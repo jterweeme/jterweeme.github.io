@@ -1,0 +1,43 @@
+figure.diagram ul
+{
+    list-style-type: none;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+}
+
+figure.diagram ul li
+{
+    font-size: 12px;
+    border-top: 1px solid black;
+    white-space: pre;
+}
+
+figure.diagram figure
+{
+    display: block;
+    border: 0px solid gray;
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+figure.diagram figure div
+{
+    margin: 30px;
+    margin-right: 30px;
+    border: 1px solid black;
+    width: 100%;
+    height: 100%;
+}
+
+figure.diagram figure div hr
+{
+    display: none
+}
+
+
