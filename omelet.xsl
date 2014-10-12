@@ -8,7 +8,16 @@
                 <title>Omelet</title>
                 <link rel="stylesheet" type="text/css" href="omelet.css"/>
             </head>
-            <body><xsl:apply-templates select="diagram"/></body>
+            <body>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="index.html">TBD</a>
+                    <a href="index.html">TBD</a>
+                    <a href="index.html">TBD</a>
+                    <a href="index.html">TBD</a>
+                </nav>
+                <xsl:apply-templates select="diagram"/>
+            </body>
         </html>
     </xsl:template>
 
