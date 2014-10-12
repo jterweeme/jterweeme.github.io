@@ -6,7 +6,7 @@
         <html>
             <head>
                 <title>Omelet</title>
-                <link rel="stylesheet" type="text/css" href="common.css"/>
+                <link rel="stylesheet" type="text/css" href="omelet.css"/>
             </head>
             <body><xsl:apply-templates select="diagram"/></body>
         </html>

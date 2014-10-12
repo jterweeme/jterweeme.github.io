@@ -1,0 +1,46 @@
+/*
+Jasper ter Weeme
+*/
+
+figure.diagram ul
+{
+    list-style-type: none;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+}
+
+figure.diagram ul li
+{
+    font-size: 12px;
+    border-top: 1px solid black;
+    white-space: pre;
+}
+
+figure.diagram ul li b
+{
+    text-align: center;
+}
+
+figure.diagram figure
+{
+    position: absolute;
+    padding-top: 22px;
+    padding-left: 29px;
+    padding-right: 20px;
+    padding-bottom: 26px;
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+figure.diagram figure hr
+{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+
