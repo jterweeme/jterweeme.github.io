@@ -2,6 +2,11 @@
 Jasper ter Weeme
 */
 
+figure.diagram
+{
+    position: relative;
+}
+
 figure.diagram ul
 {
     list-style-type: none;

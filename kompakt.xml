@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="omelet.xsl"?>
+<diagram program="umlet" version="12.1">
+  <zoom_level>9</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>216</x>
+      <y>576</y>
+      <w>252</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>
+*ISO*
+--
+- Descriptors descriptors
+- std::vector[CDirectory] directories
+--
++ read(std::istream s): int
+    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>135</x>
+      <y>0</y>
+      <w>297</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>
+*Util*
+--
+--
+_foo(const char *s, int length): std::string_
+    </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>405</x>
+      <y>351</y>
+      <w>279</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>
+*App*
+--
+- options: Options
+--
++ run(argc: int, argv: char): int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1107</x>
+      <y>171</y>
+      <w>351</w>
+      <h>342</h>
+    </coordinates>
+    <panel_attributes>
+*SDirectory*
+--
++ length: uint8_t
+uint8_t extendedLength
+uint32_t lbaLE
+uint32_t lbaBE
+uint32_t dataLengthLE
+uint32_t dataLengthBE
+uint8_t year
+uint8_t month
+uint8_t day
+uint8_t hour
+uint8_t min
+uint8_t sec
+uint8_t timezone
+uint8_t flags
+uint8_t interleaved
+uint16_t volSeqNumLE;
+uint16_t volSeqNumBE;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1107</x>
+      <y>738</y>
+      <w>243</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>
+*CDirectory*
+--
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1044</x>
+      <y>36</y>
+      <w>387</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>
+*VolDescFactory*
+--
+--
++ create(vd: CVolumeDescriptor): CVolumeDescriptor *</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>495</x>
+      <y>0</y>
+      <w>360</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>*CVolumeDescriptorSetTerminator*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>585</x>
+      <y>144</y>
+      <w>243</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>*Options*
+--
+- info: bool
+- list: bool
+- extract: bool
+--
++ parse(argc: int, argv: char): int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>621</x>
+      <y>225</y>
+      <w>44</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;126;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>558</x>
+      <y>576</y>
+      <w>225</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*Descriptors*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>441</x>
+      <y>630</y>
+      <w>134</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;27;117;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>108</x>
+      <y>351</y>
+      <w>270</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*Directories*
+--
+--
+int read(std::istream &amp;s, Descriptors &amp;d)
+std::string toString()
+std::string list(int mode = 1)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>252</x>
+      <y>450</y>
+      <w>44</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;126;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>747</x>
+      <y>783</y>
+      <w>252</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*CVolumeDescriptor*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>369</x>
+      <y>783</y>
+      <w>261</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>*CPrimaryVolumeDesc*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>873</x>
+      <y>558</y>
+      <w>279</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>*SVolumeDescriptor*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>405</x>
+      <y>468</y>
+      <w>44</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;108;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1251</x>
+      <y>531</y>
+      <w>207</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*Flags*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1260</x>
+      <y>630</y>
+      <w>44</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;27;27;108</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>873</x>
+      <y>684</y>
+      <w>44</w>
+      <h>116</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;99;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>603</x>
+      <y>810</y>
+      <w>161</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>144;27;27;27</additional_attributes>
+  </element>
+</diagram>

@@ -2,8 +2,22 @@
 Jasper ter Weeme
 */
 
+body
+{
+    padding: 0px;
+    margin: 0px;
+}
+
 nav
 {
+    margin: 0px;
+    padding: 5px;
     background-color: green;
+}
+
+nav a
+{
+    color: white;
+    padding-left: 10px;
 }
 
