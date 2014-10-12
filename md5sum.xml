@@ -12,7 +12,7 @@
     </coordinates>
     <panel_attributes>*App*
 --
-- _hash: Hash
+- _hasher: Hasher
 - _options: Options
 - _paars: Paars
 --
@@ -24,31 +24,22 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1040</x>
-      <y>300</y>
-      <w>380</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>*Util*
---
---
-+ to_bytes(val: uint32_t, bytes: uint8_t *): void
-+ to_int32(bytes: uint8_t *): uint32_t</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
       <x>250</x>
-      <y>450</y>
+      <y>190</y>
       <w>250</w>
-      <h>130</h>
+      <h>170</h>
     </coordinates>
     <panel_attributes>*Hash*
 --
+- _h0: uint32_t
+- _h1: uint32_t
+- _h2: uint32_t
+- _h3: uint32_t
 --
 + dump(os: ostream&amp;): void
-+ toString(): string</panel_attributes>
++ toString(): string
++ read(hash: const char *): void
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -71,15 +62,19 @@
     <coordinates>
       <x>1050</x>
       <y>520</y>
-      <w>210</w>
-      <h>130</h>
+      <w>350</w>
+      <h>190</h>
     </coordinates>
     <panel_attributes>*Options*
 --
 - _check: bool
 - _files: Files
+- _cin: bool
+- _argc: int
+- _argv: char **
+- _argp: int
 --
-+ Options(): Options</panel_attributes>
++ Options(argc: int, argv: char **): Options</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -96,24 +91,24 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>470</x>
+      <x>440</x>
       <y>500</y>
-      <w>170</w>
+      <w>200</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;150;30</additional_attributes>
+    <additional_attributes>30;30;180;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>340</x>
-      <y>550</y>
-      <w>50</w>
-      <h>210</h>
+      <x>270</x>
+      <y>560</y>
+      <w>120</w>
+      <h>200</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;190</additional_attributes>
+    <additional_attributes>30;30;100;180</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
@@ -174,5 +169,31 @@
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>30;30;30;140</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1010</x>
+      <y>190</y>
+      <w>240</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>*Chunk*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>220</x>
+      <y>460</y>
+      <w>250</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*Hasher*
+--
+--</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

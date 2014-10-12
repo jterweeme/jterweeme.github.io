@@ -45,9 +45,9 @@
             <xsl:attribute name="style">
                 <xsl:apply-templates select="coordinates"/>
             </xsl:attribute>
-            <div><hr/></div>
-           <!-- <xsl:apply-templates select="panel_attributes"/> -->
+            <hr/>
         </figure>
+           <!-- <xsl:apply-templates select="panel_attributes"/> -->
     </xsl:template>   
 
     <xsl:template match="panel_attributes">
