@@ -44,7 +44,9 @@ xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
 
         <xsl:choose>
             <xsl:when test="starts-with($inhoud, '*')">
-                <b><xsl:value-of select="substring-after($inhoud, '*')"/></b>
+                <b>
+                    <xsl:value-of select="substring-before(substring-after($inhoud, '*'), '*')"/>
+                </b>
             </xsl:when>
             <xsl:when test="starts-with($inhoud, '*')">
                 <b><xsl:value-of select="substring-after($inhoud, '*')"/></b>
