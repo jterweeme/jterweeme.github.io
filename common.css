@@ -8,14 +8,14 @@ body
     margin: 0px;
 }
 
-nav
+nav.mainmenu
 {
     margin: 0px;
     padding: 5px;
     background-color: green;
 }
 
-nav a
+nav.mainmenu a
 {
     color: white;
     padding-left: 10px;

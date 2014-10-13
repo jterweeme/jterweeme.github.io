@@ -68,7 +68,7 @@ table.menu > tbody > tr > td > img
     width: 30px;
 }
 
-nav
+nav.sidebar
 {
     padding-top: 200px;
     padding-left: 5px;
@@ -81,14 +81,14 @@ nav
     border-bottom-right-radius: 8px;
 }
 
-nav table img
+nav.sidebar table img
 {
     width: 80px;
     background-color: white;
     cursor: move;
 }
 
-nav a
+nav.sidebar a
 {
     display: block;
     background-color: yellow;
@@ -100,12 +100,12 @@ nav a
     text-align: center;
 }
 
-nav table img.hold
+nav.sidebar table img.hold
 {
     background-color: blue;
 }
 
-nav img#btnDice
+nav.sidebar img#btnDice
 {
     cursor: move;
 }
