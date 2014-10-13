@@ -1,4 +1,7 @@
-all: kompakt.xml md5sum.xml
+all: index.html kompakt.xml md5sum.xml
+
+index.html: index.php
+	php $< > $@
 
 kompakt.xml: kompakt.uxf
 	sed -f header.sed $< > $@

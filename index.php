@@ -5,13 +5,9 @@
 <link rel="stylesheet" type="text/css" href="common.css"/>
 </head>
 <body>
-<nav class="mainmenu">
-<a href="index.html">Home</a>
-<a href="https://github.com/jterweeme">GitHub</a>
-<a href="yahtzee/index.html">Yahtzee</a>
-<a href="et/index.html">E.T.</a>
-</nav>
-
+<?php
+echo file_get_contents("mainmenu.xml");
+?>
 <h1>Welcome</h1>
 <ul>
 <li><a href="md5sum.xml">Diagram MD5Sum</a></li>
