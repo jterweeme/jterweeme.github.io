@@ -1,0 +1,51 @@
+body {
+    width: 1000px;
+}
+
+@font-face {
+    font-family: AtariET;
+    src: url(AtariET.ttf) format("truetype");
+}
+
+#wrap {
+    background-color: #000000;
+    width: 640px;
+    height: 360px;
+    margin-left: 30px;
+    margin-top: 30px;
+    padding-top: 14px;
+    padding-bottom: 46px;
+    margin-right: 30px;
+    float: left;
+}
+
+#wrap header {
+    background-color: #97197A;
+    height: 30px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+#wrap>img {
+    padding-top: 8px;
+    padding-left: 64px;
+    padding-right: 64px;
+    padding-bottom: 6px;
+}
+
+#wrap footer {
+    background-color: #65a0e1;
+    margin-top: 8px;
+    height: 40px;
+    text-align: center;
+    font-family: "AtariET";
+    color: #004400;
+    font-size: 20px;
+    line-height: 2em;
+}
+
+li {
+    list-style-type: none;
+}
+
+
