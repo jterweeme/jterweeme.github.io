@@ -42,6 +42,12 @@ figure.diagram figure
     margin: 0px;
 }
 
+figure.diagram figure img
+{
+    position: absolute;
+    margin-left: -15px;
+}
+
 figure.diagram figure hr
 {
     width: 100%;

@@ -75,6 +75,7 @@ xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
             <xsl:attribute name="style">
                 <xsl:apply-templates select="coordinates"/>
             </xsl:attribute>
+            <img src="diamond.png" alt=""/>
             <hr/>
         </figure>
            <!-- <xsl:apply-templates select="panel_attributes"/> -->
