@@ -41,7 +41,6 @@ xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
 
     <xsl:template name="onzin">
         <xsl:param name="inhoud"/>
-
         <xsl:choose>
             <xsl:when test="starts-with($inhoud, '*')">
                 <b>
@@ -55,30 +54,28 @@ xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
                 <xsl:value-of select="$inhoud"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
 
+    <xsl:template match="additional_attributes">
+        <xsl:text>left: </xsl:text>
+        <xsl:value-of select="substring-before(., ';')"/>
+        <xsl:text>px; top: </xsl:text>
+        <xsl:value-of select="substring-before(substring-after(., ';'), ';')"/>
+        <xsl:text>px;</xsl:text>
     </xsl:template>
 
     <xsl:template name="relation" match="element[type = 'com.umlet.element.Relation']">
         <figure>
-<!--
-            <xsl:analyze-string select="." regex="\d{{4}}">
-            <xsl:matching-substring>
-                <a href="http://www.historyorb.com/events/date/{.}">
-                    <xsl:value-of select="."/>
-                </a>
-            </xsl:matching-substring>
-            <xsl:non-matching-substring>
-                <xsl:value-of select="."/>
-            </xsl:non-matching-substring>
-            </xsl:analyze-string>
--->
             <xsl:attribute name="style">
                 <xsl:apply-templates select="coordinates"/>
             </xsl:attribute>
-            <img src="diamond.png" alt=""/>
+            <img src="diamond.png" alt="">
+                <xsl:attribute name="style">
+                    <xsl:apply-templates select="additional_attributes"/>
+                </xsl:attribute>
+            </img>
             <hr/>
         </figure>
-           <!-- <xsl:apply-templates select="panel_attributes"/> -->
     </xsl:template>   
 
     <xsl:template match="panel_attributes">
@@ -93,8 +90,6 @@ xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
         <li>
             <xsl:value-of select="substring-after(substring-after(., '--'), '--')"/>
         </li>
-        
-        <!-- <li><xsl:value-of select="."/></li> -->
     </xsl:template>
 
     <xsl:template match="coordinates">
