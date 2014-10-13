@@ -1,0 +1,158 @@
+body
+{
+    margin-top: 0px;
+    font-family: Sans-serif;
+}
+
+table.score
+{
+    border: 1px solid black;
+    border-spacing: 0px;
+    float: left;
+    padding: 2px;
+    font-weight: bold;
+}
+
+table.score td
+{
+    padding-left: 3px;
+}
+
+caption
+{
+}
+
+caption > img
+{
+    height: 150px;
+    float: left;
+}
+
+caption > dl
+{
+    height: 75px;
+    padding-top: 75px;
+    margin: 0;
+}
+
+caption > dl > dt
+{
+    display: inline-block;;
+}
+
+caption > dl > dd
+{
+    width: 150px;
+    display: inline-block;
+    margin-left: 0px;
+    border-bottom: 1px solid black;
+}
+
+hr
+{
+    margin: 10px;
+    float: left;
+    width: 80px;
+    display: block;
+}
+
+td, th
+{
+    border: 1px solid black;
+}
+
+/* dobbelstenen */
+table.score > tbody > tr > td > img,
+table.menu > tbody > tr > td > img
+{
+    width: 30px;
+}
+
+nav
+{
+    padding-top: 200px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    position: fixed;
+    margin-left: 720px;
+    background-color: #ccc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+nav table img
+{
+    width: 80px;
+    background-color: white;
+    cursor: move;
+}
+
+nav a
+{
+    display: block;
+    background-color: yellow;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    width: 100px;
+    text-align: center;
+}
+
+nav table img.hold
+{
+    background-color: blue;
+}
+
+nav img#btnDice
+{
+    cursor: move;
+}
+
+td > span:first-of-type
+{
+    width: 70px;
+    display: inline-block;
+}
+
+th, td.toelichting
+{
+    text-align: center;
+}
+
+td.noborder
+{
+    border: 0px;
+}
+
+table.score td.selectable:hover
+{
+    background-color: red;
+}
+
+td dl
+{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+td dl dt
+{
+    display: inline-block;
+    width: 80px;
+}
+
+td dl dd
+{
+    font-size: 12px;
+    margin-left: 0px;
+    width: 100px;
+    float: right;
+}
+
+form
+{
+    display: none;
+}
+

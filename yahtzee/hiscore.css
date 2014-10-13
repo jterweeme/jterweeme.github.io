@@ -1,0 +1,36 @@
+body
+{
+    margin-top: 0px;
+}
+
+table
+{
+    margin-top: 10px;
+    float: left;
+}
+
+nav
+{
+    background-color: #ccc;
+    padding-top: 200px;
+    width: 200px;
+    height: 300px;
+    position: fixed;
+    margin-left: 720px;
+}
+
+nav a
+{
+    display: block;
+    width: 100px;
+    margin: auto;
+    background-color: yellow;
+    text-align: center;
+}
+
+td
+{
+    border: 1px solid black;
+}
+
+
