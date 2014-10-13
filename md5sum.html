@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Onzin</title>
+<link rel="stylesheet" type="text/css" href="common.css"/>
+<link rel="stylesheet" type="text/css" href="omelet.css"/>
+</head>
+<body>
+
+<nav class="mainmenu">
+<a href="index.html">Home</a>
+<a href="https://github.com/jterweeme">GitHub</a>
+<a href="yahtzee/index.html">Yahtzee</a>
+<a href="et/index.html">E.T.</a>
+</nav>
+
+<figure class="diagram"><ul style="left: 830px; top: 220px; width: 310px; height: 190px;">
+<li>*App*
+</li><li>
+- _hasher: Hasher
+- _options: Options
+- _paars: Paars
+</li><li>
++ App(): App
++ run(argc: int, argv: char **): int
+- checkFile(fn: const char *): void</li></ul>
+<ul style="left: 430px; top: 450px; width: 250px; height: 170px;">
+<li>*Hash*
+</li><li>
+- _h0: uint32_t
+- _h1: uint32_t
+- _h2: uint32_t
+- _h3: uint32_t
+</li><li>
++ dump(os: ostream&): void
++ toString(): string
++ read(hash: const char *): void
+</li></ul>
+<ul style="left: 530px; top: 690px; width: 250px; height: 120px;">
+<li>*Paar*
+</li><li>
+- _hash: Hash
+</li><li>
++ Paar(): Paar</li></ul>
+<ul style="left: 1260px; top: 330px; width: 350px; height: 190px;">
+<li>*Options*
+</li><li>
+- _check: bool
+- _files: Files
+- _cin: bool
+- _argc: int
+- _argv: char **
+- _argp: int
+</li><li>
++ Options(argc: int, argv: char **): Options</li></ul>
+<figure style="left: 1110px; top: 340px; width: 170px; height: 50px;">
+<hr/>
+</figure>
+<figure style="left: 650px; top: 280px; width: 200px; height: 50px;">
+<hr/>
+</figure>
+<figure style="left: 580px; top: 590px; width: 50px; height: 120px;">
+<hr/>
+</figure>
+<ul style="left: 940px; top: 690px; width: 280px; height: 130px;">
+<li>*Paars*
+</li><li>
+</li><li>
++ dump(os: ostream&): void</li></ul>
+<figure style="left: 750px; top: 730px; width: 210px; height: 50px;">
+<hr/>
+</figure>
+<figure style="left: 970px; top: 380px; width: 50px; height: 330px;">
+<hr/>
+</figure>
+<ul style="left: 850px; top: 0px; width: 250px; height: 110px;">
+<li>*Files*
+</li><li>
+</li><li></li></ul>
+<figure style="left: 920px; top: 80px; width: 50px; height: 160px;">
+<hr/>
+</figure>
+<ul style="left: 0px; top: 450px; width: 350px; height: 190px;">
+<li>*Chunk*
+</li><li>
+- _w[16]: uint32_t
+</li><li>
+- to_int32(bytes: const uint8_t *) uint32_t
+- LEFTROTATE(): uint32_t
++ clear()
++ dump()
++ fillTail()
++ w()
++ calc(): Hash
++ read(): void</li></ul>
+<ul style="left: 200px; top: 240px; width: 480px; height: 130px;">
+<li>*Hasher*
+</li><li>
+- _hash: Hash
+</li><li>
++ hash(): Hash
++ reset(): void
++ stream(is: istream&): void
++ stream(s: const char*, size: size_t): void</li></ul>
+<figure style="left: 320px; top: 500px; width: 130px; height: 50px;">
+<hr/>
+</figure>
+<figure style="left: 460px; top: 340px; width: 50px; height: 130px;">
+<hr/>
+</figure>
+<figure style="left: 250px; top: 340px; width: 50px; height: 130px;">
+<hr/>
+</figure>
+</figure>
+</body>
+</html>
+
+
