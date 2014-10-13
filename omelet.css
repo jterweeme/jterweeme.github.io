@@ -27,6 +27,7 @@ figure.diagram ul li
 
 figure.diagram ul li b
 {
+    display: block;
     text-align: center;
 }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xpath-default-namespace="http://www.w3.org/1999/xhtml" version="2.0">
     <xsl:output omit-xml-declaration="yes"/>
 
     <xsl:template match="/">
@@ -12,7 +13,7 @@
             <body>
                 <nav>
                     <a href="index.html">Home</a>
-                    <a href="index.html">TBD</a>
+                    <a href="https://github.com/jterweeme">GitHub</a>
                     <a href="index.html">TBD</a>
                     <a href="index.html">TBD</a>
                     <a href="index.html">TBD</a>
@@ -40,7 +41,11 @@
 
     <xsl:template name="onzin">
         <xsl:param name="inhoud"/>
+
         <xsl:choose>
+            <xsl:when test="starts-with($inhoud, '*')">
+                <b><xsl:value-of select="substring-after($inhoud, '*')"/></b>
+            </xsl:when>
             <xsl:when test="starts-with($inhoud, '*')">
                 <b><xsl:value-of select="substring-after($inhoud, '*')"/></b>
             </xsl:when>
@@ -48,10 +53,23 @@
                 <xsl:value-of select="$inhoud"/>
             </xsl:otherwise>
         </xsl:choose>
+
     </xsl:template>
 
     <xsl:template name="relation" match="element[type = 'com.umlet.element.Relation']">
         <figure>
+<!--
+            <xsl:analyze-string select="." regex="\d{{4}}">
+            <xsl:matching-substring>
+                <a href="http://www.historyorb.com/events/date/{.}">
+                    <xsl:value-of select="."/>
+                </a>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+            </xsl:analyze-string>
+-->
             <xsl:attribute name="style">
                 <xsl:apply-templates select="coordinates"/>
             </xsl:attribute>
@@ -67,7 +85,10 @@
             </xsl:call-template>
         </li>
         <li>
-            <xsl:value-of select="substring-after(., '--')"/>
+            <xsl:value-of select="substring-before(substring-after(., '--'), '--')"/>
+        </li>
+        <li>
+            <xsl:value-of select="substring-after(substring-after(., '--'), '--')"/>
         </li>
         
         <!-- <li><xsl:value-of select="."/></li> -->
