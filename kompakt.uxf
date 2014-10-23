@@ -3,8 +3,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>207</x>
-      <y>612</y>
+      <x>198</x>
+      <y>594</y>
       <w>252</w>
       <h>126</h>
     </coordinates>
@@ -21,24 +21,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>126</x>
-      <y>36</y>
-      <w>297</w>
-      <h>108</h>
-    </coordinates>
-    <panel_attributes>
-*Util*
---
---
-_foo(const char *s, int length): std::string_
-    </panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>396</x>
-      <y>387</y>
+      <x>387</x>
+      <y>369</y>
       <w>279</w>
       <h>144</h>
     </coordinates>
@@ -54,8 +38,8 @@ _foo(const char *s, int length): std::string_
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1098</x>
-      <y>207</y>
+      <x>1089</x>
+      <y>189</y>
       <w>351</w>
       <h>342</h>
     </coordinates>
@@ -86,13 +70,13 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1098</x>
-      <y>774</y>
+      <x>1089</x>
+      <y>756</y>
       <w>243</w>
       <h>108</h>
     </coordinates>
     <panel_attributes>
-*CDirectory*
+*DirEntry*
 --
 --
 </panel_attributes>
@@ -101,8 +85,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1035</x>
-      <y>72</y>
+      <x>1080</x>
+      <y>45</y>
       <w>387</w>
       <h>99</h>
     </coordinates>
@@ -116,8 +100,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>486</x>
-      <y>36</y>
+      <x>477</x>
+      <y>18</y>
       <w>360</w>
       <h>108</h>
     </coordinates>
@@ -129,8 +113,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>576</x>
-      <y>180</y>
+      <x>567</x>
+      <y>162</y>
       <w>243</w>
       <h>108</h>
     </coordinates>
@@ -146,8 +130,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>612</x>
-      <y>261</y>
+      <x>603</x>
+      <y>243</y>
       <w>44</w>
       <h>143</h>
     </coordinates>
@@ -157,8 +141,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>549</x>
-      <y>612</y>
+      <x>540</x>
+      <y>594</y>
       <w>225</w>
       <h>126</h>
     </coordinates>
@@ -170,8 +154,8 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>432</x>
-      <y>666</y>
+      <x>423</x>
+      <y>648</y>
       <w>134</w>
       <h>44</h>
     </coordinates>
@@ -181,9 +165,9 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>99</x>
-      <y>387</y>
-      <w>270</w>
+      <x>54</x>
+      <y>369</y>
+      <w>306</w>
       <h>126</h>
     </coordinates>
     <panel_attributes>*Directories*
@@ -197,8 +181,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>243</x>
-      <y>486</y>
+      <x>234</x>
+      <y>468</y>
       <w>44</w>
       <h>143</h>
     </coordinates>
@@ -208,8 +192,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>738</x>
-      <y>819</y>
+      <x>729</x>
+      <y>801</y>
       <w>252</w>
       <h>126</h>
     </coordinates>
@@ -221,8 +205,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>360</x>
-      <y>819</y>
+      <x>351</x>
+      <y>801</y>
       <w>261</w>
       <h>144</h>
     </coordinates>
@@ -234,8 +218,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>864</x>
-      <y>594</y>
+      <x>855</x>
+      <y>576</y>
       <w>279</w>
       <h>153</h>
     </coordinates>
@@ -247,8 +231,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>396</x>
-      <y>504</y>
+      <x>387</x>
+      <y>486</y>
       <w>44</w>
       <h>125</h>
     </coordinates>
@@ -258,8 +242,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1242</x>
-      <y>567</y>
+      <x>1233</x>
+      <y>549</y>
       <w>207</w>
       <h>126</h>
     </coordinates>
@@ -271,19 +255,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1251</x>
-      <y>666</y>
-      <w>44</w>
-      <h>125</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>27;27;27;108</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>864</x>
-      <y>720</y>
+      <x>855</x>
+      <y>702</y>
       <w>44</w>
       <h>116</h>
     </coordinates>
@@ -293,12 +266,90 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>594</x>
-      <y>846</y>
+      <x>585</x>
+      <y>828</y>
       <w>161</w>
       <h>44</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>144;27;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>828</x>
+      <y>225</y>
+      <w>198</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*PathEntry*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>306</x>
+      <y>153</y>
+      <w>234</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>*PathTable*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>765</x>
+      <y>369</y>
+      <w>234</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>*Directory*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>54</x>
+      <y>738</y>
+      <w>243</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>*FileSystem*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>846</x>
+      <y>18</y>
+      <w>207</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>*SPathEntry*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>36</x>
+      <y>144</y>
+      <w>216</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>*SDirectory*
+--
+--</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
