@@ -94,7 +94,7 @@ uint16_t volSeqNumBE;
 *VolDescFactory*
 --
 --
-+ create(vd: CVolumeDescriptor): CVolumeDescriptor *</panel_attributes>
++ create(vd: CVolumeDescriptor): CVolumeDescriptor</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
