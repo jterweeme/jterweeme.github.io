@@ -477,7 +477,7 @@ function beweeg()
         var randomNum = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
         if (!imgDob[i].keep)
         {
-            imgDob[i].src = "http://localhost/yahtzee/Dice-" + randomNum + ".svg";
+            imgDob[i].src = "Dice-" + randomNum + ".svg";
             imgDob[i].waarde = randomNum;
         }
     }

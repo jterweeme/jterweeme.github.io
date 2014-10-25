@@ -3,7 +3,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>333</x>
+      <x>594</x>
       <y>576</y>
       <w>252</w>
       <h>126</h>
@@ -11,8 +11,10 @@
     <panel_attributes>
 *ISO*
 --
-- Descriptors descriptors
-- std::vector[CDirectory] directories
+- _descriptors: Descriptors
+- _directories: Directories
+- _pathTable: PathTable
+- _fileList: Directory
 --
 + read(std::istream s): int
     </panel_attributes>
@@ -21,7 +23,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>522</x>
+      <x>783</x>
       <y>351</y>
       <w>279</w>
       <h>144</h>
@@ -38,7 +40,7 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1530</x>
+      <x>1791</x>
       <y>738</y>
       <w>351</w>
       <h>342</h>
@@ -70,7 +72,7 @@ uint16_t volSeqNumBE;
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1224</x>
+      <x>1485</x>
       <y>738</y>
       <w>243</w>
       <h>108</h>
@@ -80,14 +82,15 @@ uint16_t volSeqNumBE;
 --
 _fn: string
 _dir: SDirectory
+_offset: uint32_t
 --
-</panel_attributes>
++ dir(): SDirectory</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1215</x>
+      <x>1476</x>
       <y>27</y>
       <w>387</w>
       <h>99</h>
@@ -102,7 +105,7 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>612</x>
+      <x>873</x>
       <y>0</y>
       <w>360</w>
       <h>108</h>
@@ -115,7 +118,7 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>702</x>
+      <x>963</x>
       <y>144</y>
       <w>243</w>
       <h>108</h>
@@ -132,10 +135,10 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>729</x>
+      <x>990</x>
       <y>225</y>
-      <w>44</w>
-      <h>143</h>
+      <w>36</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>27;27;27;126</additional_attributes>
@@ -143,7 +146,7 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>675</x>
+      <x>936</x>
       <y>576</y>
       <w>225</w>
       <h>126</h>
@@ -156,7 +159,7 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>558</x>
+      <x>819</x>
       <y>621</y>
       <w>134</w>
       <h>44</h>
@@ -167,8 +170,8 @@ _dir: SDirectory
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>504</x>
-      <y>936</y>
+      <x>675</x>
+      <y>1008</y>
       <w>306</w>
       <h>126</h>
     </coordinates>
@@ -183,18 +186,18 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>522</x>
+      <x>693</x>
       <y>675</y>
       <w>44</w>
-      <h>278</h>
+      <h>350</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>27;261;27;27</additional_attributes>
+    <additional_attributes>27;333;27;27</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1044</x>
+      <x>1305</x>
       <y>585</y>
       <w>252</w>
       <h>126</h>
@@ -207,7 +210,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>846</x>
+      <x>1107</x>
       <y>351</y>
       <w>261</w>
       <h>144</h>
@@ -220,7 +223,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1170</x>
+      <x>1431</x>
       <y>342</y>
       <w>279</w>
       <h>153</h>
@@ -236,7 +239,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>522</x>
+      <x>783</x>
       <y>468</y>
       <w>44</w>
       <h>125</h>
@@ -247,7 +250,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1341</x>
+      <x>1602</x>
       <y>549</y>
       <w>234</w>
       <h>126</h>
@@ -263,7 +266,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1053</x>
+      <x>1314</x>
       <y>468</y>
       <w>44</w>
       <h>134</h>
@@ -274,7 +277,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>981</x>
+      <x>1242</x>
       <y>189</y>
       <w>198</w>
       <h>126</h>
@@ -289,7 +292,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>0</x>
+      <x>261</x>
       <y>324</y>
       <w>450</w>
       <h>171</h>
@@ -303,8 +306,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>1143</x>
-      <y>945</y>
+      <x>801</x>
+      <y>774</y>
       <w>234</w>
       <h>144</h>
     </coordinates>
@@ -317,20 +320,21 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>189</x>
-      <y>720</y>
+      <x>306</x>
+      <y>747</y>
       <w>243</w>
       <h>144</h>
     </coordinates>
     <panel_attributes>*FileSystem*
 --
---</panel_attributes>
+--
++ mkdir(name: const char): void</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>981</x>
+      <x>1242</x>
       <y>0</y>
       <w>207</w>
       <h>108</h>
@@ -347,8 +351,8 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>171</x>
-      <y>126</y>
+      <x>1404</x>
+      <y>936</y>
       <w>216</w>
       <h>144</h>
     </coordinates>
@@ -366,10 +370,10 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1350</x>
+      <x>1611</x>
       <y>648</y>
-      <w>44</w>
-      <h>107</h>
+      <w>36</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>27;27;27;90</additional_attributes>
@@ -377,7 +381,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1053</x>
+      <x>1314</x>
       <y>81</y>
       <w>36</w>
       <h>117</h>
@@ -388,10 +392,10 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1440</x>
+      <x>1701</x>
       <y>792</y>
-      <w>107</w>
-      <h>44</h>
+      <w>99</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>90;27;27;27</additional_attributes>
@@ -399,29 +403,29 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1251</x>
-      <y>819</y>
-      <w>44</w>
-      <h>143</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>27;27;27;126</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>783</x>
-      <y>990</y>
-      <w>377</w>
+      <x>1008</x>
+      <y>801</y>
+      <w>494</w>
       <h>44</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>360;27;27;27</additional_attributes>
+    <additional_attributes>477;27;27;27</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>1197</x>
+      <x>819</x>
+      <y>891</y>
+      <w>44</w>
+      <h>134</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;27;27;117</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1458</x>
       <y>468</y>
       <w>44</w>
       <h>134</h>
@@ -432,7 +436,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>873</x>
+      <x>1134</x>
       <y>621</y>
       <w>188</w>
       <h>44</h>
@@ -443,7 +447,7 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>378</x>
+      <x>639</x>
       <y>468</y>
       <w>44</w>
       <h>125</h>
@@ -454,12 +458,48 @@ std::string list(int mode = 1)</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>540</x>
+      <x>801</x>
       <y>675</y>
-      <w>647</w>
-      <h>287</h>
+      <w>44</w>
+      <h>116</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>630;270;630;153;27;153;27;27</additional_attributes>
+    <additional_attributes>27;99;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1512</x>
+      <y>819</y>
+      <w>36</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;117;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>315</x>
+      <y>972</y>
+      <w>234</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>*FSPath*
+--
+--
++ dump(os: ostream): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>414</x>
+      <y>864</y>
+      <w>44</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>27;108;27;27</additional_attributes>
   </element>
 </diagram>
