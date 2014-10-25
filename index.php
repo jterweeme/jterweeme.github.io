@@ -12,6 +12,7 @@ echo file_get_contents("mainmenu.xml");
 <ul>
 <li><a href="md5sum.html">Diagram MD5Sum</a></li>
 <li><a href="kompakt.html">Diagram Kompakt</a></li>
+<li><a href="rm.html">Diagram RM</a></li>
 </ul>
 </body>
 </html>

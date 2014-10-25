@@ -4,7 +4,7 @@
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>450</x>
-      <y>230</y>
+      <y>210</y>
       <w>220</w>
       <h>130</h>
     </coordinates>
@@ -32,20 +32,34 @@
     <type>com.umlet.element.Class</type>
     <coordinates>
       <x>350</x>
-      <y>450</y>
+      <y>390</y>
       <w>230</w>
-      <h>130</h>
+      <h>280</h>
     </coordinates>
     <panel_attributes>*FileSystem*
 --
---</panel_attributes>
+- _root: FSPath
+- _pwd: FSPath
+--
++ mkdir
++ chdir
++ chmkdir
++ chmkdir
++ rmdir
++ up(): void
++ up(n: int): void
++ goRoot(): void
++ pwdir(): FSPath
++ FileSystem(): FileSystem
++ root(): FSPath
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>640</x>
-      <y>270</y>
+      <y>250</y>
       <w>160</w>
       <h>50</h>
     </coordinates>
@@ -56,11 +70,36 @@
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>470</x>
-      <y>330</y>
+      <y>310</y>
       <w>50</w>
-      <h>140</h>
+      <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;120;30;30</additional_attributes>
+    <additional_attributes>30;80;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>330</x>
+      <y>750</y>
+      <w>250</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*FSPath*
+--
+--
++ dump(os: ostream): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>420</x>
+      <y>640</y>
+      <w>50</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;110;30;30</additional_attributes>
   </element>
 </diagram>

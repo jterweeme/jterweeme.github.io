@@ -17,16 +17,18 @@
 </nav>
 
 <figure class="diagram">
-<ul style="left: 333px; top: 576px; width: 252px; height: 126px;">
+<ul style="left: 594px; top: 576px; width: 252px; height: 126px;">
 <li><b>
 *ISO*
 </b></li><li>
-- Descriptors descriptors
-- std::vector[CDirectory] directories
+- _descriptors: Descriptors
+- _directories: Directories
+- _pathTable: PathTable
+- _fileList: Directory
 </li><li>
 + read(std::istream s): int
     </li></ul>
-<ul style="left: 522px; top: 351px; width: 279px; height: 144px;">
+<ul style="left: 783px; top: 351px; width: 279px; height: 144px;">
 <li><b>
 *App*
 </b></li><li>
@@ -34,7 +36,7 @@
 </li><li>
 + run(argc: int, argv: char): int
 </li></ul>
-<ul style="left: 1530px; top: 738px; width: 351px; height: 342px;">
+<ul style="left: 1791px; top: 738px; width: 351px; height: 342px;">
 <li><b>
 *SDirectory*
 </b></li><li>
@@ -57,25 +59,26 @@ uint16_t volSeqNumLE;
 uint16_t volSeqNumBE;
 </li><li>
 </li></ul>
-<ul style="left: 1224px; top: 738px; width: 243px; height: 108px;">
+<ul style="left: 1485px; top: 738px; width: 243px; height: 108px;">
 <li><b>
 *DirEntry*
 </b></li><li>
 _fn: string
 _dir: SDirectory
+_offset: uint32_t
 </li><li>
-</li></ul>
-<ul style="left: 1215px; top: 27px; width: 387px; height: 99px;">
++ dir(): SDirectory</li></ul>
+<ul style="left: 1476px; top: 27px; width: 387px; height: 99px;">
 <li><b>
 *VolDescFactory*
 </b></li><li>
 </li><li>
 + create(vd: CVolumeDescriptor): CVolumeDescriptor</li></ul>
-<ul style="left: 612px; top: 0px; width: 360px; height: 108px;">
+<ul style="left: 873px; top: 0px; width: 360px; height: 108px;">
 <li><b>*CVolumeDescriptorSetTerminator*
 </b></li><li>
 </li><li></li></ul>
-<ul style="left: 702px; top: 144px; width: 243px; height: 108px;">
+<ul style="left: 963px; top: 144px; width: 243px; height: 108px;">
 <li><b>*Options*
 </b></li><li>
 - info: bool
@@ -83,75 +86,76 @@ _dir: SDirectory
 - extract: bool
 </li><li>
 + parse(argc: int, argv: char): int</li></ul>
-<figure style="left: 729px; top: 225px; width: 44px; height: 143px;">
+<figure style="left: 990px; top: 225px; width: 36px; height: 135px;">
 <hr/>
 </figure>
-<ul style="left: 675px; top: 576px; width: 225px; height: 126px;">
+<ul style="left: 936px; top: 576px; width: 225px; height: 126px;">
 <li><b>*Descriptors*
 </b></li><li>
 </li><li></li></ul>
-<figure style="left: 558px; top: 621px; width: 134px; height: 44px;">
+<figure style="left: 819px; top: 621px; width: 134px; height: 44px;">
 <hr/>
 </figure>
-<ul style="left: 504px; top: 936px; width: 306px; height: 126px;">
+<ul style="left: 675px; top: 1008px; width: 306px; height: 126px;">
 <li><b>*Directories*
 </b></li><li>
 </li><li>
 int read(std::istream &s, Descriptors &d)
 std::string toString()
 std::string list(int mode = 1)</li></ul>
-<figure style="left: 522px; top: 675px; width: 44px; height: 278px;">
+<figure style="left: 693px; top: 675px; width: 44px; height: 350px;">
 <hr/>
 </figure>
-<ul style="left: 1044px; top: 585px; width: 252px; height: 126px;">
+<ul style="left: 1305px; top: 585px; width: 252px; height: 126px;">
 <li><b>*CVolumeDescriptor*
 </b></li><li>
 </li><li></li></ul>
-<ul style="left: 846px; top: 351px; width: 261px; height: 144px;">
+<ul style="left: 1107px; top: 351px; width: 261px; height: 144px;">
 <li><b>*CPrimaryVolumeDesc*
 </b></li><li>
 </li><li></li></ul>
-<ul style="left: 1170px; top: 342px; width: 279px; height: 153px;">
+<ul style="left: 1431px; top: 342px; width: 279px; height: 153px;">
 <li><b>*SVolumeDescriptor*
 </b></li><li>
 + type: uint8_t
 + identifier: char[5]
 + version: uint8_t
 </li><li></li></ul>
-<figure style="left: 522px; top: 468px; width: 44px; height: 125px;">
+<figure style="left: 783px; top: 468px; width: 44px; height: 125px;">
 <hr/>
 </figure>
-<ul style="left: 1341px; top: 549px; width: 234px; height: 126px;">
+<ul style="left: 1602px; top: 549px; width: 234px; height: 126px;">
 <li><b>*Flags*
 </b></li><li>
 </li><li>
 + Flags(flags: uint8_t): Flags
 + dump(os: ostream): void
 + toString(): string</li></ul>
-<figure style="left: 1053px; top: 468px; width: 44px; height: 134px;">
+<figure style="left: 1314px; top: 468px; width: 44px; height: 134px;">
 <hr/>
 </figure>
-<ul style="left: 981px; top: 189px; width: 198px; height: 126px;">
+<ul style="left: 1242px; top: 189px; width: 198px; height: 126px;">
 <li><b>*PathEntry*
 </b></li><li>
 - _pe: SPathEntry
 - _name: char[255]
 </li><li></li></ul>
-<ul style="left: 0px; top: 324px; width: 450px; height: 171px;">
+<ul style="left: 261px; top: 324px; width: 450px; height: 171px;">
 <li><b>*PathTable*
 </b></li><li>
 </li><li>
 - wayToSort(p1: const PathEntry, p2: const PathEntry): bool</li></ul>
-<ul style="left: 1143px; top: 945px; width: 234px; height: 144px;">
+<ul style="left: 801px; top: 774px; width: 234px; height: 144px;">
 <li><b>*Directory*
 </b></li><li>
 </li><li>
 - sortLBA(): bool</li></ul>
-<ul style="left: 189px; top: 720px; width: 243px; height: 144px;">
+<ul style="left: 306px; top: 747px; width: 243px; height: 144px;">
 <li><b>*FileSystem*
 </b></li><li>
-</li><li></li></ul>
-<ul style="left: 981px; top: 0px; width: 207px; height: 108px;">
+</li><li>
++ mkdir(name: const char): void</li></ul>
+<ul style="left: 1242px; top: 0px; width: 207px; height: 108px;">
 <li><b>*SPathEntry*
 </b></li><li>
 + length: uint8_t
@@ -159,7 +163,7 @@ std::string list(int mode = 1)</li></ul>
 + lba: uint32_t
 + parent: uint16_t
 </li><li></li></ul>
-<ul style="left: 171px; top: 126px; width: 216px; height: 144px;">
+<ul style="left: 1404px; top: 936px; width: 216px; height: 144px;">
 <li><b>*SDirectory*
 </b></li><li>
 - length: uint8_t
@@ -169,31 +173,42 @@ std::string list(int mode = 1)</li></ul>
 - dataLengthLE: uint32_t
 - dataLengthBE: uint32_t
 </li><li></li></ul>
-<figure style="left: 1350px; top: 648px; width: 44px; height: 107px;">
+<figure style="left: 1611px; top: 648px; width: 36px; height: 99px;">
 <hr/>
 </figure>
-<figure style="left: 1053px; top: 81px; width: 36px; height: 117px;">
+<figure style="left: 1314px; top: 81px; width: 36px; height: 117px;">
 <hr/>
 </figure>
-<figure style="left: 1440px; top: 792px; width: 107px; height: 44px;">
+<figure style="left: 1701px; top: 792px; width: 99px; height: 36px;">
 <hr/>
 </figure>
-<figure style="left: 1251px; top: 819px; width: 44px; height: 143px;">
+<figure style="left: 1008px; top: 801px; width: 494px; height: 44px;">
 <hr/>
 </figure>
-<figure style="left: 783px; top: 990px; width: 377px; height: 44px;">
+<figure style="left: 819px; top: 891px; width: 44px; height: 134px;">
 <hr/>
 </figure>
-<figure style="left: 1197px; top: 468px; width: 44px; height: 134px;">
+<figure style="left: 1458px; top: 468px; width: 44px; height: 134px;">
 <hr/>
 </figure>
-<figure style="left: 873px; top: 621px; width: 188px; height: 44px;">
+<figure style="left: 1134px; top: 621px; width: 188px; height: 44px;">
 <hr/>
 </figure>
-<figure style="left: 378px; top: 468px; width: 44px; height: 125px;">
+<figure style="left: 639px; top: 468px; width: 44px; height: 125px;">
 <hr/>
 </figure>
-<figure style="left: 540px; top: 675px; width: 647px; height: 287px;">
+<figure style="left: 801px; top: 675px; width: 44px; height: 116px;">
+<hr/>
+</figure>
+<figure style="left: 1512px; top: 819px; width: 36px; height: 126px;">
+<hr/>
+</figure>
+<ul style="left: 315px; top: 972px; width: 234px; height: 126px;">
+<li><b>*FSPath*
+</b></li><li>
+</li><li>
++ dump(os: ostream): void</li></ul>
+<figure style="left: 414px; top: 864px; width: 44px; height: 125px;">
 <hr/>
 </figure>
 

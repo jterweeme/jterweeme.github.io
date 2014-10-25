@@ -19,5 +19,5 @@ rm.html: rm.php omelet.php rm.uxf
 #	sed -f header.sed $< > $@
 
 clean:
-	rm -Rvf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml
+	rm -Rvf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
 

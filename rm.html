@@ -17,7 +17,7 @@
 </nav>
 
 <figure class="diagram">
-<ul style="left: 450px; top: 230px; width: 220px; height: 130px;">
+<ul style="left: 450px; top: 210px; width: 220px; height: 130px;">
 <li><b>*App*
 </b></li><li>
 - _options: Options
@@ -27,14 +27,36 @@
 <li><b>*Options*
 </b></li><li>
 </li><li></li></ul>
-<ul style="left: 350px; top: 450px; width: 230px; height: 130px;">
+<ul style="left: 350px; top: 390px; width: 230px; height: 280px;">
 <li><b>*FileSystem*
 </b></li><li>
-</li><li></li></ul>
-<figure style="left: 640px; top: 270px; width: 160px; height: 50px;">
+- _root: FSPath
+- _pwd: FSPath
+</li><li>
++ mkdir
++ chdir
++ chmkdir
++ chmkdir
++ rmdir
++ up(): void
++ up(n: int): void
++ goRoot(): void
++ pwdir(): FSPath
++ FileSystem(): FileSystem
++ root(): FSPath
+</li></ul>
+<figure style="left: 640px; top: 250px; width: 160px; height: 50px;">
 <hr/>
 </figure>
-<figure style="left: 470px; top: 330px; width: 50px; height: 140px;">
+<figure style="left: 470px; top: 310px; width: 50px; height: 100px;">
+<hr/>
+</figure>
+<ul style="left: 330px; top: 750px; width: 250px; height: 130px;">
+<li><b>*FSPath*
+</b></li><li>
+</li><li>
++ dump(os: ostream): void</li></ul>
+<figure style="left: 420px; top: 640px; width: 50px; height: 130px;">
 <hr/>
 </figure>
 
