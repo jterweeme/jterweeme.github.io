@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="12.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>450</x>
+      <y>230</y>
+      <w>220</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*App*
+--
+- _options: Options
+- _fs: FileSystem
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>780</x>
+      <y>190</y>
+      <w>260</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>*Options*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>350</x>
+      <y>450</y>
+      <w>230</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>*FileSystem*
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>640</x>
+      <y>270</y>
+      <w>160</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>140;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>470</x>
+      <y>330</y>
+      <w>50</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;120;30;30</additional_attributes>
+  </element>
+</diagram>
