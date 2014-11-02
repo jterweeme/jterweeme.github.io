@@ -14,7 +14,7 @@ echo file_get_contents("../achtung.html");
 echo file_get_contents("../mainmenu.xml");
 ?>
     <h1 id="header"><a href="animatie.html">Watch</a> Madmanimation</h1>
-    <img src="00.png" alt=""/>
+    <a href="animatie.html"><img src="00.png" alt=""/></a>
     <footer>
         <p>
             <span>Madmanimation code by</span>
