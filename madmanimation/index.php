@@ -1,11 +1,18 @@
 <!DOCTYPE html>
+<?php
+echo file_get_contents("../achtung.html");
+?>
 <html>
 <head>
     <title>Madmanimation</title>
+    <link rel="stylesheet" type="text/css" href="../common.css"/>
     <link rel="stylesheet" type="text/css" href="common.css"/>
     <link rel="stylesheet" type="text/css" href="index.css"/>
 </head>
 <body>
+<?php
+echo file_get_contents("../mainmenu.xml");
+?>
     <h1 id="header"><a href="animatie.html">Watch</a> Madmanimation</h1>
     <img src="00.png" alt=""/>
     <footer>

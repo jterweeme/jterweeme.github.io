@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<!-- This file is auto-generated DO NOT EDIT -->
-
+<?php
+echo file_get_contents("../achtung.html");
+?>
 <html>
 <head>
     <title>Madmanimation</title>
@@ -25,14 +26,9 @@
     <link rel="stylesheet" type="text/css" href="scene16.css"/>
 </head>
 <body>
-<nav class="mainmenu">
-<a href="index.html">Home</a>
-<a href="https://github.com/jterweeme">GitHub</a>
-<a href="yahtzee/index.html">Yahtzee</a>
-<a href="et/index.html">E.T.</a>
-<a href="madmanimation/index.html">MyMadManiMation</a>
-</nav>
-
+<?php
+echo file_get_contents("../mainmenu.xml");
+?>
 <h1 id="header"><a href="index.html">Watch</a> Madmanimation</h1>
 <ol id="canvas">
 	<li id="scene01">

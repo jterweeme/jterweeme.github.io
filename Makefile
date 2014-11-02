@@ -21,7 +21,9 @@ rm.html: rm.php omelet.php rm.uxf
 
 clean:
 	rm -Rvf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
+	make -C madmanimation clean
 
 rebuild: clean all
+
 
 
