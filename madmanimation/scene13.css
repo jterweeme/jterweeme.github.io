@@ -1,0 +1,19 @@
+li#scene13
+{
+    -moz-animation-name: scene13;
+    -moz-animation-duration: 1800ms;
+    -moz-animation-delay: 34s;
+}
+
+@-moz-keyframes scene13
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+li#scene13 h1
+{
+    top: 150px;
+    left: 600px;
+}
+

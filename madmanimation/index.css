@@ -1,0 +1,34 @@
+img, footer
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+footer
+{
+    width: 1024px;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+footer p
+{
+    font-size: 0.75em;
+}
+
+footer p a
+{
+    color: #b5161b;
+}
+
+footer small, footer small a
+{
+    color: #a0a0a0;
+}
+
+footer a
+{
+    font-weight: bold;
+    text-decoration: none;
+}
+

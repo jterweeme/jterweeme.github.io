@@ -1,0 +1,78 @@
+li#scene09
+{
+    -moz-animation-duration: 2800ms;
+    -moz-animation-delay: 23900ms;
+    -moz-animation-name: scene9;
+}
+
+@-moz-keyframes scene9
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+li#scene09 h1#title-09-a
+{
+    top: 50px;
+    left: 625px;
+}
+
+li#scene09 h1#title-09-b
+{
+    top: 150px;
+    left:625px;
+}
+
+li#scene09 img#bg-09
+{
+    top: 0;
+    width: 1417px;
+    height: 744px;
+    -moz-transform-origin: 0% 50%;
+    -moz-animation: bldg-09 3s 1;
+    -moz-animation-delay: 23900ms;
+    -moz-animation-duration: 3s;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes bldg-09
+{
+    from
+    {
+        -moz-transform: translate(0,0);
+        -moz-animation-timing-function: linear;
+    }
+    to
+    {
+        -moz-transform: translate(-150px,-160px);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+li#scene09 img#man09
+{
+    top: -200px;
+    left: 160px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man09 3500ms 1;
+    -moz-animation-delay: 23900ms;
+    -moz-animation-duration: 3500ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man09
+{
+    from
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -moz-transform: translate(50px, 820px) rotate(-20deg);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+
+

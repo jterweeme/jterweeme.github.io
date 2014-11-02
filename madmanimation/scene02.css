@@ -1,0 +1,198 @@
+li#scene02
+{
+    -moz-animation-name: scene2;
+    -moz-animation-duration: 2s;
+    -moz-animation-delay: 4500ms;
+
+    -webkit-animation-name: scene2;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-delay: 4500ms;
+}
+
+@-moz-keyframes scene2
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+@-webkit-keyframes scene2
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+li#scene02 img#r-foot-02
+{
+    width: 491px;
+    height: 440px;
+}
+
+li#scene02 img#r-shin-02
+{
+    top: -70px;
+    left: -10px;
+    width: 317px;
+    height: 395px;
+    -moz-transform-origin: 0 0;
+    -moz-animation: rotate-shin-02 1s 1;
+    -moz-animation-fill-mode: both;
+}
+
+li#scene02 div#r-leg-02
+{
+    left: 500px;
+    width: 495px;
+    height: 75.993092%;
+    -moz-transform-origin: 0 100%;
+    -moz-animation: rotate-leg-02 1s 1;
+    -moz-animation-delay: 4500ms;
+    -moz-animation-fill-mode: both;
+    -moz-transform: rotate(-15deg);
+}
+
+@-moz-keyframes rotate-leg-02
+{
+    0%
+    {
+        -moz-transform: translate(-20px,-20px) rotate(-15deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+li#scene02 img#r-shadow
+{
+    top: 390px;
+    left: 500px;
+    width: 497px;
+    height: 504px;
+    -moz-transform-origin: 0 0;
+    -moz-animation: rotate-shadow-r-02 1s 1;
+    -moz-animation-delay: 4500ms;
+    -moz-animation-fill-mode: both;
+    -moz-transform: rotate(15deg);
+}
+
+@-moz-keyframes rotate-shadow-r-02
+{
+     0% {
+-moz-transform : translate(20px,20px) rotate(15deg);
+-moz-animation-timing-function : ease-out; }
+ 100% {
+-moz-transform : translate(0,0) rotate(0deg);
+-moz-animation-timing-function : ease; }
+}
+
+li#scene02 div#l-leg-02
+{
+    top: 0;
+    left: -250px;
+    width: 530px;
+    height: 470px;
+    -moz-animation: leg-l-02 1s 1;
+    -moz-animation-delay: 5500ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes leg-l-02
+{
+    0%
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: translate(125px,-70px) rotate(5deg);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+li#scene02 div#l-shadow
+{
+    top: 425px;
+    left: -320px;
+    height: 557px;
+    width: 596px;
+    -moz-transform-origin: 100% 0%;
+    -moz-animation: rotate-shadow-l-02 1s 1;
+    -moz-animation-delay: 5s;
+    -moz-animation-fill-mode: both;
+    -moz-transform: rotate(0deg);
+}
+
+@-moz-keyframes rotate-shadow-l-02
+{
+ 0% {
+    -moz-transform: translate(0,0) rotate(0deg);
+    -moz-animation-timing-function : ease-out;
+    }
+ 100% {
+    -moz-transform: translate(100px, 10px) rotate(-10deg);
+    -moz-animation-timing-function : ease;
+    }
+}
+
+li#scene02 img#l-shin-02
+{
+    left: 0;
+    top: -100px;
+    width: 327px;
+    height: 400px;
+    -moz-animation: rotate-shin-l-02 1s 1;
+    -moz-animation-delay: 5s;
+    -moz-animation-fill-mode: both;
+    -moz-transform: rotate(0deg);
+    -moz-transform-origin: 100% 100%;
+}
+
+@-moz-keyframes rotate-shin-l-02
+{
+ 0% {
+    -moz-transform : translate(0,0) rotate(0deg);
+    -moz-animation-timing-function : ease-out; }
+ 100% {
+    -moz-transform : translate(20px,-30px) rotate(20deg);
+    -moz-animation-timing-function : ease; }
+}
+
+li#scene02 #l-foot-02
+{
+    bottom: 0;
+    left: 0;
+    height: 418px;
+    width: 425px;
+    -moz-animation: rotate-foot-l-02 1s 1;
+    -moz-animation-delay: 6s;
+    -moz-animation-fill-mode: both;
+    -moz-transform: rotate(0deg);
+    -moz-transform-origin: 100% 100%;
+}
+
+@-moz-keyframes rotate-foot-l-02
+{
+ 0% {
+    -moz-transform : translate(0,0) rotate(0deg);
+    -moz-animation-timing-function : ease-out; }
+ 100% {
+    -moz-transform : translate(-80px,0) rotate(20deg);
+    -moz-animation-timing-function : ease; }
+}
+
+li#scene02 #l-foot-tip
+{
+    bottom: 10px;
+    left: 300px;
+    height: 154px;
+    width: 227px;
+}
+
+li#scene02 h1
+{
+    width: 300px;
+}
+

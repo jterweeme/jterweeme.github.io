@@ -1,0 +1,43 @@
+
+li#scene06
+{
+    -moz-animation-name: scene6;
+    -moz-animation-duration: 3s;
+    -moz-animation-delay: 14100ms;
+}
+
+@-moz-keyframes scene6
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+li#scene06 img#man-06
+{
+    top: -200px;
+    left: -290px;
+    width: 1600px;
+    height: 905px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man-06 3s 1;
+    -moz-animation-delay: 14100ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man-06
+{
+    0%
+    {
+        -moz-transform: scale(1.5,1.5) translate(0,0) rotate(20deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: scale(.65,.65) translate(0,50px) rotate(0deg);
+        -moz-animation-timing-function: ease-in;
+    }
+}
+
+
+
+

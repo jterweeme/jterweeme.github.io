@@ -1,0 +1,115 @@
+li#scene04
+{
+    -moz-animation-name: scene4;
+    -moz-animation-duration: 2200ms;
+    -moz-animation-delay: 8900ms;
+
+    -moz-animation-name: scene4;
+    -moz-animation-duration: 2200ms;
+    -moz-animation-delay: 8900ms;
+
+}
+
+@-moz-keyframes scene4
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+li#scene04 h1
+{
+    top: 350px;
+    left: 125px;
+    width: 300px;
+}
+
+img#ad-a, img#ad-b, img#ad-c
+{
+    width: 160px;
+    height: 230px;
+}
+
+li#scene04 img#ad-a
+{
+    top: 130px;
+    left: 465px;
+    opacity: .65;
+    -moz-transform-origin: 50% 50%;
+    -moz-transform: rotate(-3deg);
+    -moz-animation: drop-posters-a-04 7s 1;
+    -moz-animation-duration: 7s;
+    -moz-animation-delay: 8900ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes drop-posters-a-04
+{
+    0%
+    {
+        -moz-transform: translate(0,0) rotate(-3deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: translate(0, 470px) rotate(-20deg);
+        -moz-animation-timing-function: ease-in;
+    }
+}
+
+li#scene04 img#ad-b
+{
+    left: 575px;
+    opacity: .65;
+    top: 340px;
+    -moz-transform-origin: 50% 50%;
+    -moz-transform: rotate(3deg);
+    -moz-animation: drop-posters-b-04 7s 150ms 1;
+    -moz-animation-delay: 9050ms;
+    -moz-animation-duration: 7s;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes drop-posters-b-04
+{
+    from
+    {
+        -moz-transform: translate(0,0) rotate(3deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -moz-transform: translate(0, 350px) rotate(30deg);
+        -moz-animation-timing-function: ease-in;
+    }
+}
+
+li#scene04 img#ad-c
+{
+    top: 10px;
+    left: 646px;
+    opacity: .65;
+    height: 260px;
+    width: 150px;
+    -moz-transform-origin: 50% 50%;
+    -moz-transform: rotate(-3deg);
+    -moz-animation: drop-posters-c-04 7s 100ms 1;
+    -moz-animation-delay: 9s;
+    -moz-animation-duration: 7s;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes drop-posters-c-04
+{
+    from
+    {
+        -moz-transform: translate(0,0) rotate(-3deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -moz-transform: translate(0,700px) rotate(-30deg);
+        -moz-animation-timing-function: ease-in;
+    }
+}
+
+

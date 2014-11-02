@@ -1,0 +1,80 @@
+li#scene08
+{
+    -moz-animation-duration: 3800ms;
+    -moz-animation-delay: 20100ms;
+    -moz-animation-name: scene8;
+}
+
+@-moz-keyframes scene8
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+li#scene08 h1#title-08-a
+{
+    top: 50px;
+    left: 75px;
+    z-index: 2;
+    position: absolute;
+}
+
+li#scene08 h1#title-08-b
+{
+    top: 125px;
+    left: 75px;
+    z-index: 2;
+}
+
+li#scene08 img#bg-08
+{
+    top: 0;
+    width: 1024px;
+    height: 909px;
+    -moz-transform-origin: 0% 50%;
+    -moz-animation: bldg-08 14s 1;
+    -moz-animation-delay: 20100ms;
+    -moz-animation-duration: 14s;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes bldg-08
+{
+    from
+    {
+        -moz-transform: translate(0,0);
+        -moz-animation-timing-function: ease;
+    }
+    to
+    {
+        -moz-transform: translate(0, -330px);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+li#scene08 img#man-08
+{
+    top: 260px;
+    left: 566px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man-08 8s 1;
+    -moz-animation-delay: 20100ms;
+    -moz-animation-duration: 8s;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man-08
+{
+    from
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -moz-transform: translate(0,325px) rotate(45deg);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+

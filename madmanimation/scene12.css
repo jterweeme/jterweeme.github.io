@@ -1,0 +1,14 @@
+li#scene12
+{
+    -moz-animation-name: scene12;
+    -moz-animation-duration: 1800ms;
+    -moz-animation-delay: 32200ms;
+}
+
+@-moz-keyframes scene12
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+

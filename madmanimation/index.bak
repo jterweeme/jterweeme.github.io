@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Madmanimation</title>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+</head>
+<body>
+    <h1><a href="#">Watch</a> Madmanimation</h1>
+    <div id="canvas">
+        <div id="scene01" class="scene">
+            <div class="absolute">
+                <img src="01-bg.jpg" alt="onzin"/>
+                <div id="fan-01" class="object">
+                    <img class="absolute" src="01-bg-fan.png" alt=""/>
+                    <img id="fan-blade" src="01-fan-blade.png" alt=""/>
+                </div>
+            </div>
+            <img id="man-01" class="absolute" src="01-man.png" alt=""/>
+        </div>
+        <div id="scene02" class="scene">
+            <div class="background object">
+                <img src="02-bg.jpg" alt="onzin"/>
+            </div>
+            <div class="r-shadow object">
+                <img src="02-r-shadow.png" alt=""/>
+            </div>
+            <div class="l-shadow object">
+                <img src="02-l-shadow.png" alt=""/>
+            </div>
+            <div class="r-leg-02 object">
+                <div class="r-foot-02 object">
+                    <img src="02-r-foot.png" alt=""/>
+                </div>
+                <div class="r-shin-02 object">
+                    <img src="02-r-leg.png" alt=""/>
+                </div>
+            </div>
+        </div>
+        <div id="scene03" class="scene">
+            <div class="background">
+                <img src="03-bg.jpg" alt="onzin"/>
+            </div>
+        </div>
+        <div id="overig" class="scene">
+            <img src="04-bg.jpg" alt="onzin"/>
+            <img src="05-bg.jpg" alt="onzin"/>
+            <img src="06-bg.jpg" alt="onzin"/>
+            <img src="07-bg.jpg" alt="onzin"/>
+            <img src="08-bg.jpg" alt="onzin"/>
+        </div>
+    </div>
+</body>
+</html>

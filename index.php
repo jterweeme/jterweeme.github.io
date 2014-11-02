@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+echo file_get_contents("achtung.html");
+?>
 <html>
 <head>
 <title>Welcome</title>

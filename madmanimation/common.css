@@ -1,0 +1,23 @@
+body
+{
+    background-color: rgb(230, 230, 230);
+}
+
+h1#header
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1024px;
+    text-align: center;
+    font-family: "TradeGothicLTStdBold", sans-serif;
+    text-transform: uppercase;
+}
+
+h1#header a
+{
+    text-decoration: none;
+    color: rgb(181,22,27);
+}
+
+
+

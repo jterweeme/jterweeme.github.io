@@ -1,0 +1,89 @@
+
+li#scene05
+{
+    -moz-animation-name: scene5;
+    -moz-animation-duration: 5s;
+    -moz-animation-delay: 11100ms;
+
+    -webkit-animation-name: scene5;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-delay: 11100ms;
+}
+
+@-moz-keyframes scene5
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+@-webkit-keyframes scene5
+{
+    from { z-index: 2; }
+    to { z-index: 2; }  
+}
+
+li#scene05 div.fan
+{
+    left: 550px;
+    top: 256px;
+    width: 50px;
+    height: 58px;
+    position: absolute;
+}
+
+li#scene05 div.fan img#fan-blade-05
+{
+    left: 5px;
+    top: 5px;
+    width: 40px;
+    height: 40px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: fan-rotate-01 18s 1;
+    -moz-animation-delay: 11100ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes fan-rotate-01
+{
+    from
+    {
+        -moz-transform: rotate(0deg);
+    }
+    to
+    {
+        -moz-transform: rotate(900deg);
+    }
+}
+
+li#scene05 img#books-05
+{
+    left: 200px;
+    top: 240px;
+    width: 269px;
+    height: 80px;
+    -moz-transform-origin: 100% 100%;
+    -moz-animation: books05 7s 500ms 1;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes books05
+{
+    from
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease-in;
+    }
+    50%
+    {
+        -moz-transform: translate(0,50px) rotate(-10deg);
+        -moz-animation-timing-function: ease-in;
+    }
+    to
+    {
+        -moz-transform: translate(0,350px) rotate(0deg);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+
+

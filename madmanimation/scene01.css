@@ -1,0 +1,88 @@
+
+li#scene01
+{
+    -moz-animation-name: scene1;
+    -moz-animation-duration: 4500ms;
+    -moz-animation-delay: 0s;
+
+    -webkit-animation-name: scene1;
+    -webkit-animation-duration: 4500ms;
+    -webkit-animation-delay: 0s;
+}
+
+@-moz-keyframes scene1
+{
+    from
+    {
+        z-index: 2;
+    }
+    to
+    {
+        z-index: 2;
+    }
+}
+
+@-webkit-keyframes scene1
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+li#scene01 div#fan-01
+{
+    left: 550px;
+    top: 256px;
+    width: 50px;
+    height: 58px;
+}
+
+li#scene01 div#fan-01 img#fan-blade
+{
+    top: 5px;
+    left: 5px;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: fan-rotate-01 18s 1;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes fan-rotate-01
+{
+    0%
+    {
+        -moz-transform: rotate(0deg);
+    }
+    100%
+    {
+        -moz-transform: rotate(900deg);
+    }
+}
+
+li#scene01 img#man-01
+{
+    top: -50px;
+    left: 575px;
+    width: 523px;
+    height: 747px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man-zoomout-01 6s 500ms 1;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man-zoomout-01
+{
+    0%
+    {
+        -moz-transform: translate(0,0) scale(1.05,1.05);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: translate(0,0) scale(.8,.8);
+        -moz-animation-timing-function: ease;
+    }
+}
+
+

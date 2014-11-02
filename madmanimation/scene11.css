@@ -1,0 +1,39 @@
+li#scene11
+{
+    -moz-animation-name: scene11;
+    -moz-animation-duration: 2500ms;
+    -moz-animation-delay: 29700ms;
+}
+
+@-moz-keyframes scene11
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+li#scene11 #man-11
+{
+    top: 30px;
+    left: 375px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man-11 3500ms 1;
+    -moz-animation-delay: 29700ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man-11
+{
+    0%
+    {
+        -moz-transform: translate(0,0) rotate(0deg);
+        -moz-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -moz-transform: translate(0,700px) rotate(15deg);
+        -moz-animation-timing-function: ease-in;
+    }
+}
+
+
+

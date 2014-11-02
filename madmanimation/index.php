@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Madmanimation</title>
+    <link rel="stylesheet" type="text/css" href="common.css"/>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+</head>
+<body>
+    <h1 id="header"><a href="animatie.html">Watch</a> Madmanimation</h1>
+    <img src="00.png" alt=""/>
+    <footer>
+        <p>
+            <span>Madmanimation code by</span>
+            <a href="http://anthonycalzadilla.com">Anthony Calzadilla</a>
+            <br/>
+            <span>Art direction, HTML and</span>
+            <a href="http://hardboiledwebdesign.com">"hardboiled"</a>
+            <span>CSS by</span>
+            <a href="http://stuffandnonsense.co.uk">Andy Clarke</a>
+            <br/>
+            <span>Image manipulation by</span>
+            <a href="http://hellogeri.com">Geri Coady</a>
+            <br/>
+            <span>Madmanimation uses</span>
+            <a href="http://modernizr.com">Modernizr</a><!--
+            --><span>.</span>
+            <br>
+            <a href="http://twitter.com/animatableapp">Follow @animatableapp</a>
+            <span>, the CSS animation app.</span>
+        </p>
+        <p>
+            <span>Original photography by</span>
+            <a href="http://www.flickr.com/people/hellogeri/">Geri Coady</a><!--
+            --><span>,</span>
+            <a href="http://www.flickr.com/people/natecroft/">Nate Croft</a><!--
+            --><span>,</span>
+            <a href="http://www.flickr.com/people/kittyfoo/">Kat Durrant</a>,
+            <a href="http://www.flickr.com/people/40054618@n03/">Peter Hart</a>,
+            <a href="http://www.flickr.com/people/markjaquith/">Mark Jaquith</a>,
+            <a href="http://www.flickr.com/people/chrisjennings/">Chris Jennings</a>,
+            <a href="http://www.flickr.com/people/adactio/">Jeremy Keith</a>,
+            <a href="http://www.flickr.com/people/miekd/">Maykel Loomans</a>,
+            <a href="http://www.flickr.com/people/localcelebrity/">John Morrison - Subism.com</a>,
+            <a href="http://www.flickr.com/people/stn1978/">Stefan Nitzsche</a>,
+            <a href="http://www.flickr.com/people/wparsons/">Warren Parsons</a>
+            <span>and</span>
+            <a href="http://www.flickr.com/people/zeldman/">Jeffrey Zeldman</a>.
+        </p>
+
+        <p>
+            <span>
+                Madmanimation is for educational purposes only and is
+                not affiliated with the
+            </span>
+            <a href="http://www.amctv.com/originals/madmen/">Mad Men</a>
+            <span>TV show.</span>
+            <br/>
+            <span>All</span>
+            <a href="http://www.amctv.com">American Movie Classics Company LLC</a>.
+            <span>copyrights, trademarks and tradenames are respected.</span>
+        </p>
+        <small>
+            <span>Anthony Calzadilla appears courtesy of</span>
+            <a href="http://www.optimum7.com/">Optimum7 Internet Marketing</a>.
+        </small>
+    </footer>
+</body>
+</html>
