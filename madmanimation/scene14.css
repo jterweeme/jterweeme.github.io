@@ -3,6 +3,12 @@ li#scene14
     -moz-animation-name: scene14;
     -moz-animation-duration: 1800ms;
     -moz-animation-delay: 35800ms;
+    -webkit-animation-name: scene14;
+    -webkit-animation-duration: 1800ms;
+    -webkit-animation-delay: 35800ms;
+    animation-name: scene14;
+    animation-duration: 1800ms;
+    animation-delay: 35800ms;
 }
 
 @-moz-keyframes scene14
@@ -11,5 +17,15 @@ li#scene14
     to { z-index: 2; }
 }
 
+@-webkit-keyframes scene14
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
 
+@keyframes scene14
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
 

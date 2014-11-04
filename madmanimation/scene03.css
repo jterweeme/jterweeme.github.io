@@ -3,14 +3,30 @@ li#scene03
     -moz-animation-name: scene3;
     -moz-animation-duration: 2400ms;
     -moz-animation-delay: 6500ms;
+    -webkit-animation-name: scene3;
+    -webkit-animation-duration: 2400ms;
+    -webkit-animation-delay: 6500ms;
+    animation-name: scene3;
+    animation-duration: 2400ms;
+    animation-delay: 6500ms;
 }
 
 @-moz-keyframes scene3
 {
-    from {
-        z-index: 2; }
-    to {
-        z-index: 2; }
+    from { z-index: 2; }
+    to {  z-index: 2; }
+}
+
+@-webkit-keyframes scene3
+{
+    from { z-index: 2; }
+    to {  z-index: 2; }
+}
+
+@keyframes scene3
+{
+    from { z-index: 2; }
+    to {  z-index: 2; }
 }
 
 li#scene03 h1
@@ -27,6 +43,12 @@ li#scene03 #multi-slats-03
     -moz-animation: multi-slats-03 2s 1;
     -moz-animation-delay: 7500ms;
     -moz-animation-fill-mode: both;
+    -webkit-animation : multi-slats-03 2s 1s 1;
+    -webkit-animation-delay: 7500ms;
+    -webkit-animation-fill-mode : both;
+    animation : multi-slats-03 2s 1s 1;
+    animation-delay: 7500ms;
+    animation-fill-mode : both;
 }
 
 @-moz-keyframes multi-slats-03
@@ -60,6 +82,14 @@ li#scene03 img.suitcase
     -moz-animation-duration: 1s;
     -moz-animation-delay: 6500ms;
     -moz-animation-fill-mode: both;
+    -webkit-animation: suitcase03 1s 1;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-delay: 6500ms;
+    -webkit-animation-fill-mode: both;
+    animation: suitcase03 1s 1;
+    animation-duration: 1s;
+    animation-delay: 6500ms;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes suitcase03
@@ -85,6 +115,56 @@ li#scene03 img.suitcase
         -moz-animation-timing-function: ease;
     }
 }
+
+@-webkit-keyframes suitcase03
+{
+    from
+    {
+        -webkit-transform: translate(0,0);
+        -webkit-animation-timing-function: ease-in;
+    }
+    65%
+    {
+        -webkit-transform: translate(0,135px);
+        -webkit-animation-timing-function: ease-out;
+    }
+    75%
+    {
+        -webkit-transform: translate(0,135px);
+        -webkit-animation-timing-function: ease-in;
+    }
+    to
+    {
+        -webkit-transform: translate(0,135px);
+        -webkit-animation-timing-function: ease;
+    }
+}
+
+
+@keyframes suitcase03
+{
+    from
+    {
+        transform: translate(0,0);
+        animation-timing-function: ease-in;
+    }
+    65%
+    {
+        transform: translate(0,135px);
+        animation-timing-function: ease-out;
+    }
+    75%
+    {
+        transform: translate(0,135px);
+        animation-timing-function: ease-in;
+    }
+    to
+    {
+        transform: translate(0,135px);
+        animation-timing-function: ease;
+    }
+}
+
 
 li#scene03 img.arm
 {
@@ -113,6 +193,30 @@ li#scene03 img.arm
     -moz-transform : translate(0,130px);
     -moz-animation-timing-function : ease; }
 }
+
+@keyframes suitcase03
+{
+    0% {
+        transform : translate(0,0);
+        animation-timing-function : ease-in;
+    }
+    65%
+    {
+        transform : translate(0,135px);
+        animation-timing-function : ease-out;
+    }
+    75%
+    {
+        transform : translate(0,135px);
+        animation-timing-function: ease-in;
+    }
+    100%
+    {
+        transform : translate(0,130px);
+        animation-timing-function : ease;
+    }
+}
+
 
 li#scene03 img.legs
 {

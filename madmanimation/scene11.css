@@ -3,6 +3,12 @@ li#scene11
     -moz-animation-name: scene11;
     -moz-animation-duration: 2500ms;
     -moz-animation-delay: 29700ms;
+    -webkit-animation-name: scene11;
+    -webkit-animation-duration: 2500ms;
+    -webkit-animation-delay: 29700ms;
+    animation-name: scene11;
+    animation-duration: 2500ms;
+    animation-delay: 29700ms;
 }
 
 @-moz-keyframes scene11
@@ -10,6 +16,19 @@ li#scene11
     from { z-index: 2; }
     to { z-index: 2; }
 }
+
+@-webkit-keyframes scene11
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+@keyframes scene11
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
 
 li#scene11 #man-11
 {
@@ -19,6 +38,14 @@ li#scene11 #man-11
     -moz-animation: man-11 3500ms 1;
     -moz-animation-delay: 29700ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: man-11 3500ms 1;
+    -webkit-animation-delay: 29700ms;
+    -webkit-animation-fill-mode: both;
+    transform-origin: 50% 50%;
+    animation: man-11 3500ms 1;
+    animation-delay: 29700ms;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes man-11
@@ -32,6 +59,20 @@ li#scene11 #man-11
     {
         -moz-transform: translate(0,700px) rotate(15deg);
         -moz-animation-timing-function: ease-in;
+    }
+}
+
+@-webkit-keyframes man-11
+{
+    0%
+    {
+        -webkit-transform: translate(0,0) rotate(0deg);
+        -webkit-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -webkit-transform: translate(0,700px) rotate(15deg);
+        -webkit-animation-timing-function: ease-in;
     }
 }
 

@@ -4,26 +4,26 @@ echo file_get_contents("../achtung.html");
 ?>
 <html>
 <head>
-    <title>Madmanimation</title>
-    <link rel="stylesheet" type="text/css" href="../common.css"/>
-    <link rel="stylesheet" type="text/css" href="common.css"/>
-    <link rel="stylesheet" type="text/css" href="animatie.css"/>
-    <link rel="stylesheet" type="text/css" href="scene01.css"/>
-    <link rel="stylesheet" type="text/css" href="scene02.css"/>
-    <link rel="stylesheet" type="text/css" href="scene03.css"/>
-    <link rel="stylesheet" type="text/css" href="scene04.css"/>
-    <link rel="stylesheet" type="text/css" href="scene05.css"/>
-    <link rel="stylesheet" type="text/css" href="scene06.css"/>
-    <link rel="stylesheet" type="text/css" href="scene07.css"/>
-    <link rel="stylesheet" type="text/css" href="scene08.css"/>
-    <link rel="stylesheet" type="text/css" href="scene09.css"/>
-    <link rel="stylesheet" type="text/css" href="scene10.css"/>
-    <link rel="stylesheet" type="text/css" href="scene11.css"/>
-    <link rel="stylesheet" type="text/css" href="scene12.css"/>
-    <link rel="stylesheet" type="text/css" href="scene13.css"/>
-    <link rel="stylesheet" type="text/css" href="scene14.css"/>
-    <link rel="stylesheet" type="text/css" href="scene15.css"/>
-    <link rel="stylesheet" type="text/css" href="scene16.css"/>
+<title>Madmanimation</title>
+<link rel="stylesheet" type="text/css" href="../common.css"/>
+<link rel="stylesheet" type="text/css" href="common.css"/>
+<link rel="stylesheet" type="text/css" href="animatie.css"/>
+<link rel="stylesheet" type="text/css" href="scene01.css"/>
+<link rel="stylesheet" type="text/css" href="scene02.css"/>
+<link rel="stylesheet" type="text/css" href="scene03.css"/>
+<link rel="stylesheet" type="text/css" href="scene04.css"/>
+<link rel="stylesheet" type="text/css" href="scene05.css"/>
+<link rel="stylesheet" type="text/css" href="scene06.css"/>
+<link rel="stylesheet" type="text/css" href="scene07.css"/>
+<link rel="stylesheet" type="text/css" href="scene08.css"/>
+<link rel="stylesheet" type="text/css" href="scene09.css"/>
+<link rel="stylesheet" type="text/css" href="scene10.css"/>
+<link rel="stylesheet" type="text/css" href="scene11.css"/>
+<link rel="stylesheet" type="text/css" href="scene12.css"/>
+<link rel="stylesheet" type="text/css" href="scene13.css"/>
+<link rel="stylesheet" type="text/css" href="scene14.css"/>
+<link rel="stylesheet" type="text/css" href="scene15.css"/>
+<link rel="stylesheet" type="text/css" href="scene16.css"/>
 </head>
 <body>
 <?php
@@ -129,39 +129,21 @@ echo file_get_contents("../mainmenu.xml");
             <img src="05-chair-slice-b-2.png" alt=""/>
             <img src="05-chair-slice-b-3.png" alt=""/>
         </div>
-
-<div id="chair-b-05">
-    <div id="chair-shadow-b-05">
-        <img alt="" src="images/05-chair-shadow-b.png"/>
-    </div>
-    <div id="chair-slice-b-1-05">
-        <img alt="" src="images/05-chair-slice-b-1.png"/>
-    </div>
-    <div id="chair-slice-b-2-05">
-        <img alt="" src="images/05-chair-slice-b-2.png"/>
-    </div>
-    <div id="chair-slice-b-3-05">
-        <img alt="" src="images/05-chair-slice-b-3.png"/>
-    </div>
-</div>
-<div id="lights-a-05">
-    <img alt="" src="images/05-lights-a.png"/>
-</div>
-<div id="lights-b-05">
-    <img alt="" src="images/05-lights-b.png"/>
-</div>
-<div id="lights-c-05">
-    <img alt="" src="images/05-lights-c.png"/>
-</div>
-<div id="lights-d-05">
-    <img alt="" src="images/05-lights-d.png"/>
-</div>
-<div id="man-05">
-    <img alt="" src="images/05-man.png"/>
-</div>
-<div id="suitcase-05">
-    <img alt="" src="images/05-suitcase.png"/></div><div id="ads-a-05"><img alt="" src="images/04-ad-a.jpg"/></div><div id="ads-b-05"><img alt="" src="images/04-ad-b.jpg"/></div><div id="ads-c-05"><img alt="" src="images/04-ad-c.jpg"/></div>
-
+        <div id="chair-b-05">
+            <div id="chair-shadow-b-05"><img alt="" src="images/05-chair-shadow-b.png"/></div>
+            <div id="chair-slice-b-1-05"><img alt="" src="images/05-chair-slice-b-1.png"/></div>
+            <div id="chair-slice-b-2-05"><img alt="" src="images/05-chair-slice-b-2.png"/></div>
+            <div id="chair-slice-b-3-05"><img alt="" src="images/05-chair-slice-b-3.png"/></div>
+        </div>
+        <div id="lights-a-05"><img alt="" src="images/05-lights-a.png"/></div>
+        <div id="lights-b-05"><img alt="" src="images/05-lights-b.png"/></div>
+        <div id="lights-c-05"><img alt="" src="images/05-lights-c.png"/></div>
+        <div id="lights-d-05"><img alt="" src="images/05-lights-d.png"/></div>
+        <div id="man-05"><img alt="" src="images/05-man.png"/></div>
+        <div id="suitcase-05"><img alt="" src="images/05-suitcase.png"/></div>
+        <div id="ads-a-05"><img alt="" src="images/04-ad-a.jpg"/></div>
+        <div id="ads-b-05"><img alt="" src="images/04-ad-b.jpg"/></div>
+        <div id="ads-c-05"><img alt="" src="images/04-ad-c.jpg"/></div>
 	</li>
 	<li id="scene06">
         <p>

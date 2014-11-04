@@ -2,6 +2,10 @@ li#scene16
 {
     -moz-animation-name: scene16;
     -moz-animation-duration: 14s;
+    -webkit-animation-name: scene16;
+    -webkit-animation-duration: 14s;
+    animation-name: scene16;
+    animation-duration: 14s;
 }
 
 @-moz-keyframes scene16
@@ -24,9 +28,27 @@ li#scene16 h1 em
     -moz-animation: title-mad-16 4s 2500ms 1;
     -moz-animation-delay: 40s;
     -moz-animation-fill-mode: both;
+    -webkit-animation: title-mad-16 4s 2500ms 1;
+    -webkit-animation-delay: 40s;
+    -webkit-animation-fill-mode: both;
+    animation: title-mad-16 4s 2500ms 1;
+    animation-delay: 40s;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes title-mad-16
+{
+    0%  { opacity: 0; top: -40px; }
+    100% { opacity: 1; top: 0px; }
+}
+
+@-webkit-keyframes title-mad-16
+{
+    0%  { opacity: 0; top: -40px; }
+    100% { opacity: 1; top: 0px; }
+}
+
+@keyframes title-mad-16
 {
     0%  { opacity: 0; top: -40px; }
     100% { opacity: 1; top: 0px; }
@@ -40,6 +62,9 @@ li#scene16 h1 span.title-men
     -moz-animation: title-men-16 4s 2500ms 1;
     -moz-animation-delay: 40s;
     -moz-animation-fill-mode: both;
+    -webkit-animation: title-men-16 4s 2500ms 1;
+    -webkit-animation-delay: 40s;
+    -webkit-animation-fill-mode: both;
 }
 
 @-moz-keyframes title-men-16
@@ -48,11 +73,26 @@ li#scene16 h1 span.title-men
     to   { opacity: 1; top: 0px;  }
 }
 
+@-webkit-keyframes title-men-16
+{
+    from { opacity: 0; top: 40px; }
+    to   { opacity: 1; top: 0px;  }
+}
+
+@keyframes title-men-16
+{
+    from { opacity: 0; top: 40px; }
+    to   { opacity: 1; top: 0px;  }
+}
+
+
 li#scene16 img#man16
 {
     left: 60px;
     top: 160px;
     -moz-transform-origin: 50% 0%;
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
 }
 
 

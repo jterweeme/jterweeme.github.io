@@ -3,9 +3,27 @@ li#scene13
     -moz-animation-name: scene13;
     -moz-animation-duration: 1800ms;
     -moz-animation-delay: 34s;
+    -webkit-animation-name: scene13;
+    -webkit-animation-duration: 1800ms;
+    -webkit-animation-delay: 34s;
+    animation-name: scene13;
+    animation-duration: 1800ms;
+    animation-delay: 34s;
 }
 
 @-moz-keyframes scene13
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+@-webkit-keyframes scene13
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+@keyframes scene13
 {
     from { z-index: 2; }
     to   { z-index: 2; }

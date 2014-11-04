@@ -4,10 +4,12 @@ li#scene05
     -moz-animation-name: scene5;
     -moz-animation-duration: 5s;
     -moz-animation-delay: 11100ms;
-
     -webkit-animation-name: scene5;
     -webkit-animation-duration: 5s;
     -webkit-animation-delay: 11100ms;
+    animation-name: scene5;
+    animation-duration: 5s;
+    animation-delay: 11100ms;
 }
 
 @-moz-keyframes scene5
@@ -55,6 +57,13 @@ li#scene05 div.fan img#fan-blade-05
     }
 }
 
+@-webkit-keyframes fan-rotate-01
+{
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(900deg); }
+}
+
+
 li#scene05 img#books-05
 {
     left: 200px;
@@ -64,6 +73,12 @@ li#scene05 img#books-05
     -moz-transform-origin: 100% 100%;
     -moz-animation: books05 7s 500ms 1;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 100% 100%;
+    -webkit-animation: books05 7s 500ms 1;
+    -webkit-animation-fill-mode: both;
+    transform-origin: 100% 100%;
+    animation: books05 7s 500ms 1;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes books05

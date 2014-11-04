@@ -3,6 +3,9 @@ li#scene07
     -moz-animation-name: scene7;
     -moz-animation-duration: 3s;
     -moz-animation-delay: 17100ms;
+    -webkit-animation-name: scene7;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-delay: 17100ms;
 }
 
 @-moz-keyframes scene7
@@ -10,6 +13,13 @@ li#scene07
     from { z-index: 2; }
     to { z-index: 2; }
 }
+
+@-webkit-keyframes scene7
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
 
 li#scene07 h1
 {
@@ -26,6 +36,10 @@ li#scene07 #bldg-07
     -moz-animation: bldg-07 10s 1;
     -moz-animation-fill-mode: both;
     -moz-animation-delay: 17100ms;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: bldg-07 10s 1;
+    -webkit-animation-fill-mode: both;
+    -webkit-animation-delay: 17100ms;
 }
 
 @-moz-keyframes bldg-07
@@ -42,6 +56,19 @@ li#scene07 #bldg-07
     }
 }
 
+@-webkit-keyframes bldg-07
+{
+    0%
+    {
+        -webkit-transform: translate(0,0);
+        -webkit-animation-timing-function: ease-out;
+    }
+    100%
+    {
+        -webkit-transform: translate(0,-450px);
+        -webkit-animation-timing-function: ease-out;
+    }
+}
 
 
 

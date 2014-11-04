@@ -3,6 +3,12 @@ li#scene10
     -moz-animation-duration: 3s;
     -moz-animation-delay: 26700ms;
     -moz-animation-name: scene10;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-delay: 26700ms;
+    -webkit-animation-name: scene10;
+    animation-duration: 3s;
+    animation-delay: 26700ms;
+    animation-name: scene10;
 }
 
 @-moz-keyframes scene10
@@ -18,6 +24,9 @@ li#scene10 h1#title10a
     -moz-animation: title10a 750ms 1500ms 1;
     -moz-animation-delay: 28200ms;
     -moz-animation-fill-mode: both;
+    animation: title10a 750ms 1500ms 1;
+    animation-delay: 28200ms;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes title10a
@@ -34,6 +43,9 @@ li#scene10 h1#title10b
     -moz-animation: title10b 750ms 1500ms 1;
     -moz-animation-delay: 28200ms;
     -moz-animation-fill-mode: both;
+    -webkit-animation: title10b 750ms 1500ms 1;
+    -webkit-animation-delay: 28200ms;
+    -webkit-animation-fill-mode: both;
 }
 
 @-moz-keyframes title10b

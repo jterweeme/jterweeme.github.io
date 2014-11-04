@@ -3,6 +3,9 @@ li#scene09
     -moz-animation-duration: 2800ms;
     -moz-animation-delay: 23900ms;
     -moz-animation-name: scene9;
+    -webkit-animation-duration: 2800ms;
+    -webkit-animation-delay: 23900ms;
+    -webkit-animation-name: scene9;
 }
 
 @-moz-keyframes scene9
@@ -33,6 +36,11 @@ li#scene09 img#bg-09
     -moz-animation-delay: 23900ms;
     -moz-animation-duration: 3s;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 0% 50%;
+    -webkit-animation: bldg-09 3s 1;
+    -webkit-animation-delay: 23900ms;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
 }
 
 @-moz-keyframes bldg-09
