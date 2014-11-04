@@ -27,7 +27,10 @@ echo file_get_contents("../achtung.html");
 </head>
 <body>
 <?php
-echo file_get_contents("../mainmenu.xml");
+require_once('../mainmenu.php');
+$mm = new MainMenu();
+$mm->setDepth(1);
+echo $mm;
 ?>
 <h1 id="header"><a href="index.html">Watch</a> Madmanimation</h1>
 <ol id="canvas">
