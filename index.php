@@ -11,6 +11,7 @@ echo file_get_contents("achtung.html");
 <?php
 require_once('mainmenu.php');
 $mm = new MainMenu();
+$mm->setDepth(0);
 echo $mm;
 ?>
 <h1>Welcome</h1>

@@ -3,7 +3,7 @@ class MainMenu
 {
     private $depth;
     public function __construct() { $this->depth = 0; }
-    public function setDepth($depth) { $this->depth = depth; }
+    public function setDepth($depth) { $this->depth = $depth; }
 
     public function __tostring()
     {
