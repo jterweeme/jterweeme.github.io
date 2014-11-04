@@ -1,15 +1,19 @@
 <?php
 class MainMenu
 {
+    private $depth;
+    public function __construct() { $this->depth = 0; }
+    public function setDepth($depth) { $this->depth = depth; }
+
     public function __tostring()
     {
-        $path = stat('mainmenu.xml') ? "mainmenu.xml" : "../mainmenu.xml";
+        $path = file_exists('mainmenu.xml') ? "mainmenu.xml" : "../mainmenu.xml";
         $xml = simplexml_load_file($path);
         $ret = "<nav class=\"mainmenu\">\n";
 
         foreach ($xml->a as $link)
         {
-            if (stat("achtung.html"))
+            if (file_exists("achtung.html"))
             {
                 $ret .= sprintf("<a href=\"%s\">%s</a>\n", $link->attributes(), $link);
             }
