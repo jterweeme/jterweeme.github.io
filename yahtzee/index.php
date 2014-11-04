@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<!-- This file is auto-generated DO NOT EDIT -->
-
+<?php
+echo file_get_contents('../achtung.html');
+?>
 <html>
 <head>
     <title>Yahtzee</title>
@@ -9,16 +10,11 @@
     <script src="index.js"></script>
 </head>
 <body>
-
-
-<nav class="mainmenu">
-<a href="http://jterweeme.github.io/index.html">Home</a>
-<a href="https://github.com/jterweeme">GitHub</a>
-<a href="http://jterweeme.github.io/yahtzee/index.html">Yahtzee</a>
-<a href="http://jterweeme.github.io/et/index.html">E.T.</a>
-<a href="http://jterweeme.github.io/madmanimation/index.html">MyMadManiMation</a>
-</nav>
-
+<?php
+require_once('../mainmenu.php');
+$mm = new MainMenu();
+echo $mm;
+?>
 <!--
 <nav class="mainmenu">
     <a href="../index.html">Home</a>

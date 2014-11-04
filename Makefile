@@ -1,5 +1,6 @@
 all: index.html md5sum.html kompakt.html rm.html
 	make -C madmanimation all
+	make -C yahtzee all
 
 index.html: index.php
 	php $< > $@
@@ -22,6 +23,7 @@ rm.html: rm.php omelet.php rm.uxf
 clean:
 	rm -Rvf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
 	make -C madmanimation clean
+	make -C yahtzee clean
 
 rebuild: clean all
 
