@@ -29,3 +29,37 @@ li#scene12
     to   { z-index: 2; }
 }
 
+#scene12 .background {
+-moz-transform-origin : 0% 50%;
+-moz-animation : bldg-12 3s 1;  
+    -moz-animation-delay: 32200ms;
+-moz-animation-fill-mode : both; }
+
+@-moz-keyframes bldg-12 {
+ 0% {
+-moz-transform : translate(0,0);
+-moz-animation-timing-function : linear; }
+ 100% {
+-moz-transform : translate(0,-1000px);
+-moz-animation-timing-function : ease; }
+}
+
+#scene12 .man
+{
+    top : -150px;
+    left : 265px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : man-12 3500ms 1;
+    -moz-animation-delay: 32200ms; 
+    -moz-animation-fill-mode : both;
+}
+
+@-moz-keyframes man-12 {
+ 0% {
+-moz-transform : translate(0,0) rotate(0deg);
+-moz-animation-timing-function : ease-out; }
+ 100% {
+-moz-transform : translate(10px,600px) rotate(10deg);
+-moz-animation-timing-function : ease-in; }
+ }
+

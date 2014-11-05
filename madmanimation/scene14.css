@@ -29,3 +29,27 @@ li#scene14
     to { z-index: 2; }
 }
 
+li#scene14 img.background
+{
+    top: -0;
+    left: -0;
+    width: 1024px;
+    height: 768px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : bldg-14 2s 1;
+    -moz-animation-delay: 35800ms;
+    -moz-animation-fill-mode : both; }
+}
+
+
+@-moz-keyframes bldg-14
+{
+    0% {
+        -moz-transform : scale(1,1);
+        -moz-animation-timing-function : linear; }
+    100% {
+        -moz-transform : scale(1.15,1.15);
+        -moz-animation-timing-function : linear; }
+}
+
+

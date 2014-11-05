@@ -1,6 +1,44 @@
 li#scene15
 {
+    -moz-animation-name: scene15;
     -moz-animation-duration: 3s;
+    -moz-animation-delay: 37600ms;
 }
 
+@-moz-keyframes scene15
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+#scene15 img.background
+{
+    top: -160px;
+    left: -200px;
+    width: 1488px;
+    height: 1047px;
+}
+
+#scene15 img.man
+{
+    top: 0;
+    left: 300px;
+    width: 708px;
+    height: 657px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man-15 3000ms 1;
+    -moz-animation-delay: 37600ms;
+    -moz-animation-fill-mode: both;
+}
+
+@-moz-keyframes man-15 {
+    0% {
+        -moz-transform : translate(0,0) scale(.85,.85) rotate(0deg);
+        -moz-animation-timing-function : ease-out; }
+    100%
+    {
+        -moz-transform : translate(1000px,1000px) scale(12,12) rotate(45deg);
+        -moz-animation-timing-function : ease-in;
+    }
+}
 

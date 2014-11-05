@@ -35,3 +35,31 @@ li#scene13 h1
     left: 600px;
 }
 
+#scene13 img.man
+{
+    left: 450px;
+    top: 0;
+    width: 106px;
+    height: 107px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : man-13 3500ms 1;   
+    -moz-animation-fill-mode : both;
+    -moz-animation-delay: 34s;
+}
+
+
+@-moz-keyframes man-13
+{
+    0%
+    {
+        -moz-transform : translate(0,0) rotate(0deg);
+        -moz-animation-timing-function : ease-out;
+    }
+    100%
+    {
+        -moz-transform : translate(0,600px) rotate(-15deg);
+        -moz-animation-timing-function : ease-in; }
+}
+
+
+
