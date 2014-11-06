@@ -1,4 +1,4 @@
-li#scene14
+li.scene14
 {
     -moz-animation-name: scene14;
     -moz-animation-duration: 1800ms;
@@ -9,6 +9,26 @@ li#scene14
     animation-name: scene14;
     animation-duration: 1800ms;
     animation-delay: 35800ms;
+}
+
+li.scene14 img.background
+{
+    top: -0;
+    left: -0;
+    width: 1024px;
+    height: 768px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : bldg-14 2s 1;
+    -moz-animation-delay: 35800ms;
+    -moz-animation-fill-mode : both;
+    -webkit-transform-origin : 50% 50%;
+    -webkit-animation : bldg-14 2s 1;
+    -webkit-animation-delay: 35800ms;
+    -webkit-animation-fill-mode : both;
+    transform-origin : 50% 50%;
+    animation : bldg-14 2s 1;
+    animation-delay: 35800ms;
+    animation-fill-mode : both;
 }
 
 @-moz-keyframes scene14
@@ -29,19 +49,6 @@ li#scene14
     to { z-index: 2; }
 }
 
-li#scene14 img.background
-{
-    top: -0;
-    left: -0;
-    width: 1024px;
-    height: 768px;
-    -moz-transform-origin : 50% 50%;
-    -moz-animation : bldg-14 2s 1;
-    -moz-animation-delay: 35800ms;
-    -moz-animation-fill-mode : both; }
-}
-
-
 @-moz-keyframes bldg-14
 {
     0% {
@@ -50,6 +57,30 @@ li#scene14 img.background
     100% {
         -moz-transform : scale(1.15,1.15);
         -moz-animation-timing-function : linear; }
+}
+
+@-webkit-keyframes bldg-14
+{
+    0% {
+        -webkit-transform : scale(1,1);
+        -webkit-animation-timing-function : linear; }
+    100% {
+        -webkit-transform : scale(1.15,1.15);
+        -webkit-animation-timing-function : linear; }
+}
+
+@keyframes bldg-14
+{
+    0%
+    {
+        transform : scale(1,1);
+        animation-timing-function : linear;
+    }
+    100%
+    {
+        transform : scale(1.15,1.15);
+        animation-timing-function : linear;
+    }
 }
 
 

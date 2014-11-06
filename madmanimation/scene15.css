@@ -1,8 +1,42 @@
-li#scene15
+li.scene15
 {
     -moz-animation-name: scene15;
     -moz-animation-duration: 3s;
     -moz-animation-delay: 37600ms;
+    -webkit-animation-name: scene15;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-delay: 37600ms;
+    animation-name: scene15;
+    animation-duration: 3s;
+    animation-delay: 37600ms;
+}
+
+li.scene15 img.background
+{
+    top: -160px;
+    left: -200px;
+    width: 1488px;
+    height: 1047px;
+}
+
+li.scene15 img.man
+{
+    top: 0;
+    left: 300px;
+    width: 708px;
+    height: 657px;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: man15 3000ms 1;
+    -moz-animation-delay: 37600ms;
+    -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: man15 3000ms 1;
+    -webkit-animation-delay: 37600ms;
+    -webkit-animation-fill-mode: both;
+    transform-origin: 50% 50%;
+    animation: man15 3000ms 1;
+    animation-delay: 37600ms;
+    animation-fill-mode: both;
 }
 
 @-moz-keyframes scene15
@@ -11,34 +45,37 @@ li#scene15
     to { z-index: 2; }
 }
 
-#scene15 img.background
+@-webkit-keyframes scene15
 {
-    top: -160px;
-    left: -200px;
-    width: 1488px;
-    height: 1047px;
+    from { z-index: 2; }
+    to { z-index: 2; }
 }
 
-#scene15 img.man
+@-moz-keyframes man15
 {
-    top: 0;
-    left: 300px;
-    width: 708px;
-    height: 657px;
-    -moz-transform-origin: 50% 50%;
-    -moz-animation: man-15 3000ms 1;
-    -moz-animation-delay: 37600ms;
-    -moz-animation-fill-mode: both;
-}
-
-@-moz-keyframes man-15 {
-    0% {
+    0%
+    {
         -moz-transform : translate(0,0) scale(.85,.85) rotate(0deg);
-        -moz-animation-timing-function : ease-out; }
+        -moz-animation-timing-function : ease-out;
+    }
     100%
     {
         -moz-transform : translate(1000px,1000px) scale(12,12) rotate(45deg);
         -moz-animation-timing-function : ease-in;
+    }
+}
+
+@-webkit-keyframes man15
+{
+    0%
+    {
+        -webkit-transform : translate(0,0) scale(.85,.85) rotate(0deg);
+        -webkit-animation-timing-function : ease-out;
+    }
+    100%
+    {
+        -webkit-transform : translate(1000px,1000px) scale(12,12) rotate(45deg);
+        -webkit-animation-timing-function : ease-in;
     }
 }
 

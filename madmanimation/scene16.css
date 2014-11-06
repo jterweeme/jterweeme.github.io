@@ -1,4 +1,4 @@
-li#scene16
+li.scene16
 {
     -moz-animation-name: scene16;
     -moz-animation-duration: 14s;
@@ -13,7 +13,7 @@ li#scene16
     
 }
 
-li#scene16 h1
+li.scene16 h1
 {
     font-size: 24px;
     left: 550px;
@@ -21,7 +21,7 @@ li#scene16 h1
     position: absolute;
 }
 
-li#scene16 h1 em
+li.scene16 h1 em
 {
     position: relative;
     top: 0px;
@@ -54,7 +54,7 @@ li#scene16 h1 em
     100% { opacity: 1; top: 0px; }
 }
 
-li#scene16 h1 span.title-men
+li.scene16 h1 span.title-men
 {
     position: relative;
     top: 0px;
@@ -86,7 +86,7 @@ li#scene16 h1 span.title-men
 }
 
 
-li#scene16 img#man16
+li.scene16 img#man16
 {
     left: 60px;
     top: 160px;

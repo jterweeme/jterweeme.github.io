@@ -1,5 +1,5 @@
 
-li#scene01
+li.scene01
 {
     -moz-animation-name: scene1;
     -moz-animation-duration: 4500ms;
@@ -9,19 +9,7 @@ li#scene01
     -webkit-animation-delay: 0s;
 }
 
-@-moz-keyframes scene1
-{
-    from { z-index: 2; }
-    to { z-index: 2; }
-}
-
-@-webkit-keyframes scene1
-{
-    from { z-index: 2; }
-    to   { z-index: 2; }
-}
-
-li#scene01 div#fan-01
+li.scene01 div#fan-01
 {
     left: 550px;
     top: 256px;
@@ -29,7 +17,7 @@ li#scene01 div#fan-01
     height: 58px;
 }
 
-li#scene01 div#fan-01 img#fan-blade
+li.scene01 div#fan-01 img#fan-blade
 {
     top: 5px;
     left: 5px;
@@ -44,19 +32,7 @@ li#scene01 div#fan-01 img#fan-blade
     -webkit-animation-fill-mode: both;
 }
 
-@-moz-keyframes fan-rotate-01
-{
-    0% { -moz-transform: rotate(0deg); }
-    100% { -moz-transform: rotate(900deg); }
-}
-
-@-webkit-keyframes fan-rotate-01
-{
-    0% { -webkit-transform: rotateZ(0deg); }
-    100% { -webkit-transform: rotateZ(900deg); }
-}
-
-li#scene01 img#man-01
+li.scene01 img.man
 {
     top: -50px;
     left: 575px;
@@ -68,6 +44,30 @@ li#scene01 img#man-01
     -webkit-transform-origin: 50% 50%;
     -webkit-animation: man-zoomout-01 6s 500ms 1;
     -webkit-animation-fill-mode: both;
+}
+
+@-moz-keyframes scene1
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+@-webkit-keyframes scene1
+{
+    from { z-index: 2; }
+    to   { z-index: 2; }
+}
+
+@-moz-keyframes fan-rotate-01
+{
+    0% { -moz-transform: rotate(0deg); }
+    100% { -moz-transform: rotate(900deg); }
+}
+
+@-webkit-keyframes fan-rotate-01
+{
+    0% { -webkit-transform: rotateZ(0deg); }
+    100% { -webkit-transform: rotateZ(900deg); }
 }
 
 @-moz-keyframes man-zoomout-01
@@ -97,21 +97,5 @@ li#scene01 img#man-01
         -webkit-animation-timing-function: ease;
     }
 }
-
-/*
-@-webkit-keyframes man-zoomout-01
-{
-    0%
-    {
-        -webkit-transform : translate3d(0,0,0) scale3d(1.05,1.05,1.05);
-        -webkit-animation-timing-function : ease-out; }
-    }
-    100%
-    {
-        -webkit-transform : translate3d(0,0,0) scale3d(.8,.8,.8);
-        -webkit-animation-timing-function : ease; }
-    }
-}
-*/
 
 

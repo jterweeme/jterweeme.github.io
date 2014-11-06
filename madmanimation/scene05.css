@@ -12,16 +12,10 @@ li#scene05
     animation-delay: 11100ms;
 }
 
-@-moz-keyframes scene5
+#scene05 img.lines
 {
-    from { z-index: 2; }
-    to { z-index: 2; }
-}
-
-@-webkit-keyframes scene5
-{
-    from { z-index: 2; }
-    to { z-index: 2; }  
+    left: 0;
+    top: 272px;
 }
 
 li#scene05 div.fan
@@ -43,28 +37,20 @@ li#scene05 div.fan img#fan-blade-05
     -moz-animation: fan-rotate-01 18s 1;
     -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: fan-rotate-01 18s 1;
+    -webkit-animation-delay: 11100ms;
+    -webkit-animation-fill-mode: both;
 }
 
-@-moz-keyframes fan-rotate-01
+#scene05 #chair5a
 {
-    from
-    {
-        -moz-transform: rotate(0deg);
-    }
-    to
-    {
-        -moz-transform: rotate(900deg);
-    }
+    position: relative;
+    top: 350px;
+    left: 400px;
 }
 
-@-webkit-keyframes fan-rotate-01
-{
-    from { -webkit-transform: rotate(0deg); }
-    to { -webkit-transform: rotate(900deg); }
-}
-
-
-li#scene05 img#books-05
+#scene05 img.books
 {
     left: 200px;
     top: 240px;
@@ -81,13 +67,43 @@ li#scene05 img#books-05
     animation-fill-mode: both;
 }
 
-#scene05 img.books
+#scene05 .ads5a
 {
-    left: 200px;
-    top: 240px;
-    width: 269px;
-    height: 80px;
-    -moz-transform-origin: 100% 100%;
+    opacity: .55;
+    top: 350px;
+    left: 900px;
+    height: 100px;
+    width: 60px;
+    width : 60px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : drop-ads-a-05 4s 100ms 1;  
+    -moz-animation-fill-mode : both;
+}
+
+#scene05 .ads5b
+{
+    opacity : .55;
+    top : 430px;
+    left : 870px;
+    height : 100px;
+    width : 60px;
+    background-color : rgb(200,200,200);
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : drop-ads-b-05 4s 1;    
+    -moz-animation-fill-mode : both;
+}
+
+#scene05 .ads5c
+{
+    opacity : .55;
+    top : 470px;
+    left : 925px;
+    height : 100px;
+    width : 60px;
+    background-color : rgb(200,200,200);
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : drop-ads-a-05 4s 1;    
+    -moz-animation-fill-mode : both;
 }
 
 #scene05 img.lamp
@@ -100,6 +116,14 @@ li#scene05 img#books-05
     -moz-animation: drop-lamps-05 7s 500ms 1;
     -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 100% 100%;
+    -webkit-animation: drop-lamps-05 7s 500ms 1;
+    -webkit-animation-delay: 11100ms;
+    -webkit-animation-fill-mode: both;
+    transform-origin: 100% 100%;
+    animation: drop-lamps-05 7s 500ms 1;
+    animation-delay: 11100ms;
+    animation-fill-mode: both;
 }
 
 #scene05 #lights-b-05
@@ -120,6 +144,34 @@ li#scene05 img#books-05
     -moz-animation: drop-light-05 7s 100ms 1;
     -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 0 0;
+    -webkit-animation: drop-light-05 7s 100ms 1;
+    -webkit-animation-delay: 11100ms;
+    -webkit-animation-fill-mode: both;
+}
+
+@-moz-keyframes scene5
+{
+    from { z-index: 2; }
+    to { z-index: 2; }
+}
+
+@-webkit-keyframes scene5
+{
+    from { z-index: 2; }
+    to { z-index: 2; }  
+}
+
+@-moz-keyframes fan-rotate-01
+{
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(900deg); }
+}
+
+@-webkit-keyframes fan-rotate-01
+{
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(900deg); }
 }
 
 @-moz-keyframes drop-light-05
@@ -133,6 +185,20 @@ li#scene05 img#books-05
     {
         -moz-transform: translate(0, 650px) rotate(-50deg);
         -moz-animation-timing-function: ease;
+    }
+}
+
+@-webkit-keyframes drop-light-05
+{
+    0%
+    {
+        -webkit-transform: translate(0, 0);
+        -webkit-animation-timing-function: ease-in;
+    }
+    100%
+    {
+        -webkit-transform: translate(0, 650px) rotate(-50deg);
+        -webkit-animation-timing-function: ease;
     }
 }
 
@@ -155,6 +221,25 @@ li#scene05 img#books-05
     }
 }
 
+@-webkit-keyframes books05
+{
+    from
+    {
+        -webkit-transform: translate(0,0) rotate(0deg);
+        -webkit-animation-timing-function: ease-in;
+    }
+    50%
+    {
+        -webkit-transform: translate(0,50px) rotate(-10deg);
+        -webkit-animation-timing-function: ease-in;
+    }
+    to
+    {
+        -webkit-transform: translate(0,350px) rotate(0deg);
+        -webkit-animation-timing-function: ease;
+    }
+}
+
 @-moz-keyframes drop-lamps-05
 {
     0%
@@ -173,4 +258,24 @@ li#scene05 img#books-05
         -moz-animation-timing-function: ease;
     }
 }
+
+@-webkit-keyframes drop-lamps-05
+{
+    0%
+    {
+        -webkit-transform: translate(0,0) rotateX(0deg) skew(0deg,0deg);
+        -webkit-animation-timing-function: ease-in;
+    }
+    90%
+    {
+        -webkit-transform: translate(0,0) rotateX(180deg) skew(-55deg, 0deg);
+        -webkit-animation-timing-function: ease;
+    }
+    100%
+    {
+        -webkit-transform: translate(0,100px) rotateX(180deg) skew(-55deg, 0deg);
+        -webkit-animation-timing-function: ease;
+    }
+}
+
 
