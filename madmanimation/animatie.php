@@ -106,7 +106,7 @@ echo $mm;
         <img id="shade-c-05" src="05-shade-c.png" alt=""/>
         <img src="05-blinds-a.png" alt=""/>
         <img src="05-blinds-b.png" alt=""/>
-        <img id="books-05" class="books" src="05-books.png" alt=""/>
+        <img class="books" src="05-books.png" alt=""/>
         <img class="lines" src="05-lines.png" alt=""/>
         <img src="05-desk-shadow.png" alt=""/>
         <img src="05-desk-top.png" alt=""/>
@@ -114,7 +114,7 @@ echo $mm;
         <img src="05-desk-front.png" alt=""/>
         <img src="05-desk-legs.png" alt=""/>
         <img class="lamp" src="05-lamp.png" alt=""/>
-        <div id="chair5a">
+        <div class="chair5a">
             <img src="05-chair-shadow-a.png" alt=""/>
             <img src="05-chair-slice-a-1.png" alt=""/>
             <img src="05-chair-slice-a-2.png" alt=""/>
@@ -126,15 +126,15 @@ echo $mm;
             <img src="05-chair-slice-b-2.png" alt=""/>
             <img src="05-chair-slice-b-3.png" alt=""/>
         </div>
-        <div id="lights-a-05"><img alt="" src="05-lights-a.png"/></div>
-        <div id="lights-b-05"><img alt="" src="05-lights-b.png"/></div>
-        <div id="lights-c-05"><img alt="" src="05-lights-c.png"/></div>
-        <div id="lights-d-05"><img alt="" src="05-lights-d.png"/></div>
-        <div id="man-05"><img alt="" src="05-man.png"/></div>
-        <div id="suitcase-05"><img alt="" src="05-suitcase.png"/></div>
-        <div class="ads5a"><img alt="" src="04-ad-a.jpg"/></div>
-        <div class="ads5b"><img alt="" src="04-ad-b.jpg"/></div>
-        <div class="ads5c"><img alt="" src="04-ad-c.jpg"/></div>
+        <img class="lights5a" alt="" src="05-lights-a.png"/>
+        <img class="lights5b" alt="" src="05-lights-b.png"/>
+        <img class="lights5c" alt="" src="05-lights-c.png"/>
+        <img class="lights5d" alt="" src="05-lights-d.png"/>
+        <img class="man" alt="man" src="05-man.png"/>
+        <img class="suitcase" alt="suitcase" src="05-suitcase.png"/>
+        <img class="ads5a" alt="ads5a" src="04-ad-a.jpg"/>
+        <img class="ads5b" alt="ads5b" src="04-ad-b.jpg"/>
+        <img class="ads5c" alt="ads5c" src="04-ad-c.jpg"/>
 	</li>
 	<li id="scene06">
         <p>

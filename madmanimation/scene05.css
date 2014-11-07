@@ -43,11 +43,29 @@ li#scene05 div.fan img#fan-blade-05
     -webkit-animation-fill-mode: both;
 }
 
-#scene05 #chair5a
+#scene05 .chair5a
 {
     position: relative;
     top: 350px;
     left: 400px;
+}
+
+li#scene05 img.man
+{
+    position: relative;
+    z-index: 9000!important;
+    top: 230px;
+    left: 700px;
+}
+
+li#scene05 img.suitcase
+{
+    z-index: 9100!important;
+    top: 475px;
+    left : 665px;
+    -moz-transform-origin : 100% 0;
+    -moz-animation : drop-desk-shadow-05 5s 500ms 1;    
+    -moz-animation-fill-mode : both;
 }
 
 #scene05 img.books
@@ -67,7 +85,7 @@ li#scene05 div.fan img#fan-blade-05
     animation-fill-mode: both;
 }
 
-#scene05 .ads5a
+li#scene05 img.ads5a
 {
     opacity: .55;
     top: 350px;
@@ -76,11 +94,12 @@ li#scene05 div.fan img#fan-blade-05
     width: 60px;
     width : 60px;
     -moz-transform-origin : 50% 50%;
-    -moz-animation : drop-ads-a-05 4s 100ms 1;  
+    -moz-animation : drop-ads-a-05 4s 100ms 1;
+    -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode : both;
 }
 
-#scene05 .ads5b
+li#scene05 img.ads5b
 {
     opacity : .55;
     top : 430px;
@@ -89,11 +108,12 @@ li#scene05 div.fan img#fan-blade-05
     width : 60px;
     background-color : rgb(200,200,200);
     -moz-transform-origin : 50% 50%;
-    -moz-animation : drop-ads-b-05 4s 1;    
+    -moz-animation : drop-ads-b-05 4s 1;
+    -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode : both;
 }
 
-#scene05 .ads5c
+li#scene05 img.ads5c
 {
     opacity : .55;
     top : 470px;
@@ -102,7 +122,8 @@ li#scene05 div.fan img#fan-blade-05
     width : 60px;
     background-color : rgb(200,200,200);
     -moz-transform-origin : 50% 50%;
-    -moz-animation : drop-ads-a-05 4s 1;    
+    -moz-animation : drop-ads-a-05 4s 1;
+    -moz-animation-delay: 11100ms;
     -moz-animation-fill-mode : both;
 }
 
@@ -126,7 +147,7 @@ li#scene05 div.fan img#fan-blade-05
     animation-fill-mode: both;
 }
 
-#scene05 #lights-b-05
+#scene05 img.lights5b
 {
     top: 50px;
     left: 313px;
@@ -134,7 +155,7 @@ li#scene05 div.fan img#fan-blade-05
     height: 31px;
 }
 
-#scene05 #lights-c-05
+#scene05 img.lights5c
 {
     top: 95px;
     left: 480px;
@@ -239,6 +260,26 @@ li#scene05 div.fan img#fan-blade-05
         -webkit-animation-timing-function: ease;
     }
 }
+
+@-moz-keyframes drop-ads-a-05 {
+ 0% {
+-moz-transform : translate(0,0) rotate(0deg) skew(5deg,-15deg);
+-moz-animation-timing-function : ease-out; }
+ 100% {
+-moz-transform : translate(0,300px) rotate(30deg) skew(7deg,-25deg);
+-moz-animation-timing-function : ease-in; }
+}
+
+@-moz-keyframes drop-ads-b-05 {
+ 0% {
+-moz-transform : translate(0,0) rotate(0deg) skew(5deg,-15deg);
+-moz-animation-timing-function : ease-out; }
+ 100% {
+-moz-transform : translate(0,300px) rotate(-30deg) skew(7deg,-25deg);
+-moz-animation-timing-function : ease-in; }
+}
+
+
 
 @-moz-keyframes drop-lamps-05
 {
