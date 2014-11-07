@@ -13,11 +13,18 @@ nav.mainmenu
     margin: 0px;
     padding: 5px;
     background-color: green;
+    font-family: sans-serif;
+    font-size: 16px;
 }
 
 nav.mainmenu a
 {
     color: white;
     padding-left: 10px;
+}
+
+main
+{
+    padding: 10px;
 }
 

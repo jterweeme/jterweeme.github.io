@@ -14,6 +14,7 @@ $mm = new MainMenu();
 $mm->setDepth(0);
 echo $mm;
 ?>
+<main>
 <h1>Welcome</h1>
 <ul>
 <li><a href="md5sum.html">Diagram MD5Sum</a></li>
@@ -21,6 +22,7 @@ echo $mm;
 <li><a href="rm.html">Diagram RM</a></li>
 <li><a href="kompakt011.zip">Download Kompakt</a></li>
 </ul>
+</main>
 </body>
 </html>
 

@@ -1,12 +1,18 @@
-<!DOCTYPE html SYSTEM "../strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
 <title>Yvette's Wedding Dresses Panama City Florida Yvette's Yvette's</title>
 <link rel="stylesheet" type="text/css" href="index.css"/>
+<link rel="stylesheet" type="text/css" href="../common.css"/>
 <meta name="generator" content="Yahoo! SiteBuilder/2.6/1.6.0_29"/>
 </head>
 <body link="#0000ff" text="#000000" vlink="#800080">
+<?php
+require_once("../mainmenu.php");
+$mm = new MainMenu();
+echo $mm;
+?>
 <div id="root">
 <div id="e0">
 <img src="yvettes_files/newjn26052-571x505.jpg" alt="" height="505" width="571"/>
@@ -1493,7 +1499,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="844">
 <tbody><tr>
 <td bgcolor="#6666ff" height="1320" nowrap="nowrap" valign="top"><span class="text"><b><font color="#33ff33" size="6">
-<span style="font-size: 30px; line-height: 35px;">please donate to the World Famous Artist Sean Terrence <br/ soft="">Best !! ~*<br/>
+<span style="font-size: 30px; line-height: 35px;">please donate to the World Famous Artist Sean Terrence <br soft=""/>Best !! ~*<br/>
 <span>$1, &nbsp;$5, &nbsp;$10, &nbsp;$20, whatever amount you donate shall be <br soft=""/>very helpful and very appreciated !! *~V8~*+<br/>You may use the PayPal buttons on this page which have </span>
 <br soft=""/>been provided for Your convenience !! *~V8~*+<br/>You may also donate using your debit or credit card if you <br soft=""/>don't have a PayPal account !! *~V8~*+<br/>
 <br/><br/><br/>if you would like to contribute a greater amount to the <br soft=""/>World Famous Artist Sean Terrence Best, you may click on <br soft=""/>this </span>
@@ -1746,7 +1752,6 @@
 <span class="text"><font color="#66ff66">
 <span style="font-size: 14px; line-height: 17px;">music is fun &nbsp;<br soft=""/>movies are fun !! <br soft=""/>*~V8~*+<br soft=""/></span>
 </font></span>
-</div>
 </div>
 <img style="display: none;" src="yvettes_files/visit.gif" border="0"/>
 <noscript>

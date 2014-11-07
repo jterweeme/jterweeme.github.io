@@ -1,22 +1,20 @@
-all: index.html md5sum.html kompakt.html rm.html
+
+%.html: %.php
+	@php $< > $@
+	@xmllint --noout --schema xhtml.xsd $@
+
+.PHONY: all
+
+all: index.html md5sum.html kompakt.html rm.html worst.html
 	@make -C madmanimation all
 	@make -C yahtzee all
+	@make -C yvettes all
 
 index.html: index.php
-	@php $< > $@
-	@xmllint --noout --schema xhtml.xsd $@
-
 md5sum.html: md5sum.php omelet.php md5sum.uxf
-	@php $< > $@
-	@xmllint --noout --schema xhtml.xsd $@
-
 kompakt.html: kompakt.php omelet.php kompakt.uxf
-	@php $< > $@
-	@xmllint --noout --schema xhtml.xsd $@
-
 rm.html: rm.php omelet.php rm.uxf
-	@php $< > $@
-	@xmllint --noout --schema xhtml.xsd $@
+worst.html: worst.php
 
 clean:
 	@rm -Rf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
