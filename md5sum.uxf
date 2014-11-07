@@ -34,7 +34,7 @@
 - _h2: uint32_t
 - _h3: uint32_t
 --
-+ dump(os: ostream&amp;): void
++ dump(os: ostream): void
 + toString(): string
 + read(hash: const char *): void
 </panel_attributes>
@@ -119,7 +119,7 @@
     <panel_attributes>*Paars*
 --
 --
-+ dump(os: ostream&amp;): void</panel_attributes>
++ dump(os: ostream): void</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -204,7 +204,7 @@
 --
 + hash(): Hash
 + reset(): void
-+ stream(is: istream&amp;): void
++ stream(is: istream): void
 + stream(s: const char*, size: size_t): void</panel_attributes>
     <additional_attributes/>
   </element>

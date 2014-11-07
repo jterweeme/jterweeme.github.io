@@ -1,10 +1,11 @@
 all: index.html
 
 index.html: index.php
-	php $< > $@
+	@php $< > $@
+	#@xmllint --noout --schema ../xhtml.xsd $@
 
 clean:
-	rm -Rvf index.html
+	@rm -Rf index.html
 
 rebuild: clean all
 

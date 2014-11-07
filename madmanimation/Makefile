@@ -1,13 +1,13 @@
 all: index.html animatie.html
 
 index.html: index.php
-	php $< > $@
+	@php $< > $@
 
 animatie.html: animatie.php
-	php $< > $@
+	@php $< > $@
 
 clean:
-	rm -Rvf index.html animatie.html
+	@rm -Rf index.html animatie.html
 
 rebuild: clean all
 

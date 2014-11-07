@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="html">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="head"/>
+                <xs:element name="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="aside"/>
+    <xs:element name="code"/>
+    <xs:element name="dl"/>
+    <xs:element name="p"/>
+    <xs:element name="img"/>
+    <xs:element name="h1"/>
+    <xs:element name="h2"/>
+    <xs:element name="h3"/>
+    <xs:element name="h4"/>
+    <xs:element name="figcaption"/>
+    <xs:element name="figure"/>
+    <xs:element name="table"/>
+    <xs:element name="ul"/>
+</xs:schema>
+
+

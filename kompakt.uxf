@@ -178,7 +178,7 @@ _offset: uint32_t
     <panel_attributes>*Directories*
 --
 --
-int read(std::istream &amp;s, Descriptors &amp;d)
+int read(std::istream s, Descriptors d)
 std::string toString()
 std::string list(int mode = 1)</panel_attributes>
     <additional_attributes/>
