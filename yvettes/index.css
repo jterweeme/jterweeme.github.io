@@ -1,0 +1,42 @@
+/* onbegonnen werk */
+
+body
+{
+    background-image: url("background.jpg");
+    background-color: #fff;
+    font-family: "Arial";
+    font-size: 14;
+    margin: 0px;
+    padding: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+div#root
+{
+    position: absolute;
+    width: 1623px;
+    height: 15501px;
+}
+
+div#e0
+{
+    position: absolute;
+    left: 183px;
+    top: 0pt;
+    width: 571px;
+    height: 505px;
+}
+
+p
+{
+    font-family: "Arial";
+    font-size: 14;
+}
+
+form
+{
+    margin: 0;
+    padding: 0;
+}
+
