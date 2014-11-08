@@ -1,4 +1,4 @@
-li#scene07
+li.scene07
 {
     -moz-animation-name: scene7;
     -moz-animation-duration: 3s;
@@ -6,6 +6,37 @@ li#scene07
     -webkit-animation-name: scene7;
     -webkit-animation-duration: 3s;
     -webkit-animation-delay: 17100ms;
+}
+
+li.scene07 h1
+{
+    top: 150px;
+    left: 75px;
+    width: 300px;
+}
+
+li.scene07 img.building
+{
+    top: -50px;
+    left: 0;
+    -moz-transform-origin: 50% 50%;
+    -moz-animation: bldg-07 10s 1;
+    -moz-animation-fill-mode: both;
+    -moz-animation-delay: 17100ms;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: bldg-07 10s 1;
+    -webkit-animation-fill-mode: both;
+    -webkit-animation-delay: 17100ms;
+}
+
+li.scene07 img.man
+{
+    top : -250px;
+    left : 332px;
+    -moz-transform-origin : 50% 50%;
+    -moz-animation : man-07 6s 1;   
+    -moz-animation-fill-mode : both;
+    -moz-animation-delay: 17100ms;
 }
 
 @-moz-keyframes scene7
@@ -20,26 +51,14 @@ li#scene07
     to { z-index: 2; }
 }
 
-
-li#scene07 h1
+@-moz-keyframes man-07
 {
-    top: 150px;
-    left: 75px;
-    width: 300px;
-}
-
-li#scene07 #bldg-07
-{
-    top: -50px;
-    left: 0;
-    -moz-transform-origin: 50% 50%;
-    -moz-animation: bldg-07 10s 1;
-    -moz-animation-fill-mode: both;
-    -moz-animation-delay: 17100ms;
-    -webkit-transform-origin: 50% 50%;
-    -webkit-animation: bldg-07 10s 1;
-    -webkit-animation-fill-mode: both;
-    -webkit-animation-delay: 17100ms;
+ 0% {
+-moz-transform : translate(0,0) rotate(-60deg);
+-moz-animation-timing-function : ease-out; }
+ 100% {
+-moz-transform : translate(250px,1000px) rotate(20deg);
+-moz-animation-timing-function : ease-out; }
 }
 
 @-moz-keyframes bldg-07
