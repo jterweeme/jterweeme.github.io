@@ -904,13 +904,13 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e97"><span class="text"><b><font color="#ff33ff" >
-<span style="font-size: 22px; line-height: 26px;">Yvette's</span>
-</font></b><b><font color="#ffff33" >
+<div id="e97"><span class="text"><b>
+<span style="font-size: 22px; color: #ff33ff; line-height: 26px;">Yvette's</span>
+</b><b><font color="#ffff33" >
 <span class="stijl4"> sells Bridal accessories in Panama City Florida</span>
-</font></b><b><font color="#ff33ff" >
-<span style="font-size: 20px; line-height: 24px;"> ~*<br/></span>
-</font></b><b><font color="#33ff33">
+</font></b><b>
+<span style="font-size: 20px; color: #ff33ff; line-height: 24px;"> ~*<br/></span>
+</b><b><font color="#33ff33">
 <span style="font-size: 14px; line-height: 17px;">please purchase your Bridal accessories @ Yvette's in Panama City Florida ~*<br/>
 </span>
 </font></b><span style="font-size: 14px; line-height: 17px;">Bridal accessories Panama City<br/>Panama City Bridal accessories<br/></span></span>
