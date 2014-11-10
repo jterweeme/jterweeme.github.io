@@ -22,9 +22,9 @@ echo $mm;
 </font></b></span>      
 </div>
 <div id="e2">
-<span class="text"><font color="#33ff00">
-<span style="font-size: 14px; line-height: 17px;">YVETTES WITH AN APOSTROPHE '<br/>
-</span></font></span>      
+<span class="text">
+<span style="font-size: 14px; color: #33ff00; line-height: 17px;">YVETTES WITH AN APOSTROPHE '<br/>
+</span></span>      
 </div>
 <div id="e3">
 <span class="text"><b><font color="#ffff00" >
@@ -56,19 +56,19 @@ echo $mm;
 <br/>YVETTE'S<br/><br/>YVETTE'S<br/></span></span>
 </div>
 <div id="e6">
-<span class="text"><b><font color="#330033">
-<span style="font-size: 14px; line-height: 17px;">Yvette's<br/>
+<span class="text"><b>
+<span style="font-size: 14px; color: #330033; line-height: 17px;">Yvette's<br/>
 <br/>yvettes<br/><br/>Yvette's<br/><br/>Yvette's<br/><br/>Yvette's<br/>
 <br/>Yvettes'<br/><br/>Yvettes<br/><br/>yvettes<br/><br/>yvette's<br/>
 <br/>yvettes'<br/><br/>yvette's<br/><br/>yvette's<br/><br/>yvette's<br/>
 <br/>yvette's<br/><br/>yvette's<br/><br/>yvette's<br/></span>
-</font></b></span>      
+</b></span>
 </div>
 <div id="e7">
 <span class="text">    
-<a href="http://yvettesbridalformal.com/index.htm"><font color="#33ff00" >
-<span style="font-size: 30px; line-height: 35px;">ENTER YVETTE'S<br/>
-</span></font></a></span>      
+<a href="http://yvettesbridalformal.com/index.htm">
+<span style="font-size: 30px; color: #33ff00; line-height: 35px;">ENTER YVETTE'S<br/>
+</span></a></span>
 </div>
 <div id="e8"><span class="text">
 <span style="font-size: 14px; line-height: 17px;">beautiful<br/></span></span>      
@@ -78,17 +78,15 @@ echo $mm;
 <tbody><tr>
 <td bgcolor="#66ff66" height="49" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yvettesbridalformal.com/Pinklinks1.html">
-<b><font color="#ff00ff" >
-<span style="font-size: 30px; line-height: 35px;">*~M</span></font></b>
+<b>
+<span class="stijl5">*~M</span></b>
 </a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b>
-<font color="#ff00ff" >
-<span style="font-size: 30px; line-height: 35px;">ysterious secrets of V8+ !! </span>
-</font>
+<span class="stijl5">ysterious secrets of V8+ !! </span>
 </b></a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b>
-<font color="#ff00ff" ><span style="font-size: 30px; line-height: 35px;">~*</span>
-</font></b></a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b>
-<font color="#ff00ff" ><span style="font-size: 30px; line-height: 35px;">~*<br/>
-</span></font></b></a></span></td>
+<span style="font-size: 30px; color: #ff00ff; line-height: 35px;">~*</span>
+</b></a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b>
+<span style="font-size: 30px; color: #ff00ff; line-height: 35px;">~*<br/>
+</span></b></a></span></td>
 </tr>
 </tbody></table>
 </div>
