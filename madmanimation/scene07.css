@@ -37,6 +37,10 @@ li.scene07 img.man
     -moz-animation : man-07 6s 1;   
     -moz-animation-fill-mode : both;
     -moz-animation-delay: 17100ms;
+    -webkit-transform-origin : 50% 50%;
+    -webkit-animation : man-07 6s 1;   
+    -webkit-animation-fill-mode : both;
+    -webkit-animation-delay: 17100ms;
 }
 
 @-moz-keyframes scene7
@@ -59,6 +63,16 @@ li.scene07 img.man
  100% {
 -moz-transform : translate(250px,1000px) rotate(20deg);
 -moz-animation-timing-function : ease-out; }
+}
+
+@-webkit-keyframes man-07
+{
+ 0% {
+-webkit-transform : translate(0,0) rotate(-60deg);
+-webkit-animation-timing-function : ease-out; }
+ 100% {
+-webkit-transform : translate(250px,1000px) rotate(20deg);
+-webkit-animation-timing-function : ease-out; }
 }
 
 @-moz-keyframes bldg-07

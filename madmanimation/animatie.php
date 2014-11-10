@@ -165,7 +165,7 @@ echo $mm;
 		<img id="bg-08" src="08-bg.jpg" alt="background"/>
         <img id="man-08" src="08-man.png" alt="man"/>
 	</li>
-    <li id="scene09">
+    <li class="scene09">
         <p>
             Don accepts his fate and relaxes as
             he falls. Behind him, photographs from magazine
@@ -183,8 +183,8 @@ echo $mm;
             <br/>
             <em>Jeffrey</em> Veen
         </h1>
-        <img id="bg-09" src="09-bg.jpg" alt=""/>
-        <img id="man09" src="09-man.png" alt=""/>
+        <img class="background" src="09-bg.jpg" alt="background"/>
+        <img class="man" src="09-man.png" alt="man"/>
     </li>
     <li class="scene10">
         <p>

@@ -1,4 +1,4 @@
-li#scene09
+li.scene09
 {
     -moz-animation-duration: 2800ms;
     -moz-animation-delay: 23900ms;
@@ -8,19 +8,19 @@ li#scene09
     -webkit-animation-name: scene9;
 }
 
-li#scene09 h1#title-09-a
+li.scene09 h1#title-09-a
 {
     top: 50px;
     left: 625px;
 }
 
-li#scene09 h1#title-09-b
+li.scene09 h1#title-09-b
 {
     top: 150px;
     left:625px;
 }
 
-li#scene09 img#bg-09
+li.scene09 img.background
 {
     top: 0;
     width: 1417px;
@@ -37,7 +37,7 @@ li#scene09 img#bg-09
     -webkit-animation-fill-mode: both;
 }
 
-li#scene09 img#man09
+li.scene09 img.man
 {
     top: -200px;
     left: 160px;
@@ -46,6 +46,11 @@ li#scene09 img#man09
     -moz-animation-delay: 23900ms;
     -moz-animation-duration: 3500ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: man09 3500ms 1;
+    -webkit-animation-delay: 23900ms;
+    -webkit-animation-duration: 3500ms;
+    -webkit-animation-fill-mode: both;
 }
 
 @-moz-keyframes scene9
@@ -75,6 +80,20 @@ li#scene09 img#man09
     }
 }
 
+@-webkit-keyframes bldg-09
+{
+    from
+    {
+        -webkit-transform: translate(0,0);
+        -webkit-animation-timing-function: linear;
+    }
+    to
+    {
+        -webkit-transform: translate(-150px,-160px);
+        -webkit-animation-timing-function: ease;
+    }
+}
+
 @-moz-keyframes man09
 {
     from
@@ -86,6 +105,20 @@ li#scene09 img#man09
     {
         -moz-transform: translate(50px, 820px) rotate(-20deg);
         -moz-animation-timing-function: ease;
+    }
+}
+
+@-webkit-keyframes man09
+{
+    from
+    {
+        -webkit-transform: translate(0,0) rotate(0deg);
+        -webkit-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -webkit-transform: translate(50px, 820px) rotate(-20deg);
+        -webkit-animation-timing-function: ease;
     }
 }
 

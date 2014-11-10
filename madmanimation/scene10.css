@@ -18,6 +18,9 @@ li.scene10 h1#title10a
     -moz-animation: title10a 750ms 1500ms 1;
     -moz-animation-delay: 28200ms;
     -moz-animation-fill-mode: both;
+    -webkit-animation: title10a 750ms 1500ms 1;
+    -webkit-animation-delay: 28200ms;
+    -webkit-animation-fill-mode: both;
     animation: title10a 750ms 1500ms 1;
     animation-delay: 28200ms;
     animation-fill-mode: both;
@@ -44,6 +47,11 @@ li.scene10 img.man
     -moz-animation-duration: 4500ms;
     -moz-animation-delay: 26700ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation: man10 4500ms 1;
+    -webkit-animation-duration: 4500ms;
+    -webkit-animation-delay: 26700ms;
+    -webkit-animation-fill-mode: both;
 }
 
 li.scene10 img.background
@@ -53,6 +61,11 @@ li.scene10 img.background
     -moz-animation-duration: 7s;
     -moz-animation-delay: 26700ms;
     -moz-animation-fill-mode: both;
+    -webkit-transform-origin: 0% 50%;
+    -webkit-animation: bldg10 7s 1;
+    -webkit-animation-duration: 7s;
+    -webkit-animation-delay: 26700ms;
+    -webkit-animation-fill-mode: both;
 }
 
 @-moz-keyframes scene10
@@ -74,6 +87,13 @@ li.scene10 img.background
     to { opacity: 0; }
 }
 
+@-webkit-keyframes title10a
+{
+    from { opacity: 1; }
+    75% { opacity: 0; }
+    to { opacity: 0; }
+}
+
 @-moz-keyframes bldg10
 {
  from {
@@ -84,8 +104,24 @@ li.scene10 img.background
     -moz-animation-timing-function : ease; }
 }
 
+@-webkit-keyframes bldg10
+{
+ from {
+    -webkit-transform : translate(0,0);
+    -webkit-animation-timing-function : ease; }
+ to {
+    -webkit-transform : translate(0,-700px);
+    -webkit-animation-timing-function : ease; }
+}
 
 @-moz-keyframes title10b
+{
+    from { opacity: 0; }
+    20% { opacity: 1; }
+    to { opacity: 1; }
+}
+
+@-webkit-keyframes title10b
 {
     from { opacity: 0; }
     20% { opacity: 1; }
@@ -103,6 +139,20 @@ li.scene10 img.background
     {
         -moz-transform: translate(0,650px) rotate(-25deg);
         -moz-animation-timing-function: ease;
+    }
+}
+
+@-webkit-keyframes man10
+{
+    from
+    {
+        -webkit-transform: translate(0,0) rotate(0deg);
+        -webkit-animation-timing-function: ease-out;
+    }
+    to
+    {
+        -webkit-transform: translate(0,650px) rotate(-25deg);
+        -webkit-animation-timing-function: ease;
     }
 }
 
