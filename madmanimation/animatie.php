@@ -205,7 +205,7 @@ echo $mm;
         <img class="background" src="11-bg.jpg" alt=""/>
         <img id="man-11" src="11-man.png" alt=""/>
     </li>
-    <li id="scene12">
+    <li class="scene12">
         <p>Glamourous women.</p>
         <img class="background" src="12-bg.jpg" alt="background"/>
         <img class="man" src="12-man.png" alt="man"/>

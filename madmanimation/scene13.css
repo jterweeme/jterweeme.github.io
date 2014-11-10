@@ -45,6 +45,10 @@ li#scene13 h1
     -moz-animation : man-13 3500ms 1;   
     -moz-animation-fill-mode : both;
     -moz-animation-delay: 34s;
+    -webkit-transform-origin : 50% 50%;
+    -webkit-animation : man-13 3500ms 1;   
+    -webkit-animation-fill-mode : both;
+    -webkit-animation-delay: 34s;
 }
 
 
@@ -59,6 +63,19 @@ li#scene13 h1
     {
         -moz-transform : translate(0,600px) rotate(-15deg);
         -moz-animation-timing-function : ease-in; }
+}
+
+@-webkit-keyframes man-13
+{
+    0%
+    {
+        -webkit-transform : translate(0,0) rotate(0deg);
+        -webkit-animation-timing-function : ease-out;
+    }
+    100%
+    {
+        -webkit-transform : translate(0,600px) rotate(-15deg);
+        -webkit-animation-timing-function : ease-in; }
 }
 
 
