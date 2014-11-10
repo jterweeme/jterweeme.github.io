@@ -3,7 +3,16 @@
     <xs:element name="html">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="head"/>
+                <xs:element name="head">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="link"/>
+                            <xs:element name="meta"/>
+                            <xs:element name="script"/>
+                            <xs:element name="title"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="body"/>
             </xs:sequence>
         </xs:complexType>

@@ -15,13 +15,7 @@ require_once('../mainmenu.php');
 $mm = new MainMenu();
 echo $mm;
 ?>
-<!--
-<nav class="mainmenu">
-    <a href="../index.html">Home</a>
-    <a href="https://github.com/jterweeme">GitHub</a>
-    <a href="index.html">Yahtzee</a>
-</nav>
--->
+
 <table class="score">
     <caption>
         <img src="yahtzee.svg" alt="logo"/>
@@ -126,7 +120,7 @@ echo $mm;
     </tr>
     <tr>
         <td>TOTAL SCORE</td>
-        <td class="toelichting">&rarr;</td>
+        <td class="toelichting">&#8594;</td>
         <td class="total"></td>
         <td class="total"></td>
         <td class="total"></td>
@@ -151,7 +145,7 @@ echo $mm;
     </tr>
     <tr>
         <td><dl><dt>TOTAL</dt><dd>Of Upper<br/>Section</dd></dl></td>
-        <td class="toelichting">&rarr;</td>
+        <td class="toelichting">&#8594;</td>
         <td class="upperTotal"></td>
         <td class="upperTotal"></td>
         <td class="upperTotal"></td>
@@ -244,7 +238,7 @@ echo $mm;
     </tr>
     <tr>
         <td><dl><dt>TOTAL</dt><dd>Of Lower<br/>Section</dd></dl></td>
-        <td class="toelichting">&rarr;</td>
+        <td class="toelichting">&#8594;</td>
         <td class="lowerTotal"></td>
         <td class="lowerTotal"></td>
         <td class="lowerTotal"></td>
@@ -254,7 +248,7 @@ echo $mm;
     </tr>
     <tr>
         <td><dl><dt>TOTAL</dt><dd>Of Upper<br/>Section</dd></dl></td>
-        <td class="toelichting">&rarr;</td>
+        <td class="toelichting">&#8594;</td>
         <td class="upperTotal2"></td>
         <td class="upperTotal2"></td>
         <td class="upperTotal2"></td>
@@ -264,7 +258,7 @@ echo $mm;
     </tr>
     <tr>
         <td>GRAND TOTAL</td>
-        <td class="toelichting">&rarr;</td>
+        <td class="toelichting">&#8594;</td>
         <td class="grandTotal"></td>
         <td class="grandTotal"></td>
         <td class="grandTotal"></td>

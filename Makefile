@@ -20,6 +20,7 @@ clean:
 	@rm -Rf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
 	@make -C madmanimation clean
 	@make -C yahtzee clean
+	@make -C yvettes clean
 
 rebuild: clean all
 

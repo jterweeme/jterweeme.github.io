@@ -33,7 +33,7 @@ echo $mm;
         <span>Madmanimation uses</span>
         <a href="http://modernizr.com">Modernizr</a>
         <span>.</span>
-        <br>
+        <br/>
         <a href="http://twitter.com/animatableapp">Follow @animatableapp</a>
         <span>, the CSS animation app.</span>
     </p>
