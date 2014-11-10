@@ -17,23 +17,22 @@ echo $mm;
 <div id="e0">
 <img src="yvettes_files/newjn26052-571x505.jpg" alt="" height="505" width="571"/>
 </div>
-<div id="e1" style="position: absolute; left: 288px; top: 805px; width: 250px; height: 100px;">
+<div id="e1">
 <span class="text"><b><font color="#ff00ff" size="6">
-<span style="font-size: 30px; line-height: 35px;">YVETTES with <br soft=""/>an apostrophe '<br soft=""/>
-</span>
+<span class="stijl1">YVETTES with <br soft=""/>an apostrophe '<br soft=""/></span>
 </font></b></span>      
 </div>
-<div id="e2" style="position: absolute; left: 262px; top: 634px; width: 250px; height: 40px;">
+<div id="e2">
 <span class="text"><font color="#33ff00">
 <span style="font-size: 14px; line-height: 17px;">YVETTES WITH AN APOSTROPHE '<br soft=""/>
 </span></font></span>      
 </div>
-<div id="e3" style="position: absolute; left: 255px; top: 673px; width: 250px; height: 100px;">
+<div id="e3">
 <span class="text"><b><font color="#ffff00" size="4">
-<span style="font-size: 20px; line-height: 24px;">YVETTES with an <br soft=""/>apostrophe '<br soft=""/>
-</span></font></b></span>      
+<span class="stijl2">YVETTES with an <br soft=""/>apostrophe '<br soft=""/></span>
+</font></b></span>      
 </div>
-<div id="e4" style="position: absolute; left: 504px; top: 953px; width: 250px; height: 777px;">
+<div id="e4">
 <span class="text">
 <span style="font-size: 14px; line-height: 17px;">Yvettes bridal<br/>
 <br/>br/idal Yvettes<br/>
@@ -50,12 +49,14 @@ echo $mm;
 <br/>wedding br/idal formal Panama City <br soft=""/>Beach Florida<br/>
 <br/>Yvettes<br/>yvettes<br/>Yvettes<br soft=""/></span></span>
 </div>      
-<div id="e5" style="position: absolute; left: 1px; top: 847px; width: 250px; height: 323px;">
-<span class="text"><span style="font-size: 14px; line-height: 17px;">Yvette's<br/><br/>Yvette's<br/>
-<br/>Yvette's<br/><br/>Yvette's<br/><br/>yvette's<br/><br/>yvette's<br/><br/>YVETTE'S<br/><br/>YVETTE'S<br/>
+<div id="e5">
+<span class="text"><span style="font-size: 14px; line-height: 17px;">Yvette's<br/>
+<br/>Yvette's<br/>
+<br/>Yvette's<br/><br/>Yvette's<br/><br/>yvette's<br/>
+<br/>yvette's<br/><br/>YVETTE'S<br/><br/>YVETTE'S<br/>
 <br/>YVETTE'S<br/><br/>YVETTE'S<br soft=""/></span></span>
 </div>
-<div id="e6" style="position: absolute; left: 882px; top: 1064px; width: 250px; height: 534px;">
+<div id="e6">
 <span class="text"><b><font color="#330033">
 <span style="font-size: 14px; line-height: 17px;">Yvette's<br/>
 <br/>yvettes<br/><br/>Yvette's<br/><br/>Yvette's<br/><br/>Yvette's<br/>
@@ -64,21 +65,22 @@ echo $mm;
 <br/>yvette's<br/><br/>yvette's<br/><br/>yvette's<br soft=""/></span>
 </font></b></span>      
 </div>
-<div id="e7" style="position: absolute; left: 437px; top: 459px; width: 270px; height: 52px;">
+<div id="e7">
 <span class="text">    
 <a href="http://yvettesbridalformal.com/index.htm"><font color="#33ff00" size="6">
 <span style="font-size: 30px; line-height: 35px;">ENTER YVETTE'S<br soft=""/>
 </span></font></a></span>      
 </div>
-<div id="e8" style="position: absolute; left: 34px; top: 1423px; width: 250px; height: 100px;"><span class="text">
+<div id="e8"><span class="text">
 <span style="font-size: 14px; line-height: 17px;">beautiful<br soft=""/></span></span>      
 </div>
-<div id="e9" style="position: absolute; left: 214px; top: 500px; width: 519px; height: 49px;">
+<div id="e9">
 <table border="0" cellpadding="0" cellspacing="0" width="519">
 <tbody><tr>
 <td bgcolor="#66ff66" height="49" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yvettesbridalformal.com/Pinklinks1.html">
-<b><font color="#ff00ff" size="6"><span style="font-size: 30px; line-height: 35px;">*~M</span></font></b>
+<b><font color="#ff00ff" size="6">
+<span style="font-size: 30px; line-height: 35px;">*~M</span></font></b>
 </a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b><font color="#ff00ff" size="6">
 <span style="font-size: 30px; line-height: 35px;">ysterious secrets of V8+ !! </span></font>
 </b></a><a href="http://yvettesbridalformal.com/Pinklinks1.html"><b>
@@ -89,7 +91,7 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e10" style="position: absolute; left: 359px; top: 7px; width: 290px; height: 35px;">
+<div id="e10">
 <span class="text"><b><font color="#00ffcc" size="4">
 <span style="font-size: 22px; line-height: 26px;">Welcome to</span>
 </font></b><b><font color="#ff99ff" size="6">
@@ -98,40 +100,42 @@ echo $mm;
 <span style="font-size: 22px; line-height: 26px;"> !!!<br soft=""/></span>
 </font></b></span>      
 </div>
-<div id="e11" style="position: absolute; left: 198px; top: 397px; width: 541px; height: 60px;">
+<div id="e11">
 <span class="text"><b><i><font color="#ff00ff" size="5">
 <span style="font-size: 24px; line-height: 29px;">Yvette's</span>
 </font></i></b><b><font color="#00cccc" size="4">
 <span style="font-size: 18px; line-height: 22px;"> HOURS:<br/>
 </span></font></b><b><font color="#ff99ff" size="5">
-<span style="font-size: 24px; line-height: 29px;">Yvette's Loves You !! ~* Yvette's Loves You !!~*<br soft=""/></span>
+<span class="stijl3">Yvette's Loves You !! ~* Yvette's Loves You !!~*<br soft=""/></span>
 </font></b></span>      
 </div>
-<div id="e12" style="position: absolute; left: 758px; top: 890px; width: 179px; height: 101px;">
+<div id="e12">
 <table border="0" cellpadding="0" cellspacing="0" width="179">
 <tbody><tr>
 <td bgcolor="#0099ff" height="101" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yvettesbridalformal.com/signup1.html"><b>
-<font color="#ffff00" size="3">
+<span class="color1">
 <span style="font-size: 16px; line-height: 19px;">Point'n'Click </span>
-</font></b></a><a href="http://yvettesbridalformal.com/signup1.html"><b>
-<font color="#ffff00" size="3">
-<span style="font-size: 16px; line-height: 19px;">here to <br soft=""/>
-</span></font>
+</span>
 </b></a><a href="http://yvettesbridalformal.com/signup1.html"><b>
-<font color="#ffff00" size="3">
+<span class="color1">
+<span style="font-size: 16px; line-height: 19px;">here to <br soft=""/></span>
+</span>
+</b></a><a href="http://yvettesbridalformal.com/signup1.html"><b>
+<span class="color1">
 <span style="font-size: 16px; line-height: 19px;">see </span>
-</font></b></a><a href="http://yvettesbridalformal.com/signup1.html">
-<b><font color="#ff00ff" size="3">
+</span>
+</b></a><a href="http://yvettesbridalformal.com/signup1.html">
+<b><font color="#ff00ff">
 <span style="font-size: 16px; line-height: 19px;">Yvette's</span>
 </font></b></a><a href="http://yvettesbridalformal.com/signup1.html"><b>
-<font color="#ffff00" size="3">
+<font color="#ffff00">
 <span style="font-size: 16px; line-height: 19px;"> SIGN</span>
 </font></b></a><a href="http://yvettesbridalformal.com/signup1.html"><b>
-<font color="#ffff00" size="3">
+<font color="#ffff00">
 <span style="font-size: 16px; line-height: 19px;">S</span>
 </font></b></a><a href="http://yvettesbridalformal.com/signup1.html">
-<b><font color="#ffff00" size="3"><span style="font-size: 16px; line-height: 19px;">
+<b><font color="#ffff00"><span style="font-size: 16px; line-height: 19px;">
 <br soft=""/>being </span>
 </font>
 </b></a>
@@ -156,12 +160,12 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e13" style="position: absolute; left: 137px; top: 551px; width: 600px; height: 450px;">
+<div id="e13">
 <a href="http://yvettesbridalformal.com/signup1.html">
 <img src="yvettes_files/test18_034-600x450.jpg" alt="" border="0" height="450" width="600"/>
 </a>
 </div>      
-<div id="e14" style="position: absolute; left: 88px; top: 884px; width: 634px; height: 108px;">
+<div id="e14">
 <table border="0" cellpadding="0" cellspacing="0" width="634">
 <tbody><tr>
 <td bgcolor="#660066" height="108" nowrap="nowrap" valign="top">
@@ -169,8 +173,9 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e15" style="position: absolute; left: 194px; top: 35px; width: 198px; height: 406px;">
-<span class="text"><font color="#33ff33" size="4"><span style="font-size: 18px; line-height: 22px;">Pageants<br/>
+<div id="e15">
+<span class="text"><font color="#33ff33" size="4">
+<span style="font-size: 18px; line-height: 22px;">Pageants<br/>
 </span></font><font color="#ff99ff" size="4">
 <span style="font-size: 18px; line-height: 22px;">Valentine's</span>
 </font><font color="#33ff33" size="4">
@@ -211,7 +216,7 @@ echo $mm;
 <span style="font-size: 24px; line-height: 29px;">&nbsp;&nbsp;&nbsp;&nbsp;$65.00 ~*<br soft=""/>
 </span></font></b></a></span>      
 </div>
-<div id="e16" style="position: absolute; left: 570px; top: 155px; width: 446px; height: 83px;">
+<div id="e16">
 <table border="0" cellpadding="0" cellspacing="0" width="446">
 <tbody><tr>
 <td bgcolor="#000000" height="83" nowrap="nowrap" valign="top">
@@ -237,31 +242,36 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e17" style="position: absolute; left: 397px; top: 373px; width: 586px; height: 38px;">
+<div id="e17">
 <table border="0" cellpadding="0" cellspacing="0" width="586">
 <tbody><tr>
 <td bgcolor="#330033" height="38" nowrap="nowrap" valign="top">
-<span class="text"><b><i><font color="#ff00ff" size="6"><span style="font-size: 30px; line-height: 35px;">Yvette's</span>
+<span class="text"><b><i><font color="#ff00ff" size="6">
+<span style="font-size: 30px; line-height: 35px;">Yvette's</span>
 </font></i></b>
 <a href="http://www.yvettesbridalformal.com/Fine_Art_For_Sale_Panama_City1.html"><b>
 <font color="#33ffff" size="6"><span style="font-size: 30px; line-height: 35px;">P</span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/Fine_Art_For_Sale_Panama_City1.html"><b><font color="#33ffff" size="6">
+</font></b></a>
+<a href="http://www.yvettesbridalformal.com/Fine_Art_For_Sale_Panama_City1.html"><b>
+<font color="#33ffff" size="6">
 <span style="font-size: 30px; line-height: 35px;">aintings for sale !!,</span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/Fine_Art_For_Sale_Panama_City1.html"><b>
-<font color="#33ffff" size="4"><span style="font-size: 18px; line-height: 22px;">please click here !! ~*<br soft=""/>
+</font></b></a>
+<a href="http://www.yvettesbridalformal.com/Fine_Art_For_Sale_Panama_City1.html"><b>
+<font color="#33ffff" size="4">
+<span style="font-size: 18px; line-height: 22px;">please click here !! ~*<br soft=""/>
 </span></font></b></a></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e18" style="position: absolute; left: 29px; top: 1391px; width: 450px; height: 600px;">
+<div id="e18">
 <img src="yvettes_files/test34_029-450x600.jpg" alt="" height="600" width="450"/></div>
-<div id="e19" style="position: absolute; left: 5px; top: 1994px; width: 600px; height: 450px;">
+<div id="e19">
 <img src="yvettes_files/test34_023-600x450.jpg" alt="" height="450" width="600"/></div>
-<div id="e20" style="position: absolute; left: 20px; top: 2447px; width: 600px; height: 450px;">
+<div id="e20">
 <img src="yvettes_files/test34_033-600x450.jpg" alt="" height="450" width="600"/></div>
-<div id="e21" style="position: absolute; left: 22px; top: 2908px; width: 600px; height: 450px;">
+<div id="e21">
 <img src="yvettes_files/test34_030-600x450.jpg" alt="" height="450" width="600"/></div>
-<div id="e22" style="position: absolute; left: 574px; top: 1025px; width: 130px; height: 130px;">
+<div id="e22">
 <table border="0" cellpadding="0" cellspacing="0" width="130">
 <tbody>
 <tr>
@@ -293,101 +303,126 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e23" style="position: absolute; left: 280px; top: 598px; width: 293px; height: 48px;">
+<div id="e23">
 <table border="0" cellpadding="0" cellspacing="0" width="293">
 <tbody><tr>
 <td bgcolor="#333333" height="48" nowrap="nowrap" valign="top"><span class="text"><b>
-<i><font color="#ff00ff" size="5"><span style="font-size: 24px; line-height: 29px;">Yvette's</span>
+<i><font color="#ff00ff" size="5">
+<span style="font-size: 24px; line-height: 29px;">Yvette's</span>
 </font></i></b><font color="#ffccff" size="5">
-<span style="font-size: 24px; line-height: 29px;"> sells tuxedos !!<br soft=""/></span></font></span></td>
+<span style="font-size: 24px; line-height: 29px;"> sells tuxedos !!<br soft=""/>
+</span></font></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e24" style="position: absolute; left: 656px; top: 0pt; width: 128px; height: 136px;">
+<div id="e24">
 <table border="0" cellpadding="0" cellspacing="0" width="128">
 <tbody><tr>
-<td bgcolor="#000000" height="136" nowrap="nowrap" valign="top"><span class="text"><b><font color="#00ff99">
-<span style="font-size: 14px; line-height: 17px;">BRIDAL<br/>FORMAL<br/></span></font></b><b><font color="#ffcccc">
+<td bgcolor="#000000" height="136" nowrap="nowrap" valign="top">
+<span class="text"><b><font color="#00ff99">
+<span style="font-size: 14px; line-height: 17px;">BRIDAL<br/>FORMAL<br/>
+</span></font></b><b><font color="#ffcccc">
 <span style="font-size: 14px; line-height: 17px;">PAGEANT<br/>PROM<br/></span></font></b>
-<b><font color="#ffffcc"><span style="font-size: 14px; line-height: 17px;">HOMECOMING<br/>CRUISE<br/>
+<b><font color="#ffffcc">
+<span style="font-size: 14px; line-height: 17px;">HOMECOMING<br/>CRUISE<br/>
 </span></font></b><b><font color="#ff66ff">
 <span style="font-size: 14px; line-height: 17px;">HOLIDAY<br/>CELEBRATE<br soft=""/>
 </span></font></b></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e25" style="position: absolute; left: 967px; top: 607px; width: 189px; height: 289px;">
+<div id="e25">
 <span class="text">
 <span style="font-size: 14px; line-height: 17px;"><span>wedding gown<br/>wedding dress<br/>wedding dress<br/>wedding dress<br/>wedding dress<br/>wedding dress<br/>wedding dress</span>
 <br/>wedding dress<br/>panama city florida<br/>wedding dress<br/>br/idesmaid<br/>br/ides maids<br/>br/idesmaids<br/>br/ides maid<br/>br/ides maid<br/>wedding dress<br/>wedding gown<br soft=""/>
 </span>
 </span>      
 </div>
-<div id="e26" style="position: absolute; left: 174px; top: 264px; width: 224px; height: 32px;">
+<div id="e26">
 <table border="0" cellpadding="0" cellspacing="0" width="224">
 <tbody><tr>
-<td bgcolor="#660000" height="32" nowrap="nowrap" valign="top"><span class="text"><b><font color="#ff0033" size="4">
-<span style="font-size: 20px; line-height: 24px;">Nous aimons la France.<br soft=""/></span></font></b></span></td>
+<td bgcolor="#660000" height="32" nowrap="nowrap" valign="top">
+<span class="text"><b><font color="#ff0033" size="4">
+<span style="font-size: 20px; line-height: 24px;">Nous aimons la France.<br soft=""/>
+</span></font></b></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e27" style="position: absolute; left: 184px; top: 144px; width: 210px; height: 25px;">
+<div id="e27">
 <table border="0" cellpadding="0" cellspacing="0" width="210">
 <tbody><tr>
-<td bgcolor="#660033" height="25" nowrap="nowrap" valign="top"><span class="text"><b><font color="#ffcccc" size="4">
+<td bgcolor="#660033" height="25" nowrap="nowrap" valign="top">
+<span class="text"><b><font color="#ffcccc" size="4">
 <span style="font-size: 20px; line-height: 24px;">&#1052;&#1099; &#1083;&#1102;&#1073;&#1080;&#1084; &#1056;&#1086;&#1089;&#1089;&#1080;&#1103;.<br soft=""/>
 </span></font></b></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e28" style="position: absolute; left: 747px; top: 421px; width: 697px; height: 450px;">
+<div id="e28">
 <img src="orient.png" alt="" height="450" width="697"/></div>
-<div id="e29" style="position: absolute; left: 1007px; top: 0pt; width: 600px; height: 419px;">
+<div id="e29">
 <img src="yvettes_files/DePlane-600x419.jpg" alt="" height="419" width="600"/></div>
-<div id="e30" style="position: absolute; left: 183px; top: 126px; width: 213px; height: 19px;">
+<div id="e30">
 <table border="0" cellpadding="0" cellspacing="0" width="213">
 <tbody><tr>
-<td bgcolor="#000000" height="19" nowrap="nowrap" valign="top"><span class="text"><b><font color="#66ffff" size="3">
-<span style="font-size: 16px; line-height: 19px;">Miss</span></font></b><b><font color="#ff3366" size="3">
-<span style="font-size: 16px; line-height: 19px;"> Fire</span></font></b><b><font color="#ffff00" size="3">
-<span style="font-size: 16px; line-height: 19px;">cracker </span></font></b><b><font color="#ffcc00" size="3">
-<span style="font-size: 16px; line-height: 19px;">Pageant<br soft=""/></span></font></b></span></td>
+<td bgcolor="#000000" height="19" nowrap="nowrap" valign="top">
+<span class="text"><b><font color="#66ffff" size="3">
+<span style="font-size: 16px; line-height: 19px;">Miss</span></font></b>
+<b><font color="#ff3366" size="3">
+<span style="font-size: 16px; line-height: 19px;"> Fire</span></font></b>
+<b><font color="#ffff00" size="3">
+<span style="font-size: 16px; line-height: 19px;">cracker </span></font></b>
+<b><font color="#ffcc00" size="3">
+<span style="font-size: 16px; line-height: 19px;">Pageant<br soft=""/></span></font></b>
+</span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e31" style="position: absolute; left: 70px; top: 787px; width: 114px; height: 114px;">
+<div id="e31">
 <table border="0" cellpadding="0" cellspacing="0" width="114">
 <tbody><tr>
 <td bgcolor="#330099" height="114" nowrap="nowrap" valign="top">
-<span class="text"><a href="http://yourmagicalmoments.com/"><b><font color="#ff3366" size="3"><span style="font-size: 16px; line-height: 19px;">cl</span>
+<span class="text"><a href="http://yourmagicalmoments.com/"><b>
+<font color="#ff3366" size="3"><span style="font-size: 16px; line-height: 19px;">cl</span>
 </font></b></a><a href="http://yourmagicalmoments.com/"><b><font color="#ff3333" size="3">
-<span style="font-size: 16px; line-height: 19px;">ick here to <br soft=""/></span></font></b></a><a href="http://yourmagicalmoments.com/"><b>
-<font color="#ff3333" size="3"><span style="font-size: 16px; line-height: 19px;">visit our friend <br soft=""/></span></font>
+<span style="font-size: 16px; line-height: 19px;">ick here to <br soft=""/>
+</span></font></b></a><a href="http://yourmagicalmoments.com/"><b>
+<font color="#ff3333" size="3">
+<span style="font-size: 16px; line-height: 19px;">visit our friend <br soft=""/></span></font>
 </b></a><a href="http://yourmagicalmoments.com/"><b><font color="#ff3333" size="3">
-<span style="font-size: 16px; line-height: 19px;">C</span></font></b></a><a href="http://yourmagicalmoments.com/"><b>
-<font color="#ff3333" size="3"><span style="font-size: 16px; line-height: 19px;">at @ </span></font></b></a><a href="http://yourmagicalmoments.com/"><b>
-<font color="#66ff66" size="3"><span style="font-size: 16px; line-height: 19px;">Magical <br soft=""/></span>
-</font></b></a><a href="http://yourmagicalmoments.com/"><b><font color="#66ff66" size="3"><span style="font-size: 16px; line-height: 19px;">Moments</span>
+<span style="font-size: 16px; line-height: 19px;">C</span>
+</font></b></a><a href="http://yourmagicalmoments.com/"><b>
+<font color="#ff3333" size="3">
+<span style="font-size: 16px; line-height: 19px;">at @ </span></font></b></a>
+<a href="http://yourmagicalmoments.com/"><b>
+<font color="#66ff66" size="3">
+<span style="font-size: 16px; line-height: 19px;">Magical <br soft=""/></span>
+</font></b></a><a href="http://yourmagicalmoments.com/"><b>
+<font color="#66ff66" size="3"><span style="font-size: 16px; line-height: 19px;">Moments</span>
 </font></b></a><a href="http://yourmagicalmoments.com/"><b><font color="#ff3333" size="3">
-<span style="font-size: 16px; line-height: 19px;"> <br soft=""/>Photography<br soft=""/></span></font></b></a></span></td>
+<span style="font-size: 16px; line-height: 19px;"> <br soft=""/>Photography<br soft=""/>
+</span></font></b></a></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e32" style="position: absolute; left: 182px; top: 15px; width: 167px; height: 35px;">
+<div id="e32">
 <span class="text"><b><font color="#ffff33">
 <span style="font-size: 14px; line-height: 17px;">Miss Sunshine Pageant<br soft=""/>
 </span></font></b></span>      
 </div>      
-<div id="e33" style="position: absolute; left: 4px; top: 279px; width: 170px; height: 135px;">
+<div id="e33">
 <table border="0" cellpadding="0" cellspacing="0" width="170">
 <tbody><tr>
 <td bgcolor="#003366" height="135" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b>
-<font color="#ff66ff" size="5"><span style="font-size: 24px; line-height: 29px;">Yvette's</span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b><font color="#ffff33" size="5">
+<font color="#ff66ff" size="5">
+<span style="font-size: 24px; line-height: 29px;">Yvette's</span>
+</font></b></a><a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b>
+<font color="#ffff33" size="5">
 <span style="font-size: 24px; line-height: 29px;"> </span></font></b></a>
 <a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b>
-<font color="#33ff33" size="4"><span style="font-size: 22px; line-height: 26px;">has </span></font></b></a>
+<font color="#33ff33" size="4">
+<span style="font-size: 22px; line-height: 26px;">has </span></font></b></a>
 <a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b>
 <font color="#33ff33" size="4">
 <span style="font-size: 22px; line-height: 26px;">a <br soft=""/>mysterious, <br soft=""/>ancient secret <br soft=""/>for YOU</span>
@@ -417,12 +452,12 @@ echo $mm;
 </tr>
 </tbody></table> 
 </div>
-<div id="e34" style="position: absolute; left: 266px; top: 230px; width: 331px; height: 35px;">
+<div id="e34">
 <span class="text"><b><font color="#33ff33"><span style="font-size: 14px; line-height: 17px;">Luxury Name Brand~* &nbsp;&nbsp;</span></font></b><b>
 <font color="#ff3333"><span style="font-size: 14px; line-height: 17px;">Designer Fabrique`~*<br/></span></font></b><b>
 <font color="#ff66ff"><span style="font-size: 14px; line-height: 17px;">Fashion Label~*<br soft=""/></span></font></b></span>      
 </div>
-<div id="e35" style="position: absolute; left: 773px; top: 1016px; width: 324px; height: 26px;">
+<div id="e35">
 <table border="0" cellpadding="0" cellspacing="0" width="324">
 <tbody><tr>
 <td bgcolor="#999900" height="26" nowrap="nowrap" valign="top">
@@ -433,7 +468,7 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e36" style="position: absolute; left: 744px; top: 781px; width: 602px; height: 89px;">
+<div id="e36">
 <table border="0" cellpadding="0" cellspacing="0" width="602">
 <tbody><tr>
 <td bgcolor="#990099" height="89" nowrap="nowrap" valign="top">
@@ -441,14 +476,14 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e37" style="position: absolute; left: 806px; top: 794px; width: 460px; height: 62px;">
+<div id="e37">
 <table border="0" cellpadding="0" cellspacing="0" width="460">
 <tbody><tr>
 <td bgcolor="#999900" height="62" nowrap="nowrap" valign="top"></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e38" style="position: absolute; left: 878px; top: 812px; width: 250px; height: 31px;">
+<div id="e38">
 <table border="0" cellpadding="0" cellspacing="0" width="250">
 <tbody><tr>
 <td bgcolor="#990066" height="31" nowrap="nowrap" valign="top">
@@ -456,7 +491,7 @@ echo $mm;
 </tr>
 </tbody></table>
 </div>
-<div id="e39" style="position: absolute; left: 765px; top: 15px; width: 194px; height: 137px;">
+<div id="e39">
 <table border="0" cellpadding="0" cellspacing="0" width="194">
 <tbody><tr>
 <td bgcolor="#00cccc" height="137" nowrap="nowrap" valign="top"><span class="text">
@@ -466,10 +501,13 @@ echo $mm;
 <font color="#ffff33" size="4">
 <span style="font-size: 22px; line-height: 26px;">&amp; <br soft=""/>
 </span></font></b></a><a href="http://www.yvettesbridalformal.com/BLB1.html"><b>
-<font color="#ffff33" size="4"><span style="font-size: 22px; line-height: 26px;">Brittany </span>
+<font color="#ffff33" size="4">
+<span style="font-size: 22px; line-height: 26px;">Brittany </span>
 </font></b></a><a href="http://www.yvettesbridalformal.com/BLB1.html"><b>
-<font color="#0066ff" size="4"><span style="font-size: 22px; line-height: 26px;">trying on</span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/BLB1.html"><b><font color="#ffff33" size="4">
+<font color="#0066ff" size="4">
+<span style="font-size: 22px; line-height: 26px;">trying on</span>
+</font></b></a><a href="http://www.yvettesbridalformal.com/BLB1.html"><b>
+<font color="#ffff33" size="4">
 <span style="font-size: 22px; line-height: 26px;"> <br soft=""/>Gowns</span></font></b></a>
 <a href="http://www.yvettesbridalformal.com/BLB1.html"><b><font color="#ffff33" size="4">
 <span style="font-size: 22px; line-height: 26px;"> @ <br soft=""/></span></font></b></a>
@@ -484,26 +522,27 @@ echo $mm;
 <span style="font-size: 24px; line-height: 29px;"> <br soft=""/>~*</span>
 </font></b></a><a href="http://www.yvettesbridalformal.com/BLB1.html"><b>
 <font color="#ffff33" size="5">
-<span style="font-size: 24px; line-height: 29px;">~*~*<br soft=""/></span></font></b></a></span></td>
+<span style="font-size: 24px; line-height: 29px;">~*~*<br soft=""/>
+</span></font></b></a></span></td>
 </tr>
 </tbody></table>
 </div>
-<div id="e40" style="position: absolute; left: 1158px; top: 874px; width: 450px; height: 600px;">
+<div id="e40">
 <img src="yvettes_files/test114_099-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e41" style="position: absolute; left: 633px; top: 1299px; width: 450px; height: 600px;">
+<div id="e41">
 <img src="yvettes_files/test114_103-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e42" style="position: absolute; left: 633px; top: 1936px; width: 450px; height: 600px;">
+<div id="e42">
 <img src="yvettes_files/test116_085-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e43" style="position: absolute; left: 630px; top: 2533px; width: 450px; height: 600px;">
+<div id="e43">
 <img src="yvettes_files/test116_050-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e44" style="position: absolute; left: 633px; top: 3137px; width: 450px; height: 600px;">
+<div id="e44">
 <img src="yvettes_files/test116_038-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e45" style="position: absolute; left: 188px; top: 3304px; width: 592px; height: 229px;"/>
+<div id="e45"/>
 <table border="0" cellpadding="0" cellspacing="0" width="592">
 <tbody><tr>
 <td bgcolor="#006666" height="229" nowrap="nowrap" valign="top">
@@ -579,9 +618,9 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e47">
-<img src="yvettes_files/test118_050-450x600.jpg" alt="" height="600" width="450"/></div>
+<img src="bride4.jpg" alt="" height="600" width="450"/></div>
 <div id="e48">
-<img src="yvettes_files/test118_066-450x600.jpg" alt="" height="600" width="450"/>
+<img src="bride3.jpg" alt="" height="600" width="450"/>
 </div>      
 <div id="e49">
 <img src="yvettes_files/test113_073-600x450.jpg" alt="" height="450" width="600"/>
@@ -611,9 +650,9 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e51">
-<img src="yvettes_files/test121_128-450x600.jpg" alt="" height="600" width="450"/></div>      
+<img src="bride2.jpg" alt="" height="600" width="450"/></div>      
 <div id="e52">
-<img src="yvettes_files/test121_001-450x600.jpg" alt="" height="600" width="450"/>
+<img src="bride1.jpg" alt="" height="600" width="450"/>
 </div><div id="e53">
 <img src="yvettes_files/test122_013-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e54">
@@ -1361,17 +1400,18 @@ echo $mm;
 </span></font></b></span>
 </div>      
 <div id="e158"><span class="text"><b><font color="#33ff33" size="5">
-<span style="font-size: 24px; line-height: 29px;">Wedding Gowns Panama City Florida !! ~*<br/>Wedding Gown Panama City Florida !! ~*<br soft=""/></span></font></b></span>
+<span class="stijl3">Wedding Gowns Panama City Florida !! ~*<br/>Wedding Gown Panama City Florida !! ~*<br soft=""/></span></font></b></span>
 </div>
 <div id="e159"><span class="text"><b><font color="#33ff33" size="5">
-<span style="font-size: 24px; line-height: 29px;">Wedding Dresses Panama City !! ~*<br/>Wedding Dresses Panama City Florida !! ~*<br soft=""/></span></font></b></span>
+<span class="stijl3">Wedding Dresses Panama City !! ~*<br/>Wedding Dresses Panama City Florida !! ~*<br soft=""/>
+</span></font></b></span>
 </div>
 <div id="e160">
 <table border="0" cellpadding="0" cellspacing="0" width="421">
 <tbody><tr>
 <td bgcolor="#003333" height="31" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" size="5">
-<span style="font-size: 24px; line-height: 29px;">Yvette's habla poquito espanola !! ~*<br soft=""/></span>
+<span class="stijl3">Yvette's habla poquito espanola !! ~*<br soft=""/></span>
 </font></b></span></td>
 </tr>
 </tbody></table>
@@ -1860,15 +1900,21 @@ echo $mm;
 </div>
 <div id="e194">
 <a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina">
-<img src="yvettes_files/BooneNC_002-450x600.jpg" alt="" border="0" height="600" width="450"/></a></div>
+<img src="yvettes_files/BooneNC_002-450x600.jpg" alt="" border="0" height="600" width="450"/>
+</a></div>
 <div id="e195">
 <table border="0" cellpadding="0" cellspacing="0" width="411">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="71" nowrap="nowrap" valign="top">
-<span class="text"><a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina"><b><font color="#33ff33" size="6">
-<span style="font-size: 30px; line-height: 35px;">to view this Master~Piece <br soft=""/></span></font></b></a>
-<a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina"><b><font color="#33ff33" size="6">
-<span style="font-size: 30px; line-height: 35px;">please click here !! *~V8~*+<br soft=""/></span></font></b></a></span></td>
+<span class="text">
+<a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina"><b>
+<font color="#33ff33" size="6">
+<span style="font-size: 30px; line-height: 35px;">to view this Master~Piece <br soft=""/>
+</span></font></b></a>
+<a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina"><b>
+<font color="#33ff33" size="6">
+<span style="font-size: 30px; line-height: 35px;">please click here !! *~V8~*+<br soft=""/>
+</span></font></b></a></span></td>
 </tr>
 </tbody></table>
 </div>

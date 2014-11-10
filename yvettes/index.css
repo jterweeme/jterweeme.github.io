@@ -12,6 +12,38 @@ body
     margin-left: 0px;
 }
 
+p
+{
+    font-family: "Arial";
+    font-size: 14;
+}
+
+form
+{
+    margin: 0;
+    padding: 0;
+}
+
+span.stijl1
+{
+font-size: 30px; line-height: 35px;
+}
+
+span.stijl2
+{
+font-size: 20px; line-height: 24px;
+}
+
+span.stijl3
+{
+    font-size: 24px; line-height: 29px;
+}
+
+span.color1
+{
+    color: #ffff00;
+}
+
 div#root
 {
     position: absolute;
@@ -28,16 +60,229 @@ div#e0
     height: 505px;
 }
 
-p
+div#e1
 {
-    font-family: "Arial";
-    font-size: 14;
+position: absolute; left: 288px; top: 805px; width: 250px; height: 100px;
 }
 
-form
+div#e2
 {
-    margin: 0;
-    padding: 0;
+position: absolute; left: 262px; top: 634px; width: 250px; height: 40px;
+}
+
+div#e3
+{
+position: absolute; left: 255px; top: 673px; width: 250px; height: 100px;
+}
+
+div#e4
+{
+position: absolute; left: 504px; top: 953px; width: 250px; height: 777px;
+}
+
+div#e5
+{
+position: absolute; left: 1px; top: 847px; width: 250px; height: 323px;
+}
+
+div#e6
+{
+position: absolute; left: 882px; top: 1064px; width: 250px; height: 534px;
+}
+
+div#e7
+{
+position: absolute; left: 437px; top: 459px; width: 270px; height: 52px;
+}
+
+div#e8
+{
+position: absolute; left: 34px; top: 1423px; width: 250px; height: 100px;
+}
+
+div#e9
+{
+position: absolute; left: 214px; top: 500px; width: 519px; height: 49px;
+}
+
+div#e10
+{
+position: absolute; left: 359px; top: 7px; width: 290px; height: 35px;
+}
+
+div#e11
+{
+position: absolute; left: 198px; top: 397px; width: 541px; height: 60px;
+}
+
+div#e12
+{
+position: absolute; left: 758px; top: 890px; width: 179px; height: 101px;
+}
+
+div#e13
+{
+position: absolute; left: 137px; top: 551px; width: 600px; height: 450px;
+}
+
+div#e14
+{
+position: absolute; left: 88px; top: 884px; width: 634px; height: 108px;
+}
+
+div#e15
+{
+position: absolute; left: 194px; top: 35px; width: 198px; height: 406px;
+}
+
+div#e16
+{
+position: absolute; left: 570px; top: 155px; width: 446px; height: 83px;
+}
+
+div#e17
+{
+position: absolute; left: 397px; top: 373px; width: 586px; height: 38px;
+}
+
+div#e18
+{
+position: absolute; left: 29px; top: 1391px; width: 450px; height: 600px;
+}
+
+div#e19
+{
+position: absolute; left: 5px; top: 1994px; width: 600px; height: 450px;
+}
+
+div#e20
+{
+position: absolute; left: 20px; top: 2447px; width: 600px; height: 450px;
+}
+
+div#e21
+{
+position: absolute; left: 22px; top: 2908px; width: 600px; height: 450px;
+}
+
+div#e22
+{
+position: absolute; left: 574px; top: 1025px; width: 130px; height: 130px;
+}
+
+div#e23
+{
+position: absolute; left: 280px; top: 598px; width: 293px; height: 48px;
+}
+
+div#e24
+{
+position: absolute; left: 656px; top: 0pt; width: 128px; height: 136px;
+}
+
+div#e25
+{
+position: absolute; left: 967px; top: 607px; width: 189px; height: 289px;
+}
+
+div#e26
+{
+position: absolute; left: 174px; top: 264px; width: 224px; height: 32px;
+}
+
+div#e27
+{
+position: absolute; left: 184px; top: 144px; width: 210px; height: 25px;
+}
+
+div#e28
+{
+position: absolute; left: 747px; top: 421px; width: 697px; height: 450px;
+}
+
+div#e29
+{
+position: absolute; left: 1007px; top: 0pt; width: 600px; height: 419px;
+}
+
+div#e30
+{
+position: absolute; left: 183px; top: 126px; width: 213px; height: 19px;
+}
+
+div#e31
+{
+position: absolute; left: 70px; top: 787px; width: 114px; height: 114px;
+}
+
+div#e32
+{
+position: absolute; left: 182px; top: 15px; width: 167px; height: 35px;
+}
+
+div#e33
+{
+position: absolute; left: 4px; top: 279px; width: 170px; height: 135px;
+}
+
+div#e34
+{
+position: absolute; left: 266px; top: 230px; width: 331px; height: 35px;
+}
+
+div#e35
+{
+position: absolute; left: 773px; top: 1016px; width: 324px; height: 26px;
+}
+
+div#e36
+{
+position: absolute; left: 744px; top: 781px; width: 602px; height: 89px;
+}
+
+div#e37
+{
+position: absolute; left: 806px; top: 794px; width: 460px; height: 62px;
+}
+
+div#e38
+{
+position: absolute; left: 878px; top: 812px; width: 250px; height: 31px;
+}
+
+div#e39
+{
+position: absolute; left: 765px; top: 15px; width: 194px; height: 137px;
+}
+
+div#e40
+{
+position: absolute; left: 1158px; top: 874px; width: 450px; height: 600px;
+}
+
+div#e41
+{
+position: absolute; left: 633px; top: 1299px; width: 450px; height: 600px;
+}
+
+div#e42
+{
+position: absolute; left: 633px; top: 1936px; width: 450px; height: 600px;
+}
+
+div#e43
+{
+position: absolute; left: 630px; top: 2533px; width: 450px; height: 600px;
+}
+
+div#e44
+{
+position: absolute; left: 633px; top: 3137px; width: 450px; height: 600px;
+}
+
+div#e45
+{
+position: absolute; left: 188px; top: 3304px; width: 592px; height: 229px;
 }
 
 div#e46
