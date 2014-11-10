@@ -74,7 +74,7 @@ echo $mm;
 <span style="font-size: 14px; line-height: 17px;">beautiful<br/></span></span>      
 </div>
 <div id="e9">
-<table border="0"  cellspacing="0" width="519">
+<table border="0"   width="519">
 <tbody><tr>
 <td bgcolor="#66ff66" height="49" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yvettesbridalformal.com/Pinklinks1.html">
@@ -109,7 +109,7 @@ echo $mm;
 </font></b></span>      
 </div>
 <div id="e12">
-<table border="0"  cellspacing="0" width="179">
+<table border="0"   width="179">
 <tbody><tr>
 <td bgcolor="#0099ff" height="101" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yvettesbridalformal.com/signup1.html"><b>
@@ -165,7 +165,7 @@ echo $mm;
 </a>
 </div>      
 <div id="e14">
-<table border="0"  cellspacing="0" width="634">
+<table border="0"   width="634">
 <tbody><tr>
 <td bgcolor="#660066" height="108" nowrap="nowrap" valign="top">
 </td>
@@ -216,7 +216,7 @@ echo $mm;
 </span></font></b></a></span>      
 </div>
 <div id="e16">
-<table border="0"  cellspacing="0" width="446">
+<table border="0"   width="446">
 <tbody><tr>
 <td bgcolor="#000000" height="83" nowrap="nowrap" valign="top">
 <span class="text">
@@ -242,7 +242,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e17">
-<table border="0"  cellspacing="0" width="586">
+<table border="0"   width="586">
 <tbody><tr>
 <td bgcolor="#330033" height="38" nowrap="nowrap" valign="top">
 <span class="text"><b><i><font color="#ff00ff" >
@@ -272,7 +272,7 @@ echo $mm;
 <div id="e21">
 <img src="yvettes_files/test34_030-600x450.jpg" alt="" height="450" width="600"/></div>
 <div id="e22">
-<table border="0"  cellspacing="0" width="130">
+<table border="0"   width="130">
 <tbody>
 <tr>
 <td bgcolor="#ff66ff" height="130" nowrap="nowrap" valign="top">
@@ -299,7 +299,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e23">
-<table border="0"  cellspacing="0" width="293">
+<table border="0"   width="293">
 <tbody><tr>
 <td bgcolor="#333333" height="48" nowrap="nowrap" valign="top"><span class="text"><b>
 <i><font color="#ff00ff" >
@@ -311,7 +311,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e24">
-<table border="0"  cellspacing="0" width="128">
+<table border="0"   width="128">
 <tbody><tr>
 <td bgcolor="#000000" height="136" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#00ff99">
@@ -335,7 +335,7 @@ echo $mm;
 </span>      
 </div>
 <div id="e26">
-<table border="0"  cellspacing="0" width="224">
+<table border="0"   width="224">
 <tbody><tr>
 <td bgcolor="#660000" height="32" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff0033" >
@@ -345,7 +345,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e27">
-<table border="0"  cellspacing="0" width="210">
+<table border="0"   width="210">
 <tbody><tr>
 <td bgcolor="#660033" height="25" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffcccc" >
@@ -359,7 +359,7 @@ echo $mm;
 <div id="e29">
 <img src="yvettes_files/DePlane-600x419.jpg" alt="" height="419" width="600"/></div>
 <div id="e30">
-<table border="0"  cellspacing="0" width="213">
+<table border="0"   width="213">
 <tbody><tr>
 <td bgcolor="#000000" height="19" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#66ffff" >
@@ -375,7 +375,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e31">
-<table border="0"  cellspacing="0" width="114">
+<table border="0"   width="114">
 <tbody><tr>
 <td bgcolor="#330099" height="114" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://yourmagicalmoments.com/"><b>
@@ -407,7 +407,7 @@ echo $mm;
 </span></font></b></span>      
 </div>      
 <div id="e33">
-<table border="0"  cellspacing="0" width="170">
+<table border="0"   width="170">
 <tbody><tr>
 <td bgcolor="#003366" height="135" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/PlusSizes1.html"><b>
@@ -458,7 +458,7 @@ echo $mm;
 </span></font></b></span>      
 </div>
 <div id="e35">
-<table border="0"  cellspacing="0" width="324">
+<table border="0"   width="324">
 <tbody><tr>
 <td bgcolor="#999900" height="26" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.wildroseminiatures.com/"><b>
@@ -469,7 +469,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e36">
-<table border="0"  cellspacing="0" width="602">
+<table border="0"   width="602">
 <tbody><tr>
 <td bgcolor="#990099" height="89" nowrap="nowrap" valign="top">
 </td>
@@ -477,14 +477,14 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e37">
-<table border="0"  cellspacing="0" width="460">
+<table border="0"   width="460">
 <tbody><tr>
 <td bgcolor="#999900" height="62" nowrap="nowrap" valign="top"></td>
 </tr>
 </tbody></table>
 </div>
 <div id="e38">
-<table border="0"  cellspacing="0" width="250">
+<table border="0"   width="250">
 <tbody><tr>
 <td bgcolor="#990066" height="31" nowrap="nowrap" valign="top">
 </td>
@@ -492,7 +492,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e39">
-<table border="0"  cellspacing="0" width="194">
+<table border="0"   width="194">
 <tbody><tr>
 <td bgcolor="#00cccc" height="137" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/BLB1.html"><b><font color="#ffff33" >
@@ -543,7 +543,7 @@ echo $mm;
 <img src="yvettes_files/test116_038-450x600.jpg" alt="" height="600" width="450"/>
 </div>
 <div id="e45"/>
-<table border="0"  cellspacing="0" width="592">
+<table border="0"   width="592">
 <tbody><tr>
 <td bgcolor="#006666" height="229" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -597,7 +597,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e46">
-<table border="0"  cellspacing="0" width="140">
+<table border="0"   width="140">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="131" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Glamorlist1.html"><b>
@@ -634,7 +634,7 @@ echo $mm;
 <img src="yvettes_files/test113_073-600x450.jpg" alt="" height="450" width="600"/>
 </div>
 <div id="e50">
-<table border="0"  cellspacing="0" width="134">
+<table border="0"   width="134">
 <tbody><tr>
 <td bgcolor="#00ff99" height="97" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/RoadStar1.html">
@@ -668,21 +668,21 @@ echo $mm;
 </div><div id="e53">
 <img src="yvettes_files/test122_013-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e54">
-<table border="0"  cellspacing="0" width="361">
+<table border="0"   width="361">
 <tbody><tr>
 <td bgcolor="#993300" height="57" nowrap="nowrap" valign="top"></td>
 </tr>
 </tbody></table>
 </div>
 <div id="e55">
-<table border="0"  cellspacing="0" width="313">
+<table border="0"   width="313">
 <tbody><tr>
 <td bgcolor="#ff33ff" height="35" nowrap="nowrap" valign="top"></td>
 </tr>
 </tbody></table>
 </div>
 <div id="e56">
-<table border="0"  cellspacing="0" width="250">
+<table border="0"   width="250">
 <tbody><tr>
 <td bgcolor="#33ffcc" height="17" nowrap="nowrap" valign="top"></td>
 </tr>
@@ -743,14 +743,14 @@ echo $mm;
 <div id="e75">
 <img src="yvettes_files/test148_036-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e76">
-<table border="0"  cellspacing="0" width="80">
+<table border="0"   width="80">
 <tbody><tr>
 <td bgcolor="#990099" height="32" nowrap="nowrap" valign="top"></td>
 </tr>
 </tbody></table>
 </div>
 <div id="e77">
-<table border="0"  cellspacing="0" width="36">
+<table border="0"   width="36">
 <tbody><tr>
 <td bgcolor="#006699" height="167" nowrap="nowrap" valign="top"></td>
 </tr>
@@ -784,7 +784,7 @@ echo $mm;
 </span></span>
 </div>
 <div id="e88">
-<table border="0"  cellspacing="0" width="177">
+<table border="0"   width="177">
 <tbody><tr>
 <td bgcolor="#cc33ff" height="104" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/PROM"><b>
@@ -829,7 +829,7 @@ echo $mm;
 </span></span>
 </div>
 <div id="e92">
-<table border="0"  cellspacing="0" width="185">
+<table border="0"   width="185">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="64" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/carlsoncraft3.html"><b>
@@ -854,7 +854,7 @@ echo $mm;
 </span></font></span>
 </div>
 <div id="e94">
-<table border="0"  cellspacing="0" width="191">          
+<table border="0"   width="191">          
 <tbody><tr>            
 <td bgcolor="#3333ff" height="232" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b><font color="#ffff33" >
@@ -893,7 +893,7 @@ echo $mm;
 <div id="e95">
 <img src="yvettes_files/test141_037-367x455.jpg" alt="" height="455" width="367"/></div>
 <div id="e96">
-<table border="0"  cellspacing="0" width="396">
+<table border="0"   width="396">
 <tbody><tr>
 <td bgcolor="#ffcccc" height="26" nowrap="nowrap" valign="top">
 <span class="text"><font color="#ff00ff" >
@@ -921,7 +921,7 @@ echo $mm;
 </span></font></b></span>
 </div>
 <div id="e99">
-<table border="0"  cellspacing="0" width="605">
+<table border="0"   width="605">
 <tbody><tr>
 <td bgcolor="#009900" height="50" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -933,7 +933,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e100">
-<table border="0"  cellspacing="0" width="728">
+<table border="0"   width="728">
 <tbody><tr>
 <td bgcolor="#990099" height="35" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -949,7 +949,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e101">
-<table border="0"  cellspacing="0" width="756">
+<table border="0"   width="756">
 <tbody><tr>
 <td bgcolor="#000099" height="64" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -961,7 +961,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e102">
-<table border="0"  cellspacing="0" width="683">          
+<table border="0"   width="683">          
 <tbody><tr>            
 <td bgcolor="#990066" height="59" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -973,7 +973,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e103">
-<table border="0"  cellspacing="0" width="978">
+<table border="0"   width="978">
 <tbody><tr>
 <td bgcolor="#3399ff" height="183" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -996,7 +996,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e104">
-<table border="0"  cellspacing="0" width="226">
+<table border="0"   width="226">
 <tbody><tr>
 <td bgcolor="#cc99ff" height="75" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/DesignerBridalGownsYvettes1.html"><b>
@@ -1020,7 +1020,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e105">
-<table border="0"  cellspacing="0" width="325">
+<table border="0"   width="325">
 <tbody><tr>
 <td bgcolor="#cc99ff" height="50" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#00ffff" >
@@ -1041,7 +1041,7 @@ echo $mm;
 </span></font></b></span>
 </div>     
 <div id="e108">
-<table border="0"  cellspacing="0" width="432">
+<table border="0"   width="432">
 <tbody><tr>
 <td bgcolor="#00ff00" height="127" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffcc33" >
@@ -1050,7 +1050,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e109">
-<table border="0"  cellspacing="0" width="365">
+<table border="0"   width="365">
 <tbody><tr>
 <td bgcolor="#ff9933" height="61" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#cc33ff" >
@@ -1060,7 +1060,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e110">
-<table border="0"  cellspacing="0" width="209">
+<table border="0"   width="209">
 <tbody><tr>
 <td bgcolor="#ffff33" height="53" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff33ff" >
@@ -1070,7 +1070,7 @@ echo $mm;
 </tbody></table>      
 </div> 
 <div id="e111">
-<table border="0"  cellspacing="0" width="209">          
+<table border="0"   width="209">          
 <tbody><tr>
 <td bgcolor="#ff00cc" height="106" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffccff" >
@@ -1082,7 +1082,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e112">
-<table border="0"  cellspacing="0" width="567">
+<table border="0"   width="567">
 <tbody><tr>
 <td bgcolor="#00ffcc" height="52" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff00ff" >
@@ -1092,7 +1092,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e113">
-<table border="0"  cellspacing="0" width="1359">
+<table border="0"   width="1359">
 <tbody><tr>
 <td bgcolor="#00ffcc" height="46" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff00ff" >
@@ -1102,7 +1102,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e114">
-<table border="0"  cellspacing="0" width="528">
+<table border="0"   width="528">
 <tbody><tr>
 <td bgcolor="#00ffff" height="88" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff00ff" >
@@ -1112,7 +1112,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e115">
-<table border="0"  cellspacing="0" width="343">
+<table border="0"   width="343">
 <tbody><tr>
 <td bgcolor="#ff9966" height="59" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffff00" >
@@ -1122,7 +1122,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e116">
-<table border="0"  cellspacing="0" width="575">
+<table border="0"   width="575">
 <tbody><tr>
 <td bgcolor="#ff33cc" height="71" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#00ffff" >
@@ -1134,7 +1134,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e117">
-<table border="0"  cellspacing="0" width="404">
+<table border="0"   width="404">
 <tbody><tr>       
 <td bgcolor="#ff33cc" height="100" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#00ffcc" >
@@ -1144,7 +1144,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e118">
-<table border="0"  cellspacing="0" width="432">
+<table border="0"   width="432">
 <tbody><tr>
 <td bgcolor="#00ffff" height="34" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/YvettesBridal.html"><b>
@@ -1155,7 +1155,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e119">
-<table border="0"  cellspacing="0" width="416">
+<table border="0"   width="416">
 <tbody><tr>
 <td bgcolor="#ffff33" height="28" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#3333ff" >
@@ -1165,7 +1165,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e120">
-<table border="0"  cellspacing="0" width="152">
+<table border="0"   width="152">
 <tbody><tr> 
 <td bgcolor="#ffff33" height="92" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/YvettesGuestBook1.html">
@@ -1192,7 +1192,7 @@ echo $mm;
 <div id="e121">
 <img src="yvettes_files/LindseySean2-1023x715.png" alt="" height="715" width="1023"/></div>
 <div id="e122">
-<table border="0"  cellspacing="0" width="1178">
+<table border="0"   width="1178">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="56" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ffff" >
@@ -1213,7 +1213,7 @@ echo $mm;
 </span></font></b></span>
 </div>
 <div id="e126">
-<table border="0"  cellspacing="0" width="574">
+<table border="0"   width="574">
 <tbody><tr>
 <td bgcolor="#33ffff" height="30" nowrap="nowrap" valign="top"><span class="text"><b>
 <font color="#ff00cc" >
@@ -1239,7 +1239,7 @@ echo $mm;
 </font></b></span>
 </div>
 <div id="e132">
-<table border="0"  cellspacing="0" width="447">
+<table border="0"   width="447">
 <tbody><tr>
 <td bgcolor="#ff0099" height="30" nowrap="nowrap" valign="top"><span class="text">
 <b><font color="#33ffff" >
@@ -1249,7 +1249,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e133">
-<table border="0"  cellspacing="0" width="275">          
+<table border="0"   width="275">          
 <tbody><tr>       
 <td bgcolor="#669900" height="29" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/ApplePieRecipeYvettes1"><b>
@@ -1269,7 +1269,7 @@ echo $mm;
 </span></font></b></span>
 </div>
 <div id="e135">
-<table border="0"  cellspacing="0" width="356">
+<table border="0"   width="356">
 <tbody><tr>
 <td bgcolor="#ff0099" height="30" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ffff" >
@@ -1288,7 +1288,7 @@ echo $mm;
 </span></font></b></span>
 </div>
 <div id="e137">
-<table border="0"  cellspacing="0" width="1040">
+<table border="0"   width="1040">
 <tbody><tr>            
 <td bgcolor="#ff00ff" height="59" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#66ffcc" >
@@ -1304,7 +1304,7 @@ echo $mm;
 <img src="yvettes_files/YvettesFlamingos13-480x600.jpg" alt="" height="600" width="480"/>
 </div>      
 <div id="e139">
-<table border="0"  cellspacing="0" width="622">
+<table border="0"   width="622">
 <tbody><tr>
 <td bgcolor="#3399ff" height="59" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffff00" >
@@ -1314,7 +1314,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e140">
-<table border="0"  cellspacing="0" width="405">
+<table border="0"   width="405">
 <tbody><tr>
 <td bgcolor="#33ff00" height="117" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff99ff" >
@@ -1327,7 +1327,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e141">
-<table border="0"  cellspacing="0" width="375">
+<table border="0"   width="375">
 <tbody><tr>
 <td bgcolor="#00ffcc" height="84" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff00ff" >
@@ -1336,7 +1336,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e142">
-<table border="0"  cellspacing="0" width="349">
+<table border="0"   width="349">
 <tbody><tr>
 <td bgcolor="#00ffff" height="30" nowrap="nowrap" valign="top"><span class="text"><b>
 <font color="#ff00cc" >
@@ -1349,7 +1349,7 @@ echo $mm;
 <img src="yvettes_files/c.gif" alt="Counter"/>
 </div>
 <div id="e144">
-<table border="0"  cellspacing="0" width="403">
+<table border="0"   width="403">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="35" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#99ffff" >
@@ -1359,7 +1359,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e145">
-<table border="0"  cellspacing="0" width="120">
+<table border="0"   width="120">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="33" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#99ffff" >
@@ -1369,7 +1369,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e146">
-<table border="0"  cellspacing="0" width="390">
+<table border="0"   width="390">
 <tbody><tr>
 <td bgcolor="#ffccff" height="31" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" >
@@ -1379,7 +1379,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e147">
-<table border="0"  cellspacing="0" width="435">
+<table border="0"   width="435">
 <tbody><tr>
 <td bgcolor="#ffff33" height="35" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Yerza_Kultoria_Gallery_of_Fine_Arts.html"><b>
@@ -1434,7 +1434,7 @@ echo $mm;
 </span></font></b></span>
 </div>      
 <div id="e155"> 
-<table border="0"  cellspacing="0" width="480">    
+<table border="0"   width="480">    
 <tbody><tr>
 <td bgcolor="#cc99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.panamacityliving.com/"><b><font color="#ffff33" >
@@ -1447,7 +1447,7 @@ echo $mm;
 </tbody></table> 
 </div>
 <div id="e156">
-<table border="0"  cellspacing="0" width="212">
+<table border="0"   width="212">
 <tbody><tr>
 <td bgcolor="#00ff66" height="92" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Yvettes_New_Location1.html"><b>
@@ -1482,7 +1482,7 @@ echo $mm;
 </span></font></b></span>
 </div>
 <div id="e160">
-<table border="0"  cellspacing="0" width="421">
+<table border="0"   width="421">
 <tbody><tr>
 <td bgcolor="#003333" height="31" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" >
@@ -1492,7 +1492,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e161">
-<table border="0"  cellspacing="0" width="415">
+<table border="0"   width="415">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1512,7 +1512,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e162">
-<table border="0"  cellspacing="0" width="343">
+<table border="0"   width="343">
 <tbody><tr>
 <td bgcolor="#ccff33" height="59" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Tux_Rental_Panama_City"><b>
@@ -1530,7 +1530,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e163">
-<table border="0"  cellspacing="0" width="397">
+<table border="0"   width="397">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1549,7 +1549,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e164">
-<table border="0"  cellspacing="0" width="674">
+<table border="0"   width="674">
 <tbody><tr>
 <td bgcolor="#33ff33" height="42" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/Bridal_Shops_Florida"><b>
@@ -1560,7 +1560,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e165">
-<table border="0"  cellspacing="0" width="419">
+<table border="0"   width="419">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/Wedding_Dresses_Panama_City"><b>
@@ -1578,7 +1578,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e166">
-<table border="0"  cellspacing="0" width="379">
+<table border="0"   width="379">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Bridal_Gowns_Panama_City"><b>
@@ -1597,7 +1597,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e167">
-<table border="0"  cellspacing="0" width="316">
+<table border="0"   width="316">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Bridal_Salons_Florida"><b>
@@ -1625,7 +1625,7 @@ echo $mm;
 </span></font></b></span>      
 </div>      
 <div id="e169">
-<table border="0"  cellspacing="0" width="454">
+<table border="0"   width="454">
 <tbody><tr>
 <td bgcolor="#ccff33" height="87" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Fine_Art_Panama_City"><b>
@@ -1643,7 +1643,7 @@ echo $mm;
 </tbody></table>
 </div>      
 <div id="e170">
-<table border="0"  cellspacing="0" width="364">          
+<table border="0"   width="364">          
 <tbody><tr>            
 <td bgcolor="#33ffff" height="59" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1661,7 +1661,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e171">
-<table border="0"  cellspacing="0" width="406">
+<table border="0"   width="406">
 <tbody><tr>
 <td bgcolor="#339900" height="35" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1675,7 +1675,7 @@ echo $mm;
 <div id="e172">
 <img src="yvettes_files/04-29-10_1324-480x600.jpg" alt="" height="600" width="480"/></div>
 <div id="e173">
-<table border="0"  cellspacing="0" width="497">
+<table border="0"   width="497">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="77" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Wedding_Gowns_Panama_City"><b>
@@ -1693,7 +1693,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e174">
-<table border="0"  cellspacing="0" width="474">
+<table border="0"   width="474">
 <tbody><tr>
 <td bgcolor="#ff99ff" height="71" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1713,7 +1713,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e175">
-<table border="0"  cellspacing="0" width="442">
+<table border="0"   width="442">
 <tbody><tr>
 <td bgcolor="#ccff66" height="86" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1733,7 +1733,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e176">
-<table border="0"  cellspacing="0" width="448">
+<table border="0"   width="448">
 <tbody><tr>
 <td bgcolor="#000033" height="74" nowrap="nowrap" valign="top">
 <span class="text">
@@ -1753,7 +1753,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e177">
-<table border="0"  cellspacing="0" width="528">
+<table border="0"   width="528">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="72" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/High_Priestess_of_Machu_Picchu"><b>
@@ -1772,7 +1772,7 @@ echo $mm;
 </tbody></table> 
 </div>
 <div id="e178">
-<table border="0"  cellspacing="0" width="392">
+<table border="0"   width="392">
 <tbody><tr>   
 <td bgcolor="#ff00cc" height="117" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" >
@@ -1809,7 +1809,7 @@ echo $mm;
 <div id="e181">
 <img src="icon.png" alt="icon"/></div>
 <div id="e182">
-<table border="0"  cellspacing="0" width="590">
+<table border="0"   width="590">
 <tbody><tr>
 <td bgcolor="#33ff33" height="81" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ff66ff" >
@@ -1826,7 +1826,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e183">
-<table border="0"  cellspacing="0" width="240">
+<table border="0"   width="240">
 <tbody><tr>
 <td bgcolor="#ccff00" height="71" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/please_contribute_to_the_World_Famous_Artist_Sean_Terrence_Best_V8"><b>
@@ -1840,7 +1840,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e184">
-<table border="0"  cellspacing="0" width="362">
+<table border="0"   width="362">
 <tbody><tr>
 <td bgcolor="#ccff00" height="102" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/please_contribute_to_the_World_Famous_Artist_Sean_Terrence_Best_V8"><b><font color="#ff33ff" >
@@ -1861,7 +1861,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e185">
-<table border="0"  cellspacing="0" width="844">
+<table border="0"   width="844">
 <tbody><tr>
 <td bgcolor="#6666ff" height="1320" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" >
@@ -1989,7 +1989,7 @@ echo $mm;
 <img src="yvettes_files/BooneNC_002-450x600.jpg" alt="" border="0" height="600" width="450"/>
 </a></div>
 <div id="e195">
-<table border="0"  cellspacing="0" width="411">
+<table border="0"   width="411">
 <tbody><tr>
 <td bgcolor="#ff00cc" height="71" nowrap="nowrap" valign="top">
 <span class="text">
@@ -2009,7 +2009,7 @@ echo $mm;
 <img src="seurat.jpg" alt=""/>
 </a></div>
 <div id="e197">
-<table border="0"  cellspacing="0" width="407">
+<table border="0"   width="407">
 <tbody><tr>
 <td bgcolor="#3333ff" height="71" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Portrait_of_Seurat_V8"><b>
@@ -2026,7 +2026,7 @@ echo $mm;
 <a href="http://www.yvettesbridalformal.com/theWorldFamousArtistSeanTerrenceBestSelfPortraitV8">
 <img src="yvettes_files/SelfPortraitV8_005-450x600.jpg" alt="" border="0" height="600" width="450"/></a></div>
 <div id="e199">
-<table border="0"  cellspacing="0" width="404">
+<table border="0"   width="404">
 <tbody><tr>
 <td bgcolor="#0000ff" height="71" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/theWorldFamousArtistSeanTerrenceBestSelfPortraitV8">
@@ -2044,7 +2044,7 @@ echo $mm;
 <a href="http://www.yvettesbridalformal.com/theWhiteGloveofMatrimonyV8">
 <img src="yvettes_files/theWhiteGloveofMatrimonyV8_026-450x600.jpg" alt="" border="0" height="600" width="450"/></a></div>
 <div id="e201">
-<table border="0"  cellspacing="0" width="400">
+<table border="0"   width="400">
 <tbody><tr>
 <td bgcolor="#ccff00" height="71" nowrap="nowrap" valign="top">
 <span class="text"><a href="http://www.yvettesbridalformal.com/theWhiteGloveofMatrimonyV8"><b>
@@ -2059,7 +2059,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e202">
-<table border="0"  cellspacing="0" width="685">
+<table border="0"   width="685">
 <tbody><tr>
 <td bgcolor="#000099" height="100" nowrap="nowrap" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/MosaicsintheMystV8"><b>
@@ -2077,7 +2077,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e203">
-<table border="0"  cellspacing="0" width="864">
+<table border="0"   width="864">
 <tbody><tr>
 <td bgcolor="#0000cc" height="95" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#66ffff" >
@@ -2098,7 +2098,7 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e204">
-<table border="0"  cellspacing="0" width="483">
+<table border="0"   width="483">
 <tbody><tr>
 <td bgcolor="#33ff33" height="33" nowrap="nowrap" valign="top"><span class="text">
 <a href="mailto:SeanTerrenceBest@aol.com"><b>

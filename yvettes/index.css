@@ -12,6 +12,11 @@ body
     margin-left: 0px;
 }
 
+table
+{
+    border-spacing: 0px;
+}
+
 p
 {
     font-family: "Arial";
