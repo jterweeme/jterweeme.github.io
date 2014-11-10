@@ -207,14 +207,14 @@ echo $mm;
 <span style="font-size: 30px; line-height: 35px;">!<br/><br/>
 </span></font><a href="http://www.yvettesbridalformal.com/tuxedo1.html"><b>
 <font color="#ffff66" size="5">
-<span style="font-size: 24px; line-height: 29px;">Tuxedo rentals &nbsp;&nbsp;<br/>
+<span style="font-size: 24px; line-height: 29px;">Tuxedo rentals &#160;&#160;<br/>
 </span>
 </font></b></a><a href="http://www.yvettesbridalformal.com/tuxedo1.html"><b>
 <font color="#ffff66" size="5">
-<span class="stijl3">&nbsp;&nbsp;starting @ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<span class="stijl3">&#160;&#160;starting @ &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<br/>
 </span></font></b></a><a href="http://www.yvettesbridalformal.com/tuxedo1.html"><b>
 <font color="#ffff66" size="5">
-<span style="font-size: 24px; line-height: 29px;">&nbsp;&nbsp;&nbsp;&nbsp;$65.00 ~*<br/>
+<span style="font-size: 24px; line-height: 29px;">&#160;&#160;&#160;&#160;$65.00 ~*<br/>
 </span></font></b></a></span>      
 </div>
 <div id="e16">
@@ -458,7 +458,7 @@ echo $mm;
 </div>
 <div id="e34">
 <span class="text"><b><font color="#33ff33">
-<span style="font-size: 14px; line-height: 17px;">Luxury Name Brand~* &nbsp;&nbsp;</span>
+<span style="font-size: 14px; line-height: 17px;">Luxury Name Brand~* &#160;&#160;</span>
 </font></b><b>
 <font color="#ff3333">
 <span style="font-size: 14px; line-height: 17px;">Designer Fabrique`~*<br/></span></font></b><b>
@@ -833,7 +833,7 @@ echo $mm;
 <span class="text">
 <span style="font-size: 14px; line-height: 17px;">
 <span>cruise gown panama city<br/>cruise gown<br/>panama city<br/>cruise gown panama city<br/>panama city cruise gown</span>
-<br/>Panama City cruise gown<br/>invitations Panama City<br/>panama city invitations<br/>panama city &nbsp;invitations<br/>invitations panama city<br/>invitations<br/>panama city<br/>
+<br/>Panama City cruise gown<br/>invitations Panama City<br/>panama city invitations<br/>panama city &#160;invitations<br/>invitations panama city<br/>invitations<br/>panama city<br/>
 </span></span>
 </div>
 <div id="e92">
@@ -963,7 +963,7 @@ echo $mm;
 <span class="text"><b><font color="#ff33ff" size="5">
 <span style="font-size: 24px; line-height: 29px;">Yvette's</span>
 </font></b><b><font color="#ff3333" size="5">
-<span style="font-size: 24px; line-height: 29px;"> sells Veils &amp; Bridal HeadPieces in Panama City Florida ~*<br/>Veils in Panama City Florida ~* &nbsp;Ring Pillows Friendly Helpful ~*<br/>
+<span style="font-size: 24px; line-height: 29px;"> sells Veils &amp; Bridal HeadPieces in Panama City Florida ~*<br/>Veils in Panama City Florida ~* &#160;Ring Pillows Friendly Helpful ~*<br/>
 </span></font></b></span></td>
 </tr>
 </tbody></table>
@@ -975,7 +975,7 @@ echo $mm;
 <span class="text"><b><font color="#ff33ff" size="5">
 <span style="font-size: 24px; line-height: 29px;">Yvette's</span>
 </font></b><b><font color="#ffcccc" size="5">
-<span style="font-size: 24px; line-height: 29px;"> appreciates you all ~* &nbsp;Thank you for giving us the <br/>opportunity to serve you all ~* Thank you one and all ~*<br/></span>
+<span style="font-size: 24px; line-height: 29px;"> appreciates you all ~* &#160;Thank you for giving us the <br/>opportunity to serve you all ~* Thank you one and all ~*<br/></span>
 </font></b></span></td>
 </tr>
 </tbody></table>
@@ -994,7 +994,7 @@ echo $mm;
 <span style="font-size: 30px; line-height: 35px;"> sells Bridal shoes in Panama City Florida ~* ~* ~* ~*<br/></span></font></b><b><font color="#ff33ff" size="6">
 <span style="font-size: 30px; line-height: 35px;">Yvette's</span>
 </font></b><b><font color="#33ff33" size="6">
-<span style="font-size: 30px; line-height: 35px;"> sells Tuxedo Shoes in Panama City Florida ~* ~* ~* ~* `* ~*<br/>World's Most Beautiful Beaches ~* ~* ~* ~* ~* &nbsp;~* ~*<br/>High Fashion Designer FootWear ~*Fine Fashions </span>
+<span style="font-size: 30px; line-height: 35px;"> sells Tuxedo Shoes in Panama City Florida ~* ~* ~* ~* `* ~*<br/>World's Most Beautiful Beaches ~* ~* ~* ~* ~* &#160;~* ~*<br/>High Fashion Designer FootWear ~*Fine Fashions </span>
 </font></b><b><font color="#ff33ff" size="6">
 <span style="font-size: 30px; line-height: 35px;">Yvette's</span>
 </font></b><b><font color="#33ff33" size="6">
@@ -1053,7 +1053,7 @@ echo $mm;
 <tbody><tr>
 <td bgcolor="#00ff00" height="127" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#ffcc33" size="5">
-<span style="font-size: 24px; line-height: 29px;">Dress Shop Panama City ~* ~* ~* ~*<br/>Beautiful Dress Shop Panama City ~*<br/>Prom Dress Panama City &nbsp;~* ~* ~* ~*<br/>Prom Dress Panama City &nbsp;Florida ~*<br/></span></font></b></span></td>
+<span style="font-size: 24px; line-height: 29px;">Dress Shop Panama City ~* ~* ~* ~*<br/>Beautiful Dress Shop Panama City ~*<br/>Prom Dress Panama City &#160;~* ~* ~* ~*<br/>Prom Dress Panama City &#160;Florida ~*<br/></span></font></b></span></td>
 </tr>
 </tbody></table>
 </div>
@@ -1292,7 +1292,7 @@ echo $mm;
 <br/><span>Tux Rental Panama City Florida !! ~*</span>
 <br/>Tux Rentals Panama City !! ~*<br/>Tux Rentals Panama City Florida !! ~*<br/>
 </span></font></b><b><font color="#ffff33" size="6">
-<span class="stijl1">starting at only &nbsp;$65 &nbsp;&nbsp;!! ~*~*~*<br/>
+<span class="stijl1">starting at only &#160;$65 &#160;&#160;!! ~*~*~*<br/>
 </span></font></b></span>
 </div>
 <div id="e137">
@@ -1824,7 +1824,7 @@ echo $mm;
 <span style="font-size: 30px; line-height: 35px;">Have </span></font></b><a href="http://www.onewed.com/wedding-hair-styles/"><b>
 <font color="#6666ff" size="6"><span style="font-size: 30px; line-height: 35px;">curly hair</span></font></b></a><b>
 <font color="#ff66ff" size="6">
-<span style="font-size: 30px; line-height: 35px;">? &nbsp;Look your best for your <br/>big day with </span>
+<span style="font-size: 30px; line-height: 35px;">? &#160;Look your best for your <br/>big day with </span>
 </font></b>
 <a href="http://www.marcanthony.com/products/strictly-curls-hair"><b>
 <font color="#6666ff" size="6">
@@ -1874,7 +1874,7 @@ echo $mm;
 <td bgcolor="#6666ff" height="1320" nowrap="nowrap" valign="top">
 <span class="text"><b><font color="#33ff33" size="6">
 <span style="font-size: 30px; line-height: 35px;">please donate to the World Famous Artist Sean Terrence <br/>Best !! ~*<br/>
-<span>$1, &nbsp;$5, &nbsp;$10, &nbsp;$20, whatever amount you donate shall be <br/>very helpful and very appreciated !! *~V8~*+<br/>You may use the PayPal buttons on this page which have </span>
+<span>$1, &#160;$5, &#160;$10, &#160;$20, whatever amount you donate shall be <br/>very helpful and very appreciated !! *~V8~*+<br/>You may use the PayPal buttons on this page which have </span>
 <br/>been provided for Your convenience !! *~V8~*+<br/>You may also donate using your debit or credit card if you <br/>don't have a PayPal account !! *~V8~*+<br/>
 <br/><br/><br/>if you would like to contribute a greater amount to the <br/>World Famous Artist Sean Terrence Best, you may click on <br/>this </span>
 </font></b><a href="http://www.paypal.com/"><b>
@@ -2153,7 +2153,7 @@ echo $mm;
 </div>
 <div id="e208">
 <span class="text"><font color="#66ff66">
-<span style="font-size: 14px; line-height: 17px;">music is fun &nbsp;<br/>movies are fun !! <br/>*~V8~*+<br/></span>
+<span style="font-size: 14px; line-height: 17px;">music is fun &#160;<br/>movies are fun !! <br/>*~V8~*+<br/></span>
 </font></span>
 </div>
 <img style="display: none;" src="yvettes_files/visit.gif" border="0"/>
