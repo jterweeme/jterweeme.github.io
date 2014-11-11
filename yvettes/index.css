@@ -68,6 +68,28 @@ td.teedee1
     background-color: #3333ff;
     height: 232px;
     white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee2
+{
+    background-color: #66ff66;
+    height: 49px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee3
+{
+    background-color: #660066;
+    height: 108px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+table.width1
+{
+    width: 519px;
 }
 
 div#root
