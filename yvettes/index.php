@@ -531,53 +531,53 @@ echo $mm;
 <table width="592">
 <tbody><tr>
 <td bgcolor="#006666" height="229" nowrap="nowrap" valign="top">
-<span class="text"><b><font color="#ff33ff" >
-<span style="font-size: 48px; line-height: 56px;">Yvette's </span>
-</font></b><b><font color="#ffff66" >
-<span style="font-size: 36px; line-height: 43px;">Salutes</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;"> ea</span>
-</font></b><b><font color="#ccffcc" >
-<span style="font-size: 36px; line-height: 43px;">ch</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;"> a</span>
-</font></b><b><font color="#cc9900" >
-<span style="font-size: 36px; line-height: 43px;">nd</span>
-</font></b><b><font color="#33ffff" >
-<span style="font-size: 36px; line-height: 43px;"><br/>ev</span>
-</font></b><b><font color="#6666ff" >
-<span style="font-size: 36px; line-height: 43px;">ery</span>
-</font></b><b><font color="#33ffff" >        
-<span style="font-size: 36px; line-height: 43px;"> one </span>        
-</font></b><b><font color="#ff9966" >           
-<span style="font-size: 36px; line-height: 43px;">of</span>            
-</font></b><b><font color="#33ffff" >                
-<span style="font-size: 36px; line-height: 43px;"> our</span>
-</font></b><b><font color="#ccccff" >
-<span style="font-size: 36px; line-height: 43px;"> Gorgeo</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;">us, <br/>
-</span></font></b><b><font color="#ff0033" >
-<span style="font-size: 36px; line-height: 43px;">Glamorous</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;"> Hi</span>
-</font></b><b><font color="#0099ff" >
-<span style="font-size: 36px; line-height: 43px;">g</span>
-</font></b><b><font color="#ffff00" >
-<span style="font-size: 36px; line-height: 43px;">h</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;"> F</span>
-</font></b><b><font color="#00ffcc" >
-<span style="font-size: 36px; line-height: 43px;">ashi</span>
-</font></b><b><font color="#33cc00" >
-<span style="font-size: 36px; line-height: 43px;">on Mod</span>
-</font></b><b><font color="#ff33ff" >
-<span style="font-size: 36px; line-height: 43px;">els</span>
-</font></b><b><font color="#ff33ff" >
-<span style="font-size: 48px; line-height: 56px;"> <br/>~*!!</span>
-</font></b><b><font color="#99f433" >
-<span style="font-size: 30px; line-height: 35px;">~*!!~*<br/>
-</span></font></b></span></td>
+<span class="text"><b>
+<span style="font-size: 48px; color: #ff33ff; line-height: 56px;">Yvette's </span>
+</b><b>
+<span style="font-size: 36px; color: #ffff66; line-height: 43px;">Salutes</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;"> ea</span>
+</b><b>
+<span style="font-size: 36px; color: #ccffcc; line-height: 43px;">ch</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;"> a</span>
+</b><b>
+<span style="font-size: 36px; color: #cc9900; line-height: 43px;">nd</span>
+</b><b>
+<span style="font-size: 36px; color: #33ffff; line-height: 43px;"><br/>ev</span>
+</b><b>
+<span style="font-size: 36px; color: #6666ff; line-height: 43px;">ery</span>
+</b><b>
+<span style="font-size: 36px; color: #33ffff; line-height: 43px;"> one </span>        
+</b><b>
+<span style="font-size: 36px; color: #ff9966; line-height: 43px;">of</span>            
+</b><b>
+<span style="font-size: 36px; color: #33ffff; line-height: 43px;"> our</span>
+</b><b>
+<span style="font-size: 36px; color: #ccccff; line-height: 43px;"> Gorgeo</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;">us, <br/>
+</span></b><b>
+<span style="font-size: 36px; color: #ff0033; line-height: 43px;">Glamorous</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;"> Hi</span>
+</b><b>
+<span style="font-size: 36px; color: #0099ff; line-height: 43px;">g</span>
+</b><b>
+<span style="font-size: 36px; color: #ffff00; line-height: 43px;">h</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;"> F</span>
+</b><b>
+<span style="font-size: 36px; color: #00ffcc; line-height: 43px;">ashi</span>
+</b><b>
+<span style="font-size: 36px; color: #33cc00; line-height: 43px;">on Mod</span>
+</b><b>
+<span style="font-size: 36px; color: #ff33ff; line-height: 43px;">els</span>
+</b><b>
+<span style="font-size: 48px; color: #ff33ff; line-height: 56px;"> <br/>~*!!</span>
+</b><b>
+<span style="font-size: 30px; color: #99f433; line-height: 35px;">~*!!~*<br/>
+</span></b></span></td>
 </tr>
 </tbody></table>
 </div>
