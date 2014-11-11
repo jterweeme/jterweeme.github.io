@@ -1681,7 +1681,7 @@ echo $mm;
 <div id="e176">
 <table class="width448">
 <tbody><tr>
-<td bgcolor="#000033" height="74" nowrap="nowrap" valign="top">
+<td class="teedee76">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Jackie_of_Picasso_in_Blue"><b>
 <span style="color: #6666ff" >
@@ -1701,7 +1701,7 @@ echo $mm;
 <div id="e177">
 <table class="width528">
 <tbody><tr>
-<td bgcolor="#ff00cc" height="72" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee77"><span class="text">
 <a href="http://www.yvettesbridalformal.com/High_Priestess_of_Machu_Picchu"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 30px; line-height: 35px;">High Priestess of Machu Picchu !! ~* <br/>
@@ -1720,7 +1720,7 @@ echo $mm;
 <div id="e178">
 <table class="width392">
 <tbody><tr>   
-<td bgcolor="#ff00cc" height="117" nowrap="nowrap" valign="top">
+<td class="teedee78">
 <span class="text"><b><span style="color: #33ff33" >
 <span style="font-size: 24px; line-height: 29px;">Bride Brides Flower Girls<br/>Flower Girl Dresses Panama City<br/>Florida Yvette's Yvette's Yvette's<br/>Flower Girls' Dress Dresses </span>
 </span>
@@ -1757,7 +1757,7 @@ echo $mm;
 <div id="e182">
 <table class="width590">
 <tbody><tr>
-<td bgcolor="#33ff33" height="81" nowrap="nowrap" valign="top">
+<td class="teedee79">
 <span class="text"><b><span style="color: #ff66ff" >
 <span style="font-size: 30px; line-height: 35px;">Have </span></span></b><a href="http://www.onewed.com/wedding-hair-styles/"><b>
 <span style="color: #6666ff" ><span style="font-size: 30px; line-height: 35px;">curly hair</span></span></b></a><b>
@@ -1774,7 +1774,7 @@ echo $mm;
 <div id="e183">
 <table class="width240">
 <tbody><tr>
-<td bgcolor="#ccff00" height="71" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee80"><span class="text">
 <a href="http://www.yvettesbridalformal.com/please_contribute_to_the_World_Famous_Artist_Sean_Terrence_Best_V8"><b>
 <span style="color: #ff33ff" >
 <span style="font-size: 30px; line-height: 35px;">please click <br/>
@@ -1788,7 +1788,7 @@ echo $mm;
 <div id="e184">
 <table class="width362">
 <tbody><tr>
-<td bgcolor="#ccff00" height="102" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee81"><span class="text">
 <a href="http://www.yvettesbridalformal.com/please_contribute_to_the_World_Famous_Artist_Sean_Terrence_Best_V8"><b><span style="color: #ff33ff" >
 <span style="font-size: 24px; line-height: 29px;">please click here to contribute <br/>
 </span>
@@ -1809,7 +1809,7 @@ echo $mm;
 <div id="e185">
 <table class="width844">
 <tbody><tr>
-<td bgcolor="#6666ff" height="1320" nowrap="nowrap" valign="top">
+<td class="teedee82">
 <span class="text"><b><span style="color: #33ff33" >
 <span style="font-size: 30px; line-height: 35px;">please donate to the World Famous Artist Sean Terrence <br/>Best !! ~*<br/>
 <span>$1, &#160;$5, &#160;$10, &#160;$20, whatever amount you donate shall be <br/>very helpful and very appreciated !! *~V8~*+<br/>You may use the PayPal buttons on this page which have </span>
@@ -1937,7 +1937,7 @@ echo $mm;
 <div id="e195">
 <table class="width411">
 <tbody><tr>
-<td bgcolor="#ff00cc" height="71" nowrap="nowrap" valign="top">
+<td class="teedee83">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina"><b>
 <span style="color: #33ff33" >
@@ -1957,7 +1957,7 @@ echo $mm;
 <div id="e197">
 <table class="width407">
 <tbody><tr>
-<td bgcolor="#3333ff" height="71" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee84"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Portrait_of_Seurat_V8"><b>
 <span style="color: #33ffff" >
 <span style="font-size: 30px; line-height: 35px;">to view this Master~Piece <br/>
@@ -1974,7 +1974,7 @@ echo $mm;
 <div id="e199">
 <table class="width404">
 <tbody><tr>
-<td bgcolor="#0000ff" height="71" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee85"><span class="text">
 <a href="http://www.yvettesbridalformal.com/theWorldFamousArtistSeanTerrenceBestSelfPortraitV8">
 <b><span style="color: #33ff33" >
 <span style="font-size: 30px; line-height: 35px;">to view this Master~Piece <br/></span>
@@ -1992,7 +1992,7 @@ echo $mm;
 <div id="e201">
 <table class="width400">
 <tbody><tr>
-<td bgcolor="#ccff00" height="71" nowrap="nowrap" valign="top">
+<td class="teedee80">
 <span class="text"><a href="http://www.yvettesbridalformal.com/theWhiteGloveofMatrimonyV8"><b>
 <span style="color: #ff99ff" >
 <span style="font-size: 30px; line-height: 35px;">to view this Master~Piece <br/>
@@ -2007,7 +2007,7 @@ echo $mm;
 <div id="e202">
 <table class="width685">
 <tbody><tr>
-<td bgcolor="#000099" height="100" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee86"><span class="text">
 <a href="http://www.yvettesbridalformal.com/MosaicsintheMystV8"><b>
 <span style="color: #cc33ff" >
 <span style="font-size: 48px; line-height: 56px;">Mosaics in the Myst *~V8~*+<br/>
@@ -2023,7 +2023,7 @@ echo $mm;
 <div id="e203">
 <table class="width864">
 <tbody><tr>
-<td bgcolor="#0000cc" height="95" nowrap="nowrap" valign="top">
+<td class="teedee87">
 <span class="text"><b><span style="color: #66ffff" >
 <span class="stijl3">
 <span>Yvette's Site is for sale!! price: $2,000,000 !! *~V8~*+</span>
@@ -2044,7 +2044,7 @@ echo $mm;
 <div id="e204">
 <table class="width483">
 <tbody><tr>
-<td bgcolor="#33ff33" height="33" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee88"><span class="text">
 <a href="mailto:SeanTerrenceBest@aol.com"><b>
 <span style="color: #ff00ff" >
 <span class="stijl3">click ye here to contact Yvette's !! *~V8~*+<br/>
