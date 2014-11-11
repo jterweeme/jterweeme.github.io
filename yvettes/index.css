@@ -359,6 +359,86 @@ td.teedee37
     vertical-align: top;
 }
 
+td.teedee38
+{
+    background-color: #00ff00;
+    height: 127px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee39
+{
+    background-color: #ff9933;
+    height: 61px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee40
+{
+    background-color: #ffff33;
+    height: 53px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee41
+{
+    background-color: #ff00cc;
+    height: 106px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee42
+{
+    background-color: #00ffcc;
+    height: 52px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee43
+{
+    background-color: #00ffcc;
+    height: 46px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee44
+{
+    background-color: #00ffff;
+    height: 88px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee45
+{
+    background-color: #ff9966;
+    height: 59px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee46
+{
+    background-color: #ff33cc;
+    height: 71px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+td.teedee47
+{
+    background-color: #ff33cc;
+    height: 100px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
 
 table.width36 { width: 36px; }
 table.width80 { width: 80px; }
@@ -380,6 +460,7 @@ table.width210 { width: 210px; }
 table.width212 { width: 212px; }
 table.width213 { width: 213px; }
 table.width226 { width: 226px; }
+table.width240 { width: 240px; }
 table.width250 { width: 250px; }
 table.width224 { width: 224px; }
 table.width250 { width: 250px; }
@@ -393,28 +474,37 @@ table.width343 { width: 343px; }
 table.width349 { width: 349px; }
 table.width356 { width: 356px; }
 table.width361 { width: 361px; }
+table.width362 { width: 362px; }
 table.width364 { width: 364px; }
 table.width365 { width: 365px; }
 table.width375 { width: 375px; }
 table.width379 { width: 379px; }
 table.width390 { width: 390px; }
+table.width392 { width: 392px; }
 table.width396 { width: 396px; }
 table.width397 { width: 397px; }
+table.width400 { width: 400px; }
 table.width403 { width: 403px; }
 table.width404 { width: 404px; }
 table.width405 { width: 405px; }
 table.width406 { width: 406px; }
+table.width407 { width: 407px; }
+table.width411 { width: 411px; }
 table.width415 { width: 415px; }
 table.width416 { width: 416px; }
 table.width419 { width: 419px; }
 table.width421 { width: 421px; }
 table.width432 { width: 432px; }
 table.width435 { width: 435px; }
+table.width442 { width: 442px; }
 table.width446 { width: 446px; }
 table.width447 { width: 447px; }
+table.width448 { width: 448px; }
 table.width454 { width: 454px; }
 table.width460 { width: 460px; }
+table.width474 { width: 474px; }
 table.width480 { width: 480px; }
+table.width483 { width: 483px; }
 table.width497 { width: 497px; }
 table.width519 { width: 519px; }
 table.width528 { width: 528px; }
@@ -422,6 +512,7 @@ table.width567 { width: 567px; }
 table.width574 { width: 574px; }
 table.width575 { width: 575px; }
 table.width586 { width: 586px; }
+table.width590 { width: 590px; }
 table.width592 { width: 592px; }
 table.width602 { width: 602px; }
 table.width605 { width: 605px; }
@@ -429,8 +520,11 @@ table.width622 { width: 622px; }
 table.width634 { width: 634px; }
 table.width674 { width: 674px; }
 table.width683 { width: 683px; }
+table.width685 { width: 685px; }
 table.width728 { width: 728px; }
 table.width756 { width: 756px; }
+table.width844 { width: 844px; }
+table.width864 { width: 864px; }
 table.width978 { width: 978px; }
 table.width1040 { width: 1040px; }
 table.width1178 { width: 1178px; }
