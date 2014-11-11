@@ -15,6 +15,7 @@
                 </xs:element>
                 <xs:element name="body"/>
             </xs:sequence>
+            <xs:attribute name="class"/>
         </xs:complexType>
     </xs:element>
 

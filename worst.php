@@ -2,7 +2,7 @@
 <?php
 echo file_get_contents("achtung.html");
 ?>
-<html>
+<html class="worst">
 <head>
 <title>Onzin</title>
 <link rel="stylesheet" type="text/css" href="common.css"/>
