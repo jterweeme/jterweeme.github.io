@@ -1093,7 +1093,7 @@ echo $mm;
 <div id="e118">
 <table class="width432">
 <tbody><tr>
-<td bgcolor="#00ffff" height="34" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee48"><span class="text">
 <a href="http://www.yvettesbridalformal.com/YvettesBridal.html"><b>
 <span style="color: #ff33cc" >
 <span style="font-size: 24px; line-height: 29px;">Follow the Pink Links to Yvette's !! ~*<br/>
@@ -1104,7 +1104,7 @@ echo $mm;
 <div id="e119">
 <table class="width416">
 <tbody><tr>
-<td bgcolor="#ffff33" height="28" nowrap="nowrap" valign="top">
+<td class="teedee49">
 <span class="text"><b><span style="color: #3333ff" >
 <span class="stijl2">Wedding invitations Panama City Florida ~*<br/>
 </span></span></b></span></td>
@@ -1114,7 +1114,7 @@ echo $mm;
 <div id="e120">
 <table class="width152">
 <tbody><tr> 
-<td bgcolor="#ffff33" height="92" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee50"><span class="text">
 <a href="http://www.yvettesbridalformal.com/YvettesGuestBook1.html">
 <b><span style="color: #cc00ff" >
 <span style="font-size: 18px; line-height: 22px;">CLICK HERE TO <br/>
@@ -1141,7 +1141,7 @@ echo $mm;
 <div id="e122">
 <table class="width1178">
 <tbody><tr>
-<td bgcolor="#ff00cc" height="56" nowrap="nowrap" valign="top">
+<td class="teedee51">
 <span class="text"><b><span style="color: #33ffff" >
 <span style="font-size: 36px; line-height: 43px;">Yvette's cares about YOU !! ~* Yvette's wants YOU to be HAPPY !! ~*<br/>
 </span></span></b></span></td>
@@ -1162,7 +1162,7 @@ echo $mm;
 <div id="e126">
 <table class="width574">
 <tbody><tr>
-<td bgcolor="#33ffff" height="30" nowrap="nowrap" valign="top"><span class="text"><b>
+<td class="teedee52"><span class="text"><b>
 <span style="color: #ff00cc" >
 <span class="stijl3">Yvette's treasures the opportunity to serve you ~*<br/>
 </span></span></b></span></td>
@@ -1188,7 +1188,7 @@ echo $mm;
 <div id="e132">
 <table class="width447">
 <tbody><tr>
-<td bgcolor="#ff0099" height="30" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee53"><span class="text">
 <b><span style="color: #33ffff" >
 <span style="font-size: 24px; line-height: 29px;">Tuxedo Shop Panama City Florida !! ~*<br/>
 </span></span></b></span></td>
@@ -1198,7 +1198,7 @@ echo $mm;
 <div id="e133">
 <table class="width275">          
 <tbody><tr>       
-<td bgcolor="#669900" height="29" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee54"><span class="text">
 <a href="http://www.yvettesbridalformal.com/ApplePieRecipeYvettes1"><b>
 <span style="color: #ffff33" >
 <span style="font-size: 24px; line-height: 29px;">Apple Pie , </span>
@@ -1218,7 +1218,7 @@ echo $mm;
 <div id="e135">
 <table class="width356">
 <tbody><tr>
-<td bgcolor="#ff0099" height="30" nowrap="nowrap" valign="top">
+<td class="teedee53">
 <span class="text"><b>
 <span style="font-size: 24px; color: #33ffff; line-height: 29px;">Prom Gowns Panama City !! ~*<br/>
 </span></b></span></td>
@@ -1237,7 +1237,7 @@ echo $mm;
 <div id="e137">
 <table class="width1040">
 <tbody><tr>            
-<td bgcolor="#ff00ff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee55">
 <span class="text"><b>
 <span style="font-size: 24px; color: #66ffcc; line-height: 29px;">
 <span>Life is rich and sweet and good and healthy </span>
@@ -1253,7 +1253,7 @@ echo $mm;
 <div id="e139">
 <table class="width622">
 <tbody><tr>
-<td bgcolor="#3399ff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee56">
 <span class="text"><b><span style="color: #ffff00" >
 <span class="stijl3">Healthy communication increases access to the <br/>Wealth which Life offers us all *~*~*~*~*~*~*~*~*~*~*~*<br/>
 </span></span></b></span></td>
