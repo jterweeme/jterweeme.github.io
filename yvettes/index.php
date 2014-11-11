@@ -1849,7 +1849,7 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-but21.gif" height="23" type="image" width="110"/>
+<input src="yvettes_files/x-click-but21.gif" height="23" type="image" alt="a" width="110"/>
 </form>
 </div>      
 <div id="e187">
@@ -1863,7 +1863,7 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-but04.gif" height="31" type="image" width="62"/>
+<input src="yvettes_files/x-click-but04.gif" height="31" type="image" alt="a" width="62"/>
 </form>
 </div>
 <div id="e188">
@@ -1877,7 +1877,7 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-but21.gif" height="23" type="image" width="110"/>
+<input src="yvettes_files/x-click-but21.gif" height="23" type="image" alt="a" width="110"/>
 </form>
 </div>
 <div id="e189">
@@ -1891,7 +1891,8 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-but04.gif" height="31" type="image" width="62"/></form>
+<input src="yvettes_files/x-click-but04.gif" height="31" type="image" alt="a" width="62"/>
+</form>
 </div>
 <div id="e190">
 <div style="overflow: auto; width: 100px; height: 100px;">
@@ -1916,7 +1917,8 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-butcc-donate.gif" height="44" type="image" width="73"/></form></div>
+<input src="yvettes_files/x-click-butcc-donate.gif" alt="a" height="44" type="image" width="73"/>
+</form></div>
 <div id="e193">
 <form method="post" style="margin: 0pt;" action="https://www.paypal.com/cgi-bin/webscr">
 <input name="cmd" value="_xclick" type="hidden"/>
@@ -1928,7 +1930,8 @@ echo $mm;
 <input name="bn" value="yahoo-sitebuilder" type="hidden"/>
 <input name="pal" value="C3MGKKUCCAB9J" type="hidden"/>
 <input name="mrb" value="R-5AJ59462NH120001H" type="hidden"/>
-<input src="yvettes_files/x-click-butcc-donate.gif" height="44" type="image" width="73"/></form>
+<input src="yvettes_files/x-click-butcc-donate.gif" height="44" type="image" alt="a" width="73"/>
+</form>
 </div>
 <div id="e194">
 <a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina">
