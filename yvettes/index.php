@@ -1263,7 +1263,7 @@ echo $mm;
 <div id="e140">
 <table class="width405">
 <tbody><tr>
-<td bgcolor="#33ff00" height="117" nowrap="nowrap" valign="top">
+<td class="teedee57">
 <span class="text"><b><span style="color: #ff99ff" >
 <span class="stijl3"><span>Healthy Success Happy </span>
 <br/>
@@ -1276,7 +1276,7 @@ echo $mm;
 <div id="e141">
 <table class="width375">
 <tbody><tr>
-<td bgcolor="#00ffcc" height="84" nowrap="nowrap" valign="top">
+<td class="teedee58">
 <span class="text"><b>
 <span style="font-size: 72px; color: #ff00ff; line-height: 84px;">Yvette's ~*<br/>
 </span></b></span></td>
@@ -1286,7 +1286,7 @@ echo $mm;
 <div id="e142">
 <table class="width349">
 <tbody><tr>
-<td bgcolor="#00ffff" height="30" nowrap="nowrap" valign="top"><span class="text"><b>
+<td class="teedee59"><span class="text"><b>
 <span style="color: #ff00cc" >
 <span style="font-size: 24px; line-height: 29px;">Yvette's is here for YOU !! ~*~*<br/>
 </span></span></b></span></td>
@@ -1299,7 +1299,7 @@ echo $mm;
 <div id="e144">
 <table class="width403">
 <tbody><tr>
-<td bgcolor="#ff00cc" height="35" nowrap="nowrap" valign="top">
+<td class="teedee60">
 <span class="text"><b>
 <span style="font-size: 24px; color: #99ffff; line-height: 29px;">this Yvette's page has been visited<br/>
 </span></b></span></td>
@@ -1309,7 +1309,7 @@ echo $mm;
 <div id="e145">
 <table class="width120">
 <tbody><tr>
-<td bgcolor="#ff00cc" height="33" nowrap="nowrap" valign="top">
+<td class="teedee61">
 <span class="text"><b>
 <span style="font-size: 24px; color: #99ffff; line-height: 29px;">times !! ~*<br/>
 </span></b></span></td>
@@ -1319,7 +1319,7 @@ echo $mm;
 <div id="e146">
 <table class="width390">
 <tbody><tr>
-<td bgcolor="#ffccff" height="31" nowrap="nowrap" valign="top">
+<td class="teedee62">
 <span class="text"><b><span style="color: #33ff33" >
 <span class="stijl3">Yvette's is here to serve YOU !! ~*<br/>
 </span></span></b></span></td>
@@ -1329,7 +1329,7 @@ echo $mm;
 <div id="e147">
 <table class="width435">
 <tbody><tr>
-<td bgcolor="#ffff33" height="35" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee63"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Yerza_Kultoria_Gallery_of_Fine_Arts.html"><b>
 <span style="font-size: 24px; color: #ff33cc; line-height: 29px;">Call to Artists !! ~*</span>
 </b></a>
@@ -1382,7 +1382,7 @@ echo $mm;
 <div id="e155"> 
 <table class="width480">    
 <tbody><tr>
-<td bgcolor="#cc99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee64"><span class="text">
 <a href="http://www.panamacityliving.com/"><b>
 <span style="font-size: 24px; color: #ffff33; line-height: 29px;">please click here to visit<br/>
 </span>
@@ -1395,7 +1395,7 @@ echo $mm;
 <div id="e156">
 <table class="width212">
 <tbody><tr>
-<td bgcolor="#00ff66" height="92" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee65"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Yvettes_New_Location1.html"><b>
 <span style="color: #ff00ff" >
 <span style="font-size: 30px; line-height: 35px;">Map</span>
@@ -1430,7 +1430,7 @@ echo $mm;
 <div id="e160">
 <table class="width421">
 <tbody><tr>
-<td bgcolor="#003333" height="31" nowrap="nowrap" valign="top">
+<td class="teedee66">
 <span class="text"><b><span style="color: #33ff33" >
 <span class="stijl3">Yvette's habla poquito espanola !! ~*<br/></span>
 </span></b></span></td>
@@ -1440,7 +1440,7 @@ echo $mm;
 <div id="e161">
 <table class="width415">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee67">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Wedding_Gowns_Panama_City"><b>
 <span style="color: #33ff33" >
@@ -1460,7 +1460,7 @@ echo $mm;
 <div id="e162">
 <table class="width343">
 <tbody><tr>
-<td bgcolor="#ccff33" height="59" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee68"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Tux_Rental_Panama_City"><b>
 <span style="color: #ff33ff" >
 <span style="font-size: 24px; line-height: 29px;">Tux Rental Panama City !! ~* <br/>
@@ -1478,7 +1478,7 @@ echo $mm;
 <div id="e163">
 <table class="width397">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee67">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Wedding_Shops_Panama_City"><b>
 <span style="color: #33ff33" >
@@ -1497,7 +1497,7 @@ echo $mm;
 <div id="e164">
 <table class="width674">
 <tbody><tr>
-<td bgcolor="#33ff33" height="42" nowrap="nowrap" valign="top">
+<td class="teedee69">
 <span class="text"><a href="http://www.yvettesbridalformal.com/Bridal_Shops_Florida"><b>
 <span style="color: #ff33ff" >
 <span class="stijl1">Bridal Shops Florida !! ~* please click here !! ~*<br/>
@@ -1508,7 +1508,7 @@ echo $mm;
 <div id="e165">
 <table class="width419">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee67">
 <span class="text"><a href="http://www.yvettesbridalformal.com/Wedding_Dresses_Panama_City"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 24px; line-height: 29px;">Wedding Dresses Panama City !! ~* <br/>
@@ -1526,7 +1526,7 @@ echo $mm;
 <div id="e166">
 <table class="width379">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee67"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Bridal_Gowns_Panama_City"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 24px; line-height: 29px;">Bridal Gowns Panama City !! ~*<br/>
@@ -1545,7 +1545,7 @@ echo $mm;
 <div id="e167">
 <table class="width316">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="59" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee67"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Bridal_Salons_Florida"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 24px; line-height: 29px;">Bridal Salons Florida !! ~*<br/></span>
@@ -1573,7 +1573,7 @@ echo $mm;
 <div id="e169">
 <table class="width454">
 <tbody><tr>
-<td bgcolor="#ccff33" height="87" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee70"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Fine_Art_Panama_City"><b>
 <span style="color: #ff66ff" >
 <span style="font-size: 36px; line-height: 43px;">Fine Art Panama City !! ~* <br/>
@@ -1591,7 +1591,7 @@ echo $mm;
 <div id="e170">
 <table class="width364">          
 <tbody><tr>            
-<td bgcolor="#33ffff" height="59" nowrap="nowrap" valign="top">
+<td class="teedee71">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Tux_Rentals_Panama_City"><b>
 <span style="color: #ff00ff" >
@@ -1609,7 +1609,7 @@ echo $mm;
 <div id="e171">
 <table class="width406">
 <tbody><tr>
-<td bgcolor="#339900" height="35" nowrap="nowrap" valign="top">
+<td class="teedee72">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Fine_Art_Florida"><b>
 <span style="color: #ffff33" >
@@ -1623,7 +1623,7 @@ echo $mm;
 <div id="e173">
 <table class="width497">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="77" nowrap="nowrap" valign="top"><span class="text">
+<td class="teedee73"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Wedding_Gowns_Panama_City"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 30px; line-height: 35px;">Wedding Gowns Panama City !! ~* <br/>
@@ -1641,7 +1641,7 @@ echo $mm;
 <div id="e174">
 <table class="width474">
 <tbody><tr>
-<td bgcolor="#ff99ff" height="71" nowrap="nowrap" valign="top">
+<td class="teedee74">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Quince_Gowns_Panama_City"><b>
 <span style="color: #33ff33" >
@@ -1661,7 +1661,7 @@ echo $mm;
 <div id="e175">
 <table class="width442">
 <tbody><tr>
-<td bgcolor="#ccff66" height="86" nowrap="nowrap" valign="top">
+<td class="teedee75">
 <span class="text">
 <a href="http://www.yvettesbridalformal.com/Easy_Yvettes_Navigation"><b>
 <span style="color: #ff00ff" >
