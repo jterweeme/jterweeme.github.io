@@ -497,7 +497,7 @@ echo $mm;
 <div id="e44">
 <img src="yvettes_files/test116_038-450x600.jpg" alt="" height="600" width="450"/>
 </div>
-<div id="e45"/>
+<div id="e45">
 <table class="width592">
 <tbody><tr>
 <td class="teedee20">
@@ -2100,6 +2100,7 @@ echo $mm;
 <img style="display: none;" src="yvettes_files/visit.gif" alt="a"/>
 <noscript>
 <img src="http://visit.webhosting.yahoo.com/visit.gif?us1323444733" alt="setstats" width="1" height="1"/></noscript>
+</div>
 </body>
 </html>
 
