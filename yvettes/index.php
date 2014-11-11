@@ -197,9 +197,10 @@ echo $mm;
 <span style="font-size: 18px; line-height: 22px;">cracker</span>
 </font><font color="#33ff33" >
 <span style="font-size: 18px; line-height: 22px;"> Pageant<br/><br/>
-</span></font><font color="#33ffff" >
-<span style="font-size: 24px; line-height: 29px;">Evening Gowns <br/>Prom Gowns <br/></span>
-</font><font color="#ccffff" >
+</span></font>
+<span style="font-size: 24px; color: #33ffff; line-height: 29px;">Evening Gowns <br/>Prom Gowns <br/>
+</span>
+<font color="#ccffff" >
 <span style="font-size: 24px; line-height: 29px;">!!!!!!</span>
 </font><font color="#ccffff" >
 <span style="font-size: 30px; line-height: 35px;">!<br/><br/>
@@ -699,10 +700,11 @@ echo $mm;
 <div id="e61">
 <img src="yvettes_files/Pyrathing11-742x681.jpg" alt="" height="681" width="742"/></div>      
 <div id="e62">
-<span class="text"><b><font color="#3333ff" >
-<span style="font-size: 30px; line-height: 35px;">Designs by<br/></span>
-</font></b><b><font color="#3333ff" >
-<span style="font-size: 48px; line-height: 56px;">DudeOtep~*<br/></span></font></b></span>      
+<span class="text"><b>
+<span style="font-size: 30px; color: #3333ff; line-height: 35px;">Designs by<br/></span>
+</b><b>
+<span style="font-size: 48px; color: #3333ff; line-height: 56px;">DudeOtep~*<br/>
+</span></b></span>
 </div>      
 <div id="e63">
 <span class="text">
@@ -720,9 +722,9 @@ echo $mm;
 <div id="e65">
 <img src="yvettes_files/test132_079-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e66">
-<span class="text"><b><font color="#ff66ff" >
-<span style="font-size: 36px; line-height: 43px;">Private Label by G<br/>
-</span></font></b></span>
+<span class="text"><b>
+<span style="font-size: 36px; color: #ff66ff; line-height: 43px;">Private Label by G<br/>
+</span></b></span>
 </div>
 <div id="e67">
 <img src="yvettes_files/test132_093-450x600.jpg" alt="" height="600" width="450"/></div>
@@ -803,9 +805,9 @@ echo $mm;
 </div>
 <div id="e89"><span class="text">
 <span style="font-size: 14px; line-height: 17px;">gown Panama City<br/>
-</span><font color="#ffffff">
-<span style="font-size: 14px; line-height: 17px;">gown panama city<br/>gown panama city<br/>
-</span></font>
+</span>
+<span style="font-size: 14px; color: #ffffff; line-height: 17px;">gown panama city<br/>gown panama city<br/>
+</span>
 <span style="font-size: 14px; line-height: 17px;">gowns panama city<br/>
 </span><font color="#ffffff">
 <span style="font-size: 14px; line-height: 17px;">gowns panama city<br/>gowns panama city<br/>
@@ -839,54 +841,49 @@ echo $mm;
 <font color="#66ff66" >
 <span style="font-size: 18px; line-height: 22px;">please </span></font></b></a>
 <a href="http://www.yvettesbridalformal.com/carlsoncraft3.html"><b>
-<font color="#66ff66" >
-<span style="font-size: 18px; line-height: 22px;">click here ~*<br/>
-</span></font></b></a></span></td>          
+<span style="font-size: 18px; color: #66ff66; line-height: 22px;">click here ~*<br/>
+</span></b></a></span></td>          
 </tr>        
 </tbody></table>      
 </div>      
 <div id="e93">
-<span class="text"><font color="#66ff66" >
-<span style="font-size: 16px; line-height: 19px;">
+<span class="text">
+<span style="font-size: 16px; color: #66ff66; line-height: 19px;">
 <span>sweet sixteen panama city<br/>Panama City Sweet Sixteen<br/>sweet sixteen panama city<br/>Hoop Skirts panama city<br/>Hoop Skirts panama city<br/>Crinolines panama city<br/>crinolines panama city</span>
 <span><br/>crinolines panama city<br/>gloves panama city<br/>sweet sixteen panama city<br/>sweet sixteen panama city<br/>bat mitzvahs panama city<br/>bat mitzvahs panama city<br/>bat mitzvahs panama city</span>
 <br/>gloves panama city gloves<br/>panama city bat mitzvah<br/>
-</span></font></span>
+</span></span>
 </div>
 <div id="e94">
 <table width="191">          
 <tbody><tr>            
-<td bgcolor="#3333ff" height="232" nowrap="nowrap" valign="top"><span class="text">
-<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b><font color="#ffff33" >
-<span style="font-size: 24px; line-height: 29px;">Jewelry,</span></font></b></a>
-<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b><font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;"> Pearls, <br/></span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
-<font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Swarovski <br/></span></font></b></a>
-<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b><font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Crystals, <br/></span>
-</font></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
-<font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Necklaces, <br/>
-</span></font></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
-<font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Earrings, <br/>
-</span></font></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
-<font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Bracelets, <br/>
-</span></font></b></a>
+<td class="teedee1" valign="top"><span class="text">
 <a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
-<font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Aurora Borealis <br/>
-</span></font></b></a>
-<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b><font color="#66ffff" >
-<span style="font-size: 24px; line-height: 29px;">Stones, </span>
-</font></b></a>
+<span style="font-size: 24px; color: #ffff33; line-height: 29px;">Jewelry,</span>
+</b></a>
+<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;"> Pearls, <br/></span>
+</b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Swarovski <br/>
+</span></b></a>
+<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Crystals, <br/></span>
+</b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Necklaces, <br/>
+</span></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Earrings, <br/>
+</span></b></a><a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Bracelets, <br/>
+</span></b></a>
+<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Aurora Borealis <br/>
+</span></b></a>
+<a href="http://www.yvettesbridalformal.com/Jewelry1a.html"><b>
+<span style="font-size: 24px; color: #66ffff; line-height: 29px;">Stones, </span>
+</b></a>
 <a href="http://www.yvettesbridalformal.com/Jewelry1a.html">
-<font color="#ffff33">
-<span style="font-size: 14px; line-height: 17px;">click here ~*<br/>
-</span></font></a></span></td>
+<span style="font-size: 14px; color: #ffff33; line-height: 17px;">click here ~*<br/>
+</span></a></span></td>
 </tr>
 </tbody></table>
 </div>
@@ -896,11 +893,11 @@ echo $mm;
 <table width="396">
 <tbody><tr>
 <td bgcolor="#ffcccc" height="26" nowrap="nowrap" valign="top">
-<span class="text"><font color="#ff00ff" >
-<span style="font-size: 22px; line-height: 26px;">Yvette's phone number: </span>
-</font><b><font color="#cc00cc" >
-<span style="font-size: 22px; line-height: 26px;">(850)~871~3000<br/>
-</span></font></b></span></td>
+<span class="text">
+<span style="font-size: 22px; color: #ff00ff; line-height: 26px;">Yvette's phone number: </span>
+<b>
+<span style="font-size: 22px; color: #cc00cc; line-height: 26px;">(850)~871~3000<br/>
+</span></b></span></td>
 </tr>
 </tbody></table>
 </div>
@@ -910,15 +907,14 @@ echo $mm;
 <span class="stijl4"> sells Bridal accessories in Panama City Florida</span>
 </font></b><b>
 <span style="font-size: 20px; color: #ff33ff; line-height: 24px;"> ~*<br/></span>
-</b><b><font color="#33ff33">
-<span style="font-size: 14px; line-height: 17px;">please purchase your Bridal accessories @ Yvette's in Panama City Florida ~*<br/>
+</b><b>
+<span style="font-size: 14px; color: #33ff33; line-height: 17px;">please purchase your Bridal accessories @ Yvette's in Panama City Florida ~*<br/>
 </span>
-</font></b><span style="font-size: 14px; line-height: 17px;">Bridal accessories Panama City<br/>Panama City Bridal accessories<br/></span></span>
+</b><span style="font-size: 14px; line-height: 17px;">Bridal accessories Panama City<br/>Panama City Bridal accessories<br/></span></span>
 </div>
 <div id="e98"><span class="text"><b>
-<font color="#ff33ff" >
-<span style="font-size: 16px; line-height: 19px;">Yvette's Bridal Gowns<br/>
-</span></font></b></span>
+<span style="font-size: 16px; color: #ff33ff; line-height: 19px;">Yvette's Bridal Gowns<br/>
+</span></b></span>
 </div>
 <div id="e99">
 <table width="605">

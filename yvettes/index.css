@@ -63,6 +63,13 @@ span.color1
     color: #ffff00;
 }
 
+td.teedee1
+{
+    background-color: #3333ff;
+    height: 232px;
+    white-space: nowrap;
+}
+
 div#root
 {
     position: absolute;
