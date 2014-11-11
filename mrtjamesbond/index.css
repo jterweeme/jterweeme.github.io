@@ -1,0 +1,18 @@
+/*
+Mr. T vs James Bond
+*/
+
+body
+{
+    background-color: black;
+}
+
+a, h1, img, p
+{
+    display: block;
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+
+
