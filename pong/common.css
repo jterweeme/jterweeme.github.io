@@ -1,0 +1,48 @@
+table
+{
+    margin: auto;
+    width: 900px;
+    height: 500px;
+}
+
+table tr:first-child td
+{
+    height: 20px;
+    width: 50%;
+}
+
+
+#paddle1
+{
+    width: 10px;
+    height: 100px;
+    background-color: red;
+    float: left;
+}
+
+#paddle2
+{
+    width: 10px;
+    height: 100px;
+    background-color: blue;
+    float: right;
+}
+
+#speelveld
+{
+    vertical-align: top;
+    width: 900px;
+    height: 500px;
+}
+
+#ball
+{
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    top: 200px;
+    left: 400px;
+    position: relative;
+}
+
+
