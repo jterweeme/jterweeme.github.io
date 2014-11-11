@@ -175,16 +175,53 @@ td.teedee14
     vertical-align: top;
 }
 
-
-table.width1
-{
-    width: 519px;
-}
-
-table.width2
-{
-    width: 224px;
-}
+table.width36 { width: 36px; }
+table.width80 { width: 80px; }
+table.width114 { width: 114px; }
+table.width128 { width: 128px; }
+table.width130 { width: 130px; }
+table.width134 { width: 134px; }
+table.width140 { width: 140px; }
+table.width170 { width: 170px; }
+table.width177 { width: 177px; }
+table.width179 { width: 179px; }
+table.width185 { width: 185px; }
+table.width191 { width: 191px; }
+table.width194 { width: 194px; }
+table.width209 { width: 209px; }
+table.width210 { width: 210px; }
+table.width213 { width: 213px; }
+table.width226 { width: 226px; }
+table.width250 { width: 250px; }
+table.width224 { width: 224px; }
+table.width250 { width: 250px; }
+table.width293 { width: 293px; }
+table.width313 { width: 313px; }
+table.width324 { width: 324px; }
+table.width325 { width: 325px; }
+table.width349 { width: 349px; }
+table.width361 { width: 361px; }
+table.width365 { width: 365px; }
+table.width375 { width: 375px; }
+table.width396 { width: 396px; }
+table.width403 { width: 403px; }
+table.width404 { width: 404px; }
+table.width405 { width: 405px; }
+table.width432 { width: 432px; }
+table.width446 { width: 446px; }
+table.width460 { width: 460px; }
+table.width519 { width: 519px; }
+table.width586 { width: 586px; }
+table.width592 { width: 592px; }
+table.width602 { width: 602px; }
+table.width605 { width: 605px; }
+table.width622 { width: 622px; }
+table.width634 { width: 634px; }
+table.width683 { width: 683px; }
+table.width728 { width: 728px; }
+table.width756 { width: 756px; }
+table.width978 { width: 978px; }
+table.width1040 { width: 1040px; }
 
 div#root
 {
