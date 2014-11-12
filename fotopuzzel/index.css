@@ -1,0 +1,15 @@
+/* index.css
+*/
+
+table
+{
+    border: 1px solid black;
+}
+
+table img
+{
+    width: 100px;
+    border: 1px solid black;
+    display: block;
+}
+
