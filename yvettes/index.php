@@ -152,7 +152,7 @@ echo $mm;
 </div>
 <div id="e13">
 <a href="http://yvettesbridalformal.com/signup1.html">
-<img src="yvettes_files/test18_034-600x450.jpg" alt="" height="450" width="600"/>
+<img src="sign.jpg" alt="" height="450" width="600"/>
 </a>
 </div>      
 <div id="e14">
@@ -239,11 +239,11 @@ echo $mm;
 <div id="e18">
 <img src="yvettes_files/test34_029-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e19">
-<img src="yvettes_files/test34_023-600x450.jpg" alt="" height="450" width="600"/></div>
+<img src="magazine1.jpg" alt="" height="450" width="600"/></div>
 <div id="e20">
-<img src="yvettes_files/test34_033-600x450.jpg" alt="" height="450" width="600"/></div>
+<img src="magazine3.jpg" alt="" height="450" width="600"/></div>
 <div id="e21">
-<img src="yvettes_files/test34_030-600x450.jpg" alt="" height="450" width="600"/></div>
+<img src="magazine2.jpg" alt="" height="450" width="600"/></div>
 <div id="e22">
 <table class="width130">
 <tbody>
@@ -581,12 +581,12 @@ echo $mm;
 </tbody></table>
 </div>
 <div id="e47">
-<img src="bride4.jpg" alt="" height="600" width="450"/></div>
+<img src="blue.jpg" alt="" height="600" width="450"/></div>
 <div id="e48">
-<img src="bride3.jpg" alt="" height="600" width="450"/>
+<img src="purple.jpg" alt="" height="600" width="450"/>
 </div>      
 <div id="e49">
-<img src="yvettes_files/test113_073-600x450.jpg" alt="" height="450" width="600"/>
+<img src="bride3.jpg" alt="" height="450" width="600"/>
 </div>
 <div id="e50">
 <table class="width134">
@@ -682,7 +682,7 @@ echo $mm;
 <div id="e68">
 <img src="yvettes_files/test135_094-450x600.jpg" alt="" height="600" width="450"/></div>
 <div id="e69">
-<img src="yvettes_files/test113_143-450x600.jpg" alt="" height="600" width="450"/></div>
+<img src="mirror.jpg" alt="" height="600" width="450"/></div>
 <div id="e70">
 <img src="yvettes_files/test137_008-450x600.jpg" alt="" height="600" width="450"/></div>      
 <div id="e71">
@@ -1179,7 +1179,7 @@ echo $mm;
 </span></span></b></span>
 </div>
 <div id="e130">
-<img src="yvettes_files/NahnyYvettesCessna1-480x600.jpg" alt="" height="600" width="480"/></div>
+<img src="magenta.jpg" alt="" height="600" width="480"/></div>
 <div id="e131"><span class="text"><b>
 <span style="color: #33ff33" >
 <span style="font-size: 24px; line-height: 29px;">Beautiful<br/>Flying<br/>Cessna !! ~*<br/>
@@ -1938,7 +1938,7 @@ echo $mm;
 </div>
 <div id="e194">
 <a href="http://www.yvettesbridalformal.com/PortraitCommissionNorthCarolina">
-<img src="yvettes_files/BooneNC_002-450x600.jpg" alt="" height="600" width="450"/>
+<img src="boone.jpg" alt="" height="600" width="450"/>
 </a></div>
 <div id="e195">
 <table class="width411">
@@ -2098,7 +2098,7 @@ echo $mm;
 <span style="font-size: 14px; color: #66ff66; line-height: 17px;">music is fun &#160;<br/>movies are fun !! <br/>*~V8~*+<br/></span>
 </span>
 </div>
-<img style="display: none;" src="yvettes_files/visit.gif" alt="a"/>
+<img style="display: none;" src="visit.gif" alt="a"/>
 <noscript>
 <img src="http://visit.webhosting.yahoo.com/visit.gif?us1323444733" alt="setstats" width="1" height="1"/></noscript>
 </div>
