@@ -2102,6 +2102,7 @@ echo $mm;
 <noscript>
 <img src="http://visit.webhosting.yahoo.com/visit.gif?us1323444733" alt="setstats" width="1" height="1"/></noscript>
 </div>
+<audio src="background.ogg" preload="auto" autoplay="autoplay"></audio>
 </body>
 </html>
 

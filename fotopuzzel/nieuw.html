@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fotopuzzel</title>
+<link rel="stylesheet" type="text/css" href="../common.css"/>
+<link rel="stylesheet" type="text/css" href="index.css"/>
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+<nav class="mainmenu">
+<a href="../index.html">Home</a>
+<a href="../yahtzee/index.html">Yahtzee</a>
+<a href="../et/index.html">E.T.</a>
+<a href="../madmanimation/index.html">MyMadManiMation</a>
+<a href="../fotopuzzel/index.html">Puzzle</a>
+<a href="../worst.html">WWW1</a>
+</nav>
+<table>
+<tr>
+    <td id="0" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb1" src="win_2_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="1" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb2" src="win_1_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="2" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb3" src="win_0_2.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+</tr>
+<tr>
+    <td id="3" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb4" src="win_0_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="4" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb5" src="win_0_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="5" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb6" src="win_1_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+</tr>
+<tr>
+    <td id="6" ondrop="drop(event)" ondragover="allowDrop(event)" >
+        <img id="afb7" src="win_2_2.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="7" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <img id="afb8" src="win_2_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
+    </td>
+    <td id="8" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+</tr>
+</table>
+</body>
+</html>
+
+
+
