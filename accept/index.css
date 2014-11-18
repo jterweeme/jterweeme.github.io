@@ -1,6 +1,52 @@
-body
+html.accept body
 {
     background-image: url('background.gif');
+}
+
+html.accept body aside
+{
+    background-color: #ccc;
+}
+
+html.accept body figure
+{
+    text-align: center;
+    font-weight: bold;
+}
+
+blockquote q
+{
+    quotes: none;
+    display: block;
+    text-align: center;
+    white-space: pre;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+blockquote cite
+{
+    display: block;
+    text-align: center;
+}
+
+html.accept body img.door
+{
+    position: fixed;
+    left: 50%;
+    bottom: 0px;
+}
+
+img.cat
+{
+    position: absolute;
+    bottom: 0px;
+    -moz-animation: catscene;
+}
+
+@-moz-keyframes catscene
+{
+    
 }
 
 

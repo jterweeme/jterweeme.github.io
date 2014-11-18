@@ -18,6 +18,18 @@ function drop(ev) {
     var data = ev.dataTransfer.getData("text");
     ev.target.appendChild(document.getElementById(data));
 }
+
+function init()
+{
+    body = document.getElementsByTagName('body')[0];
+    tbody = body.children[1].children[0];
+    //tbody.children[0].children[0].ondrop=drop(event);
+    //tbody.children[0].children[0].ondragover="allowDrop(event)";
+    
+}
+
+document.addEventListener("DOMContentLoaded", init, false);
+
 </script>
 </head>
 <body>
@@ -32,6 +44,7 @@ function drop(ev) {
 <table>
 <tr>
     <td id="0" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <!-- <td id="0"> -->
         <img id="afb1" src="win_2_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
     </td>
     <td id="1" ondrop="drop(event)" ondragover="allowDrop(event)">
