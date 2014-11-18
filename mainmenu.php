@@ -13,7 +13,8 @@ class MainMenu
 
         foreach ($xml->a as $link)
         {
-            if (file_exists("achtung.html") || $link->attributes() == "http://jterweeme.github.io")
+            if (file_exists("achtung.html") ||
+                $link->attributes() == "https://github.com/jterweeme")
             {
                 $ret .= sprintf("<a href=\"%s\">%s</a>\n", $link->attributes(), $link);
             }
