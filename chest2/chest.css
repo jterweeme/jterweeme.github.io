@@ -1,0 +1,38 @@
+   link, .link, .link a {
+      font-family: 'lucida grande', 'trebuchet ms', Verdana, Arial, Sans-serif;
+      color: #000000;
+      text-decoration: none;
+   }
+   a:link, a:visited {
+      color: #000000;
+      text-decoration: none;
+      margin-left: 5px;
+      margin-right: 5px;
+   }
+   a:hover {
+      color: #ffffff;
+   }
+   .keyword, a.keyword:visited, a.keyword:link {
+      font-size: 50px;
+      font-weight: bold;
+      font-family: 'lucida grande', 'trebuchet ms', Verdana, Arial, Sans-serif;
+      color: #990000;
+      text-decoration: none;
+   }
+   legend
+   {
+      color: #22229C;
+      font: 11px 'lucida grande', 'trebuchet ms', tahoma, verdana, geneva, lucida, arial, helvetica, sans-serif;
+      border: 0px;
+   }
+   body {
+      background: url(/chests/bigchest.jpg) no-repeat fixed center;
+      margin-left: 25%;
+      margin-right: 25%;
+      background-color: #a59381;
+   }
+   table {
+      color: white;
+   }
+
+
