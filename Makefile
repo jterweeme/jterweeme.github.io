@@ -8,6 +8,7 @@
 all: index.html md5sum.html kompakt.html rm.html worst.html
 	@make -C fotopuzzel all
 	@make -C madmanimation all
+	@make -C penny all
 	@make -C yahtzee all
 	@make -C yvettes all
 
@@ -21,6 +22,7 @@ clean:
 	@rm -Rf index.html md5sum.html kompakt.html kompakt.xml md5sum.xml rm.html
 	@make -C fotopuzzel clean
 	@make -C madmanimation clean
+	@make -C penny clean
 	@make -C yahtzee clean
 	@make -C yvettes clean
 

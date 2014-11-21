@@ -1,0 +1,65 @@
+html
+{
+    font-family: sans-serif;
+}
+
+html.penny body
+{
+    background-color: yellow;
+}
+
+html.penny body main
+{
+    background-image: url('kids.gif');
+    padding: 0px;
+}
+
+html.penny body img
+{
+    display: block;
+    margin: auto;
+}
+
+html.penny body footer
+{
+    text-align: center;
+}
+
+html.whois body
+{
+    background-image: url('background.gif');
+    margin: 0px;
+}
+
+dl
+{
+    background-color: yellow;
+    text-align: center;
+    width: 95%;
+    margin: auto;
+}
+
+dl dd.pink
+{
+    background-color: fuchsia;
+    color: white;
+}
+
+dl dd.blue
+{
+    background-color: #3333ff;
+    color: white;
+}
+
+dl dd.green
+{
+    background-color: green;
+    color: white;
+}
+
+dl dd cite
+{
+    display: block;
+}
+
+
