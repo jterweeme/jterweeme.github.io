@@ -28,3 +28,8 @@ main
     padding: 10px;
 }
 
+html.worst main a
+{
+    display: block;
+}
+

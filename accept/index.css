@@ -41,12 +41,17 @@ img.cat
 {
     position: absolute;
     bottom: 0px;
-    -moz-animation: catscene;
+    left: 100px;
+    animation: catscene 5s;
+    animation-iteration-count: infinite;
 }
 
-@-moz-keyframes catscene
+@keyframes catscene
 {
-    
+
+    0% { left: 100px; }
+    50% { left: 0px; }
+    100% { left; 0px; }
 }
 
 
