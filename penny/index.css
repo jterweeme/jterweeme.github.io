@@ -3,34 +3,6 @@ html
     font-family: sans-serif;
 }
 
-html.penny body
-{
-    background-color: yellow;
-}
-
-html.penny body main
-{
-    background-image: url('kids.gif');
-    padding: 0px;
-}
-
-html.penny body img
-{
-    display: block;
-    margin: auto;
-}
-
-html.penny body footer
-{
-    text-align: center;
-}
-
-html.whois body
-{
-    background-image: url('background.gif');
-    margin: 0px;
-}
-
 dl
 {
     background-color: yellow;
@@ -57,9 +29,67 @@ dl dd.green
     color: white;
 }
 
+dl dd.orange
+{
+    background-color: orange;
+    color: white;
+}
+
+dl dd.red
+{
+    background-color: red;
+    color: white;
+}
+
 dl dd cite
 {
     display: block;
+}
+
+html.penny body
+{
+    background-color: yellow;
+}
+
+html.penny body main
+{
+    background-image: url('kids.gif');
+    padding: 0px;
+}
+
+html.penny body img
+{
+    display: block;
+    margin: auto;
+}
+
+html.penny body footer
+{
+    text-align: center;
+}
+
+html.whois body main nav
+{
+    text-align: center;
+}
+
+html.whois body main, html.whereis body main
+{
+    background-image: url('background.gif');
+    padding: 0px;
+    min-height: 1200px;
+}
+
+html.whereis body main table
+{
+    background-color: white;
+    margin: auto;
+    width: 80%;
+}
+
+html.whereis body main table tr td
+{
+    border: 1px solid green;
 }
 
 
