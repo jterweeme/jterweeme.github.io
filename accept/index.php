@@ -36,8 +36,16 @@ through Jesus Christ our Lord.
 </q>
 <cite>-Romans 6:23</cite>
 </blockquote>
-<img class="cat" src="blackcat.gif" alt="cat"/>
-<img class="door" src="door.gif" alt="door" width="100"/>
+<img id="cat" src="blackcat.gif" alt="cat"/>
+<div class="onzin">
+<!-- <img id="doorclos" class="door" src="door.gif" alt="door" width="100"/> -->
+<img id="dooropen" class="door" src="dooropen.gif" alt="dooropen" width="100"/>
+</div>
+<div id="ie">
+    <p>BEST VIEWED WITH</p>
+    <img src="ie50.gif" alt="ie50"/>
+    <p>Forget all the other browsers and<br/>down with the Web 2.0 net police.</p>
+</div>
 </body>
 </html>
 

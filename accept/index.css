@@ -30,14 +30,44 @@ blockquote cite
     text-align: center;
 }
 
-html.accept body img.door
+footer
 {
-    position: fixed;
+    position: absolute;
     left: 50%;
     bottom: 0px;
 }
 
-img.cat
+
+div.onzin
+{
+    position: fixed;
+    border: 1px solid black;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    bottom: 0px;
+}
+
+div.onzin:hover img#dooropen
+{
+    display: block;
+}
+
+img#dooropen
+{
+    display: none;
+}
+
+#ie
+{
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    margin-left: 120px;
+    font-size: 8pt;
+}
+
+img#cat
 {
     position: absolute;
     bottom: 0px;
