@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xml" href="apa.xsl"?>
+<lib>
+
+<entry>
+    <author>Harry Mussli</author>
+    <year>1912</year>
+    <title>De aanrijding</title>
+</entry>
+
+<entry>
+    <author>Frank Baum</author>
+    <year>1900</year>
+    <title>Wizard of Oz</title>
+    <url>http://annualreport07.telecom.co.nz/download/telecom-annual-report-2007.pdf</url>
+</entry>
+
+</lib>
+
