@@ -3,10 +3,16 @@
 <?php
 echo file_get_contents("achtung.html");
 ?>
-<html class="worst">
+<html>
 <head>
 <title>Onzin</title>
 <link rel="stylesheet" type="text/css" href="common.css"/>
+<style>
+main a
+{
+    display: block;
+}
+</style>
 </head>
 <body>
 

@@ -31,6 +31,17 @@ echo $mm;
 </tr>
 </table>
 </div>
+
+<pre style="color: white;">
+[Oplossing 1]
+8 7 4 1 2 5 8 7 4 1 2 3 6 5 8 9 6 3
+2 5 6
+
+[Oplossing 2]
+6 5 8 7 4 5 6 9 8 7 4 1 2 5 8 7 4 1
+2 5 6
+</pre>
+
 </body>
 </html>
 

@@ -9,6 +9,7 @@
                             <xs:element name="link"/>
                             <xs:element name="meta"/>
                             <xs:element name="script"/>
+                            <xs:element name="style"/>
                             <xs:element name="title"/>
                         </xs:choice>
                     </xs:complexType>
