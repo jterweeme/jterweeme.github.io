@@ -429,6 +429,8 @@ geluid af te spelen met de geluidskaart.
 </p>
 
 <code>
+import pyaudio
+
 class ToneGen:
     def __init__(self, volume = 1, fs = 48000):
         self.vol = volume

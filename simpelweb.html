@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<!-- This file is auto-generated DO NOT EDIT -->
+
+
+<html>
+<head>
+<title>Meest simpele webserver</title>
+<link rel="stylesheet" type="text/css" href="common.css"/>
+<style>
+code, kbd, samp {
+    white-space: pre;
+}
+
+var {
+    font-family: monospace;
+    font-style: normal;
+}
+
+samp {
+    color: gray;
+}
+
+code em {
+    font-style: normal;
+    color: red;
+}
+</style>
+</head>
+<body>
+
+
+<nav class="mainmenu">
+<a href="index.html">Home</a>
+<a href="https://github.com/jterweeme">GitHub</a>
+<a href="yahtzee/index.html">Yahtzee</a>
+<a href="et/index.html">E.T.</a>
+<a href="madmanimation/index.html">MyMadManiMation</a>
+<a href="fotopuzzel/index.html">Puzzle</a>
+<a href="worst.html">WWW1</a>
+</nav>
+<main style="width: 900px;">
+<h1>HTTP Server</h1>
+<code>
+import http.server, socketserver
+
+handler = http.server.SimpleHTTPRequestHandler
+httpd = socketserver.TCPServer(("", 8080), handler)
+httpd.serve_forever()
+</code>
+
+
+</main>
+</body>
+</html>
+
+
+
