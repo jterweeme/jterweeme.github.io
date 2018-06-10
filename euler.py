@@ -28,22 +28,19 @@ Antwoord: 4,613,732
 """
 
 def fibonacci(term1 = 1, term2 = 2, xmax = 4000000):
-    xterm1 = term1
-    xterm2 = term2
-    temp = 0
-    xsum = 0
-    if xterm1 % 2 == 0:
-        xsum += xterm1
-    if xterm2 % 2 == 0:
-        xsum += xterm2
+    temp, xsum = 0, 0
+    if term1 % 2 == 0:
+        xsum += term1
+    if term2 % 2 == 0:
+        xsum += term2
     while True:
-        temp = xterm1 + xterm2
+        temp = term1 + term2
         if temp > xmax:
             break
         if temp % 2 == 0:
             xsum += temp
-        xterm1 = xterm2
-        xterm2 = temp
+        term1 = term2
+        term2 = temp
     return xsum
 
 """
@@ -103,7 +100,7 @@ def palindrome(x = range(999, 99, -1), y = range(999, 99, -1)):
         temp = n
         rev = 0
         while temp != 0:
-            rev = (rev * 10) + (temp % 10)
+            rev = rev * 10 + temp % 10
             temp = temp // 10
         return n == rev
     best = 0
@@ -1757,12 +1754,20 @@ is less than n and it is called abundant if this sum exceeds n.
 
 As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest
 number that can be written as the sum of two abundant numbers is 24. By
-mathematical analysis, it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers. However, this upper limit cannot be reduced any further by analysis even though it is known that the greatest number that cannot be expressed as the sum of two abundant numbers is less than this limit.
+mathematical analysis, it can be shown that all integers greater than 28123
+can be written as the sum of two abundant numbers. However, this upper limit
+cannot be reduced any further by analysis even though it is known that the
+greatest number that cannot be expressed as the sum of two abundant numbers
+is less than this limit.
 
 Find the sum of all the positive integers which
 cannot be written as the sum of two abundant numbers.
 
 Antwoord: 4,179,871
+"""
+
+"""
+Upper bound is actually 20,161
 """
 
 def opdracht23():
@@ -1772,7 +1777,7 @@ def opdracht23():
         total = 1
         while i < upper:
             if n%i == 0:
-                upper = n/i
+                upper = n//i
                 total += upper
                 if upper != i:
                     total += i
@@ -1780,14 +1785,13 @@ def opdracht23():
         return total
     def isabundant(n):
         return GetSumOfDivs(n) > n
-    lAbundants = [x for x in range(12, 28123) if isabundant(x) == True]
-    dAbundants = {x:x for x in lAbundants}
+    lAbundants = set(x for x in range(12, 28123 + 1) if isabundant(x) == True)
     sums = 1
-    for i in range(2, 28123):
+    for i in range(2, 28123 + 1):
         boo = True
         for k in lAbundants:
             if k < i:
-                if (i-k) in dAbundants:
+                if (i-k) in lAbundants:
                     boo = False
                     break
             else:
@@ -1917,7 +1921,8 @@ def opdracht26():
         while 10**p % n != 1:
             p += 1
         if p > longest:
-            num, longest = n, p
+            num = n
+            longest = p
     return num
 
 """
@@ -2073,15 +2078,17 @@ as the sum of fifth powers of their digits.
 Antwoord: 443,839
 """
 
+"""
+4,150 + 4,151 + 54,748 + 92,727 + 93,084 + 194,979 = 443,839
+"""
+
 def opdracht30(p = 5):
     def test(n, p):
         def decimal(n, i):
             return n // 10**i % 10
         def decimals2(n):
             i = 0
-            while True:
-                if n < 10**i:
-                    break
+            while n >= 10**i:
                 i += 1
             return i
         xsum = 0
@@ -2229,8 +2236,7 @@ def opdracht35(xmax = 999999):
                 return i
             def rotate(n):
                 length = decimals(n)
-                digit = n % 10
-                n = n // 10
+                n, digit = divmod(n, 10)
                 n += digit * 10**(length - 1)
                 return n
             ret = list()
@@ -2246,17 +2252,17 @@ def opdracht35(xmax = 999999):
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
+        for i, isprime in enumerate(a):
             if isprime:
                 yield i
                 for n in range(i * i, limit, i):
                     a[n] = False
-    lst = list(sieve(xmax))
-    lst2 = list()
-    for prime in lst:
-        if iscircular(prime, lst):
-            lst2.append(prime)
-    return len(lst2)
+    primes = set(sieve(xmax))
+    cprimes = set()
+    for prime in primes:
+        if iscircular(prime, primes):
+            cprimes.add(prime)
+    return len(cprimes)
 
 """
 Einde opdrachten
@@ -2342,14 +2348,20 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
 
 #answers[33 - 1] = 0
 
-def run(l = list(range(1,35 + 1))):
-    import time
-    import math
-    for p in l:
-        ts = time.time()
-        ret = runn2(p)
-        assert ret == answers[p - 1]
-        print("#{}: {} {}s".format(p, ret, math.floor(time.time() - ts)))
+jobs = list()
 
+import time
+import math
+import concurrent.futures
+
+def runjob(n):
+    ts = time.time()
+    ret = runn2(n)
+    assert ret == answers[n - 1]
+    print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
+
+def run(l = list(range(1,35 + 1))):
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        executor.map(runjob, l)
 
 
