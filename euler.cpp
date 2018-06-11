@@ -13,6 +13,7 @@
 #include <thread>
 #include <queue>
 #include <stdexcept>
+#include <algorithm>
 using namespace std;
 
 /*
@@ -2162,18 +2163,24 @@ static uint16_t divsum(uint32_t n)
     return xsum;
 }
 
+static bool find23(vector<uint16_t> &vec, uint16_t n)
+{
+    return binary_search(vec.begin(), vec.end(), n);
+    //return vec.count(n) > 0;
+}
+
 static uint32_t opdracht23()
 {
-    uint32_t xmax = 28123;
-    set<uint16_t> abundants;
+    uint16_t xmax = 28123;
+    vector<uint16_t> abundants;
 
-    for (uint32_t i = 1; i <= xmax; i++)
+    for (uint16_t i = 1; i <= xmax; i++)
         if (divsum(i) > i)
-            abundants.insert(i);
+            abundants.push_back(i);
 
     uint32_t xsum = 1;
 
-    for (uint32_t i = 2; i <= xmax; i++)
+    for (uint16_t i = 2; i <= xmax; i++)
     {
         bool boo = true;
         
@@ -2181,7 +2188,7 @@ static uint32_t opdracht23()
         {
             if (x < i)
             {
-                if (abundants.count(i - x))
+                if (find23(abundants, i - x))
                 {
                     boo = false;
                     break;
@@ -2817,29 +2824,15 @@ Find the sum of all numbers, less than one million, which are palindromic in bas
 Antwoord: 872,187
 */
 
-static bool ispalindrome2(uint32_t n)
+static bool ispalindrome36(uint32_t n, uint8_t base = 10)
 {
     uint32_t temp = n;
     uint32_t rev = 0;
     
     while (temp != 0)
     {
-        rev = rev * 2 + temp % 2;
-        temp = temp / 2;
-    }
-
-    return n == rev;
-}
-
-static bool ispalindrome10(uint32_t n)
-{
-    uint32_t temp = n;
-    uint32_t rev = 0;
-    
-    while (temp != 0)
-    {
-        rev = rev * 10 + temp % 10;
-        temp = temp / 10;
+        rev = rev * base + temp % base;
+        temp = temp / base;
     }
 
     return n == rev;
@@ -2850,8 +2843,121 @@ static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
     uint32_t xsum = 0;
     
     for (uint32_t i = min; i < limit; i++)
-        if (ispalindrome2(i) && ispalindrome10(i))
+        if (ispalindrome36(i, 10) && ispalindrome36(i, 2))
             xsum += i;
+
+    return xsum;
+}
+
+/*
+#37: Truncatable primes
+
+The number 3797 has an interesting property. Being prime itself, it is possible
+to continuously remove digits from left to right, and remain prime at each
+stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+
+Find the sum of the only eleven primes that are both
+truncatable from left to right and right to left.
+
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+
+Antwoord: 748,317
+*/
+
+/*
+23 + 37 + 53 + 73 + 313 + 317 + 373 + 797 + 3,137 + 3,797 + 739,397 = 748,317
+*/
+
+uint32_t pow37(uint32_t base, uint32_t i)
+{
+    if (i == 0)
+        return 1;
+
+    uint32_t ret = base;
+
+    while (--i)
+        ret = ret * base;
+
+    return ret;
+}
+
+static uint8_t decimals37(uint32_t n)
+{
+    uint8_t i = 0;
+    
+    while (n > pow37(10, i))
+        i++;
+
+    return i;
+}
+
+static bool isrighttruncatable(uint32_t prime, set<uint32_t> &primes)
+{
+    while (prime > 10)
+    {
+        prime = prime / 10;
+
+        if (primes.count(prime) == 0)
+            return false;
+    }
+
+    return true;
+}
+
+static uint32_t truncate_left(uint32_t n)
+{
+    uint8_t exp = decimals37(n) - 1;
+    return n % pow37(10, exp);
+}
+
+static bool islefttruncatable(uint32_t prime, set<uint32_t> &primes)
+{
+    uint8_t length = decimals37(prime);
+    
+    for (uint8_t i = 0; i < length; i++)
+    {
+        if (primes.count(prime) == 0)
+            return false;
+
+        prime = truncate_left(prime);
+    }
+    
+    return true;
+}
+
+static void sieve37(set<uint32_t> &primes, uint32_t max)
+{
+    vector<bool> v(max, true);
+    v[0] = v[1] = false;
+    
+    for (uint32_t p = 2; p * p <= max; p++)
+    {
+        if (v[p] == true)
+        {
+            for (uint32_t i = p * 2; i <= max; i += p)
+                v[i] = false;
+        }
+    }
+
+    for (uint32_t i = 1; i <= max; i++)
+        if (v[i] == true)
+            primes.insert(i);
+}
+
+static uint32_t opdracht37()
+{
+    set<uint32_t> primes;
+    sieve37(primes, 999999);
+    uint32_t xsum = 0;
+
+    for (auto prime : primes)
+    {
+        if (prime == 2 || prime == 3 || prime == 5 || prime == 7)
+            continue;
+
+        if (islefttruncatable(prime, primes) && isrighttruncatable(prime, primes))
+            xsum += prime;
+    }
 
     return xsum;
 }
@@ -2936,6 +3042,8 @@ static uint64_t run(uint32_t p)
         return opdracht35();
     case 36:
         return opdracht36();
+    case 37:
+        return opdracht37();
     }
 
     return 0;
@@ -3052,7 +3160,7 @@ static void multithread(uint8_t max)
     ThreadPool pool(4);
     std::vector< std::future<void> > results;
 
-    for (uint8_t i = 1; i <= 36; ++i)
+    for (uint8_t i = 1; i <= max; ++i)
     {
         results.emplace_back(pool.enqueue([i] { runjob(i); }));
     }
@@ -3074,9 +3182,9 @@ int main()
     answers[34 - 1] = 0;
     //answers[35 - 1] = 0;
 #if 1
-    multithread(36);
+    multithread(37);
 #else
-    singlethread(36);
+    singlethread(37);
 #endif
     return 0;
 }

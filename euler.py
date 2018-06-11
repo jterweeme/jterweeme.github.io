@@ -2290,24 +2290,18 @@ Antwoord: 872,187
 1 + 3 + 5 + 7 + 9 + 33 + 99 + 313 + 585 + 717 + 7447 + 9009 +
 15351 + 32223 + 39993 + 53235 + 53835 + 73737 + 585585 = 872187
 """
+
 def opdracht36(r = range(1,1000000)):
-    def ispalindrome2(n):
+    def ispalindrome(n, base = 10):
         temp = n
         rev = 0
         while temp != 0:
-            rev = rev * 2 + temp % 2
-            temp = temp // 2
-        return n == rev
-    def ispalindrome10(n):
-        temp = n
-        rev = 0
-        while temp != 0:
-            rev = rev * 10 + temp % 10
-            temp = temp // 10
+            rev = rev * base + temp % base
+            temp = temp // base
         return n == rev
     xsum = 0
     for i in r:
-        if ispalindrome2(i) and ispalindrome10(i):
+        if ispalindrome(i, 10) and ispalindrome(i, 2):
             xsum += i
     return xsum
 
@@ -2323,8 +2317,51 @@ truncatable from left to right and right to left.
 
 NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
 
-Antwoord: 748317
+Antwoord: 748,317
 """
+
+"""
+23 + 37 + 53 + 73 + 313 + 317 + 373 + 797 + 3,137 + 3,797 + 739,397 = 748,317
+"""
+
+def opdracht37():
+    def isrighttruncatable(prime, primes):
+        while prime > 10:
+            prime = prime // 10
+            if prime not in primes:
+                return False
+        return True
+    def islefttruncatable(prime, primes):
+        def decimals(n):
+            i = 0
+            while n > 10**i:
+                i += 1
+            return i
+        def truncate_left(n):
+            exp = decimals(n) - 1
+            return n % 10**exp
+        length = decimals(prime)
+        for i in range(0, length):
+            if prime not in primes:
+                return False
+            prime = truncate_left(prime)
+        return True
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for i, isprime in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    primes = set(sieve(999999))
+    xsum = 0
+    for prime in primes:
+        if prime in [2,3,5,7]:
+            continue
+        if islefttruncatable(prime, primes) and isrighttruncatable(prime, primes):
+            xsum += prime
+    return xsum
 
 """
 Einde opdrachten
@@ -2403,6 +2440,8 @@ def runn2(n = 1):
         return opdracht35()
     if n == 36:
         return opdracht36()
+    if n == 37:
+        return opdracht37()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2425,7 +2464,7 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def run(l = list(range(1,36 + 1))):
+def run(l = list(range(1,37 + 1))):
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
 
