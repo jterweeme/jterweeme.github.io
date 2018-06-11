@@ -183,9 +183,9 @@ static bool ispalindrome(uint32_t n)
     return n == rev;
 }
 
-static uint64_t opdracht4()
+static uint32_t opdracht4()
 {
-    uint64_t best = 0;
+    uint32_t best = 0;
     for (uint32_t a = 0; a < 1000; a++)
     {
         for (uint32_t b = 0; b < 1000; b++)
@@ -523,7 +523,7 @@ uint8_t t11[20][20] = {{ 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91
             {20,73,35,29,78,31,90, 1,74,31,49,71,48,86,81,16,23,57, 5,54},
             { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}};
 
-static uint64_t opdracht11()
+static uint32_t opdracht11()
 {
     uint32_t best = 0;
 
@@ -594,18 +594,18 @@ What is the value of the first triangle number to have over five hundred divisor
 Antwoord: 76,576,500
 */
 
-static uint64_t triangler(uint64_t n)
+static uint32_t triangler(uint64_t n)
 {
     return (n * (n + 1)) >> 1;
 }
 
-static uint64_t num_divisors(uint64_t n)
+static uint32_t num_divisors(uint64_t n)
 {
     if (n % 2 == 0)
         n = n >> 1;
 
-    uint64_t divisors = 1;
-    uint64_t count = 0;
+    uint32_t divisors = 1;
+    uint32_t count = 0;
     
     while (n % 2 == 0)
     {
@@ -614,7 +614,7 @@ static uint64_t num_divisors(uint64_t n)
     }
 
     divisors = divisors * (count + 1);
-    uint64_t p = 3;
+    uint32_t p = 3;
     while (n != 1)
     {
         count = 0;
@@ -629,10 +629,10 @@ static uint64_t num_divisors(uint64_t n)
     return divisors;
 }
 
-static uint64_t find_triangular_index(uint16_t factor_limit = 500)
+static uint32_t find_triangular_index(uint16_t factor_limit = 500)
 {
-    uint64_t n = 1;
-    uint64_t lnum = num_divisors(n), rnum = num_divisors(n + 1);
+    uint32_t n = 1;
+    uint32_t lnum = num_divisors(n), rnum = num_divisors(n + 1);
     
     while (lnum * rnum < factor_limit)
     {
@@ -643,9 +643,9 @@ static uint64_t find_triangular_index(uint16_t factor_limit = 500)
     return n;
 }
 
-static uint64_t opdracht12(uint16_t divisors = 500)
+static uint32_t opdracht12(uint16_t divisors = 500)
 {
-    uint64_t index = find_triangular_index(divisors);
+    uint32_t index = find_triangular_index(divisors);
     return triangler(index);
 }
 
@@ -1013,7 +1013,7 @@ static uint64_t opdracht15(uint8_t size = 20)
 
 What is the sum of the digits of the number 2^1000?
 
-Antwoord: 1366
+Antwoord: 1,366
 */
 
 static uint64_t opdracht16(uint16_t e = 1000)
@@ -1140,7 +1140,7 @@ problem by trying every route. However, Problem 67, is the same
 challenge with a triangle containing one-hundred rows; it cannot be
 solved by brute force, and requires a clever method! ;o)
 
-Antwoord: 1074
+Antwoord: 1,074
 */
 
 #if 0
@@ -1304,15 +1304,15 @@ of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
 
 Evaluate the sum of all the amicable numbers under 10000.
 
-Answers: 31626
+Antwoord: 31,626
 */
 
 /*
-220 - 284
-1184 - 1210
-2620 - 2924
-5020 - 5564
-6232 - 6368
+220 & 284
+1184 & 1210
+2620 & 2924
+5020 & 5564
+6232 & 6368
 */
 
 static uint64_t sum_divisors(uint64_t n)
@@ -2148,7 +2148,7 @@ mathematical analysis, it can be shown that all integers greater than 28123 can 
 Find the sum of all the positive integers which
 cannot be written as the sum of two abundant numbers.
 
-Antwoord: 4179871
+Antwoord: 4,179,871
 */
 
 static uint16_t divsum(uint32_t n)
@@ -2162,44 +2162,41 @@ static uint16_t divsum(uint32_t n)
     return xsum;
 }
 
-static bool sumup(uint32_t n, vector<uint16_t> &ab)
-{
-    vector<uint16_t>::iterator it1;
-    vector<uint16_t>::iterator it2;
-
-    for (it1 = ab.begin(); it1 != ab.end(); it1++)
-    {
-        if (n < *it1 * 2)
-            continue;
-
-        for (it2 = it1; it2 != ab.end(); it2++)
-        {
-            if (*it1 + *it2 == n)
-                return true;
-
-            if (*it1 + *it2 > n)
-                break;
-        }
-    }
-    return false;
-}
-
 static uint32_t opdracht23()
 {
     uint32_t xmax = 28123;
-    uint32_t a = xmax + 1;
-    vector<uint16_t> abundants;
-    
-    for (uint32_t i = 1; i < a; i++)
+    set<uint16_t> abundants;
+
+    for (uint32_t i = 1; i <= xmax; i++)
         if (divsum(i) > i)
-            abundants.push_back(i);
+            abundants.insert(i);
 
-    uint32_t xsum = 0;
+    uint32_t xsum = 1;
 
-    for (uint32_t i = 1; i < a; i++)
-        if (sumup(i, abundants) == false)
+    for (uint32_t i = 2; i <= xmax; i++)
+    {
+        bool boo = true;
+        
+        for (auto x : abundants)
+        {
+            if (x < i)
+            {
+                if (abundants.count(i - x))
+                {
+                    boo = false;
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (boo == true)
             xsum += i;
-
+    }
+    
     return xsum;
 }
 
@@ -2627,6 +2624,239 @@ static uint64_t opdracht31()
 }
 
 /*
+#32: Pandigital products
+
+We shall say that an n-digit number is pandigital if it makes use of all
+the digits 1 to n exactly once; for example, the 5-digit number, 15234,
+is 1 through 5 pandigital.
+
+The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing
+multiplicand, multiplier, and product is 1 through 9 pandigital.
+
+Find the sum of all products whose multiplicand/multiplier/product identity
+can be written as a 1 through 9 pandigital.
+HINT: Some products can be obtained in more than one way so be sure to only
+include it once in your sum.
+
+Antwoord: 45,228
+*/
+
+static uint64_t opdracht32()
+{
+    return 0;
+}
+
+/*
+#33: Digit cancelling fractions
+
+The fraction 49/98 is a curious fraction, as an inexperienced
+mathematician in attempting to simplify it may incorrectly believe
+that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+
+We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+
+There are exactly four non-trivial examples of this type of fraction, less
+than one in value, and containing two digits in the numerator and denominator.
+
+If the product of these four fractions is given in its
+lowest common terms, find the value of the denominator.
+
+Antwoord: 100
+*/
+
+static uint64_t opdracht33()
+{
+    double d = 1;
+    
+    for (uint32_t i = 1; i < 10; i++)
+    {
+        for (uint32_t j = 1; j < i; j++)
+        {
+            uint32_t q = (9 * j * i) / (10 * j - i);
+            uint32_t r = (9 * j * i) % (10 * j - i);
+
+            if (r == 0 && q <= 9)
+                d *= i / (double)j;
+        }
+    }
+    return (uint64_t)d;
+}
+
+/*
+#34: Digit factorials
+
+145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
+
+Find the sum of all numbers which are equal to the sum of the factorial of their digits.
+
+Note: as 1! = 1 and 2! = 2 are not sums they are not included.
+
+Antwoord: 40,730
+*/
+
+static uint64_t opdracht34()
+{
+    return 0;
+}
+
+/*
+#35: Circular primes
+
+The number, 197, is called a circular prime because all rotations
+of the digits: 197, 971, and 719, are themselves prime.
+
+There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+
+How many circular primes are there below one million?
+
+Antwoord: 55
+*/
+
+/*
+2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, 97, 113, 131, 197, 199, 311,
+337, 373, 719, 733, 919, 971, 991, 1193, 1931, 3119, 3779, 7793, 7937, 9311,
+9377, 11939, 19391, 19937, 37199, 39119, 71993, 91193, 93719, 93911, 99371,
+193939, 199933, 319993, 331999, 391939, 393919, 919393, 933199, 939193,
+939391, 993319, 999331
+*/
+
+uint32_t pow35(uint32_t base, uint32_t i)
+{
+    if (i == 0)
+        return 1;
+
+    uint32_t ret = base;
+
+    while (--i)
+        ret = ret * base;
+
+    return ret;
+}
+
+static uint8_t decimals35(uint32_t n)
+{
+    uint8_t i = 0;
+    
+    while (n > pow35(10, i))
+        i++;
+
+    return i;
+}
+
+static uint32_t rotate(uint32_t n)
+{
+    uint8_t length = decimals35(n);
+    uint8_t digit = n % 10;
+    n = n / 10;
+    n += digit * pow35(10, length - 1);
+    return n;
+}
+
+static void rotations(vector<uint32_t> &rts, uint32_t n)
+{
+    for (uint8_t i = 0; i < decimals35(n); i++)
+    {
+        n = rotate(n);
+        rts.push_back(n);
+    }
+}
+
+static bool iscircular(uint32_t n, set<uint32_t> &primes)
+{
+    vector<uint32_t> rts;
+    rotations(rts, n);
+
+    for (auto rotation : rts)
+        if (primes.count(rotation) == 0)
+            return false;
+
+    return true;
+}
+
+static void sieve35(set<uint32_t> &primes, uint32_t max)
+{
+    vector<bool> v(max, true);
+    v[0] = v[1] = false;
+    
+    for (uint32_t p = 2; p * p <= max; p++)
+    {
+        if (v[p] == true)
+        {
+            for (uint32_t i = p * 2; i <= max; i += p)
+                v[i] = false;
+        }
+    }
+
+    for (uint32_t i = 1; i <= max; i++)
+        if (v[i] == true)
+            primes.insert(i);
+}
+
+static uint32_t opdracht35()
+{
+    set<uint32_t> primes;
+    sieve35(primes, 999999);
+    set<uint32_t> cprimes;
+
+    for (auto prime : primes)
+        if (iscircular(prime, primes))
+            cprimes.insert(prime);
+
+    return cprimes.size();
+}
+
+/*
+#36: Double-base palindromes
+
+The decimal number, 585 = 1001001001_2 (binary), is palindromic in both bases.
+
+Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+
+(Please note that the palindromic number, in either base, may not include leading zeros.)
+
+Antwoord: 872,187
+*/
+
+static bool ispalindrome2(uint32_t n)
+{
+    uint32_t temp = n;
+    uint32_t rev = 0;
+    
+    while (temp != 0)
+    {
+        rev = rev * 2 + temp % 2;
+        temp = temp / 2;
+    }
+
+    return n == rev;
+}
+
+static bool ispalindrome10(uint32_t n)
+{
+    uint32_t temp = n;
+    uint32_t rev = 0;
+    
+    while (temp != 0)
+    {
+        rev = rev * 10 + temp % 10;
+        temp = temp / 10;
+    }
+
+    return n == rev;
+}
+
+static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
+{
+    uint32_t xsum = 0;
+    
+    for (uint32_t i = min; i < limit; i++)
+        if (ispalindrome2(i) && ispalindrome10(i))
+            xsum += i;
+
+    return xsum;
+}
+
+/*
 Einde opdrachten
 */
 
@@ -2696,6 +2926,16 @@ static uint64_t run(uint32_t p)
         return opdracht30();
     case 31:
         return opdracht31();
+    case 32:
+        return opdracht32();
+    case 33:
+        return opdracht33();
+    case 34:
+        return opdracht34();
+    case 35:
+        return opdracht35();
+    case 36:
+        return opdracht36();
     }
 
     return 0;
@@ -2704,7 +2944,8 @@ static uint64_t run(uint32_t p)
 uint64_t answers[] = {233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
     31875000, 142913828922, 70600674, 76576500, 5537376230, 837799, 137846528820,
     1366, 21124, 1074, 171, 648, 31626, 871198282, 4179871, 2783915460, 4782, 983, 0,
-    669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317};
+    669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
+    932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777};
 
 class ThreadPool {
 public:
@@ -2788,6 +3029,8 @@ inline ThreadPool::~ThreadPool()
         worker.join();
 }
 
+volatile bool simple_locked = false;
+
 static void runjob(uint32_t n)
 {
     time_t begin = time(0);
@@ -2797,18 +3040,28 @@ static void runjob(uint32_t n)
         throw "error";
 
     time_t end = time(0);
+    
+    while (simple_locked);
+    simple_locked = true;
     cout << "#" << (uint16_t)n << ": " << answer << " " << end - begin << "s\r\n";
+    simple_locked = false;
 }
 
-static void multithread()
+static void multithread(uint8_t max)
 {
     ThreadPool pool(4);
     std::vector< std::future<void> > results;
 
-    for(uint8_t i = 1; i < 31; ++i)
+    for (uint8_t i = 1; i <= 36; ++i)
     {
         results.emplace_back(pool.enqueue([i] { runjob(i); }));
     }
+}
+
+static void singlethread(uint8_t max)
+{
+     for (uint8_t i = 1; i <= max; i++)
+        runjob(i);   
 }
 
 int main()
@@ -2817,11 +3070,13 @@ int main()
     answers[26 - 1] = 0;
     answers[27 - 1] = 0;
     answers[29 - 1] = 0;
+    answers[32 - 1] = 0;
+    answers[34 - 1] = 0;
+    //answers[35 - 1] = 0;
 #if 1
-    multithread();
+    multithread(36);
 #else
-    for (uint8_t i = 1; i <= 31; i++)
-        runjob(i);
+    singlethread(36);
 #endif
     return 0;
 }

@@ -1817,9 +1817,19 @@ Antwoord: 2,783,915,460
 """
 
 def opdracht24(arr = [0,1,2,3,4,5,6,7,8,9], no = 1000000):
+    import itertools
+    permutations = list(itertools.permutations(arr))
+    a = permutations[no - 1]
+    ret = 0
+    for i in range(0, 10):
+        ret += a[9 - i] * 10**i
+    return ret
+
+"""
+python implementation of itertools.permutations
+"""
+def opdracht24b(arr = [0,1,2,3,4,5,6,7,8,9], no = 1000000):
     def permutations(iterable, r=None):
-        # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
-        # permutations(range(3)) --> 012 021 102 120 201 210
         pool = tuple(iterable)
         n = len(pool)
         r = n if r is None else r
@@ -2265,6 +2275,58 @@ def opdracht35(xmax = 999999):
     return len(cprimes)
 
 """
+#36: Double-base palindromes
+
+The decimal number, 585 = 1001001001_2 (binary), is palindromic in both bases.
+
+Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+
+(Please note that the palindromic number, in either base, may not include leading zeros.)
+
+Antwoord: 872,187
+"""
+
+"""
+1 + 3 + 5 + 7 + 9 + 33 + 99 + 313 + 585 + 717 + 7447 + 9009 +
+15351 + 32223 + 39993 + 53235 + 53835 + 73737 + 585585 = 872187
+"""
+def opdracht36(r = range(1,1000000)):
+    def ispalindrome2(n):
+        temp = n
+        rev = 0
+        while temp != 0:
+            rev = rev * 2 + temp % 2
+            temp = temp // 2
+        return n == rev
+    def ispalindrome10(n):
+        temp = n
+        rev = 0
+        while temp != 0:
+            rev = rev * 10 + temp % 10
+            temp = temp // 10
+        return n == rev
+    xsum = 0
+    for i in r:
+        if ispalindrome2(i) and ispalindrome10(i):
+            xsum += i
+    return xsum
+
+"""
+#37: Truncatable primes
+
+The number 3797 has an interesting property. Being prime itself, it is possible
+to continuously remove digits from left to right, and remain prime at each
+stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+
+Find the sum of the only eleven primes that are both
+truncatable from left to right and right to left.
+
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+
+Antwoord: 748317
+"""
+
+"""
 Einde opdrachten
 """
 
@@ -2339,12 +2401,15 @@ def runn2(n = 1):
         return findFactorialSum()
     if n == 35:
         return opdracht35()
+    if n == 36:
+        return opdracht36()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
     31875000, 142913828922, 70600674, 76576500, 5537376230, 837799, 137846528820,
     1366, 21124, 1074, 171, 648, 31626, 871198282, 4179871, 2783915460, 4782, 983,
-    -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317]
+    -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
+    932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777]
 
 #answers[33 - 1] = 0
 
@@ -2360,7 +2425,7 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def run(l = list(range(1,35 + 1))):
+def run(l = list(range(1,36 + 1))):
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
 
