@@ -1816,100 +1816,30 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 """
 
-def permutation24a(n = 1000000):
-    if n == 0:
-        raise "mag niet 0"
-    perm = 0
-    foo = list()
-    for i in range(0, 10):
-        foo.append(list())
-    foo[0] = [0,1,2,3,4,5,6,7,8,9]
-    nx = [0]*10
-    for nx[0] in foo[0]:
-        foo[1] = list(foo[0])
-        foo[1].remove(nx[0])
-        for nx[1] in foo[1]:
-            foo[2] = list(foo[1])
-            foo[2].remove(nx[1])
-            for nx[2] in foo[2]:
-                foo[3] = list(foo[2])
-                foo[3].remove(nx[2])
-                for nx[3] in foo[3]:
-                    foo[4] = list(foo[3])
-                    foo[4].remove(nx[3])
-                    for nx[4] in foo[4]:
-                        foo[5] = list(foo[4])
-                        foo[5].remove(nx[4])
-                        for nx[5] in foo[5]:
-                            foo[6] = list(foo[5])
-                            foo[6].remove(nx[5])
-                            for nx[6] in foo[6]:
-                                foo[7] = list(foo[6])
-                                foo[7].remove(nx[6])
-                                for nx[7] in foo[7]:
-                                    foo[8] = list(foo[7])
-                                    foo[8].remove(nx[7])
-                                    for nx[8] in foo[8]:
-                                        foo[9] = list(foo[8])
-                                        foo[9].remove(nx[8])
-                                        nx[9] = foo[8][0]
-                                        perm += 1
-                                        if perm == n:
-                                            return nx
-
-def permutation24b(a = [0,1,2,3], n = 2):
-    if n == 0:
-        raise "mag niet 0"
-    perm = 0
-    nx = [0]*len(a)
-    foo = list()
-    for i in range(0, len(a)):
-        foo.append(list())
-    foo[0] = a
-    for nx[0] in foo[0]:
-        foo[1] = list(foo[0])
-        foo[1].remove(nx[0])
-        for nx[1] in foo[1]:
-            foo[2] = list(foo[1])
-            foo[2].remove(nx[1])
-            for nx[2] in foo[2]:
-                foo[3] = list(foo[2])
-                foo[3].remove(nx[2])
-                nx[3] = foo[3][0]
-                perm += 1
+def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000):
+    def permutate(a, n):
+        if n == 0:
+            raise "mag niet 0"
+        nx = [0]*len(a)
+        perm = 0
+        def permx(depth, arr):
+            for nx[depth] in arr:
+                if depth < len(a) - 1:
+                    b = list(arr)
+                    b.remove(nx[depth])
+                    permx(depth + 1, b)
+                else:
+                    nonlocal perm
+                    perm += 1
                 if perm == n:
                     return nx
-
-def permutation24c(a = [0,1,2,3], n = 2):
-    if n == 0:
-        raise "mag niet 0"
-    nx = [0]*len(a)
-    perm = 0
-    def permx(depth, arr):
-        for nx[depth] in arr:
-            if depth < len(a) - 1:
-                b = list(arr)
-                b.remove(nx[depth])
-                permx(depth + 1, b)
-            else:
-                nonlocal perm
-                perm += 1
-            if perm == n:
-                return nx
-    for nx[0] in a:
-        arr = list(a)
-        arr.remove(nx[0])
-        permx(1, arr)
-        if perm == n:
-            return nx
-
-def opdracht24(perm = 1000000):
+        return permx(0, a)
     def concat24(lst):
         ret = 0
         for i, n in enumerate(reversed(lst)):
             ret += n *10**i
         return ret
-    lst = permutation24c([0,1,2,3,4,5,6,7,8,9], perm)
+    lst = permutate(a, perm)
     return concat24(lst)
 
 """
