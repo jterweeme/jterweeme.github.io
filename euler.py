@@ -1816,47 +1816,101 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 """
 
-def opdracht24(arr = [0,1,2,3,4,5,6,7,8,9], no = 1000000):
-    import itertools
-    permutations = list(itertools.permutations(arr))
-    a = permutations[no - 1]
-    ret = 0
+def permutation24a(n = 1000000):
+    if n == 0:
+        raise "mag niet 0"
+    perm = 0
+    foo = list()
     for i in range(0, 10):
-        ret += a[9 - i] * 10**i
-    return ret
+        foo.append(list())
+    foo[0] = [0,1,2,3,4,5,6,7,8,9]
+    nx = [0]*10
+    for nx[0] in foo[0]:
+        foo[1] = list(foo[0])
+        foo[1].remove(nx[0])
+        for nx[1] in foo[1]:
+            foo[2] = list(foo[1])
+            foo[2].remove(nx[1])
+            for nx[2] in foo[2]:
+                foo[3] = list(foo[2])
+                foo[3].remove(nx[2])
+                for nx[3] in foo[3]:
+                    foo[4] = list(foo[3])
+                    foo[4].remove(nx[3])
+                    for nx[4] in foo[4]:
+                        foo[5] = list(foo[4])
+                        foo[5].remove(nx[4])
+                        for nx[5] in foo[5]:
+                            foo[6] = list(foo[5])
+                            foo[6].remove(nx[5])
+                            for nx[6] in foo[6]:
+                                foo[7] = list(foo[6])
+                                foo[7].remove(nx[6])
+                                for nx[7] in foo[7]:
+                                    foo[8] = list(foo[7])
+                                    foo[8].remove(nx[7])
+                                    for nx[8] in foo[8]:
+                                        foo[9] = list(foo[8])
+                                        foo[9].remove(nx[8])
+                                        nx[9] = foo[8][0]
+                                        perm += 1
+                                        if perm == n:
+                                            return nx
 
-"""
-python implementation of itertools.permutations
-"""
-def opdracht24b(arr = [0,1,2,3,4,5,6,7,8,9], no = 1000000):
-    def permutations(iterable, r=None):
-        pool = tuple(iterable)
-        n = len(pool)
-        r = n if r is None else r
-        if r > n:
-            return
-        indices = list(range(n))
-        cycles = list(range(n, n-r, -1))
-        yield tuple(pool[i] for i in indices[:r])
-        while n:
-            for i in reversed(range(r)):
-                cycles[i] -= 1
-                if cycles[i] == 0:
-                    indices[i:] = indices[i+1:] + indices[i:i+1]
-                    cycles[i] = n - i
-                else:
-                    j = cycles[i]
-                    indices[i], indices[-j] = indices[-j], indices[i]
-                    yield tuple(pool[i] for i in indices[:r])
-                    break
+def permutation24b(a = [0,1,2,3], n = 2):
+    if n == 0:
+        raise "mag niet 0"
+    perm = 0
+    nx = [0]*len(a)
+    foo = list()
+    for i in range(0, len(a)):
+        foo.append(list())
+    foo[0] = a
+    for nx[0] in foo[0]:
+        foo[1] = list(foo[0])
+        foo[1].remove(nx[0])
+        for nx[1] in foo[1]:
+            foo[2] = list(foo[1])
+            foo[2].remove(nx[1])
+            for nx[2] in foo[2]:
+                foo[3] = list(foo[2])
+                foo[3].remove(nx[2])
+                nx[3] = foo[3][0]
+                perm += 1
+                if perm == n:
+                    return nx
+
+def permutation24c(a = [0,1,2,3], n = 2):
+    if n == 0:
+        raise "mag niet 0"
+    nx = [0]*len(a)
+    perm = 0
+    def permx(depth, arr):
+        for nx[depth] in arr:
+            if depth < len(a) - 1:
+                b = list(arr)
+                b.remove(nx[depth])
+                permx(depth + 1, b)
             else:
-                return
-    a = list(permutations(arr))
-    b = a[no-1]
-    ret = 0
-    for i in range(0,10):
-        ret += b[9-i] * 10**i
-    return ret
+                nonlocal perm
+                perm += 1
+            if perm == n:
+                return nx
+    for nx[0] in a:
+        arr = list(a)
+        arr.remove(nx[0])
+        permx(1, arr)
+        if perm == n:
+            return nx
+
+def opdracht24(perm = 1000000):
+    def concat24(lst):
+        ret = 0
+        for i, n in enumerate(reversed(lst)):
+            ret += n *10**i
+        return ret
+    lst = permutation24c([0,1,2,3,4,5,6,7,8,9], perm)
+    return concat24(lst)
 
 """
 #25: 1000-digit Fibonacci number
@@ -2052,7 +2106,8 @@ Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
     42=16, 43=64, 44=256, 45=1024
     52=25, 53=125, 54=625, 55=3125
 
-If they are then placed in numerical order, with any repeats removed, we get the following sequence of 15 distinct terms:
+If they are then placed in numerical order, with any repeats
+removed, we get the following sequence of 15 distinct terms:
 
 4, 8, 9, 16, 25, 27, 32, 64, 81, 125, 243, 256, 625, 1024, 3125
 
@@ -2146,8 +2201,10 @@ is 1 through 5 pandigital.
 The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing
 multiplicand, multiplier, and product is 1 through 9 pandigital.
 
-Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
-HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+Find the sum of all products whose multiplicand/multiplier/product
+identity can be written as a 1 through 9 pandigital.
+HINT: Some products can be obtained in more than one
+way so be sure to only include it once in your sum.
 
 Antwoord: 45,228
 """
@@ -2364,6 +2421,48 @@ def opdracht37():
     return xsum
 
 """
+#38: Pandigital multiples
+
+Take the number 192 and multiply it by each of 1, 2, and 3:
+
+    192 × 1 = 192
+    192 × 2 = 384
+    192 × 3 = 576
+
+By concatenating each product we get the 1 to 9 pandigital, 192384576. We
+will call 192384576 the concatenated product of 192 and (1,2,3)
+
+The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4,
+and 5, giving the pandigital, 918273645, which is the concatenated product
+of 9 and (1,2,3,4,5).
+
+What is the largest 1 to 9 pandigital 9-digit number that can be formed as
+the concatenated product of an integer with (1,2, ... , n) where n > 1?
+
+Antwoord: 932,718,654
+"""
+
+def opdracht38():
+    def concat38(a, b):
+        def decimals38(n):
+            i = 0
+            while n > 10**i:
+                i += 1
+            return i
+        length = decimals38(b)
+        b += a * 10**length
+        return b
+    def is_pandigital38(n, s=9):
+        n=str(n);
+        return len(n)==s and not '1234567890'[:s].strip(n)
+    result = 0
+    for i in range(9387, 9234, -1):
+        result = concat38(i, 2 * i)
+        if is_pandigital38(result):
+            break
+    return result
+
+"""
 Einde opdrachten
 """
 
@@ -2442,6 +2541,8 @@ def runn2(n = 1):
         return opdracht36()
     if n == 37:
         return opdracht37()
+    if n == 38:
+        return opdracht38()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2451,8 +2552,6 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777]
 
 #answers[33 - 1] = 0
-
-jobs = list()
 
 import time
 import math
@@ -2464,8 +2563,11 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def run(l = list(range(1,37 + 1))):
+def runm(l = list(range(1,38 + 1))):
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
 
+def runs(l = list(range(1,38 + 1))):
+    for job in l:
+        runjob(job)
 
