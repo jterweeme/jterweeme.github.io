@@ -113,7 +113,9 @@ def palindrome(x = range(999, 99, -1), y = range(999, 99, -1)):
  
 
 """
-#5 2520 is the smallest number that can be divided by
+#5 Smallest multiple
+
+2520 is the smallest number that can be divided by
 each of the numbers from 1 to 10 without any remainder.
 
 What is the smallest positive number that is evenly

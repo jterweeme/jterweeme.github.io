@@ -90,6 +90,36 @@ while ((temp = term1 + term2) &lt;= xmax)
 alert(xsum);    // should give 4,613,732
 </code>
 
+<h2>#5: Smallest multiple</h2>
+<p>
+2520 is the smallest number that can be divided by
+each of the numbers from 1 to 10 without any remainder.
+</p>
+<p>
+What is the smallest positive number that is evenly
+divisible by all of the numbers from 1 to 20?
+</p>
+
+<code>
+function isdivisible(n)
+{
+    l = [11,12,13,14,15,16,17,18,19,20];
+    
+    for (i = 0; i &lt; l.length; i++)
+        if (n % l[i] &gt; 0)
+            return 0;
+
+    return 1;
+}
+
+start = 2520;
+number = start;
+
+while (isdivisible(number) == 0)
+    number += start;
+
+alert(number);  // shouuld give 232,792,560
+</code>
 </main>
 </body>
 </html>
