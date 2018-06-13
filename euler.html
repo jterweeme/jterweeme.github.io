@@ -51,7 +51,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 </p>
 <code>
 limit = 1000, xsum = 0;
-for (x = 1; x &lt; limit; x++)
+for (var x = 1; x &lt; limit; x++)
     if (x % 3 == 0 || x % 5 == 0)
         xsum += x;
 alert(xsum);    // should give 233,168
@@ -70,24 +70,87 @@ By considering the terms in the Fibonacci sequence whose values
 do not exceed four million, find the sum of the even-valued terms.
 </p>
 <code>
-xmax = 4000000, term1 = 1, term2 = 2, temp = 0, xsum = 0;
+function opdracht2() {
+    var xmax = 4000000, term1 = 1, term2 = 2, temp = 0, xsum = 0;
+    if (term1 % 2 == 0) xsum += term1
+    if (term2 % 2 == 0) xsum += term2
+    while ((temp = term1 + term2) &lt;= xmax) {
+        if (temp % 2 == 0) xsum += temp;
+        term1 = term2;
+        term2 = temp;
+    }
+    return xsum;  // should give 4,613,732
+}
+alert(opdracht2());
+</code>
 
-if (term1 % 2 == 0)
-    xsum += term1
-
-if (term2 % 2 == 0)
-    xsum += term2
-
-while ((temp = term1 + term2) &lt;= xmax)
-{
-    if (temp % 2 == 0)
-        xsum += temp;
-    
-    term1 = term2;
-    term2 = temp;
+<h2>#3: Largest prime factor</h2>
+<p>
+The prime factors of 13195 are 5, 7, 13 and 29.
+What is the largest prime factor of the number 600,851,475,143?
+</p>
+<code>
+function primefactors(n) {
+    var primes = [];
+    var factors = [];
+    function primefactor(primes, n = 13195) {
+        function appendprime(primes) {
+            if (primes.length &lt; 1) primes.push(2);
+            if (primes.length &lt; 2) primes.push(3);
+            p = primes[primes.length - 1] + 2;
+            for (var i = 2; i &lt; p; i++) {
+                if (p % i == 0) {
+                    p++;
+                    i = 1;
+                }
+            }
+            primes.push(p);
+            return primes;
+        }
+        for (var i = 0; true; i++) {
+            if (primes.length &lt;= i) appendprime(primes);
+            if (n % primes[i] == 0) return primes[i];
+        }
+    }
+    while (1) {
+        var factor = primefactor(primes, n);
+        factors.push(factor);
+        if (factor == n) break;
+        n = Math.floor(n / factor);
+    }
+    return factors
 }
 
-alert(xsum);    // should give 4,613,732
+var factors = primefactors(600851475143);
+answer = Math.max.apply(null, factors);
+alert(answer);  // should be 6,857
+</code>
+
+<h2>#4: Largest palindrome product</h2>
+<p>
+A palindromic number reads the same both ways. The largest palindrome
+made from the product of two 2-digit numbers is 9009 = 91 × 99.
+</p>
+<p>
+Find the largest palindrome made from the product of two 3-digit numbers.
+</p>
+<code>
+function ispalindrome(n) {
+    var temp = n, rev = 0;
+    while (temp != 0) {
+        rev = rev * 10 + temp % 10;
+        temp = Math.floor(temp / 10);
+    }
+    return n == rev;
+}
+best = 0;
+for (var a = 100; a &lt; 1000; a++) {
+    for (var b = 100; b &lt; 1000; b++) {
+        var c = a * b;
+        if (ispalindrome(c) &amp;&amp; c &gt; best) best = c;
+    }
+}
+alert(best);    // should be 906,609
 </code>
 
 <h2>#5: Smallest multiple</h2>
@@ -101,24 +164,36 @@ divisible by all of the numbers from 1 to 20?
 </p>
 
 <code>
-function isdivisible(n)
-{
-    l = [11,12,13,14,15,16,17,18,19,20];
-    
-    for (i = 0; i &lt; l.length; i++)
+function isdivisible(n, l) {
+    for (var i = 0; i &lt; l.length; i++)
         if (n % l[i] &gt; 0)
             return 0;
-
     return 1;
 }
-
-start = 2520;
-number = start;
-
-while (isdivisible(number) == 0)
+var start = 2520, number = start;
+while (isdivisible(number, [11,12,13,14,15,16,17,18,19,20]) == 0)
     number += start;
-
 alert(number);  // shouuld give 232,792,560
+</code>
+
+<h2>#15: Lattice paths</h2>
+<p>
+Starting in the top left corner of a 2x2 grid, and only being able to move
+to the right and down, there are exactly 6 routes to the bottom right corner.
+</p>
+<p>
+How many such routes are there through a 20x20 grid?
+</p>
+<code>
+function opdracht15() {
+    paths = 1, size = 20;
+    for (var i = 0; i &lt; size; i++) {
+        paths = paths * (2 * size - i);
+        paths = Math.floor(paths / (i + 1));
+    }
+    return paths;   // should give 137,846,528,820
+}
+alert(opdracht15());
 </code>
 </main>
 </body>
