@@ -29,7 +29,7 @@ Antwoord: 4,613,732
 
 def fibonacci(term1 = 1, term2 = 2, xmax = 4000000):
     temp, xsum = 0, 0
-    if term1 % 2 == 0:
+    if term1 % 2 == 0:  #is de eerste invoer ook al even?
         xsum += term1
     if term2 % 2 == 0:
         xsum += term2
@@ -1816,24 +1816,7 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 """
 
-def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000):
-    def permutate(a, n):
-        if n == 0:
-            return list()
-        nx = [0]*len(a)
-        perm = 0
-        def permx(depth, arr):
-            for nx[depth] in arr:
-                if depth < len(a) - 1:
-                    b = list(arr)
-                    b.remove(nx[depth])
-                    permx(depth + 1, b)
-                else:
-                    nonlocal perm
-                    perm += 1
-                if perm == n:
-                    return nx
-        return permx(0, a)
+def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
     def concat24(lst):
         ret = 0
         for i, n in enumerate(reversed(lst)):
@@ -1845,11 +1828,10 @@ def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000):
             xsum *= a
         return xsum
     lst = list()
-    for x in range(0, 6):
+    while len(a) > 0:
         i, perm = divmod(perm, factorial(len(a) - 1))
         lst.append(a[i])
         a.pop(i)
-    lst += permutate(a, perm)
     return concat24(lst)
 
 """
