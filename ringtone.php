@@ -430,6 +430,7 @@ geluid af te spelen met de geluidskaart.
 
 <code>
 import pyaudio
+import numpy as np
 
 class ToneGen:
     def __init__(self, volume = 1, fs = 48000):

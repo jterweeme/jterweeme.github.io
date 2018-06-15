@@ -460,10 +460,7 @@ uint64_t opdracht10(uint32_t max = 1999999)
     }
 
     for (uint32_t i = 1; i <= max; i++)
-    {
-        if (v[i] == true)
-            sum += i;
-    }
+        sum += v[i] == true ? i : 0;
 
     return sum;
 }
