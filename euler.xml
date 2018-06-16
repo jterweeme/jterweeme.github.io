@@ -1,45 +1,4 @@
-<!DOCTYPE html>
-
-<!-- This file is auto-generated DO NOT EDIT -->
-
-
-<html>
-<head>
-<title>Project Euler</title>
-<link rel="stylesheet" type="text/css" href="common.css"/>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<style>
-code, kbd, samp {
-    white-space: pre;
-}
-
-var {
-    font-family: monospace;
-    font-style: normal;
-}
-
-samp {
-    color: gray;
-}
-
-code em {
-    font-style: normal;
-    color: red;
-}
-</style>
-</head>
-<body>
-
-
-<nav class="mainmenu">
-<a href="index.html">Home</a>
-<a href="https://github.com/jterweeme">GitHub</a>
-<a href="yahtzee/index.html">Yahtzee</a>
-<a href="et/index.html">E.T.</a>
-<a href="madmanimation/index.html">MyMadManiMation</a>
-<a href="fotopuzzel/index.html">Puzzle</a>
-<a href="worst.html">WWW1</a>
-</nav><main style="width: 900px;">
+<main style="width: 900px;">
 <h1>Project Euler</h1>
 <h2>#1: Multiples of 3 and 5</h2>
 <p>
@@ -899,11 +858,6 @@ function opdracht29() {
 alert(opdracht29());
 </code>
 </main>
-
-
-
-</body>
-</html>
 
 
 
