@@ -858,7 +858,7 @@ char number13[100][51] = {
     {"20849603980134001723930671666823555245252804609722"},
     {"53503534226472524250874054075591789781264330331690"}};
 
-static uint64_t myPow(uint64_t base, uint16_t e)
+static uint64_t pow13(uint64_t base, uint16_t e)
 {
     if (e == 0)
         return 1;
@@ -871,60 +871,32 @@ static uint64_t myPow(uint64_t base, uint16_t e)
     return ret;
 }
 
-class LongNumber13
-{
-    uint8_t _buf[100] = {0};
-public:
-    void clear() { memset(_buf, 0, sizeof(_buf)); }
-    uint8_t decimal(uint8_t i) const { return _buf[i]; }
-    void read(const char *s);
-    void add(LongNumber13 &n);
-    uint64_t firstTen();
-};
-
-void LongNumber13::add(LongNumber13 &n)
-{
-    uint8_t carry = 0;
-
-    for (uint8_t i = 0; i < 100; i++)
-    {
-        _buf[i] += carry;
-        _buf[i] += n.decimal(i);
-        carry = _buf[i] / 10;
-        _buf[i] = _buf[i] % 10;
-    }
-}
-
-void LongNumber13::read(const char *s)
-{
-    for (uint8_t i = 0; i < 50; i++)
-        _buf[i] = s[49 - i] - '0';
-}
-
-uint64_t LongNumber13::firstTen()
-{
-    uint64_t ret = 0;
-    uint8_t i = 0;
-    for (i = 99; i > 0 && _buf[i] == 0; i--);
-
-    for (uint8_t j = 9; j > 0 && i > 0; i--, j--)
-        ret += _buf[i] * myPow(10, j);
-    
-    return ret;
-}
-
 static uint64_t opdracht13()
 {
-    LongNumber13 sum;
-
-    for (uint8_t i = 0; i < 100; i++)
+    vector<uint8_t> totalSum;
+    uint64_t sum = 0;
+    
+    for (uint8_t i = 50; i > 0; i--)
     {
-        LongNumber13 n;
-        n.read(number13[i]);
-        sum.add(n);
+        for (uint8_t j = 0; j < 100; j++)
+            sum += number13[j][i - 1] - 48;
+
+        totalSum.push_back(sum % 10);
+        sum /= 10;
     }
 
-    return sum.firstTen();
+    while (sum > 0)
+    {
+        totalSum.push_back(sum % 10);
+        sum /= 10;
+    }
+
+    uint8_t start = totalSum.size() - 10;
+
+    for (uint8_t i = 0; i < 10; i++)
+        sum += totalSum[start + i] * pow13(10, i);
+
+    return sum;
 }
 
 /*
@@ -1166,9 +1138,22 @@ static uint8_t triangle[][15] = {
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
 #endif
 
-static uint64_t opdracht18()
+static uint32_t pow18(uint64_t base, uint16_t e)
 {
-    uint32_t possibilities = myPow(2, sizeof(triangle[0]) - 1);
+    if (e == 0)
+        return 1;
+
+    uint32_t ret = base;
+
+    for (uint16_t i = 1; i < e; i++)
+        ret *= base;
+
+    return ret;
+}
+
+static uint32_t opdracht18()
+{
+    uint32_t possibilities = pow18(2, sizeof(triangle[0]) - 1);
     uint32_t best = 0;
     
     for (uint32_t i = 0; i <= possibilities; i++)
