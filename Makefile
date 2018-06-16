@@ -13,7 +13,7 @@ rm.html simpelweb.html verkeer.html worst.html
 	@make -C yahtzee all
 	@make -C yvettes all
 
-euler.html: euler.php
+euler.html: euler.php euler.xml
 index.html: index.php
 md5sum.html: md5sum.php omelet.php md5sum.uxf
 kompakt.html: kompakt.php omelet.php kompakt.uxf

@@ -160,9 +160,8 @@ first one hundred natural numbers and the square of the sum.
 <code>
 function opdracht6() {
     var sumsquare = 0, squaresum = 0;
-    for (var x = 1; x &lt;= 100; x++) { sumsquare += x**2; squaresum += x; }
-    squaresum = squaresum ** 2;
-    return squaresum - sumsquare;
+    for (var x = 1; x &lt;= 100; x++) sumsquare += x**2, squaresum += x;
+    return squaresum ** 2 - sumsquare;
 }
 alert(opdracht6());     // should give 25,164,150
 </code>
@@ -658,7 +657,7 @@ alert(opdracht13());    // should give 5,537,376,230
 <p>
 The following iterative sequence is defined for the set of positive integers:
 
-n → n/2 (n is even)
+n &#x2192; n/2 (n is even)
 n → 3n + 1 (n is odd)
 
 Using the rule above and starting with 13, we generate the following sequence:
@@ -712,6 +711,32 @@ alert(opdracht15());   // should give 137,846,528,820
 </code>
 
 <hr/>
+<h2>#16 Power digit sum</h2>
+<p>2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.</p>
+<p>What is the sum of the digits of the number 2^1000?</p>
+<code>
+function opdracht16(e = 1000) {
+    var largeNum = Array(400).fill(0);
+    largeNum[0] = 2;
+    var carry = 0, sum = 0;
+
+    while (--e) {
+        for (var i = 0; i &lt; largeNum.length; i++)
+        {
+            largeNum[i] *= 2;
+            largeNum[i] += carry;
+            carry = Math.floor(largeNum[i] / 10);
+            largeNum[i] = largeNum[i] % 10;
+        }
+    }
+
+    for (var i = 0; i &lt; largeNum.length; i++) sum += largeNum[i];
+    return sum;
+}
+alert(opdracht16());    // should give 1,366
+</code>
+
+<hr/>
 <h2>#17 Number letter counts</h2>
 <p>
 If the numbers 1 to 5 are written out in words: one, two, three, four,
@@ -744,10 +769,17 @@ function opdracht17() {
     for (var i = 0; i &lt; 9; i++) {
         xsum += arr[i].length + "hundred".length;
         for (var j = 0; j &lt; 19; j++)
-            xsum += arr[i].length + "hundred".length
+            xsum += arr[i].length + "hundred".length + "and".length + arr[j].length;
+        for (var j = 19; j &lt; 27; j++) {
+            xsum += arr[i].length + "hundred".length + "and".length + arr[j].length;
+            for (var k = 0; k &lt; 9; k++)
+                xsum += arr[i].length + "hundredand".length + arr[j].length + arr[k].length;
+        }
     }
+    xsum += "onethousand".length;
     return xsum;
 }
+alert(opdracht17());    // should give 21,124
 </code>
 
 <hr/>
