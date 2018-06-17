@@ -9,13 +9,15 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 """
 
-def multiples(limit = 1000):
+def opdracht1(limit = 1000):
+    def multiples3or5(limit):
+        for x in range(1, limit):
+            if x % 3 == 0 or x % 5 == 0:
+                yield x
     xsum = 0
-    for x in range(1,limit):
-        if x % 3 == 0 or x % 5 == 0:
-            xsum += x
+    for n in multiples3or5(limit):
+        xsum += n
     return xsum
-
 
 """
 #2 Even Fibonacci numbers
@@ -103,7 +105,7 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 """
 
-def palindrome(x = range(999, 99, -1), y = range(999, 99, -1)):
+def palindrome(x = range(100, 1000), y = range(999, 99, -1)):
     def ispalindrome(n):
         temp = n
         rev = 0
@@ -267,8 +269,7 @@ def opdracht8(series1 = series8):
         product = 1
         for n in subseries:
             product *= n
-        if product > best:
-            best = product
+        best = max(best, product)
     return best
 
 """
@@ -725,9 +726,7 @@ oplossing 1: bij hele grote input merkbaar sneller
 
 def opdracht15(size = 20):
     paths = 1
-    for i in range(0, size):
-        paths = paths * (2 * size - i)
-        paths = paths // (i + 1)
+    for i in range(0, size): paths = (paths * (2 * size - i)) // (i + 1)
     return paths
 
 """
@@ -753,20 +752,11 @@ Antwoord: 1366
 """
 
 def opdracht16(e = 1000):
-    def sumdecimals(n):
-        def decimal(n, i):
-            return (n // (10**i)) % 10
-        def decimals2(n):
-            i = 0
-            while n > 10**i:
-                i += 1
-            return i
-        length = decimals2(n)
-        xsum = 0
-        for i in range(0, length):
-            xsum += decimal(n, i)
-        return xsum
-    return sumdecimals(2**e)
+    def digits(n):
+        while n > 0: yield n % 10; n = n // 10;
+    xsum = 0;
+    for n in digits(2**e): xsum += n;
+    return xsum;
 
 """
 #17 Number letter counts
@@ -881,8 +871,7 @@ def opdracht18(triangle = triangle18):
             index = index + (i >> j & 1)
             value = triangle[j + 1][index]
             xsum += value
-        if xsum > best:
-            best = xsum
+        best = max(best, xsum)
     return best
 
 """
@@ -956,10 +945,7 @@ def opdracht20(f = 100):
                 buf.append(0)
             buf[j] = buf[j] % 10
             j += 1
-    xsum = 0
-    for decimal in buf:
-        xsum += decimal
-    return xsum
+    return sum([x for x in buf])
 
 """
 #21 Amicable numbers
@@ -1881,7 +1867,7 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 Antwoord: 4,782
 """
 
-def opdracht25(limit = 10**999):
+def opdracht25a(limit = 10**999):
     i = 0
     cnt = 2
     fib = [1,0,1]
@@ -2199,16 +2185,19 @@ Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 Antwoord: 40,730
 """
 
+"""
+145 + 40585 = 40730
+"""
+
 def findFactorialSum():
-    def fact(n):
-        xsum = 1
-        for a in range(n, 0, -1):
-            xsum *= a
-        return xsum
-    factorials = [fact(x) for x in range(0, 10)] # pre-calculate products
+    factorials = (1,1,2,6,24,120,720,5040,40320,362880);
     total_sum = 0
-    for k in range(10, fact(9) * 7): # 9999999 is way more than its fact-sum
-        if sum([factorials[int(x)] for x in str(k)]) == k:
+    def facsumdig(n):
+        def digits(n):
+            while n > 0: yield n % 10; n = n // 10;
+        return sum([factorials[x] for x in digits(n)]);
+    for k in range(10, factorials[9] * 7): # 9999999 is way more than its fact-sum
+        if facsumdig(k) == k:
             total_sum += k
     return total_sum
 
@@ -2781,7 +2770,7 @@ Einde opdrachten
 
 def runn2(n = 1):
     if n == 1:
-        return multiples()
+        return opdracht1()
     if n == 2:
         return fibonacci()
     if n == 3:

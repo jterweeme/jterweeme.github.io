@@ -1,3 +1,5 @@
+//#define MULTITHREAD
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -5,6 +7,7 @@
 #include <stdint.h>
 #include <ctime>
 #include <cstring>
+#ifdef MULTITHREAD
 #include <future>
 #include <functional>
 #include <condition_variable>
@@ -13,6 +16,7 @@
 #include <thread>
 #include <queue>
 #include <stdexcept>
+#endif
 #include <algorithm>
 using namespace std;
 
@@ -2220,9 +2224,58 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 */
 
-uint32_t opdracht24()
+static uint32_t fac24(uint32_t n)
 {
-    return 0;
+    uint32_t xsum = 1;
+
+    while (n > 1)
+        xsum *= n--;
+
+    return xsum;
+}
+
+static uint32_t pow24(uint64_t base, uint16_t e)
+{
+    if (e == 0)
+        return 1;
+
+    uint32_t ret = base;
+
+    for (uint16_t i = 1; i < e; i++)
+        ret *= base;
+
+    return ret;
+}
+
+static uint32_t concat24(vector <uint8_t> &v)
+{
+    uint32_t ret = 0;
+    uint8_t last = v.size() - 1;
+    
+    for (uint8_t i = 0; i <= last; i++)
+        ret += v.at(last - i) * pow24(10, i);
+
+    return ret;
+}
+
+static uint32_t opdracht24()
+{
+    uint8_t a[] = {0,1,2,3,4,5,6,7,8,9};
+    vector<uint8_t> b;
+    vector<uint8_t> result;
+    uint32_t perm = 999999;
+
+    for (uint8_t i = 0; i < 10; i++)
+        b.push_back(a[i]);
+
+    while (b.size() > 0)
+    {
+        uint8_t i = perm / fac24(b.size() - 1);
+        perm = perm % fac24(b.size() - 1);
+        result.push_back(b.at(i));
+        b.erase(b.begin() + i);
+    }
+    return concat24(result);
 }
 
 /*
@@ -2698,9 +2751,30 @@ Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 Antwoord: 40,730
 */
 
-static uint64_t opdracht34()
+static uint32_t factorials34[] { 1,1,2,6,24,120,720,5040,40320,362880};
+
+static uint32_t facsumdig34(uint32_t n)
 {
-    return 0;
+    uint32_t sum = 0;
+
+    while (n > 0)
+    {
+        sum += factorials34[n % 10];
+        n = n / 10;
+    }
+
+    return sum;
+}
+
+static uint32_t opdracht34()
+{
+    uint32_t totalSum = 0;
+
+    for (uint32_t k = 10; k < factorials34[9] * 7; k++)
+        if (facsumdig34(k) == k)
+            totalSum += k;
+
+    return totalSum;
 }
 
 /*
@@ -3052,6 +3126,7 @@ uint64_t answers[] = {233168, 4613732, 6857, 906609, 232792560, 25164150, 104743
     669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777};
 
+#ifdef MULTITHREAD
 class ThreadPool {
 public:
     ThreadPool(size_t);
@@ -3133,6 +3208,7 @@ inline ThreadPool::~ThreadPool()
     for(std::thread &worker: workers)
         worker.join();
 }
+#endif
 
 volatile bool simple_locked = false;
 
@@ -3152,6 +3228,7 @@ static void runjob(uint32_t n)
     simple_locked = false;
 }
 
+#ifdef MULTITHREAD
 static void multithread(uint8_t max)
 {
     ThreadPool pool(4);
@@ -3162,23 +3239,21 @@ static void multithread(uint8_t max)
         results.emplace_back(pool.enqueue([i] { runjob(i); }));
     }
 }
-
+#else
 static void singlethread(uint8_t max)
 {
      for (uint8_t i = 1; i <= max; i++)
         runjob(i);   
 }
+#endif
 
 int main()
 {
-    answers[24 - 1] = 0;
     answers[26 - 1] = 0;
     answers[27 - 1] = 0;
     answers[29 - 1] = 0;
     answers[32 - 1] = 0;
-    answers[34 - 1] = 0;
-    //answers[35 - 1] = 0;
-#if 1
+#ifdef MULTITHREAD
     multithread(37);
 #else
     singlethread(37);

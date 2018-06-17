@@ -1807,20 +1807,13 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 </p>
 <code>
 function opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1) {
-    function factorial(n) {
-        var xsum = 1;
-        for (i = 1; i &lt;= n; i++) xsum *= i;
-        return xsum;
-    }
     function concat(lst) {
         var ret = 0;
-        for (i = 0; i &lt; lst.length; i++)
-            ret += lst[9 - i] * 10**i;
+        for (i = 0; i &lt; lst.length; i++) ret += lst[9 - i] * 10**i;
         return ret;
     }
-    var b = a;
-    var permx = perm;
-    lst = []
+    var b = a, permx = perm, lst = [];
+    function factorial(n) { var xsum = 1; while (n > 1) xsum *= n--; return xsum; }
     for (var j = 0; j &lt; 10; j++) {
         var fact = factorial(b.length - 1);
         var i = Math.floor(permx / fact);
