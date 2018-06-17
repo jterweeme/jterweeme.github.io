@@ -1247,7 +1247,7 @@ Find the sum of the digits in the number 100!
 Antwoord: 648
 */
 
-static uint64_t opdracht20(uint8_t f = 100)
+static uint32_t opdracht20(uint8_t f = 100)
 {
     uint16_t buf[200] = {0};
     buf[0] = f;
@@ -1265,7 +1265,7 @@ static uint64_t opdracht20(uint8_t f = 100)
         }
     }
 
-    uint64_t sum = 0;
+    uint32_t sum = 0;
 
     for (uint8_t i = 0; i < 200; i++)
         sum += buf[i];
@@ -1298,11 +1298,11 @@ Antwoord: 31,626
 6232 & 6368
 */
 
-static uint64_t sum_divisors(uint64_t n)
+static uint32_t sum_divisors(uint32_t n)
 {
-    uint64_t sum = 0;
+    uint32_t sum = 0;
 
-    for (uint64_t i = 1; i < n; i++)
+    for (uint32_t i = 1; i < n; i++)
         if (n % i == 0)
             sum += i;
 
@@ -1333,6 +1333,21 @@ static uint32_t amicable_pairs_sum(uint32_t low = 1, uint32_t high = 10000)
 
     return sum;
 }
+
+/*
+#22 Names scores
+
+Using names.txt (right click and 'Save Link/Target As...'), a 46K text
+file containing over five-thousand first names, begin by sorting it into
+alphabetical order. Then working out the alphabetical value for each name,
+multiply this value by its alphabetical position in the list to obtain a name score.
+
+For example, when the list is sorted into alphabetical order, COLIN, which
+is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. So,
+COLIN would obtain a score of 938 × 53 = 49714.
+
+What is the total of all the name scores in the file?
+*/
 
 char names22[][50] = {
 "MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER","MARIA","SUSAN",

@@ -850,7 +850,7 @@ problem by trying every route. However, Problem 67, is the same
 challenge with a triangle containing one-hundred rows; it cannot be
 solved by brute force, and requires a clever method! ;o)
 
-Antwoord: 1074
+Antwoord: 1,074
 """
 
 triangle18 = (
