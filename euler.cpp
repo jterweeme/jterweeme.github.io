@@ -2629,12 +2629,18 @@ uint8_t decimals30(uint32_t n)
 bool test30(uint32_t n, uint8_t p)
 {
     uint32_t xsum = 0;
-
+#if 0
+    while (n > 0)
+    {
+        xsum += pow30(n % 10, p);
+        n = n / 10;
+    }
+#else
     uint8_t length = decimals30(n);
     
     for (uint8_t i = 0; i < length; i++)
         xsum += pow30(decimal30(n, i), p);
-
+#endif
     return xsum == n;
 }
 

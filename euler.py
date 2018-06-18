@@ -1867,7 +1867,7 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 Antwoord: 4,782
 """
 
-def opdracht25a(limit = 10**999):
+def opdracht25(limit = 10**999):
     i = 0
     cnt = 2
     fib = [1,0,1]
@@ -2074,18 +2074,12 @@ Antwoord: 443,839
 """
 
 def opdracht30(p = 5):
+    def digits(n):
+        while n > 0: yield n % 10; n = n // 10;
     def test(n, p):
-        def decimal(n, i):
-            return n // 10**i % 10
-        def decimals2(n):
-            i = 0
-            while n >= 10**i:
-                i += 1
-            return i
         xsum = 0
-        length = decimals2(n)
-        for i in range(0, length):
-            xsum += decimal(n, i)**p
+        for d in digits(n):
+            xsum += d**p
         return xsum == n
     xsum = 0
     for i in range(2, 1000000):
@@ -2765,6 +2759,47 @@ def opdracht42(words = words42):
     return ret
 
 """
+#50: Consecutive prime sum
+
+The prime 41, can be written as the sum of six consecutive primes:
+41 = 2 + 3 + 5 + 7 + 11 + 13
+
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+"""
+
+def opdracht50(limit = 1000000):
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for (i, isprime) in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    best_prime = 0
+    best_sum = 0
+    lprimes = [x for x in sieve(limit)]
+    sprimes = set(lprimes)
+    xlen = len(lprimes)
+    foo = 0
+    for i in range(xlen):
+        for j in range(i + best_sum, xlen):
+            xsum = sum(lprimes[i:j + 1])
+            if xsum >= limit:
+                break
+            sublen = (j + 1) - i;
+            if xsum in sprimes and sublen > best_sum:
+                best_sum = sublen
+                best_prime = xsum
+                foo = j + 1
+    return best_prime;
+
+
+"""
 Einde opdrachten
 """
 
@@ -2853,15 +2888,27 @@ def runn2(n = 1):
         return opdracht41()
     if n == 42:
         return opdracht42()
+    if n in [43,44,45,46,47,48,49]:
+        return 0
+    if n == 50:
+        return opdracht50()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
     31875000, 142913828922, 70600674, 76576500, 5537376230, 837799, 137846528820,
     1366, 21124, 1074, 171, 648, 31626, 871198282, 4179871, 2783915460, 4782, 983,
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
-    932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777]
+    932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
+    134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
 answers[40 - 1] = 0
+answers[43 - 1] = 0
+answers[44 - 1] = 0
+answers[45 - 1] = 0
+answers[46 - 1] = 0
+answers[47 - 1] = 0
+answers[48 - 1] = 0
+answers[49 - 1] = 0
 
 import time
 import math
@@ -2873,11 +2920,11 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1,42 + 1))):
+def runm(l = list(range(1, 50 + 1))):
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
 
-def runs(l = list(range(1,42 + 1))):
+def runs(l = list(range(1, 50 + 1))):
     for job in l:
         runjob(job)
 
