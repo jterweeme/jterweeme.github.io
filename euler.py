@@ -2449,8 +2449,75 @@ d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
 Antwoord: 210
 """
 
-def opdracht40():
-    return 0
+def opdracht40(indices):
+    def getDigit(i):
+        def getDig(n, i):
+            def digits(n):
+                while n > 0: yield n % 10; n = n // 10;
+            xdigits = [x for x in digits(n)]
+            end = len(xdigits) - 1
+            return xdigits[end - i]
+        offset = 0
+        decimals = 1
+        beginset = 1
+        endset = 9
+        setLength = endset - offset  #9
+        if i < setLength * decimals + offset:
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        offset = 9
+        decimals += 1   #2
+        beginset *= 10  #10
+        endset = 99
+        setLength *= 10  #90
+        limit = setLength * decimals + offset #189
+        if i < limit:  #189
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        offset = limit  #189
+        decimals += 1   #3
+        beginset *= 10  #100
+        setLength *= 10 #900
+        limit = setLength * decimals + offset #2889
+        if i < limit:
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        offset = limit
+        decimals += 1   #4
+        beginset *= 10  #1000
+        setLength *= 10 #9000
+        limit = setLength * decimals + offset #38889
+        if i < limit:
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        offset = limit
+        decimals += 1   #5
+        beginset *= 10  #10000
+        setLength *= 10 #90000
+        limit = setLength * decimals + offset
+        if i < limit:
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        offset = limit
+        decimals += 1   #6
+        beginset *= 10  #100000
+        setLength *= 10 #900000
+        limit = setLength * decimals + offset
+        if i < limit:
+            tmp = i - offset
+            return getDig(tmp // decimals + beginset, tmp % decimals)
+        return 0
+    debug = []
+    for i in indices:
+        debug.append(getDigit(i))
+    return debug
+    
+
+def opdracht40b():
+    s = ""
+    for i in range(1,999999):
+        s += str(i)
+    return int(s[0]) * int(s[9]) * int(s[99]) * int(s[999]) * int(s[9999]) * int(s[99999]) * int(s[999999]);
 
 """
 #41: Pandigital prime
