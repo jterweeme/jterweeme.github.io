@@ -10,14 +10,7 @@ Antwoord: 233,168
 """
 
 def opdracht1(limit = 1000):
-    def multiples3or5(limit):
-        for x in range(1, limit):
-            if x % 3 == 0 or x % 5 == 0:
-                yield x
-    xsum = 0
-    for n in multiples3or5(limit):
-        xsum += n
-    return xsum
+    return sum({x for x in range(3,limit,3)} | {x for x in range(5,limit,5)})
 
 """
 #2 Even Fibonacci numbers
@@ -2759,6 +2752,19 @@ def opdracht42(words = words42):
     return ret
 
 """
+#48: Self powers
+
+The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+
+Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+
+Antwoord: 9,110,846,700
+"""
+
+def opdracht48():
+    return sum([x**x for x in range(1,1001)]) % 10**10
+
+"""
 #50: Consecutive prime sum
 
 The prime 41, can be written as the sum of six consecutive primes:
@@ -2785,7 +2791,6 @@ def opdracht50(limit = 1000000):
     lprimes = [x for x in sieve(limit)]
     sprimes = set(lprimes)
     xlen = len(lprimes)
-    foo = 0
     for i in range(xlen):
         for j in range(i + best_sum, xlen):
             xsum = sum(lprimes[i:j + 1])
@@ -2795,7 +2800,6 @@ def opdracht50(limit = 1000000):
             if xsum in sprimes and sublen > best_sum:
                 best_sum = sublen
                 best_prime = xsum
-                foo = j + 1
     return best_prime;
 
 
@@ -2888,8 +2892,10 @@ def runn2(n = 1):
         return opdracht41()
     if n == 42:
         return opdracht42()
-    if n in [43,44,45,46,47,48,49]:
+    if n in [43,44,45,46,47,49]:
         return 0
+    if n == 48:
+        return opdracht48()
     if n == 50:
         return opdracht50()
     return 0
@@ -2907,7 +2913,6 @@ answers[44 - 1] = 0
 answers[45 - 1] = 0
 answers[46 - 1] = 0
 answers[47 - 1] = 0
-answers[48 - 1] = 0
 answers[49 - 1] = 0
 
 import time

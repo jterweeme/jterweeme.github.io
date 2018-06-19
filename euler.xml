@@ -52,40 +52,34 @@ The prime factors of 13195 are 5, 7, 13 and 29.
 What is the largest prime factor of the number 600,851,475,143?
 </p>
 <code>
-function primefactors(n) {
-    var primes = [];
-    var factors = [];
-    function primefactor(primes, n = 13195) {
-        function appendprime(primes) {
-            if (primes.length &lt; 1) primes.push(2);
-            if (primes.length &lt; 2) primes.push(3);
-            p = primes[primes.length - 1] + 2;
-            for (var i = 2; i &lt; p; i++) {
-                if (p % i == 0) {
-                    p++;
-                    i = 1;
-                }
+function opdracht3() {
+    function primefactors(n) {
+        var primes = [], factors = [];
+        function primefactor(primes, n = 13195) {
+            function appendprime(primes) {
+                if (primes.length &lt; 1) primes.push(2);
+                if (primes.length &lt; 2) primes.push(3);
+                var p = primes[primes.length - 1] + 2;
+                for (var i = 2; i &lt; p; i++) if (p % i == 0) p++, i = 1;
+                primes.push(p);
+                return primes;
             }
-            primes.push(p);
-            return primes;
+            for (var i = 0; true; i++) {
+                if (primes.length &lt;= i) appendprime(primes);
+                if (n % primes[i] == 0) return primes[i];
+            }
         }
-        for (var i = 0; true; i++) {
-            if (primes.length &lt;= i) appendprime(primes);
-            if (n % primes[i] == 0) return primes[i];
+        while (1) {
+            var factor = primefactor(primes, n);
+            factors.push(factor);
+            if (factor == n) break;
+            n = Math.floor(n / factor);
         }
+        return factors
     }
-    while (1) {
-        var factor = primefactor(primes, n);
-        factors.push(factor);
-        if (factor == n) break;
-        n = Math.floor(n / factor);
-    }
-    return factors
+    return Math.max.apply(null, primefactors(600851475143));
 }
-
-var factors = primefactors(600851475143);
-answer = Math.max.apply(null, factors);
-alert(answer);  // should be 6,857
+alert(opdracht3());  // should be 6,857
 </code>
 
 <hr/>
@@ -701,10 +695,7 @@ How many such routes are there through a 20x20 grid?
 <code>
 function opdracht15() {
     var paths = 1, size = 20;
-    for (var i = 0; i &lt; size; i++) {
-        paths = paths * (2 * size - i);
-        paths = Math.floor(paths / (i + 1));
-    }
+    for (var i = 0; i &lt; size; i++) paths = Math.floor((paths * (2 * size - i)) / (i + 1));
     return paths;
 }
 alert(opdracht15());   // should give 137,846,528,820
@@ -719,17 +710,14 @@ function opdracht16(e = 1000) {
     var largeNum = Array(400).fill(0);
     largeNum[0] = 2;
     var carry = 0, sum = 0;
-
     while (--e) {
-        for (var i = 0; i &lt; largeNum.length; i++)
-        {
+        for (var i = 0; i &lt; largeNum.length; i++) {
             largeNum[i] *= 2;
             largeNum[i] += carry;
             carry = Math.floor(largeNum[i] / 10);
             largeNum[i] = largeNum[i] % 10;
         }
     }
-
     for (var i = 0; i &lt; largeNum.length; i++) sum += largeNum[i];
     return sum;
 }
@@ -1950,6 +1938,75 @@ function opdracht34() {
     return totalSum;
 }
 alert(opdracht34());    // should give 40,730
+</code>
+
+<hr/>
+<h2>#48: Self powers</h2>
+<p>
+The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+</p>
+<p>
+Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+</p>
+<code>
+/*
+adapted from
+https://www.mathblog.dk/project-euler-48-last-ten-digits/
+*/
+
+function opdracht48() {
+    var result = 0, modulo = 10**10;
+    for (var i = 1; i &lt;= 1000; i++) {
+        var temp = i;
+        for (var j = 1; j &lt; i; j++) { temp *= i; temp %= modulo; }
+        result += temp;
+        result %= modulo;
+    }
+    return result;
+}
+alert(opdracht48());    // should give 9,110,846,700 
+</code>
+
+<hr/>
+<h2>#50: Consecutive prime sum</h2>
+<p>
+The prime 41, can be written as the sum of six consecutive primes:
+41 = 2 + 3 + 5 + 7 + 11 + 13
+
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand that
+adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+</p>
+<code>
+function opdracht50(max = 999999) {
+    var sieve = Array(max + 1).fill(true);
+    sieve[0] = sieve[1] = false;
+    for (var i = 0; i &lt; sieve.length; i++)
+        if (sieve[i]) for (var j = i * i; j &lt; sieve.length; j+= i) sieve[j] = false;
+    var primes = [];
+    for (var i = 0; i &lt; sieve.length; i++) if (sieve[i]) primes.push(i);
+    var best_prime = 0, best_sum = 0
+    var xlen = primes.length;
+    function search(lst, n) {
+        for (var i = 0; i &lt; lst.length; i++) if (lst[i] == n) return true;
+        return false;
+    }
+    for (var i = 0; i &lt; xlen; i++) {
+        for (var j = i + best_sum; j &lt; xlen; j++) {
+            var xsum = 0;
+            for (var k = i; k &lt; j; k++) xsum += primes[k];
+            if (xsum &gt; max) break;
+            var sublen = (j + 1) - i;
+            if (search(primes, xsum) &amp;&amp; sublen &gt; best_sum)
+                best_sum = sublen, best_prime = xsum;
+        }
+    }
+    return best_prime;
+}
+alert(opdracht50());    // should give 997651
 </code>
 </main>
 
