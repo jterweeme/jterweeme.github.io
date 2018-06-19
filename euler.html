@@ -26,7 +26,20 @@ code em {
     font-style: normal;
     color: red;
 }
+
+#clipboard {
+    /*visibility: hidden;*/
+}
 </style>
+<script>
+function mycopy(x) {
+    var copyText = document.getElementById(x);
+    var clipboard = document.getElementById("clipboard");
+    clipboard.innerHTML = copyText.innerHTML;
+    clipboard.select();
+    document.execCommand("copy");
+}
+</script>
 </head>
 <body>
 
@@ -49,7 +62,7 @@ of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
 <p>
 Find the sum of all the multiples of 3 or 5 below 1000.
 </p>
-<code>
+<code id="o1">
 function opdracht1() {
     var limit = 1000, xsum = 0;
     for (var x = 1; x &lt; limit; x++) if (x % 3 == 0 || x % 5 == 0) xsum += x;
@@ -57,6 +70,7 @@ function opdracht1() {
 }
 alert(opdracht1());    // should give 233,168
 </code>
+<button onclick="mycopy('o1');">Copy</button>
 
 <hr/>
 <h2>#2: Even Fibonacci numbers</h2>
@@ -71,7 +85,7 @@ previous two terms. By starting with 1 and 2, the first 10 terms will be:
 By considering the terms in the Fibonacci sequence whose values
 do not exceed four million, find the sum of the even-valued terms.
 </p>
-<code>
+<code id="o2">
 function opdracht2() {
     var xmax = 4000000, term1 = 1, term2 = 2, temp = 0, xsum = 0;
     if (term1 % 2 == 0) xsum += term1;
@@ -85,6 +99,7 @@ function opdracht2() {
 }
 alert(opdracht2());  // should give 4,613,732
 </code>
+<button onclick="mycopy('o2');">Copy</button>
 
 <hr/>
 <h2>#3: Largest prime factor</h2>
@@ -132,7 +147,7 @@ made from the product of two 2-digit numbers is 9009 = 91 x 99.
 <p>
 Find the largest palindrome made from the product of two 3-digit numbers.
 </p>
-<code>
+<code id="o4">
 function ispalindrome(n) {
     var temp = n, rev = 0;
     while (temp != 0) {
@@ -150,6 +165,7 @@ for (var a = 100; a &lt; 1000; a++) {
 }
 alert(best);    // should be 906,609
 </code>
+<button onclick="mycopy('o4');">Copy</button>
 
 <hr/>
 <h2>#5: Smallest multiple</h2>
@@ -161,7 +177,7 @@ each of the numbers from 1 to 10 without any remainder.
 What is the smallest positive number that is evenly
 divisible by all of the numbers from 1 to 20?
 </p>
-<code>
+<code id="o5">
 function opdracht5() {
     function isdivisible(n, l) {
         for (var i = 0; i &lt; l.length; i++) if (n % l[i] &gt; 0) return 0;
@@ -173,6 +189,7 @@ function opdracht5() {
 }
 alert(opdracht5());  // shouuld give 232,792,560
 </code>
+<button onclick="mycopy('o5');">Copy</button>
 
 <hr/>
 <h2>#6: Sum square difference</h2>
@@ -192,7 +209,7 @@ natural numbers and the square of the sum is 3025 - 385 = 2640.
 Find the difference between the sum of the squares of the
 first one hundred natural numbers and the square of the sum.
 </p>
-<code>
+<code id="o6">
 function opdracht6() {
     var sumsquare = 0, squaresum = 0;
     for (var x = 1; x &lt;= 100; x++) sumsquare += x**2, squaresum += x;
@@ -200,6 +217,7 @@ function opdracht6() {
 }
 alert(opdracht6());     // should give 25,164,150
 </code>
+<button onclick="mycopy('o6');">Copy</button>
 
 <hr/>
 <h2>#7: 10001st prime</h2>
@@ -210,7 +228,7 @@ By listing the first six prime numbers: 2, 3, 5,
 <p>
 What is the 10 001st prime number?
 </p>
-<code>
+<code id="o7">
 function opdracht7() {
     function reducer(n, presets = [300, 100, 8]) {
         for (var i = 0; i &lt; presets.length; i++)
@@ -229,6 +247,7 @@ function opdracht7() {
 }
 alert(opdracht7());     // should give 104,743
 </code>
+<button onclick="mycopy('o7');">Copy</button>
 
 <hr/>
 <h2>#8 Largest product in a series</h2>
@@ -262,7 +281,7 @@ have the greatest product are 9 × 9 × 8 × 9 = 5832.
 Find the thirteen adjacent digits in the 1000-digit number that
 have the greatest product. What is the value of this product?
 </p>
-<code>
+<code id="o8">
 series8 = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
 
 function opdracht8(series1 = series8) {
@@ -276,6 +295,7 @@ function opdracht8(series1 = series8) {
 }
 alert(opdracht8()); // should give 23,514,624,000
 </code>
+<button onclick="mycopy('o8');">Copy</button>
 
 <hr/>
 <h2>#9 Special Pythagorean triplet</h2>
@@ -290,7 +310,7 @@ For example, 3^2 + 4^2 = 9 + 16 = 25 = 5^2.
 There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 Find the product abc.
 </p>
-<code>
+<code id="o9">
 function opdracht9(search = 1000) {
     for (var a = 1; a &lt; search - 1; a++) {
         for (var b = 1; b &lt; search - a; b++) {
@@ -302,6 +322,7 @@ function opdracht9(search = 1000) {
 }
 alert(opdracht9()); // should give 31,875,000
 </code>
+<button onclick="mycopy('o9');">Copy</button>
 
 <hr/>
 <h2>#10 Summation of primes</h2>
@@ -311,7 +332,7 @@ The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
 <p>
 Find the sum of all the primes below two million.
 </p>
-<code>
+<code id="o10">
 function opdracht10(max = 2000000 - 1) {
     var v = Array(max).fill(true);
     v[0] = v[1] = false;
@@ -323,6 +344,7 @@ function opdracht10(max = 2000000 - 1) {
 }
 alert(opdracht10());    // should give 142,913,828,922
 </code>
+<button onclick="mycopy('o10');">Copy</button>
 
 <hr/>
 <h2>#11 Largest product in a grid</h2>
@@ -359,7 +381,7 @@ The product of these numbers is 26 × 63 × 78 × 14 = 1788696.
 What is the greatest product of four adjacent numbers in the same
 direction (up, down, left, right, or diagonally) in the 20×20 grid?
 </p>
-<code>
+<code id="o11">
 t11 = [[ 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91, 8],
        [49,49,99,40,17,81,18,57,60,87,17,40,98,43,69,48, 4,56,62, 0],
        [81,49,31,73,55,79,14,29,93,71,40,67,53,88,30, 3,49,13,36,65],
@@ -407,6 +429,7 @@ function opdracht11(data = t11) {
 }
 alert(opdracht11());    // should give 70,600,674
 </code>
+<button onclick="mycopy('o11');">Copy</button>
 
 <hr/>
 <h2>#12 Highly divisible triangular number</h2>
@@ -436,7 +459,7 @@ We can see that 28 is the first triangle number to have over five divisors.
 <p>
 What is the value of the first triangle number to have over five hundred divisors?
 </p>
-<code>
+<code id="o12">
 function opdracht12(divisors = 500) {
     function triangler(n) { return n * (n + 1) &gt;&gt; 1; }
     function n_divs(n) {
@@ -462,6 +485,7 @@ function opdracht12(divisors = 500) {
 }
 alert(opdracht12());    // should give 76,576,500
 </code>
+<button onclick="mycopy('o12');">Copy</button>
 
 <hr/>
 <h2>#13 Large sum</h2>
@@ -570,7 +594,7 @@ Work out the first ten digits of the sum of the following one-hundred 50-digit n
 20849603980134001723930671666823555245252804609722
 53503534226472524250874054075591789781264330331690
 </pre>
-<code>
+<code id="o13">
 digits13 = ["37107287533902102798797998220837590246510135740250",
 "46376937677490009712648124896970078050417018260538",
 "74324986199524741059474233309513058123726617309629",
@@ -686,6 +710,7 @@ function opdracht13(l = digits13) {
 }
 alert(opdracht13());    // should give 5,537,376,230
 </code>
+<button onclick="mycopy('o13');">Copy</button>
 
 <hr/>
 <h2>#14 Longest Collatz sequence</h2>
@@ -706,7 +731,7 @@ Which starting number, under one million, produces the longest chain?
 
 NOTE: Once the chain starts the terms are allowed to go above one million.
 </p>
-<code>
+<code id="o14">
 function opdracht14() {
     function collatz(n) {
         var count = 1;
@@ -723,6 +748,7 @@ function opdracht14() {
 
 alert(opdracht14());    // should give 837,799
 </code>
+<button onclick="mycopy('o14');">Copy</button>
 
 <hr/>
 <h2>#15: Lattice paths</h2>
@@ -733,7 +759,7 @@ to the right and down, there are exactly 6 routes to the bottom right corner.
 <p>
 How many such routes are there through a 20x20 grid?
 </p>
-<code>
+<code id="o16">
 function opdracht15() {
     var paths = 1, size = 20;
     for (var i = 0; i &lt; size; i++) paths = Math.floor((paths * (2 * size - i)) / (i + 1));
@@ -741,12 +767,13 @@ function opdracht15() {
 }
 alert(opdracht15());   // should give 137,846,528,820
 </code>
+<button onclick="mycopy('o16');">Copy</button>
 
 <hr/>
 <h2>#16 Power digit sum</h2>
 <p>2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.</p>
 <p>What is the sum of the digits of the number 2^1000?</p>
-<code>
+<code id="o16">
 function opdracht16(e = 1000) {
     var largeNum = Array(400).fill(0);
     largeNum[0] = 2;
@@ -764,6 +791,7 @@ function opdracht16(e = 1000) {
 }
 alert(opdracht16());    // should give 1,366
 </code>
+<button onclick="mycopy('o16');">Copy</button>
 
 <hr/>
 <h2>#17 Number letter counts</h2>
@@ -781,7 +809,7 @@ forty-two) contains 23 letters and 115 (one hundred and fifteen) contains
 20 letters. The use of "and" when writing out numbers is in compliance
 with British usage.
 </p>
-<code>
+<code id="o17">
 function opdracht17() {
     var arr = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
@@ -810,6 +838,7 @@ function opdracht17() {
 }
 alert(opdracht17());    // should give 21,124
 </code>
+<button onclick="mycopy('o17');">Copy</button>
 
 <hr/>
 <h2>#18: Maximum path sum I</h2>
@@ -852,7 +881,7 @@ problem by trying every route. However, Problem 67, is the same
 challenge with a triangle containing one-hundred rows; it cannot be
 solved by brute force, and requires a clever method! ;o)
 </p>
-<code>
+<code id="o18">
 triangle18 = [
     [75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -887,6 +916,7 @@ function opdracht18(triangle = triangle18) {
 }
 alert(opdracht18());    // should give 1,074
 </code>
+<button onclick="mycopy('o18');">Copy</button>
 
 <hr/>
 <h2>#19 Counting Sundays</h2>
@@ -913,7 +943,7 @@ but not on a century unless it is divisible by 400.
 How many Sundays fell on the first of the month during
 the twentieth century (1 Jan 1901 to 31 Dec 2000)?
 </p>
-<code>
+<code id="o19">
 function opdracht19() {
     function isLeap(year) {
         if (year % 4 &gt; 0) return false;
@@ -936,6 +966,7 @@ function opdracht19() {
 }
 alert(opdracht19());    // should give 171
 </code>
+<button onclick="mycopy('o19');">Copy</button>
 
 <hr/>
 <h2>#20 Factorial digit sum</h2>
@@ -947,7 +978,7 @@ and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!
 </p>
-<code>
+<code id="o20">
 function opdracht20(f = 100) {
     var buf = Array(200).fill(0);
     buf[0] = f;
@@ -966,6 +997,7 @@ function opdracht20(f = 100) {
 }
 alert(opdracht20());    // should give 648
 </code>
+<button onclick="mycopy('o20');">Copy</button>
 
 <hr/>
 <h2>#21 Amicable numbers</h2>
@@ -981,7 +1013,7 @@ of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
 
 Evaluate the sum of all the amicable numbers under 10000.
 </p>
-<code>
+<code id="o21">
 function amicablePairsSum(low = 1, high = 10000) {
     function sumDivisors(n) {
         var som = 0;
@@ -1001,6 +1033,7 @@ function amicablePairsSum(low = 1, high = 10000) {
 }
 alert(amicablePairsSum());  // should give 31,626
 </code>
+<button onclick="mycopy('o21');">Copy</button>
 
 <hr/>
 <h2>#22 Names scores</h2>
@@ -1018,7 +1051,7 @@ COLIN would obtain a score of 938 × 53 = 49714.
 <p>
 What is the total of all the name scores in the file?
 </p>
-<code>
+<code id="o22">
 names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER","MARIA","SUSAN",
 "MARGARET","DOROTHY","LISA","NANCY","KAREN","BETTY","HELEN","SANDRA","DONNA",
 "CAROL","RUTH","SHARON","MICHELLE","LAURA","SARAH","KIMBERLY","DEBORAH",
@@ -1763,6 +1796,7 @@ function opdracht22() {
 }
 alert(opdracht22());    // should give 871,198,282
 </code>
+<button onclick="mycopy('o22');">Copy</button>
 
 <hr/>
 <h2>#23 Non-abundant sums</h2>
@@ -1788,7 +1822,7 @@ is less than this limit.
 Find the sum of all the positive integers which
 cannot be written as the sum of two abundant numbers.
 </p>
-<code>
+<code id="o23">
 function opdracht23() {
     var xmax = 28123;
     var abundants = [];
@@ -1820,6 +1854,7 @@ function opdracht23() {
 }
 alert(opdracht23());    // should give 4,179,871
 </code>
+<button onclick="mycopy('o23');">Copy</button>
 
 <hr/>
 <h2>#24: Lexicographic permutations</h2>
@@ -1834,7 +1869,7 @@ lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
 What is the millionth lexicographic permutation
 of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 </p>
-<code>
+<code id="o24">
 function opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1) {
     function concat(lst) {
         var ret = 0;
@@ -1854,15 +1889,119 @@ function opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1) {
 }
 alert(opdracht24());    // should give 2,783,915,460
 </code>
+<button onclick="mycopy('o24');">Copy</button>
+
+<hr/>
+<h2>#25: 1000-digit Fibonacci number</h2>
+<p>The Fibonacci sequence is defined by the recurrence relation:</p>
+<p>Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.</p>
+<p>Hence the first 12 terms will be:</p>
+<pre>
+F1 = 1
+F2 = 1
+F3 = 2
+F4 = 3
+F5 = 5
+F6 = 8
+F7 = 13
+F8 = 21
+F9 = 34
+F10 = 55
+F11 = 89
+F12 = 144
+</pre>
+<p>
+The 12th term, F12, is the first term to contain three digits.
+</p>
+<p>
+What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+</p>
+<code id="o25">
+/*
+https://www.mathblog.dk/project-euler-25-fibonacci-sequence-1000-digits/
+*/
+
+function opdracht25() {
+    return Math.floor((Math.log(10) * 999 + Math.log(5) / 2)/Math.log(1.6180));
+}
+alert(opdracht25());    // should give 4,782
+</code>
+<button onclick="mycopy('o25');">Copy</button>
+
+<hr/>
+<h2>#26: Reciprocal cycles</h2>
+<p>
+A unit fraction contains 1 in the numerator. The decimal representation
+of the unit fractions with denominators 2 to 10 are given:
+</p>
+<pre>
+    1/2 =  0.5
+    1/3 =  0.(3)
+    1/4 =  0.25
+    1/5 =  0.2
+    1/6 =  0.1(6)
+    1/7 =  0.(142857)
+    1/8 =  0.125
+    1/9 =  0.(1)
+    1/10 =  0.1
+</pre>
+<p>
+Where 0.1(6) means 0.166666..., and has a 1-digit recurring
+cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
+</p>
+<p>
+Find the value of d &lt; 1000 for which 1/d contains the
+longest recurring cycle in its decimal fraction part.
+</p>
+<code id="o26" style="color: red">
+// werkt niet
+
+function opdracht26() {
+    var num = 1, longest = 1;
+    for (var n = 3; n &lt; 1000; n += 2) {
+        if (n % 5 == 0) continue;
+        var p = 1;
+        while (10**p % n != 1) p++;
+        if (p > longest) num = n, longest = p;
+    }
+    return num;
+}
+</code>
+<button onclick="mycopy('o26');">Copy</button>
+
+<hr/>
+<h2>#27: Quadratic primes</h2>
+<code id="o27">
+function opdracht27() {
+    function isprime(n) {
+        var presets = [300, 100, 8];
+        var top = n;
+        for (var i = 0; i &lt; presets.length; i++)
+            if (n > presets[i] * presets[i])
+                top = Math.floor(n / presets[i]);
+        for (var i = 2; i &lt; top; i++) if (n % i == 0) return false;
+        return true;
+    }
+    var best_a = 0, best_b = 0, best_n = 0;
+    for (var a = -999; a &lt; 1000; a++) {
+        for (var b = -1000; b &lt;= 1000; b++) {
+            var n = 0;
+            while (isprime(Math.abs(n * n + a * n + b))) n++;
+            if (n &gt; best_n) best_a = a, best_b = b, best_n = n;
+        }
+    }
+    return best_a * best_b;
+}
+alert(opdracht27());    // should give -59231
+</code>
+<button onclick="mycopy('o27');">Copy</button>
 
 <hr/>
 <h2>#28 Number spiral diagonals</h2>
-
 <p>
 Starting with the number 1 and moving to the right in a
 clockwise direction a 5 by 5 spiral is formed as follows:
 </p>
-
 <pre>
 21 22 23 24 25
 20  7  8  9 10
@@ -1870,14 +2009,13 @@ clockwise direction a 5 by 5 spiral is formed as follows:
 18  5  4  3 12
 17 16 15 14 13
 </pre>
-
 <p>
 It can be verified that the sum of the numbers on the diagonals is 101.
 
 What is the sum of the numbers on the diagonals
 in a 1001 by 1001 spiral formed in the same way?
 </p>
-<code>
+<code id="o28">
 function opdracht28(root = 1001) {
     var xsum = 1, foo = 1, step = 2;
     for (var step = 2; foo &lt; root * root; step += 2)
@@ -1886,6 +2024,7 @@ function opdracht28(root = 1001) {
 }
 alert(opdracht28());    // should give 669,171,001
 </code>
+<button onclick="mycopy('o28');">Copy</button>
 
 <hr/>
 <h2>#29: Distinct powers</h2>
@@ -1909,7 +2048,7 @@ removed, we get the following sequence of 15 distinct terms:
 How many distinct terms are in the sequence
 generated by ab for 2 ≤ a ≤ 100 and 2 ≤ b ≤ 100?
 </p>
-<code>
+<code id="o29" style="color: red">
 // werkt nog niet
 
 function opdracht29() {
@@ -1921,6 +2060,39 @@ function opdracht29() {
 }
 alert(opdracht29());
 </code>
+<button onclick="mycopy('o29');">Copy</button>
+
+<hr/>
+<h2>#30: Digit fifth powers</h2>
+<p>
+Surprisingly there are only three numbers that can
+be written as the sum of fourth powers of their digits:
+
+    1634 = 1^4 + 6^4 + 3^4 + 4^4
+    8208 = 8^4 + 2^4 + 0^4 + 8^4
+    9474 = 9^4 + 4^4 + 7^4 + 4^4
+
+As 1 = 14 is not a sum it is not included.
+
+The sum of these numbers is 1634 + 8208 + 9474 = 19316.
+
+Find the sum of all the numbers that can be written
+as the sum of fifth powers of their digits.
+</p>
+<code id="o30">
+function opdracht30(p = 5) {
+    function test(n, p) {
+        var xsum = 0, tmp = n;
+        while (tmp > 0) xsum += (tmp % 10)**p, tmp = Math.floor(tmp / 10);
+        return xsum == n;
+    }
+    var xsum = 0;
+    for (var i = 2; i &lt; 1000000; i++) xsum += test(i, p) ? i : 0;
+    return xsum;
+}
+alert(opdracht30());    // should give 443,839
+</code>
+<button onclick="mycopy('o30');">Copy</button>
 
 <hr/>
 <h2>#31: Coin sums</h2>
@@ -1940,7 +2112,7 @@ It is possible to make £2 in the following way:
 <p>
 How many different ways can £2 be made using any number of coins?
 </p>
-<code>
+<code id="o31">
 function opdracht31(target = 200, coins = [1,2,5,10,20,50,100,200]) {
     var ways = Array(target + 1).fill(0);
     ways[0] = 1;
@@ -1951,6 +2123,7 @@ function opdracht31(target = 200, coins = [1,2,5,10,20,50,100,200]) {
 }
 alert(opdracht31());    // should give 73,682
 </code>
+<button onclick="mycopy('o31');">Copy</button>
 
 <hr/>
 <h2>#34: Digit factorials</h2>
@@ -1961,7 +2134,7 @@ Find the sum of all numbers which are equal to the sum of the factorial of their
 
 Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 </p>
-<code>
+<code id="o34">
 function opdracht34() {
     var factorials = [1,1,2,6,24,120,720,5040,40320,362880];
     function facsumdig(n) {
@@ -1980,6 +2153,34 @@ function opdracht34() {
 }
 alert(opdracht34());    // should give 40,730
 </code>
+<button onclick="mycopy('o34');">Copy</button>
+
+<hr/>
+<h2>#39: Integer right triangles</h2>
+<p>
+If p is the perimeter of a right angle triangle with integral length
+sides, {a,b,c}, there are exactly three solutions for p = 120.
+</p>
+<p>
+{20,48,52}, {24,45,51}, {30,40,50}
+</p>
+<p>
+For which value of p ≤ 1000, is the number of solutions maximised?
+</p>
+<code id="o39">
+function opdracht39() {
+    var best_p = 0, best_solutions = 0;
+    for (var p = 100; p &lt;= 1000; p += 2) {
+        var solutions = 0;
+        for (var a = 2; a &lt; Math.floor(p / 3); a++)
+            solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
+        if (solutions &gt; best_solutions) best_solutions = solutions, best_p = p;
+    }
+    return best_p;
+}
+alert(opdracht39());    // should give 840
+</code>
+<button onclick="mycopy('o39');">Copy</button>
 
 <hr/>
 <h2>#48: Self powers</h2>
@@ -1989,7 +2190,7 @@ The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
 <p>
 Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
 </p>
-<code>
+<code id="o48">
 /*
 adapted from
 https://www.mathblog.dk/project-euler-48-last-ten-digits/
@@ -2007,6 +2208,7 @@ function opdracht48() {
 }
 alert(opdracht48());    // should give 9,110,846,700 
 </code>
+<button onclick="mycopy('o48');">Copy</button>
 
 <hr/>
 <h2>#50: Consecutive prime sum</h2>
@@ -2021,7 +2223,7 @@ adds to a prime, contains 21 terms, and is equal to 953.
 
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 </p>
-<code>
+<code id="o50">
 function opdracht50(max = 999999) {
     var sieve = Array(max + 1).fill(true);
     sieve[0] = sieve[1] = false;
@@ -2049,10 +2251,12 @@ function opdracht50(max = 999999) {
 }
 alert(opdracht50());    // should give 997651
 </code>
+<button onclick="mycopy('o50');">Copy</button>
 </main>
 
 
 
+<textarea id="clipboard"></textarea>
 </body>
 </html>
 

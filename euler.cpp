@@ -29,14 +29,9 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 */
 
-static uint32_t multiples1(uint32_t limit = 1000)
-{
+static uint32_t multiples1(uint32_t limit = 1000) {
     uint32_t xsum = 0;
-    
-    for (uint32_t x = 1; x < limit; x++)
-        if (x % 3 == 0 || x % 5 == 0)
-            xsum += x;
-
+    for (uint32_t x = 1; x < limit; x++) if (x % 3 == 0 || x % 5 == 0) xsum += x;
     return xsum;
 }
 
@@ -175,16 +170,9 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-static bool ispalindrome(uint32_t n)
-{
-    uint32_t temp = n;
-    uint32_t rev = 0;
-    
-    while (temp != 0)
-    {
-        rev = rev * 10 + temp % 10;
-        temp = temp / 10;
-    }
+static bool ispalindrome(uint32_t n) {
+    uint32_t temp = n, rev = 0;
+    while (temp != 0) rev = rev * 10 + temp % 10, temp = temp / 10;
     return n == rev;
 }
 
@@ -214,11 +202,8 @@ divisible by all of the numbers from 1 to 20?
 Antwoord: 232,792,560
 */
 
-static inline bool isdivisible(uint32_t n, uint32_t lower, uint32_t max)
-{
-    for (uint32_t i = lower; i <= max; i++)
-        if (n % i > 0)
-            return false;
+static inline bool isdivisible(uint32_t n, uint32_t lower, uint32_t max) {
+    for (uint32_t i = lower; i <= max; i++) if (n % i > 0) return false;
     return true;
 }
 
@@ -249,16 +234,10 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100)
-{
+static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100) {
     uint32_t sumsquare = 0, squaresum = 0;
-
-    for (uint32_t i = min; i <= max; i++)
-        sumsquare += i * i;
-
-    for (uint32_t i = min; i <= max; i++)
-        squaresum += i;
-
+    for (uint32_t i = min; i <= max; i++) sumsquare += i * i;
+    for (uint32_t i = min; i <= max; i++) squaresum += i;
     squaresum = squaresum * squaresum;
     return squaresum - sumsquare;
 }
@@ -448,20 +427,15 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 */
 
-uint64_t opdracht10(uint32_t max = 1999999)
-{
+uint64_t opdracht10(uint32_t max = 1999999) {
     uint64_t sum = 0;
     vector<bool> v(max, true);
     v[0] = v[1] = false;
     
     for (uint32_t p = 2; p * p <= max; p++)
-    {
         if (v[p] == true)
-        {
             for (uint32_t i = p * 2; i <= max; i += p)
                 v[i] = false;
-        }
-    }
 
     for (uint32_t i = 1; i <= max; i++)
         sum += v[i] == true ? i : 0;
@@ -603,22 +577,13 @@ static uint32_t triangler(uint64_t n)
 
 static uint32_t num_divisors(uint64_t n)
 {
-    if (n % 2 == 0)
-        n = n >> 1;
-
-    uint32_t divisors = 1;
-    uint32_t count = 0;
-    
-    while (n % 2 == 0)
-    {
-        count++;
-        n = n >> 1;
-    }
-
+    if (n % 2 == 0) n = n >> 1;
+    uint32_t divisors = 1, count = 0;
+    while (n % 2 == 0) count++, n = n >> 1;
     divisors = divisors * (count + 1);
     uint32_t p = 3;
-    while (n != 1)
-    {
+
+    while (n != 1) {
         count = 0;
         while (n % p == 0)
         {
@@ -2600,58 +2565,23 @@ Antwoord: 443,839
 
 uint32_t pow30(uint32_t base, uint8_t i)
 {
-    if (i == 0)
-        return 1;
-
+    if (i == 0) return 1;
     uint32_t ret = base;
-
-    while (--i)
-        ret = ret * base;
-
+    while (--i) ret = ret * base;
     return ret;
-}
-
-uint8_t decimal30(uint32_t n, uint32_t i)
-{
-    return n / pow30(10, i) % 10;
-}
-
-uint8_t decimals30(uint32_t n)
-{
-    uint32_t i = 0;
-
-    while (n >= pow30(10, i))
-        i++;
-
-    return i;
 }
 
 bool test30(uint32_t n, uint8_t p)
 {
-    uint32_t xsum = 0;
-#if 0
-    while (n > 0)
-    {
-        xsum += pow30(n % 10, p);
-        n = n / 10;
-    }
-#else
-    uint8_t length = decimals30(n);
-    
-    for (uint8_t i = 0; i < length; i++)
-        xsum += pow30(decimal30(n, i), p);
-#endif
+    uint32_t xsum = 0, tmp = n;
+    while (tmp > 0) xsum += pow30(tmp % 10, p), tmp = tmp / 10;
     return xsum == n;
 }
 
 uint32_t opdracht30(uint8_t p = 5)
 {
     uint32_t xsum = 0;
-
-    for (uint32_t i = 2; i < 1000000; i++)
-        if (test30(i, p))
-            xsum += i;
-
+    for (uint32_t i = 2; i < 1000000; i++) xsum += test30(i, p) ? i : 0;
     return xsum;
 }
 
@@ -2806,34 +2736,23 @@ Antwoord: 55
 
 uint32_t pow35(uint32_t base, uint32_t i)
 {
-    if (i == 0)
-        return 1;
-
+    if (i == 0) return 1;
     uint32_t ret = base;
-
-    while (--i)
-        ret = ret * base;
-
+    while (--i) ret = ret * base;
     return ret;
 }
 
 static uint8_t decimals35(uint32_t n)
 {
     uint8_t i = 0;
-    
-    while (n > pow35(10, i))
-        i++;
-
+    while (n > pow35(10, i)) i++;
     return i;
 }
 
 static uint32_t rotate(uint32_t n)
 {
-    uint8_t length = decimals35(n);
-    uint8_t digit = n % 10;
-    n = n / 10;
-    n += digit * pow35(10, length - 1);
-    return n;
+    uint8_t length = decimals35(n), digit = n % 10;
+    return n / 10 + digit * pow35(10, length - 1);
 }
 
 static void rotations(vector<uint32_t> &rts, uint32_t n)
@@ -2863,13 +2782,9 @@ static void sieve35(set<uint32_t> &primes, uint32_t max)
     v[0] = v[1] = false;
     
     for (uint32_t p = 2; p * p <= max; p++)
-    {
         if (v[p] == true)
-        {
             for (uint32_t i = p * 2; i <= max; i += p)
                 v[i] = false;
-        }
-    }
 
     for (uint32_t i = 1; i <= max; i++)
         if (v[i] == true)
@@ -2947,35 +2862,24 @@ Antwoord: 748,317
 
 uint32_t pow37(uint32_t base, uint32_t i)
 {
-    if (i == 0)
-        return 1;
-
+    if (i == 0) return 1;
     uint32_t ret = base;
-
-    while (--i)
-        ret = ret * base;
-
+    while (--i) ret = ret * base;
     return ret;
 }
 
 static uint8_t decimals37(uint32_t n)
 {
     uint8_t i = 0;
-    
-    while (n > pow37(10, i))
-        i++;
-
+    while (n > pow37(10, i)) i++;
     return i;
 }
 
 static bool isrighttruncatable(uint32_t prime, set<uint32_t> &primes)
 {
-    while (prime > 10)
-    {
+    while (prime > 10) {
         prime = prime / 10;
-
-        if (primes.count(prime) == 0)
-            return false;
+        if (primes.count(prime) == 0) return false;
     }
 
     return true;
@@ -2991,11 +2895,8 @@ static bool islefttruncatable(uint32_t prime, set<uint32_t> &primes)
 {
     uint8_t length = decimals37(prime);
     
-    for (uint8_t i = 0; i < length; i++)
-    {
-        if (primes.count(prime) == 0)
-            return false;
-
+    for (uint8_t i = 0; i < length; i++) {
+        if (primes.count(prime) == 0) return false;
         prime = truncate_left(prime);
     }
     
@@ -3037,6 +2938,49 @@ static uint32_t opdracht37()
     }
 
     return xsum;
+}
+
+/*
+#39: Integer right triangles
+
+If p is the perimeter of a right angle triangle with integral length
+sides, {a,b,c}, there are exactly three solutions for p = 120.
+
+{20,48,52}, {24,45,51}, {30,40,50}
+
+For which value of p ≤ 1000, is the number of solutions maximised?
+
+Antwoord: 840
+*/
+
+/*
+(40, 399, 401),
+(56, 390, 394),
+(105, 360, 375),
+(120, 350, 370),
+(140, 336, 364),
+(168, 315, 357),
+(210, 280, 350),
+(240, 252, 348),
+(252, 240, 348),
+(280, 210, 350),
+(315, 168, 357),
+(336, 140, 364),
+(350, 120, 370),
+(360, 105, 375),
+(390, 56, 394),
+(399, 40, 401)
+*/
+
+static uint32_t opdracht39() {
+    uint32_t best_p = 0, best_solutions = 0;
+    for (uint32_t p = 100; p <= 1000; p += 2) {
+        uint32_t solutions = 0;
+        for (uint32_t a = 2; a < p / 3; a++)
+            solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
+        if (solutions > best_solutions) best_solutions = solutions, best_p = p;
+    }
+    return best_p;
 }
 
 /*
@@ -3121,6 +3065,10 @@ static uint64_t run(uint32_t p)
         return opdracht36();
     case 37:
         return opdracht37();
+    case 38:
+        return 0;
+    case 39:
+        return opdracht39();
     }
 
     return 0;
@@ -3259,10 +3207,11 @@ int main()
     answers[27 - 1] = 0;
     answers[29 - 1] = 0;
     answers[32 - 1] = 0;
+    answers[38 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(37);
+    multithread(39);
 #else
-    singlethread(37);
+    singlethread(39);
 #endif
     return 0;
 }

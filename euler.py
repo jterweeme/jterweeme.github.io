@@ -1871,6 +1871,14 @@ def opdracht25(limit = 10**999):
     return cnt
 
 """
+https://www.mathblog.dk/project-euler-25-fibonacci-sequence-1000-digits/
+"""
+
+def opdracht25b():
+    from math import log
+    return (log(10) * 999 + log(5) / 2) // log(1.6180)
+
+"""
 #26: Reciprocal cycles
 
 A unit fraction contains 1 in the numerator. The decimal representation

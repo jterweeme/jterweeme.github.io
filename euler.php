@@ -27,7 +27,20 @@ code em {
     font-style: normal;
     color: red;
 }
+
+#clipboard {
+    /*visibility: hidden;*/
+}
 </style>
+<script>
+function mycopy(x) {
+    var copyText = document.getElementById(x);
+    var clipboard = document.getElementById("clipboard");
+    clipboard.innerHTML = copyText.innerHTML;
+    clipboard.select();
+    document.execCommand("copy");
+}
+</script>
 </head>
 <body>
 <?php
@@ -36,6 +49,7 @@ $mm = new MainMenu();
 echo $mm;
 echo file_get_contents("euler.xml");
 ?>
+<textarea id="clipboard"></textarea>
 </body>
 </html>
 
