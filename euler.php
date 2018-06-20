@@ -28,11 +28,24 @@ code em {
     color: red;
 }
 
+section {
+    border-bottom: 1px solid black;
+}
+
 #clipboard {
     /*visibility: hidden;*/
 }
 </style>
 <script>
+function mycopy2(x) {
+    var section = document.getElementById(x);
+    var copyText = section.getElementsByTagName("code")[0];
+    var clipboard = document.getElementById("clipboard");
+    clipboard.innerHTML = copyText.innerHTML;
+    clipboard.select();
+    document.execCommand("copy");
+}
+
 function mycopy(x) {
     var copyText = document.getElementById(x);
     var clipboard = document.getElementById("clipboard");

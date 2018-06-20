@@ -2129,10 +2129,8 @@ static uint16_t divsum(uint32_t n)
     return xsum;
 }
 
-static bool find23(vector<uint16_t> &vec, uint16_t n)
-{
-    return binary_search(vec.begin(), vec.end(), n);
-    //return vec.count(n) > 0;
+static bool find23(vector<uint16_t> &d, uint16_t n)
+{   return binary_search(d.begin(), d.end(), n);
 }
 
 static uint32_t opdracht23()
@@ -2478,18 +2476,9 @@ Antwoord: 669,171,001
 */
 
 uint32_t opdracht28(uint32_t root = 1001)
-{
-    uint32_t xsum = 1;
-    
+{   uint32_t xsum = 1;    
     for (uint32_t step = 2, foo = 1; foo < root * root; step += 2)
-    {
-        for (uint8_t i = 0; i < 4; i++)
-        {
-            foo += step;
-            xsum += foo;
-        }
-    }
-
+        for (uint8_t i = 0; i < 4; i++) foo += step, xsum += foo;
     return xsum;
 }
 
@@ -2564,23 +2553,20 @@ Antwoord: 443,839
 */
 
 uint32_t pow30(uint32_t base, uint8_t i)
-{
-    if (i == 0) return 1;
+{   if (i == 0) return 1;
     uint32_t ret = base;
     while (--i) ret = ret * base;
     return ret;
 }
 
 bool test30(uint32_t n, uint8_t p)
-{
-    uint32_t xsum = 0, tmp = n;
+{   uint32_t xsum = 0, tmp = n;
     while (tmp > 0) xsum += pow30(tmp % 10, p), tmp = tmp / 10;
     return xsum == n;
 }
 
 uint32_t opdracht30(uint8_t p = 5)
-{
-    uint32_t xsum = 0;
+{   uint32_t xsum = 0;
     for (uint32_t i = 2; i < 1000000; i++) xsum += test30(i, p) ? i : 0;
     return xsum;
 }
@@ -2603,16 +2589,12 @@ Antwoord: 73,682
 */
 
 static uint64_t opdracht31()
-{
-    uint8_t target = 200;
-    uint8_t coins[] = {1,2,5,10,20,50,100,200};
+{   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
     uint32_t ways[target + 1] = {0};
     ways[0] = 1;
-    
     for (uint8_t i = 0; i < sizeof(coins); i++)
         for (uint8_t j = coins[i]; j <= target; j++)
             ways[j] += ways[j - coins[i]];
-
     return ways[target];
 }
 
@@ -2690,26 +2672,15 @@ Antwoord: 40,730
 static uint32_t factorials34[] { 1,1,2,6,24,120,720,5040,40320,362880};
 
 static uint32_t facsumdig34(uint32_t n)
-{
-    uint32_t sum = 0;
-
-    while (n > 0)
-    {
-        sum += factorials34[n % 10];
-        n = n / 10;
-    }
-
+{   uint32_t sum = 0;
+    while (n > 0) sum += factorials34[n % 10], n = n / 10;
     return sum;
 }
 
 static uint32_t opdracht34()
-{
-    uint32_t totalSum = 0;
-
+{   uint32_t totalSum = 0;
     for (uint32_t k = 10; k < factorials34[9] * 7; k++)
-        if (facsumdig34(k) == k)
-            totalSum += k;
-
+        if (facsumdig34(k) == k) totalSum += k;
     return totalSum;
 }
 
@@ -2735,72 +2706,57 @@ Antwoord: 55
 */
 
 uint32_t pow35(uint32_t base, uint32_t i)
-{
-    if (i == 0) return 1;
+{   if (i == 0) return 1;
     uint32_t ret = base;
     while (--i) ret = ret * base;
     return ret;
 }
 
 static uint8_t decimals35(uint32_t n)
-{
-    uint8_t i = 0;
+{   uint8_t i = 0;
     while (n > pow35(10, i)) i++;
     return i;
 }
 
 static uint32_t rotate(uint32_t n)
-{
-    uint8_t length = decimals35(n), digit = n % 10;
+{   uint8_t length = decimals35(n), digit = n % 10;
     return n / 10 + digit * pow35(10, length - 1);
 }
 
 static void rotations(vector<uint32_t> &rts, uint32_t n)
-{
-    for (uint8_t i = 0; i < decimals35(n); i++)
-    {
-        n = rotate(n);
+{   for (uint8_t i = 0; i < decimals35(n); i++)
+    {   n = rotate(n);
         rts.push_back(n);
     }
 }
 
 static bool iscircular(uint32_t n, set<uint32_t> &primes)
-{
-    vector<uint32_t> rts;
+{   vector<uint32_t> rts;
     rotations(rts, n);
-
     for (auto rotation : rts)
-        if (primes.count(rotation) == 0)
-            return false;
-
+        if (primes.count(rotation) == 0) return false;
     return true;
 }
 
 static void sieve35(set<uint32_t> &primes, uint32_t max)
-{
-    vector<bool> v(max, true);
+{   vector<bool> v(max, true);
     v[0] = v[1] = false;
-    
     for (uint32_t p = 2; p * p <= max; p++)
         if (v[p] == true)
             for (uint32_t i = p * 2; i <= max; i += p)
                 v[i] = false;
-
     for (uint32_t i = 1; i <= max; i++)
         if (v[i] == true)
             primes.insert(i);
 }
 
 static uint32_t opdracht35()
-{
-    set<uint32_t> primes;
+{   set<uint32_t> primes;
     sieve35(primes, 999999);
     set<uint32_t> cprimes;
-
     for (auto prime : primes)
         if (iscircular(prime, primes))
             cprimes.insert(prime);
-
     return cprimes.size();
 }
 
@@ -2817,27 +2773,15 @@ Antwoord: 872,187
 */
 
 static bool ispalindrome36(uint32_t n, uint8_t base = 10)
-{
-    uint32_t temp = n;
-    uint32_t rev = 0;
-    
-    while (temp != 0)
-    {
-        rev = rev * base + temp % base;
-        temp = temp / base;
-    }
-
+{   uint32_t rev = 0;
+    for (uint32_t temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
     return n == rev;
 }
 
 static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
-{
-    uint32_t xsum = 0;
-    
+{   uint32_t xsum = 0;
     for (uint32_t i = min; i < limit; i++)
-        if (ispalindrome36(i, 10) && ispalindrome36(i, 2))
-            xsum += i;
-
+        if (ispalindrome36(i, 10) && ispalindrome36(i, 2)) xsum += i;
     return xsum;
 }
 
