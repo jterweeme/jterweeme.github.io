@@ -33,7 +33,15 @@ code em {
 #scene .car {
     position: absolute;
     top: 190px;
-    left: 390px;
+    cursor: pointer;
+}
+
+#scene #car1 {
+    left: 490px;
+}
+
+#scene #car2 {
+    left: 890px;
 }
 
 #scene svg#ampel {
@@ -55,6 +63,10 @@ code em {
 <a href="fotopuzzel/index.html">Puzzle</a>
 <a href="worst.html">WWW1</a>
 </nav>
+<audio>
+    <source src="horn.ogg" type="audio/ogg"/>
+</audio>
+
 <main style="width: 900px;">
 <h1>Verkeerspel</h1>
 <h2>Jasper ter Weeme</h2>
@@ -68,9 +80,23 @@ code em {
     <circle style="fill:gray" cx="85" cy="110" r="18"/>
     <circle style="fill:gray" cx="85" cy="150" r="18"/>
 </svg>
-<svg class="car">
+<svg id="car1" class="car">
     <path
        style="fill:blue;stroke:#ff0000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 37.299689,122.38377 C 37.352614,75.496111 104.3604,79.622588 104.3604,79.622588 l 14.32397,-22.070616 c 37.77143,-13.16009 108.11192,-8.915944 133.73917,49.987758 l 9.5006,15.34711 -19.58585,1.46163 c 0,0 -6.86724,-21.3893 -26.60167,-21.48596 -20.38464,-0.0999 -22.41436,26.21486 -22.41436,26.21486 L 90.036421,131.3643 c 0,0 -4.474927,-26.83407 -22.070615,-28.8672 -17.389404,-2.0093 -25.636158,20.55733 -30.666117,19.88667 z"/>
+    <path
+       id="path1053"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:0.06174354;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 77.771507,127.06085 a 13.022461,13.022461 0 0 0 -13.022461,-13.02246 13.022461,13.022461 0 0 0 -13.022461,13.02246 13.022461,13.022461 0 0 0 13.022461,13.02246 13.022461,13.022461 0 0 0 13.022461,-13.02246 z m 6.639271,0.35705 A 19.368229,19.368229 0 0 1 65.042549,146.78613 19.368229,19.368229 0 0 1 45.67432,127.4179 19.368229,19.368229 0 0 1 65.042549,108.04967 19.368229,19.368229 0 0 1 84.410778,127.4179 Z" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path1053-3"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:0.06174354;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 230.8035,123.44666 a 13.022461,13.022461 0 0 0 -13.02246,-13.02246 13.022461,13.022461 0 0 0 -13.02246,13.02246 13.022461,13.022461 0 0 0 13.02246,13.02246 13.022461,13.022461 0 0 0 13.02246,-13.02246 z m 6.63928,0.35705 a 19.368229,19.368229 0 0 1 -19.36823,19.36823 19.368229,19.368229 0 0 1 -19.36823,-19.36823 19.368229,19.368229 0 0 1 19.36823,-19.36823 19.368229,19.368229 0 0 1 19.36823,19.36823 z" />
+</svg>
+<svg id="car2" class="car">
+    <path
+       style="fill:red;stroke:#ff0000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 37.299689,122.38377 C 37.352614,75.496111 104.3604,79.622588 104.3604,79.622588 l 14.32397,-22.070616 c 37.77143,-13.16009 108.11192,-8.915944 133.73917,49.987758 l 9.5006,15.34711 -19.58585,1.46163 c 0,0 -6.86724,-21.3893 -26.60167,-21.48596 -20.38464,-0.0999 -22.41436,26.21486 -22.41436,26.21486 L 90.036421,131.3643 c 0,0 -4.474927,-26.83407 -22.070615,-28.8672 -17.389404,-2.0093 -25.636158,20.55733 -30.666117,19.88667 z"/>
     <path
        id="path1053"
@@ -141,6 +167,17 @@ for (var i = 0; i &lt; l.length; i++)
 som;
 </code>
 <p>
+Een for-loop bestaat uit drie delen, gescheiden door punt-komma's. Het eerste
+deel wordt voorafgaand aan de loop uitgevoerd. Hier worden meestal variabelen
+gedefinieerd. In het tweede deel wordt een vergelijking uitgevoerd, alleen
+wanneer deze waar is, wordt de code onder de for-loop uitgevoerd. Het derde
+deel van de for-loop wordt elke keer uitgevoerd nadat de computer een keer
+door de code van de loop is heengelopen. Meestal worden er in dit deel
+variabelen opgehoogd of juist verlaagd, die gebruikt worden in de vergelijking
+uit het tweede deel. Vaak volgen programmeurs dus een bepaald stramien bij het
+invullen van een for-loop, maar dit is niet verplicht.
+</p>
+<p>
 Deze code zal de som van alle items in de lijst weergeven, er zal 1278 als
 antwoord uitkomen.
 </p>
@@ -160,6 +197,11 @@ function isPrime(n) {
 isPrime(1);
 isPrime(7);
 </code>
+<p>
+In deze functie wordt ook een "if" statement gebruikt. Bij dit statement wordt
+een vergelijking berekend en wanneer deze waar is wordt de code achter
+het if-statement uitgevoerd.
+</p>
 <p>
 Nu gaan we een functie maken die door een array heen loopt en aangeeft
 welke nummers priem zijn:
@@ -294,6 +336,9 @@ Nu gaan we over tot de auto's.
 <code>
 car1.onclick = function() { car1.style = "left: 100px;"; }
 </code>
+<p>
+Als je nu op de voorste auto klikt, wordt deze verplaatst naar links.
+</p>
 </div>
 </main>
 </body>

@@ -10,7 +10,26 @@ Antwoord: 233,168
 """
 
 def opdracht1(limit = 1000):
+    def summation(n, xmax):
+        xlen = xmax // n
+        return ((xlen * (xlen + 1)) // 2) * n
+    return summation(3, limit - 1) + summation(5, limit - 1) - summation(15, limit - 1)
+
+def opdracht1b(limit = 1000):
     return sum({x for x in range(3,limit,3)} | {x for x in range(5,limit,5)})
+
+def opdracht1c(limit = 1000):
+    sum3 = sum([x for x in range(3,limit,3)])
+    sum5 = sum([x for x in range(5,limit,5)])
+    sum15 = sum([x for x in range(15,limit,15)])
+    return sum3 + sum5 - sum15
+
+def opdracht1d(limit = 1000):
+    xsum = 0
+    for x in range(1, limit):
+        if x % 3 == 0 or x % 5 == 0:
+            xsum += x
+    return xsum
 
 """
 #2 Even Fibonacci numbers
