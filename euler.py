@@ -45,7 +45,7 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 """
 
-def fibonacci(term1 = 1, term2 = 2, xmax = 4000000):
+def fibonacci(term1 = 1, term2 = 2, xmax = 4*10**6):
     temp, xsum = 0, 0
     if term1 % 2 == 0:  #is de eerste invoer ook al even?
         xsum += term1
@@ -442,9 +442,7 @@ def opdracht12(divisors = 500):
         p = 3
         while n != 1:
             count = 0
-            while n % p == 0:
-                count += 1
-                n = n//p
+            while n % p == 0: count += 1; n = n//p
             divisors = divisors * (count + 1)
             p += 2
         return divisors
@@ -748,8 +746,7 @@ oplossing 2:
 def opdracht15b(size = 20):
     def factorial(n):
         xsum = 1
-        for a in range(n, 0, -1):
-            xsum *= a
+        for a in range(n, 0, -1): xsum *= a
         return xsum
     return factorial(2 * size) // factorial(size) // factorial(size)
 
@@ -1795,8 +1792,7 @@ def opdracht23():
             if n%i == 0:
                 upper = n//i
                 total += upper
-                if upper != i:
-                    total += i
+                if upper != i: total += i
             i += 1
         return total
     def isabundant(n):
@@ -2065,8 +2061,7 @@ Antwoord: 9,183
 def opdracht29(al = range(2, 100+1), bl = range(2,100+1)):
     lst = set()
     for a in al:
-        for b in bl:
-            lst.add(a**b)
+        for b in bl: lst.add(a**b)
     return len(lst)
 
 """
@@ -2095,16 +2090,14 @@ Antwoord: 443,839
 
 def opdracht30(p = 5):
     def digits(n):
-        while n > 0: yield n % 10; n = n // 10;
+        while n: yield n % 10; n = n // 10;
     def test(n, p):
         xsum = 0
-        for d in digits(n):
-            xsum += d**p
+        for d in digits(n): xsum += d**p
         return xsum == n
     xsum = 0
-    for i in range(2, 1000000):
-        if test(i, p):
-            xsum += i
+    for i in range(2, 10**6):
+        if test(i, p): xsum += i
     return xsum
 
 """
@@ -2150,14 +2143,24 @@ Antwoord: 45,228
 """
 
 def opdracht32():
-    def is_pandigital(n, s=9):
-        n=str(n);
-        return len(n)==s and not '1234567890'[:s].strip(n)
+    def hasDigitsOnce(n, nset):
+        for i in n:
+            if i in nset: nset.remove(i)
+            else: return False
+        return True
+    def isPandigital(n):
+        return hasDigitsOnce(n, [i for i in range(1, len(n) + 1)])
     p = set()
+    def arrize(n):
+        arr = []
+        while n: arr.append(n % 10); n = n // 10
+        arr.reverse()
+        return arr
     for i in range(2,  60):
-        start = 1234 if i < 10 else 123 
-        for j in range(start, 10000//i):
-            if is_pandigital(str(i) + str(j) + str(i*j)): p.add(i*j)
+        start = 1234 if i < 10 else 123
+        for j in range(start, 10**4//i):
+            if isPandigital(arrize(i) + arrize(j) + arrize(i*j)):
+                p.add(i*j)
     return sum(p)
 
 """
@@ -2208,7 +2211,7 @@ def findFactorialSum():
     total_sum = 0
     def facsumdig(n):
         def digits(n):
-            while n > 0: yield n % 10; n = n // 10;
+            while n: yield n % 10; n = n // 10;
         return sum([factorials[x] for x in digits(n)]);
     for k in range(10, factorials[9] * 7): # 9999999 is way more than its fact-sum
         if facsumdig(k) == k:
