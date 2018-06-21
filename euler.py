@@ -2239,7 +2239,7 @@ Antwoord: 55
 939391, 993319, 999331
 """
 
-def opdracht35(xmax = 999999):
+def opdracht35(xmax = 10**6-1):
     def iscircular(n, lst):
         def rotations(n):
             def decimals(n):
@@ -2294,7 +2294,7 @@ Antwoord: 872,187
 15351 + 32223 + 39993 + 53235 + 53835 + 73737 + 585585 = 872187
 """
 
-def opdracht36(r = range(1,1000000)):
+def opdracht36(r = range(1,10**6)):
     def ispalindrome(n, base = 10):
         temp = n
         rev = 0

@@ -9,7 +9,7 @@
 <a href="#s22">22</a>, <a href="#s23">23</a>, <a href="#s24">24</a>, <a href="#s25">25</a>,
 <a href="#s26">26</a>, <a href="#s27">27</a>, <a href="#s28">28</a>, <a href="#s29">29</a>,
 <a href="#s30">30</a>, <a href="#s31">31</a>, <a href="#s32">32</a>, <a href="#s33">33</a>,
-<a href="#s34">34</a>, <a href="#s39">39</a>,
+<a href="#s34">34</a>, <a href="#s36">36</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>,
 <a href="#s48">48</a>, <a href="#s50">50</a>
 
@@ -2212,8 +2212,7 @@ function opdracht33()
 {   var d = 1;
     for (var i = 1; i &lt; 10; i++)
     {   for (var j = 1; j &lt; i; j++)
-        {   var q = Math.floor((9*j*i) / (10*j-i));
-            var r = (9*j*i) % (10*j-i);
+        {   var a = 9*j*i, b = 10*j-i, q = Math.floor(a / b), r = a % b;
             if (r == 0 &amp;&amp; q &lt;= 9)
                 d *= i/j;
         }
@@ -2256,6 +2255,37 @@ function opdracht34() {
 alert(opdracht34());    // should give 40,730
 </code>
 <button onclick="mycopy2('s34');">Copy</button>
+</section>
+
+<section id="s36">
+<h2>#36: Double-base palindromes</h2>
+<p>
+The decimal number, 585 = 1001001001_2 (binary),
+is palindromic in both bases.
+</p>
+<p>
+Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+</p>
+<p>
+(Please note that the palindromic number, in either base, may not include leading zeros.)
+</p>
+<code>
+function opdracht36(limit = 10**6)
+{   function ispalindrome(n, base = 10)
+    {   var rev = 0;
+        for (var temp = n; temp != 0; temp = Math.floor(temp/base))
+            rev = rev * base + temp % base;
+        return n == rev;
+    }
+    var xsum = 0;
+    for (var i = 1; i &lt; limit; i++)
+        if (ispalindrome(i, 10) &amp;&amp; ispalindrome(i, 2))
+            xsum += i;
+    return xsum;
+}
+alert(opdracht36());    // should give 872,187
+</code>
+<button onclick="mycopy2('s36');">Copy</button>
 </section>
 
 <section id="s39">
