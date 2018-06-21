@@ -8,7 +8,7 @@
 <a href="#s19">19</a>, <a href="#s20">20</a>, <a href="#s21">21</a>,
 <a href="#s22">22</a>, <a href="#s23">23</a>, <a href="#s24">24</a>, <a href="#s25">25</a>,
 <a href="#s26">26</a>, <a href="#s27">27</a>, <a href="#s28">28</a>, <a href="#s29">29</a>,
-<a href="#s30">30</a>, <a href="#s31">31</a>, <a href="#s32">32</a>,
+<a href="#s30">30</a>, <a href="#s31">31</a>, <a href="#s32">32</a>, <a href="#s33">33</a>,
 <a href="#s34">34</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>,
 <a href="#s48">48</a>, <a href="#s50">50</a>
@@ -50,7 +50,7 @@ do not exceed four million, find the sum of the even-valued terms.
 </p>
 <code>
 function opdracht2()
-{   var xmax = 4000000, term1 = 1, term2 = 2, temp = 0, xsum = 0;
+{   var xmax = 4*10**6, term1 = 1, term2 = 2, temp = 0, xsum = 0;
     if (term1 % 2 == 0) xsum += term1;
     if (term2 % 2 == 0) xsum += term2;
     while ((temp = term1 + term2) &lt;= xmax)
@@ -2187,6 +2187,42 @@ function opdracht32()
 alert(opdracht32());    // should give 45,228
 </code>
 <button onclick="mycopy2('s32');">Copy</button>
+</section>
+
+<section id="s33">
+<h2>#33: Digit cancelling fractions</h2>
+<p>
+The fraction 49/98 is a curious fraction, as an inexperienced
+mathematician in attempting to simplify it may incorrectly believe
+that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+</p>
+<p>
+We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+</p>
+<p>
+There are exactly four non-trivial examples of this type of fraction, less
+than one in value, and containing two digits in the numerator and denominator.
+</p>
+<p>
+If the product of these four fractions is given in its
+lowest common terms, find the value of the denominator.
+</p>
+<code>
+function opdracht33()
+{   var d = 1;
+    for (var i = 1; i &lt; 10; i++)
+    {   for (var j = 1; j &lt; i; j++)
+        {   var q = Math.floor((9*j*i) / (10*j-i));
+            var r = (9*j*i) % (10*j-i);
+            if (r == 0 &amp;&amp; q &lt;= 9)
+                d *= i/j;
+        }
+    }
+    return Math.floor(d);
+}
+alert(opdracht33());    // should give 100
+</code>
+<button onclick="mycopy2('s33');">Copy</button>
 </section>
 
 <section id="s34">
