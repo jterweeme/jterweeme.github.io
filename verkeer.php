@@ -28,7 +28,9 @@ code em {
 }
 
 #scene {
+    width: 1100px;
     position: relative;
+    overflow: hidden;
 }
 
 #scene .car {
@@ -38,17 +40,17 @@ code em {
 }
 
 #scene #car1 {
-    left: 490px;
+    right: 150px;
 }
 
 #scene #car2 {
-    left: 890px;
+    right: -90px;
 }
 
 #scene svg#ampel {
     position: absolute;
-    top: 50px;
-    left: 390px;
+    top: -30px;
+    left: 520px;
 }
 </style>
 </head>
@@ -69,7 +71,7 @@ echo $mm;
 <time>15 Juni 2018</time>
 <figure id="scene" class="verkeer">
 <img class="weg" src="weg.svg"/>
-<svg id="ampel" width="210mm" height="297mm">
+<svg id="ampel" height="300px">
     <rect style="stroke:#ff0000;" width="15" height="115" x="77" y="161"/>
     <rect style="stroke:#ff0000;" width="75" height="141" x="50" y="40"/>
     <circle style="fill:gray" cx="85" cy="70" r="18"/>
@@ -335,6 +337,21 @@ car1.onclick = function() { car1.style = "left: 100px;"; }
 <p>
 Als je nu op de voorste auto klikt, wordt deze verplaatst naar links.
 </p>
+<code>
+function myMove() {
+  var elem = car1;  
+  var pos = 150;
+  var id = setInterval(frame, 5);
+  function frame() {
+    if (pos == 550) {
+      clearInterval(id);
+    } else {
+      pos++; 
+      elem.style.right = pos + 'px'; 
+    }
+  }
+}
+</code>
 </div>
 </main>
 </body>

@@ -76,7 +76,7 @@ function mycopy(x) {
 <a href="#s22">22</a>, <a href="#s23">23</a>, <a href="#s24">24</a>, <a href="#s25">25</a>,
 <a href="#s26">26</a>, <a href="#s27">27</a>, <a href="#s28">28</a>, <a href="#s29">29</a>,
 <a href="#s30">30</a>, <a href="#s31">31</a>, <a href="#s32">32</a>, <a href="#s33">33</a>,
-<a href="#s34">34</a>, <a href="#s36">36</a>, <a href="#s39">39</a>,
+<a href="#s34">34</a>, <a href="#s35">35</a>, <a href="#s36">36</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>,
 <a href="#s48">48</a>, <a href="#s50">50</a>
 
@@ -776,7 +776,7 @@ Which starting number, under one million, produces the longest chain?
 
 NOTE: Once the chain starts the terms are allowed to go above one million.
 </p>
-<code>
+<code style="color: orange">
 function opdracht14() {
     function collatz(n) {
         var count = 1;
@@ -784,7 +784,7 @@ function opdracht14() {
         return count;
     }
     best_start = 0, best_length = 0;
-    for (var i = 1; i &lt; 1000000; i++) {
+    for (var i = 1; i &lt; 10**6; i++) {
         var len = collatz(i);
         if (len &gt; best_length) best_start = i, best_length = len;
     }
@@ -2324,6 +2324,65 @@ alert(opdracht34());    // should give 40,730
 <button onclick="mycopy2('s34');">Copy</button>
 </section>
 
+<section id="s35">
+<h2>#35: Circular primes</h2>
+<p>
+The number, 197, is called a circular prime because all rotations
+of the digits: 197, 971, and 719, are themselves prime.
+</p>
+<p>
+There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+</p>
+<p>
+How many circular primes are there below one million?
+</p>
+<code>
+function opdracht35(limit = 10**6-1)
+{   function binarySearch(d, n)
+    {   var first = 0, last = d.length - 1;
+        var middle = Math.floor((first + last) / 2);
+        while (first &lt;= last)
+        {   if (d[middle] &lt; n) first = middle + 1;
+            else if (d[middle] == n) return true;
+            else last = middle - 1;
+            middle = Math.floor((first + last)/2);
+        }
+        return false;
+    }
+    function isCircular(n, lst)
+    {   function rotations(n)
+        {   function decimals(n) { var i = 0; while (n &gt; 10**i) i++; return i; }
+            function rotate(n)
+            {   var length = decimals(n), digit = n % 10,n = Math.floor(n / 10);
+                n += digit * 10**(length - 1);
+                return n;
+            }
+            var ret = [];
+            for (var i = 0; i &lt; decimals(n); i++) n = rotate(n), ret.push(n);
+            return ret;
+        }
+        var rts = rotations(n);
+        for (var i = 0; i &lt; rts.length; i++)
+            if (binarySearch(lst, rts[i]) == false)
+                return false;
+        return true;
+    }
+    var a = Array(limit).fill(true);
+    a[0] = a[1] = false;
+    for (var p = 2; p * p &lt;= limit; p++)
+        if (a[p] == true) for (i = p * 2; i &lt;= limit; i += p) a[i] = false;
+    var primes = [];
+    for (var i = 0; i &lt; a.length; i++) if (a[i]) primes.push(i);
+    cprimes = [];
+    for (var i = 0; i &lt; primes.length; i++)
+        if (isCircular(primes[i], primes)) cprimes.push(primes[i]);
+    return cprimes.length;
+}
+alert(opdracht35());    // should give 55
+</code>
+<button onclick="mycopy2('s35');">Copy</button>
+</section>
+
 <section id="s36">
 <h2>#36: Double-base palindromes</h2>
 <p>
@@ -2465,7 +2524,7 @@ adds to a prime, contains 21 terms, and is equal to 953.
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 </p>
 <code>
-function opdracht50(max = 999999) {
+function opdracht50(max = 10**6-1) {
     var sieve = Array(max + 1).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i &lt; sieve.length; i++)
