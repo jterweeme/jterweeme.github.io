@@ -45,7 +45,7 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 """
 
-def fibonacci(term1 = 1, term2 = 2, xmax = 4*10**6):
+def opdracht2(term1 = 1, term2 = 2, xmax = 4*10**6):
     temp, xsum = 0, 0
     if term1 % 2 == 0:  #is de eerste invoer ook al even?
         xsum += term1
@@ -697,14 +697,13 @@ NOTE: Once the chain starts the terms are allowed to go above one million.
 Antwoord: 837,799
 """
 
-def opdracht14(limit = 1000000):
+def opdracht14(limit = 10**6):
     def collatz(num, lut):
         count = 1
         n = num
         while n > 1:
-            if len(lut) >= n:
-                if lut[n - 1] > 0:
-                    return count + lut[n - 1]
+            if len(lut) >= n and lut[n - 1] > 0:
+                return count + lut[n - 1]
             n = n >> 1 if n % 2 == 0 else n * 3 + 1
             count += 1
         return count
@@ -2029,6 +2028,16 @@ Antwoord: 669,171,001
 
 def opdracht28(root = 1001):
     xsum = 1
+    ring = 24
+    step = 52
+    for i in range(root >> 1):
+        xsum += ring
+        ring += step
+        step += 32
+    return xsum
+
+def opdracht28b(root = 1001):
+    xsum = 1
     foo = 1
     step = 2
     while foo < root * root:
@@ -2864,7 +2873,7 @@ def runn2(n = 1):
     if n == 1:
         return opdracht1()
     if n == 2:
-        return fibonacci()
+        return opdracht2()
     if n == 3:
         return maxprimefactor()
     if n == 4:

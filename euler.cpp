@@ -29,10 +29,13 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 */
 
-static uint32_t multiples1(uint32_t limit = 1000) {
-    uint32_t xsum = 0;
-    for (uint32_t x = 1; x < limit; x++) if (x % 3 == 0 || x % 5 == 0) xsum += x;
-    return xsum;
+static uint32_t summation1(uint32_t n, uint32_t xmax)
+{   uint32_t xlen = xmax / n;
+    return ((xlen * (xlen + 1)) >> 1) * n;
+}
+
+static uint32_t multiples1(uint32_t limit = 1000)
+{   return summation1(3, limit - 1) + summation1(5, limit - 1) - summation1(15, limit - 1);
 }
 
 /*
@@ -47,30 +50,14 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 */
 
-static uint32_t fibonacci(uint32_t term1 = 1, uint32_t term2 = 2, uint32_t xmax = 4000000)
-{
-    uint32_t xterm1 = term1, xterm2 = term2, temp = 0, xsum = 0;
-
-    if (xterm1 % 2 == 0)
-        xsum += xterm1;
-
-    if (xterm2 % 2 == 0)
-        xsum += xterm2;
-
+static uint32_t fibonacci(uint32_t xmax = 4000000)
+{   uint32_t term1 = 1, term2 = 2, temp = 0, xsum = 2;
     while (true)
-    {
-        temp = xterm1 + xterm2;
-
-        if (temp > xmax)
-            break;
-
-        if (temp % 2 == 0)
-            xsum += temp;
-
-        xterm1 = xterm2;
-        xterm2 = temp;
+    {   temp = term1 + term2;
+        if (temp > xmax) break;
+        if (temp % 2 == 0) xsum += temp;
+        term1 = term2, term2 = temp;
     }
-
     return xsum;
 }
 
@@ -93,52 +80,37 @@ public:
 };
 
 Primes::Primes()
-{
-    _primes.push_back(2);
+{   _primes.push_back(2);
     _primes.push_back(3);
 }
 
 bool Primes::test(uint64_t p)
-{
-    for (uint64_t i = 2; i < p; i++)
-        if (p % i == 0)
-            return false;
-    
+{   for (uint64_t i = 2; i < p; i++)
+        if (p % i == 0) return false;
     return true;
 }
 
 void Primes::_add()
-{
-    uint64_t p = _primes.back() + 2;
-    
-    while (test(p) == false)
-        p += 2;
-
+{   uint64_t p = _primes.back() + 2;
+    while (test(p) == false) p += 2;
     _primes.push_back(p);
 }
 
 uint32_t Primes::get(uint16_t i)
-{
-    while (_primes.size() <= i)
-        _add();
-
+{   while (_primes.size() <= i) _add();
     return _primes[i];
 }
 
 static uint64_t primefactor(Primes &primes, uint64_t n)
-{
-    for (uint64_t i = 0; ; i++)
+{   for (uint64_t i = 0; ; i++)
         if (n % primes.get(i) == 0)
             return primes.get(i);
 }
 
 static void primefactors3(vector<uint64_t> &factors, uint64_t n)
-{
-    Primes primes;
-
+{   Primes primes;
     while (true)
-    {
-        uint64_t factor = primefactor(primes, n);
+    {   uint64_t factor = primefactor(primes, n);
         factors.push_back(factor);
 
         if (factor == n)
@@ -170,21 +142,17 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-static bool ispalindrome(uint32_t n) {
-    uint32_t temp = n, rev = 0;
+static bool ispalindrome(uint32_t n)
+{   uint32_t temp = n, rev = 0;
     while (temp != 0) rev = rev * 10 + temp % 10, temp = temp / 10;
     return n == rev;
 }
 
 static uint32_t opdracht4()
-{
-    uint32_t best = 0;
+{   uint32_t best = 0;
     for (uint32_t a = 0; a < 1000; a++)
-    {
-        for (uint32_t b = 0; b < 1000; b++)
-        {
-            uint32_t c = a * b;
-
+    {   for (uint32_t b = 0; b < 1000; b++)
+        {   uint32_t c = a * b;
             if (ispalindrome(c) && c > best)
                 best = c;
         }
@@ -202,19 +170,15 @@ divisible by all of the numbers from 1 to 20?
 Antwoord: 232,792,560
 */
 
-static inline bool isdivisible(uint32_t n, uint32_t lower, uint32_t max) {
-    for (uint32_t i = lower; i <= max; i++) if (n % i > 0) return false;
+static inline bool isdivisible(uint32_t n, uint32_t lower, uint32_t max)
+{   for (uint32_t i = lower; i <= max; i++) if (n % i > 0) return false;
     return true;
 }
 
 static uint32_t divide(uint32_t lower = 11, uint32_t max = 20)
-{
-    uint32_t start = 2520;
-    uint32_t number = start;
-    
+{   uint32_t start = 2520, number = start;
     while (isdivisible(number, lower, max) == false)
         number += start;
-
     return number;
 }
 
@@ -234,8 +198,8 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100) {
-    uint32_t sumsquare = 0, squaresum = 0;
+static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100)
+{   uint32_t sumsquare = 0, squaresum = 0;
     for (uint32_t i = min; i <= max; i++) sumsquare += i * i;
     for (uint32_t i = min; i <= max; i++) squaresum += i;
     squaresum = squaresum * squaresum;
@@ -263,25 +227,11 @@ static uint32_t reducer7(uint32_t n)
 }
 
 static uint32_t opdracht7(uint32_t n = 10001)
-{
-    uint32_t p = 3;
-    uint32_t sqp = reducer7(p);
-    uint32_t ret = 0;
-
+{   uint32_t p = 3, sqp = reducer7(p), ret = 0;
     for (uint32_t j = 0; j < n - 1; j++)
-    {
-        for (uint32_t i = 2; i < sqp; i++)
-        {
-            if (p % i == 0)
-            {
-                p++;
-                sqp = reducer7(p);
-                i = 1;
-            }
-        }
-        ret = p;
-        p += 2;
-        sqp = reducer7(p);
+    {   for (uint32_t i = 2; i < sqp; i++)
+            if (p % i == 0) sqp = reducer7(++p), i = 1;
+        ret = p, p += 2, sqp = reducer7(p);
     }
     return ret;
 }
@@ -570,50 +520,30 @@ What is the value of the first triangle number to have over five hundred divisor
 Antwoord: 76,576,500
 */
 
-static uint32_t triangler(uint64_t n)
-{
-    return (n * (n + 1)) >> 1;
-}
-
 static uint32_t num_divisors(uint64_t n)
-{
-    if (n % 2 == 0) n = n >> 1;
+{   if (n % 2 == 0) n = n >> 1;
     uint32_t divisors = 1, count = 0;
     while (n % 2 == 0) count++, n = n >> 1;
     divisors = divisors * (count + 1);
     uint32_t p = 3;
-
-    while (n != 1) {
-        count = 0;
-        while (n % p == 0)
-        {
-            count++;
-            n = n / p;
-        }
-        divisors = divisors * (count + 1);
-        p += 2;
+    while (n != 1)
+    {   count = 0;
+        while (n % p == 0) count++, n = n / p;
+        divisors = divisors * (count + 1), p += 2;
     }
     return divisors;
 }
 
 static uint32_t find_triangular_index(uint16_t factor_limit = 500)
-{
-    uint32_t n = 1;
-    uint32_t lnum = num_divisors(n), rnum = num_divisors(n + 1);
-    
+{   uint32_t n = 1, lnum = num_divisors(n), rnum = num_divisors(n + 1);
     while (lnum * rnum < factor_limit)
-    {
-        n++;
-        lnum = rnum;
-        rnum = num_divisors(n + 1);
-    }
+        lnum = rnum, rnum = num_divisors(++n + 1);
     return n;
 }
 
 static uint32_t opdracht12(uint16_t divisors = 500)
-{
-    uint32_t index = find_triangular_index(divisors);
-    return triangler(index);
+{   uint32_t i = find_triangular_index(divisors);
+    return (i * (i + 1)) >> 1;
 }
 
 /*
@@ -891,33 +821,18 @@ Antwoord: 837,799
 */
 
 static uint32_t collatz(uint32_t n)
-{
-    uint32_t count = 1;
-    
-    while (n > 1)
-    {
-        n = n % 2 == 0 ? n >> 1 : n * 3 + 1;
-        count++;
-    }
-
+{   uint32_t count = 1;
+    while (n > 1) n = n % 2 == 0 ? n >> 1 : n * 3 + 1, count++;
     return count;
 }
 
 static uint32_t opdracht14(uint32_t lower = 1, uint32_t upper = 1000000)
-{
-    uint32_t best_start = 0, best_length = 0;
-
+{   uint32_t best_start = 0, best_length = 0;
     for (uint32_t i = lower; i < upper; i++)
-    {
-        uint32_t length = collatz(i);
-
+    {   uint32_t length = collatz(i);
         if (length > best_length)
-        {
-            best_start = i;
-            best_length = length;
-        }
+            best_start = i, best_length = length;
     }
-
     return best_start;
 }
 
@@ -933,15 +848,9 @@ Antwoord: 137,846,528,820
 */
 
 static uint64_t opdracht15(uint8_t size = 20)
-{
-    uint64_t paths = 1;
-
+{   uint64_t paths = 1;
     for (uint8_t i = 0; i < size; i++)
-    {
-        paths = paths * (2 * size - i);
-        paths = paths / (i + 1);
-    }
-
+        paths = (paths * (2 * size - i)) / (i + 1);
     return paths;
 }
 
@@ -2316,21 +2225,16 @@ void LongNumber25::set(uint64_t n)
 }
 
 void LongNumber25::add(LongNumber25 &n)
-{
-    uint8_t carry = 0;
-
+{   uint8_t carry = 0;
     for (uint16_t i = 0; i < 1500; i++)
-    {
-        _buf[i] += carry;
-        _buf[i] += n.decimal(i);
+    {   _buf[i] += carry + n.decimal(i);
         carry = _buf[i] / 10;
         _buf[i] = _buf[i] % 10;
     }
 }
 
 uint32_t opdracht25()
-{
-    uint8_t i = 0;
+{   uint8_t i = 0;
     uint16_t cnt = 2;
     LongNumber25 fib[3];
     fib[0].set(1);
@@ -2639,22 +2543,16 @@ lowest common terms, find the value of the denominator.
 Antwoord: 100
 */
 
-static uint64_t opdracht33()
-{
-    double d = 1;
-    
+static uint32_t opdracht33()
+{   double d = 1;
     for (uint32_t i = 1; i < 10; i++)
-    {
-        for (uint32_t j = 1; j < i; j++)
-        {
-            uint32_t q = (9 * j * i) / (10 * j - i);
-            uint32_t r = (9 * j * i) % (10 * j - i);
-
+    {   for (uint32_t j = 1; j < i; j++)
+        {   uint32_t a = 9 * j * i, b = 10 * j - i, q = a / b, r = a % b;
             if (r == 0 && q <= 9)
                 d *= i / (double)j;
         }
     }
-    return (uint64_t)d;
+    return (uint32_t)d;
 }
 
 /*

@@ -76,7 +76,8 @@ function mycopy(x) {
 <a href="#s22">22</a>, <a href="#s23">23</a>, <a href="#s24">24</a>, <a href="#s25">25</a>,
 <a href="#s26">26</a>, <a href="#s27">27</a>, <a href="#s28">28</a>, <a href="#s29">29</a>,
 <a href="#s30">30</a>, <a href="#s31">31</a>, <a href="#s32">32</a>, <a href="#s33">33</a>,
-<a href="#s34">34</a>, <a href="#s35">35</a>, <a href="#s36">36</a>, <a href="#s39">39</a>,
+<a href="#s34">34</a>, <a href="#s35">35</a>, <a href="#s36">36</a>,
+<a href="#s37">37</a>, <a href="#s38">38</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>,
 <a href="#s48">48</a>, <a href="#s50">50</a>
 
@@ -117,13 +118,10 @@ do not exceed four million, find the sum of the even-valued terms.
 </p>
 <code>
 function opdracht2()
-{   var xmax = 4*10**6, term1 = 1, term2 = 2, temp = 0, xsum = 0;
-    if (term1 % 2 == 0) xsum += term1;
-    if (term2 % 2 == 0) xsum += term2;
+{   var xmax = 4*10**6, term1 = 1, term2 = 2, temp = 0, xsum = 2;
     while ((temp = term1 + term2) &lt;= xmax)
     {   if (temp % 2 == 0) xsum += temp;
-        term1 = term2;
-        term2 = temp;
+        term1 = term2, term2 = temp;
     }
     return xsum;
 }
@@ -213,9 +211,9 @@ What is the smallest positive number that is evenly
 divisible by all of the numbers from 1 to 20?
 </p>
 <code>
-function opdracht5() {
-    function isdivisible(n, l) {
-        for (var i = 0; i &lt; l.length; i++) if (n % l[i] &gt; 0) return 0;
+function opdracht5()
+{   function isdivisible(n, l)
+    {   for (var i = 0; i &lt; l.length; i++) if (n % l[i] &gt; 0) return 0;
         return 1;
     }
     var start = 2520, number = start;
@@ -267,19 +265,16 @@ By listing the first six prime numbers: 2, 3, 5,
 What is the 10 001st prime number?
 </p>
 <code>
-function opdracht7() {
-    function reducer(n, presets = [300, 100, 8]) {
-        for (var i = 0; i &lt; presets.length; i++)
+function opdracht7()
+{   function reducer(n, presets = [300, 100, 8])
+    {   for (var i = 0; i &lt; presets.length; i++)
             if (n &gt; presets[i] * presets[i]) return Math.floor(n / presets[i]);
         return n;
     }
-    var p = 3;
-    var sqp = reducer(p), ret = 0, n = 10001;
-    for (var j = 0; j &lt; n - 1; j++) {
-        for (var i = 2; i &lt; sqp; i++) if (p % i == 0) sqp = reducer(++p), i = 1;
-        ret = p;
-        p += 2;
-        sqp = reducer(p);
+    var p = 3, sqp = reducer(p), ret = 0, n = 10001;
+    for (var j = 0; j &lt; n - 1; j++)
+    {   for (var i = 2; i &lt; sqp; i++) if (p % i == 0) sqp = reducer(++p), i = 1;
+        ret = p, p += 2, sqp = reducer(p);
     }
     return ret;
 }
@@ -776,16 +771,21 @@ Which starting number, under one million, produces the longest chain?
 
 NOTE: Once the chain starts the terms are allowed to go above one million.
 </p>
-<code style="color: orange">
-function opdracht14() {
-    function collatz(n) {
-        var count = 1;
-        while (n &gt; 1) n = n % 2 == 0 ? Math.floor(n / 2) : n * 3 + 1, count++;
+<code>
+function opdracht14(limit = 10**6)
+{   function collatz(lut, num)
+    {   var count = 1, n = num;
+        while (n &gt; 1)
+        {   if (lut.length &gt;= n &amp;&amp; lut[n - 1] &gt; 0)
+                return count + lut[n - 1];
+            n = n % 2 == 0 ? Math.floor(n / 2) : n * 3 + 1, count++;
+        }
         return count;
     }
-    best_start = 0, best_length = 0;
-    for (var i = 1; i &lt; 10**6; i++) {
-        var len = collatz(i);
+    var lut = Array(limit - 1).fill(0), best_start = 0, best_length = 0;
+    for (var i = 1; i &lt; limit; i++)
+    {   var len = collatz(lut, i);
+        lut[i - 1] = len;
         if (len &gt; best_length) best_start = i, best_length = len;
     }
     return best_start;
@@ -2080,6 +2080,13 @@ in a 1001 by 1001 spiral formed in the same way?
 </p>
 <code>
 function opdracht28(root = 1001)
+{   var xsum = 1, ring = 24, step = 52;
+    for (var i = 0; i &lt; Math.floor(root / 2); i++)
+        xsum += ring, ring += step, step += 32;
+    return xsum;
+}
+
+function opdracht28b(root = 1001)
 {   var xsum = 1, foo = 1, step = 2;
     for (var step = 2; foo &lt; root * root; step += 2)
         for (var i = 0; i &lt; 4; i++) foo += step, xsum += foo;
@@ -2280,8 +2287,7 @@ function opdracht33()
     for (var i = 1; i &lt; 10; i++)
     {   for (var j = 1; j &lt; i; j++)
         {   var a = 9*j*i, b = 10*j-i, q = Math.floor(a / b), r = a % b;
-            if (r == 0 &amp;&amp; q &lt;= 9)
-                d *= i/j;
+            if (r == 0 &amp;&amp; q &lt;= 9) d *= i/j;
         }
     }
     return Math.floor(d);
@@ -2303,20 +2309,16 @@ Find the sum of all numbers which are equal to the sum of the factorial of their
 Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 </p>
 <code>
-function opdracht34() {
-    var factorials = [1,1,2,6,24,120,720,5040,40320,362880];
-    function facsumdig(n) {
-        var som = 0;
-        while (n &gt; 0) {
-            som += factorials[n % 10];
-            n = Math.floor(n / 10);
-        }
+function opdracht34()
+{   var factorials = [1,1,2,6,24,120,720,5040,40320,362880];
+    function facsumdig(n)
+    {   var som = 0;
+        while (n &gt; 0) som += factorials[n % 10], n = Math.floor(n / 10);
         return som;
     }
     var totalSum = 0;
     for (var k = 10; k &lt; factorials[9] * 7; k++)
-        if (facsumdig(k) == k)
-            totalSum += k;
+        if (facsumdig(k) == k) totalSum += k;
     return totalSum;
 }
 alert(opdracht34());    // should give 40,730
@@ -2340,12 +2342,12 @@ How many circular primes are there below one million?
 function opdracht35(limit = 10**6-1)
 {   function binarySearch(d, n)
     {   var first = 0, last = d.length - 1;
-        var middle = Math.floor((first + last) / 2);
+        var middle = (first + last) >> 1;
         while (first &lt;= last)
         {   if (d[middle] &lt; n) first = middle + 1;
             else if (d[middle] == n) return true;
             else last = middle - 1;
-            middle = Math.floor((first + last)/2);
+            middle = (first + last) >> 1;
         }
         return false;
     }
@@ -2369,8 +2371,8 @@ function opdracht35(limit = 10**6-1)
     }
     var a = Array(limit).fill(true);
     a[0] = a[1] = false;
-    for (var p = 2; p * p &lt;= limit; p++)
-        if (a[p] == true) for (i = p * 2; i &lt;= limit; i += p) a[i] = false;
+    for (var p = 2; p * p &lt;= a.length; p++)
+        if (a[p] == true) for (i = p * 2; i &lt;= a.length; i += p) a[i] = false;
     var primes = [];
     for (var i = 0; i &lt; a.length; i++) if (a[i]) primes.push(i);
     cprimes = [];
@@ -2412,6 +2414,75 @@ function opdracht36(limit = 10**6)
 alert(opdracht36());    // should give 872,187
 </code>
 <button onclick="mycopy2('s36');">Copy</button>
+</section>
+
+<section id="s37">
+<h2>#37: Truncatable primes</h2>
+<p>
+The number 3797 has an interesting property. Being prime itself, it is possible
+to continuously remove digits from left to right, and remain prime at each
+stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+</p>
+<p>
+Find the sum of the only eleven primes that are both
+truncatable from left to right and right to left.
+</p>
+<p>
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+</p>
+<code>
+function opdracht37()
+{
+    function binarySearch(d, n)
+    {   var first = 0, last = d.length - 1;
+        var middle = (first + last) >> 1;
+        while (first &lt;= last)
+        {   if (d[middle] &lt; n) first = middle + 1;
+            else if (d[middle] == n) return true;
+            else last = middle - 1;
+            middle = (first + last) >> 1;
+        }
+        return false;
+    }
+    function isrighttruncatable(primes, n)
+    {   while (n &gt; 10)
+        {   n = Math.floor(n / 10);
+            if (binarySearch(primes, n) == false) return false;
+        }
+        return true;
+    }
+    function islefttruncatable(primes, n)
+    {
+        function decimals(n) { var i = 0; while (n &gt; 10**i) i++; return i; }
+        function truncateLeft(n) { var exp = decimals(n) - 1; return n % 10**exp; }
+        var length = decimals(n);
+        for (var i = 0; i &lt; length; i++)
+        {   if (binarySearch(primes, n) == false) return false;
+            n = truncateLeft(n);
+        }
+        return true;
+    }
+    var a = Array(10**6).fill(true);
+    a[0] = a[1] = false;
+    for (var p = 2; p * p &lt;= a.length; p++)
+        if (a[p] == true) for (i = p * 2; i &lt;= a.length; i += p) a[i] = false;
+    var primes = [];
+    for (var i = 0; i &lt; a.length; i++) if (a[i]) primes.push(i);
+    var xsum = 0;
+    for (var i = 0; i &lt; primes.length; i++)
+    {   if (primes[i] &lt; 10) continue;
+        if (isrighttruncatable(primes, primes[i]) &amp;&amp; islefttruncatable(primes, primes[i]))
+             xsum += primes[i];
+    }
+    return xsum;
+}
+alert(opdracht37());    // should give 748,317
+</code>
+<button onclick="mycopy2('s37');">Copy</button>
+</section>
+
+<section id="s38">
+<h2>#38: Pandigital multiples</h2>
 </section>
 
 <section id="s39">
@@ -2458,11 +2529,11 @@ part, find the value of the following expression.
 d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
 </p>
 <code>
-function opdracht40(indices = [0,9,99,999,9999,99999,999999]) {
-    function getDigit(i) {
-        function getDig(n, i) {
-            var xdigits = [];
-            while (n > 0) { xdigits.push(n % 10); n = Math.floor(n / 10); }
+function opdracht40(indices = [0,9,99,999,9999,99999,999999])
+{   function getDigit(i) {
+        function getDig(n, i)
+        {   var xdigits = [];
+            while (n &gt; 0) xdigits.push(n % 10), n = Math.floor(n / 10);
             var end = xdigits.length - 1;
             return xdigits[end - i];
         }
@@ -2483,25 +2554,20 @@ alert(opdracht40());    // should give 210
 
 <section id="s48">
 <h2>#48: Self powers</h2>
-<p>
-The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
-</p>
-<p>
-Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
-</p>
+<p>The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.</p>
+<p>Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.</p>
 <code>
 /*
 adapted from
 https://www.mathblog.dk/project-euler-48-last-ten-digits/
 */
 
-function opdracht48() {
-    var result = 0, modulo = 10**10;
-    for (var i = 1; i &lt;= 1000; i++) {
-        var temp = i;
-        for (var j = 1; j &lt; i; j++) { temp *= i; temp %= modulo; }
-        result += temp;
-        result %= modulo;
+function opdracht48()
+{   var result = 0, modulo = 10**10;
+    for (var i = 1; i &lt;= 1000; i++)
+    {   var temp = i;
+        for (var j = 1; j &lt; i; j++) temp *= i, temp %= modulo;
+        result += temp, result %= modulo;
     }
     return result;
 }
@@ -2524,8 +2590,8 @@ adds to a prime, contains 21 terms, and is equal to 953.
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 </p>
 <code>
-function opdracht50(max = 10**6-1) {
-    var sieve = Array(max + 1).fill(true);
+function opdracht50(max = 10**6-1)
+{   var sieve = Array(max + 1).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i &lt; sieve.length; i++)
         if (sieve[i]) for (var j = i * i; j &lt; sieve.length; j+= i) sieve[j] = false;
@@ -2533,17 +2599,17 @@ function opdracht50(max = 10**6-1) {
     for (var i = 0; i &lt; sieve.length; i++) if (sieve[i]) primes.push(i);
     var best_prime = 0, best_sum = 0
     var xlen = primes.length;
-    function search(lst, n) {
-        for (var i = 0; i &lt; lst.length; i++) if (lst[i] == n) return true;
+    function linearSearch(lst, n)
+    {   for (var i = 0; i &lt; lst.length; i++) if (lst[i] == n) return true;
         return false;
     }
-    for (var i = 0; i &lt; xlen; i++) {
-        for (var j = i + best_sum; j &lt; xlen; j++) {
-            var xsum = 0;
+    for (var i = 0; i &lt; xlen; i++)
+    {   for (var j = i + best_sum; j &lt; xlen; j++)
+        {   var xsum = 0;
             for (var k = i; k &lt; j; k++) xsum += primes[k];
             if (xsum &gt; max) break;
             var sublen = (j + 1) - i;
-            if (search(primes, xsum) &amp;&amp; sublen &gt; best_sum)
+            if (linearSearch(primes, xsum) &amp;&amp; sublen &gt; best_sum)
                 best_sum = sublen, best_prime = xsum;
         }
     }
