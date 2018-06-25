@@ -45,12 +45,8 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 """
 
-def opdracht2(term1 = 1, term2 = 2, xmax = 4*10**6):
-    temp, xsum = 0, 0
-    if term1 % 2 == 0:  #is de eerste invoer ook al even?
-        xsum += term1
-    if term2 % 2 == 0:
-        xsum += term2
+def opdracht2(xmax = 4*10**6):
+    temp, xsum, term1, term2 = 0, 2, 1, 2
     while True:
         temp = term1 + term2
         if temp > xmax:
@@ -2827,6 +2823,103 @@ def opdracht48():
     return sum([x**x for x in range(1,1001)]) % 10**10
 
 """
+#49: Prime permutations
+
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+
+What 12-digit number do you form by concatenating the three terms in this sequence?
+
+Antwoord: 296,962,999,629
+"""
+
+def opdracht49():
+    def sequences():
+        def sieve(limit):
+            a = [True] * limit
+            a[0] = a[1] = False
+            for (i, isprime) in enumerate(a):
+                if isprime:
+                    yield i
+                    for n in range(i * i, limit, i):
+                        a[n] = False
+        def perms(n):
+            def permutations(iterable, r=None):
+                pool = tuple(iterable)
+                n = len(pool)
+                r = n if r is None else r
+                if r > n:
+                    return
+                indices = list(range(n))
+                cycles = list(range(n, n-r, -1))
+                yield tuple(pool[i] for i in indices[:r])
+                while n:
+                    for i in reversed(range(r)):
+                        cycles[i] -= 1
+                        if cycles[i] == 0:
+                            indices[i:] = indices[i+1:] + indices[i:i+1]
+                            cycles[i] = n - i
+                        else:
+                            j = cycles[i]
+                            indices[i], indices[-j] = indices[-j], indices[i]
+                            yield tuple(pool[i] for i in indices[:r])
+                            break
+                    else:
+                        return
+            def split(n):
+                ret = []
+                while n:
+                    ret.append(n % 10)
+                    n = n // 10
+                return tuple(reversed(ret))
+            def merge(n):
+                ret = 0
+                for i, a in enumerate(reversed(n)):
+                    ret += a*10**i
+                return ret
+            return [merge(x) for x in permutations(split(n))]
+        def perms4(n):
+            def swap(n, i1, i2):
+                def dig(n, i):
+                    return n // 10**i % 10
+                return n-dig(n,i1)*10**i1-dig(n,i2)*10**i2+dig(n,i1)*10**i2+dig(n,i2)*10**i1;
+            def foo(p):
+                p.append(swap(p[-1], 0, 1))
+                p.append(swap(p[-2], 1, 2))
+                p.append(swap(p[-1], 0, 1))
+                p.append(swap(p[-3], 1, 2))
+                p.append(swap(p[-1], 0, 1))
+            p = list()
+            p.append(n)
+            foo(p)
+            for i in range(-6, -15, -4):
+                p.append(swap(p[i], 2, 3))
+                foo(p)
+            return p
+        sprimes4 = {x for x in sieve(10**4) if x >= 1000}
+        while len(sprimes4) > 0:
+            for p in sprimes4:
+                tmp = set(perms(p)) & sprimes4
+                yield sorted(tmp)
+                sprimes4 -= tmp
+                break   # we willen 1 item per loop
+    lseq = list(sequences())
+    def check(a):
+        for s in a:
+            if (s + 3330 in a) and (s + 6660 in a):
+                return (s + 6660) + (s + 3330) * 10**4 + s * 10**8
+        return 0
+    for s in lseq:
+        if check(s):
+            return check(s)
+    return 0
+
+"""
 #50: Consecutive prime sum
 
 The prime 41, can be written as the sum of six consecutive primes:
@@ -2839,7 +2932,7 @@ The longest sum of consecutive primes below one-thousand that adds to a prime, c
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 """
 
-def opdracht50(limit = 1000000):
+def opdracht50(limit = 10**6):
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
@@ -2954,10 +3047,12 @@ def runn2(n = 1):
         return opdracht41()
     if n == 42:
         return opdracht42()
-    if n in [43,44,45,46,47,49]:
+    if n in [43,44,45,46,47]:
         return 0
     if n == 48:
         return opdracht48()
+    if n == 49:
+        return opdracht49()
     if n == 50:
         return opdracht50()
     return 0
@@ -2974,7 +3069,6 @@ answers[44 - 1] = 0
 answers[45 - 1] = 0
 answers[46 - 1] = 0
 answers[47 - 1] = 0
-answers[49 - 1] = 0
 
 import time
 import math

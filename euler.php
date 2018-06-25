@@ -45,14 +45,6 @@ function mycopy2(x) {
     clipboard.select();
     document.execCommand("copy");
 }
-
-function mycopy(x) {
-    var copyText = document.getElementById(x);
-    var clipboard = document.getElementById("clipboard");
-    clipboard.innerHTML = copyText.innerHTML;
-    clipboard.select();
-    document.execCommand("copy");
-}
 </script>
 </head>
 <body>

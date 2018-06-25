@@ -44,14 +44,6 @@ function mycopy2(x) {
     clipboard.select();
     document.execCommand("copy");
 }
-
-function mycopy(x) {
-    var copyText = document.getElementById(x);
-    var clipboard = document.getElementById("clipboard");
-    clipboard.innerHTML = copyText.innerHTML;
-    clipboard.select();
-    document.execCommand("copy");
-}
 </script>
 </head>
 <body>
@@ -79,7 +71,7 @@ function mycopy(x) {
 <a href="#s34">34</a>, <a href="#s35">35</a>, <a href="#s36">36</a>,
 <a href="#s37">37</a>, <a href="#s38">38</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>,
-<a href="#s48">48</a>, <a href="#s50">50</a>
+<a href="#s48">48</a>, <a href="#s49">49</a>, <a href="#s50">50</a>
 
 <section id="s1">
 <h2>#1: Multiples of 3 and 5</h2>
@@ -346,10 +338,10 @@ There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 Find the product abc.
 </p>
 <code>
-function opdracht9(search = 1000) {
-    for (var a = 1; a &lt; search - 1; a++) {
-        for (var b = 1; b &lt; search - a; b++) {
-            var c = search - a - b;
+function opdracht9(search = 1000)
+{   for (var a = 1; a &lt; search - 1; a++)
+    {   for (var b = 1; b &lt; search - a; b++)
+        {   var c = search - a - b;
             if (a * a + b * b == c * c) return a * b * c;
         }
     }
@@ -369,13 +361,13 @@ The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
 Find the sum of all the primes below two million.
 </p>
 <code>
-function opdracht10(max = 2*10**6 - 1) {
-    var v = Array(max).fill(true);
+function opdracht10(limit = 2*10**6)
+{   var v = Array(limit).fill(true);
     v[0] = v[1] = false;
-    for (var p = 2; p * p &lt;= max; p++)
-        if (v[p] == true) for (i = p * 2; i &lt;= max; i += p) v[i] = false;
+    for (var p = 2; p * p &lt; v.length; p++)
+        if (v[p] == true) for (i = p * 2; i &lt;= v.length; i += p) v[i] = false;
     var sum = 0;
-    for (i = 1; i &lt;= max; i++) sum += v[i] == true ? i : 0;
+    for (var i = 0; i &lt; v.length; i++) sum += v[i] == true ? i : 0;
     return sum;
 }
 alert(opdracht10());    // should give 142,913,828,922
@@ -775,22 +767,23 @@ NOTE: Once the chain starts the terms are allowed to go above one million.
 function opdracht14(limit = 10**6)
 {   function collatz(lut, num)
     {   var count = 1, n = num;
+        dict = {};
         while (n &gt; 1)
         {   if (lut.length &gt;= n &amp;&amp; lut[n - 1] &gt; 0)
-                return count + lut[n - 1];
+            { count += lut[n - 1] - 1; break; }
             n = n % 2 == 0 ? Math.floor(n / 2) : n * 3 + 1, count++;
+            // can't do n &gt;&gt; 1 because of 32bit limit
         }
+        lut[num - 1] = count;
         return count;
     }
     var lut = Array(limit - 1).fill(0), best_start = 0, best_length = 0;
     for (var i = 1; i &lt; limit; i++)
     {   var len = collatz(lut, i);
-        lut[i - 1] = len;
         if (len &gt; best_length) best_start = i, best_length = len;
     }
     return best_start;
 }
-
 alert(opdracht14());    // should give 837,799
 </code>
 <button onclick="mycopy2('s14');">Copy</button>
@@ -2518,14 +2511,18 @@ alert(opdracht39());    // should give 840
 <p>
 An irrational decimal fraction is created
 by concatenating the positive integers:
-
+</p>
+<p>
 0.123456789101112131415161718192021...
-
+</p>
+<p>
 It can be seen that the 12th digit of the fractional part is 1.
-
+</p>
+<p>
 If dn represents the nth digit of the fractional
 part, find the value of the following expression.
-
+</p>
+<p>
 d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
 </p>
 <code>
@@ -2576,17 +2573,91 @@ alert(opdracht48());    // should give 9,110,846,700
 <button onclick="mycopy2('s48');">Copy</button>
 </section>
 
+<section id="s49">
+<h2>#49: Prime permutations</h2>
+<p>
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+</p>
+<p>
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+</p>
+<p>
+What 12-digit number do you form by concatenating the three terms in this sequence?
+</p>
+<code>
+function opdracht49()
+{
+    function linearSearch(d, n)
+    { for (var i = 0; i &lt; d.length; i++) if (d[i] == n) return i + 1; return 0; }
+
+    function perms4(n)
+    {   function swap(n, i1, i2)
+        {   function dig(n, i) { return Math.floor(n / 10**i) % 10; }
+            return n-dig(n,i1)*10**i1-dig(n,i2)*10**i2+dig(n,i1)*10**i2+dig(n,i2)*10**i1;
+        }
+        function foo(p)
+        {   p.push(swap(p.slice(-1)[0], 0, 1));
+            p.push(swap(p.slice(-2)[0], 1, 2));
+            p.push(swap(p.slice(-1)[0], 0, 1));
+            p.push(swap(p.slice(-3)[0], 1, 2));
+            p.push(swap(p.slice(-1)[0], 0, 1));
+        }
+        var p = [];
+        p.push(n);
+        foo(p);
+        for (var i = -6; i >= -14; i -= 4) p.push(swap(p.slice(i)[0], 2, 3)), foo(p);
+        return p;
+    }
+    function sequences()
+    {
+        var sv = Array(10**4).fill(true);
+        sv[0] = sv[1] = false;
+        for (var p = 2; p * p &lt; sv.length; p++)
+            if (sv[p] == true) for (var i = p * 2; i &lt; sv.length; i += p) sv[i] = false;
+        var sprimes4 = [];
+        for (var i = 1000; i &lt; sv.length; i++) if (sv[i]) sprimes4.push(i);
+        var lseq = [];
+        while (sprimes4.length &gt; 0)
+        {   var tmp = [];
+            var p = perms4(sprimes4[0]);
+            for (var i = 0; i &lt; p.length; i++)
+                if (linearSearch(sprimes4, p[i]))
+                    tmp.push(p[i]);
+            lseq.push(tmp);
+            for (var i = 0; i &lt; tmp.length; i++)
+            {
+                var search = linearSearch(sprimes4, tmp[i])
+                if (search)
+                    sprimes4.pop(search - 1);
+            }
+        }
+        return lseq;
+    }
+    return sequences();
+}
+alert(opdracht49());    // should give 296,962,999,629
+</code>
+<button onclick="mycopy2('s49');">Copy</button>
+</section>
+
 <section id="s50">
 <h2>#50: Consecutive prime sum</h2>
 <p>
 The prime 41, can be written as the sum of six consecutive primes:
 41 = 2 + 3 + 5 + 7 + 11 + 13
-
+</p>
+<p>
 This is the longest sum of consecutive primes that adds to a prime below one-hundred.
-
+</p>
+<p>
 The longest sum of consecutive primes below one-thousand that
 adds to a prime, contains 21 terms, and is equal to 953.
-
+</p>
+<p>
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 </p>
 <code>
