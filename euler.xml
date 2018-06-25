@@ -2562,23 +2562,36 @@ function opdracht49()
         var sprimes4 = [];
         for (var i = 1000; i &lt; sv.length; i++) if (sv[i]) sprimes4.push(i);
         var lseq = [];
-        while (sprimes4.length &gt; 0)
+        function hasAlready(d, p)
+        {   for (var i = 0; i &lt; d.length; i++)
+                for (var j = 0; j &lt; d[i].length; j++)
+                    if (d[i][j] == p) return true;
+            return false;
+        }
+        for (var j = 0; j &lt; sprimes4.length; j++)
         {   var tmp = [];
-            var p = perms4(sprimes4[0]);
+            var prime = sprimes4[j];
+            if (hasAlready(lseq, prime)) continue;
+            var p = perms4(prime);
             for (var i = 0; i &lt; p.length; i++)
                 if (linearSearch(sprimes4, p[i]))
                     tmp.push(p[i]);
             lseq.push(tmp);
-            for (var i = 0; i &lt; tmp.length; i++)
-            {
-                var search = linearSearch(sprimes4, tmp[i])
-                if (search)
-                    sprimes4.pop(search - 1);
-            }
         }
         return lseq;
     }
-    return sequences();
+    lseq = sequences();
+    function check(a)
+    {
+        if (linearSearch(a, 1487)) return 0;
+        for (var i = 0; i &lt; a.length; i++)
+            if (linearSearch(a, a[i] + 3330) &amp;&amp; linearSearch(a, a[i] + 6660))
+                return (a[i] + 6660) + (a[i] + 3330) * 10**4 + a[i] * 10**8;
+        return 0;
+    }
+    for (var i = 0; i &lt; lseq.length; i++)
+        if (check(lseq[i])) return check(lseq[i]);
+    return 0;
 }
 alert(opdracht49());    // should give 296,962,999,629
 </code>

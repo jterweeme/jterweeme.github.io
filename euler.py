@@ -2843,46 +2843,11 @@ def opdracht49():
         def sieve(limit):
             a = [True] * limit
             a[0] = a[1] = False
-            for (i, isprime) in enumerate(a):
+            for i, isprime in enumerate(a):
                 if isprime:
                     yield i
                     for n in range(i * i, limit, i):
                         a[n] = False
-        def perms(n):
-            def permutations(iterable, r=None):
-                pool = tuple(iterable)
-                n = len(pool)
-                r = n if r is None else r
-                if r > n:
-                    return
-                indices = list(range(n))
-                cycles = list(range(n, n-r, -1))
-                yield tuple(pool[i] for i in indices[:r])
-                while n:
-                    for i in reversed(range(r)):
-                        cycles[i] -= 1
-                        if cycles[i] == 0:
-                            indices[i:] = indices[i+1:] + indices[i:i+1]
-                            cycles[i] = n - i
-                        else:
-                            j = cycles[i]
-                            indices[i], indices[-j] = indices[-j], indices[i]
-                            yield tuple(pool[i] for i in indices[:r])
-                            break
-                    else:
-                        return
-            def split(n):
-                ret = []
-                while n:
-                    ret.append(n % 10)
-                    n = n // 10
-                return tuple(reversed(ret))
-            def merge(n):
-                ret = 0
-                for i, a in enumerate(reversed(n)):
-                    ret += a*10**i
-                return ret
-            return [merge(x) for x in permutations(split(n))]
         def perms4(n):
             def swap(n, i1, i2):
                 def dig(n, i):
@@ -2900,18 +2865,18 @@ def opdracht49():
             for i in range(-6, -15, -4):
                 p.append(swap(p[i], 2, 3))
                 foo(p)
-            return p
+            return set(p)
         sprimes4 = {x for x in sieve(10**4) if x >= 1000}
         while len(sprimes4) > 0:
             for p in sprimes4:
-                tmp = set(perms(p)) & sprimes4
-                yield sorted(tmp)
+                tmp = perms4(p) & sprimes4
+                yield tmp
                 sprimes4 -= tmp
                 break   # we willen 1 item per loop
     lseq = list(sequences())
     def check(a):
         for s in a:
-            if (s + 3330 in a) and (s + 6660 in a):
+            if s + 3330 in a and s + 6660 in a:
                 return (s + 6660) + (s + 3330) * 10**4 + s * 10**8
         return 0
     for s in lseq:
