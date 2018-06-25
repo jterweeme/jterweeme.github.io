@@ -2425,8 +2425,7 @@ NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
 </p>
 <code>
 function opdracht37()
-{
-    function binarySearch(d, n)
+{   function binarySearch(d, n)
     {   var first = 0, last = d.length - 1;
         var middle = (first + last) >> 1;
         while (first &lt;= last)
@@ -2445,8 +2444,7 @@ function opdracht37()
         return true;
     }
     function islefttruncatable(primes, n)
-    {
-        function decimals(n) { var i = 0; while (n &gt; 10**i) i++; return i; }
+    {   function decimals(n) { var i = 0; while (n &gt; 10**i) i++; return i; }
         function truncateLeft(n) { var exp = decimals(n) - 1; return n % 10**exp; }
         var length = decimals(n);
         for (var i = 0; i &lt; length; i++)
@@ -2476,6 +2474,34 @@ alert(opdracht37());    // should give 748,317
 
 <section id="s38">
 <h2>#38: Pandigital multiples</h2>
+<code>
+function opdracht38()
+{   function decimals(n) { var i = 0; while (n &gt;= 10**i) i++; return i; }
+    function concat(a, b) { return b + a * 10**decimals(b); }
+    function linearSearch(d, n)
+    { for (var i = 0; i &lt; d.length; i++) if (d[i] == n) return i + 1; return 0; }
+    function hasDigitsOnce(n, nset)
+    {   while (n)
+        {   var i = linearSearch(nset, n % 10);
+            if (i) nset.splice(i - 1, 1); else return false;
+            n = Math.floor(n / 10);
+        }
+        return true;
+    }
+    function isPandigital(n)
+    {   var nset = [];
+        for (var i = 1; i &lt;= decimals(n); i++) nset.push(i);
+        return hasDigitsOnce(n, nset);
+    }
+    for (var i = 9387; i &gt; 9234; --i)
+    {   var result = concat(i, 2 * i);
+        if (isPandigital(result)) return result;
+    }
+    return 0;
+}
+alert(opdracht38());    // should give 932,718,654
+</code>
+<button onclick="mycopy2('s38');">Copy</button>
 </section>
 
 <section id="s39">
@@ -2491,10 +2517,10 @@ sides, {a,b,c}, there are exactly three solutions for p = 120.
 For which value of p ≤ 1000, is the number of solutions maximised?
 </p>
 <code>
-function opdracht39() {
-    var best_p = 0, best_solutions = 0;
-    for (var p = 100; p &lt;= 1000; p += 2) {
-        var solutions = 0;
+function opdracht39()
+{   var best_p = 0, best_solutions = 0;
+    for (var p = 100; p &lt;= 1000; p += 2)
+    {   var solutions = 0;
         for (var a = 2; a &lt; Math.floor(p / 3); a++)
             solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
         if (solutions &gt; best_solutions) best_solutions = solutions, best_p = p;
@@ -2590,10 +2616,8 @@ What 12-digit number do you form by concatenating the three terms in this sequen
 </p>
 <code>
 function opdracht49()
-{
-    function linearSearch(d, n)
+{   function linearSearch(d, n)
     { for (var i = 0; i &lt; d.length; i++) if (d[i] == n) return i + 1; return 0; }
-
     function perms4(n)
     {   function swap(n, i1, i2)
         {   function dig(n, i) { return Math.floor(n / 10**i) % 10; }
@@ -2613,8 +2637,7 @@ function opdracht49()
         return p;
     }
     function sequences()
-    {
-        var sv = Array(10**4).fill(true);
+    {   var sv = Array(10**4).fill(true);
         sv[0] = sv[1] = false;
         for (var p = 2; p * p &lt; sv.length; p++)
             if (sv[p] == true) for (var i = p * 2; i &lt; sv.length; i += p) sv[i] = false;
@@ -2641,8 +2664,7 @@ function opdracht49()
     }
     lseq = sequences();
     function check(a)
-    {
-        if (linearSearch(a, 1487)) return 0;
+    {   if (linearSearch(a, 1487)) return 0;
         for (var i = 0; i &lt; a.length; i++)
             if (linearSearch(a, a[i] + 3330) &amp;&amp; linearSearch(a, a[i] + 6660))
                 return (a[i] + 6660) + (a[i] + 3330) * 10**4 + a[i] * 10**8;

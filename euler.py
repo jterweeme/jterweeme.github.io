@@ -2394,24 +2394,27 @@ Antwoord: 932,718,654
 """
 
 def opdracht38():
+    def decimals(n):
+        i = 0
+        while n >= 10**i:
+            i += 1
+        return i
     def concat38(a, b):
-        def decimals38(n):
-            i = 0
-            while n > 10**i:
-                i += 1
-            return i
-        length = decimals38(b)
-        b += a * 10**length
-        return b
-    def is_pandigital38(n, s=9):
-        n=str(n);
-        return len(n)==s and not '1234567890'[:s].strip(n)
-    result = 0
+        return b + a * 10**decimals(b)
+    def hasDigitsOnce(n, nset):
+        def digits(n):
+            while n > 0: yield n % 10; n = n // 10;
+        for i in digits(n):
+            if i in nset: nset.remove(i)
+            else: return False
+        return True
+    def isPandigital(n):
+        return hasDigitsOnce(n, [i for i in range(1, decimals(n) + 1)])
     for i in range(9387, 9234, -1):
         result = concat38(i, 2 * i)
-        if is_pandigital38(result):
-            break
-    return result
+        if isPandigital(result):
+            return result
+    return 0
 
 """
 #39: Integer right triangles
