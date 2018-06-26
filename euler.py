@@ -312,7 +312,7 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 """
 
-def opdracht10(limit = 2000000):
+def opdracht10(limit = 2*10**6):
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
@@ -2249,7 +2249,7 @@ def opdracht35(xmax = 10**6-1):
         def rotations(n):
             def decimals(n):
                 i = 0
-                while n > 10**i:
+                while n >= 10**i:
                     i += 1
                 return i
             def rotate(n):
@@ -2342,7 +2342,7 @@ def opdracht37():
     def islefttruncatable(prime, primes):
         def decimals(n):
             i = 0
-            while n > 10**i:
+            while n >= 10**i:
                 i += 1
             return i
         def truncate_left(n):
@@ -2842,6 +2842,32 @@ Antwoord: 296,962,999,629
 """
 
 def opdracht49():
+    def decimals(n):
+        i = 0
+        while n >= 10**i:
+            i += 1
+        return i
+    def factorial(n):
+        xsum = 1
+        for a in range(n, 0, -1):
+            xsum *= a
+        return xsum
+    def digits(n):
+        while n > 0: yield n % 10; n = n // 10;
+    def dig(n, i):
+        return n // 10**i % 10
+    def perms(n):
+        a = list(reversed(list(digits(n))))
+        ret = set()
+        for perm in range(factorial(decimals(n))):
+            b = list(a)
+            tmp = 0
+            while len(b) > 0:
+                i, perm = divmod(perm, factorial(len(b) - 1))
+                tmp += b[i] * 10**(len(b) - 1)
+                b.pop(i)
+            ret.add(tmp)
+        return ret
     def sequences():
         def sieve(limit):
             a = [True] * limit
@@ -2851,28 +2877,10 @@ def opdracht49():
                     yield i
                     for n in range(i * i, limit, i):
                         a[n] = False
-        def perms4(n):
-            def swap(n, i1, i2):
-                def dig(n, i):
-                    return n // 10**i % 10
-                return n-dig(n,i1)*10**i1-dig(n,i2)*10**i2+dig(n,i1)*10**i2+dig(n,i2)*10**i1;
-            def foo(p):
-                p.append(swap(p[-1], 0, 1))
-                p.append(swap(p[-2], 1, 2))
-                p.append(swap(p[-1], 0, 1))
-                p.append(swap(p[-3], 1, 2))
-                p.append(swap(p[-1], 0, 1))
-            p = list()
-            p.append(n)
-            foo(p)
-            for i in range(-6, -15, -4):
-                p.append(swap(p[i], 2, 3))
-                foo(p)
-            return set(p)
         sprimes4 = {x for x in sieve(10**4) if x >= 1000}
         while len(sprimes4) > 0:
             for p in sprimes4:
-                tmp = perms4(p) & sprimes4
+                tmp = perms(p) & sprimes4
                 yield tmp
                 sprimes4 -= tmp
                 break   # we willen 1 item per loop
