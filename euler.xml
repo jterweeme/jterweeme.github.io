@@ -1961,6 +1961,7 @@ function opdracht26() {
     }
     return num;
 }
+alert(opdracht26());    // should give 983
 </code>
 <button onclick="mycopy2('s26');">Copy</button>
 </section>

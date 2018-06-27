@@ -60,11 +60,11 @@ def opdracht2(xmax = 4*10**6):
             yield xsum
             term1 = term2
             term2 = xsum
-    xsum = 0
-    for n in fibonacci(xmax):
-        if n % 2 == 0:
-            xsum += n
-    return xsum
+    def evenFib(genx):
+        for term in genx:
+            if term % 2 == 0:
+                yield term
+    return sum(evenFib(fibonacci(xmax)))
 
 """
 #3 Largest prime factor
@@ -1922,7 +1922,69 @@ longest recurring cycle in its decimal fraction part.
 Antwoord: 983
 """
 
+"""
+from pprint import pprint
+set1k = set(range(2,1000))
+d0 = {2**a*10**b for a in range(10) for b in range(3)}
+d0 |= {int(1/2**a*10**a)*10**b for a in range(0,5) for b in range(0,3)}
+d0 = d0 & set1k
+d1 = {3*2**a*10**b for a in range(9) for b in range(3)}
+d1 |= {9,90,900,15,150,18,180}
+d1 = d1 & set1k
+
+pprint([10**40//a for a in d0])
+pprint([10**40//a for a in d1])
+
+def fraction(n, cnt = 10):
+    a = 1
+    while (cnt):
+        div, mod = divmod(a, n)
+        yield div
+        a = mod * 10
+        cnt -= 1
+"""
+
+"""
+def cycleLength(n):
+    a, t = 1, 0
+    while True:
+        a = a * 10 % n
+        t += 1
+        if a == 0:
+            return 0
+        if a == 1:
+            break
+    return t
+"""
+
+"""
+https://www.xarg.org/puzzle/project-euler/problem-26/
+"""
+
 def opdracht26():
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for (i, isprime) in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    def cycleLength(n):
+        a, t = 1, 0
+        while True:
+            a = a * 10 % n
+            t += 1
+            if a == 0: return 0
+            if a == 1: break
+        return t
+    def fullReptend(genx):
+        for prime in genx:
+            if cycleLength(prime) == prime - 1:
+                yield prime
+    return max(fullReptend(sieve(1000)))
+
+def opdracht26b():
     num = longest = 1
     for n in range(3, 1000, 2):
         if n % 5 == 0:
