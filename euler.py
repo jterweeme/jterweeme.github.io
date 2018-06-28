@@ -16,13 +16,10 @@ def opdracht1(limit = 1000):
     return summation(3, limit - 1) + summation(5, limit - 1) - summation(15, limit - 1)
 
 def opdracht1b(limit = 1000):
-    return sum({x for x in range(3,limit,3)} | {x for x in range(5,limit,5)})
+    return sum(set(range(3,limit,3)) | set(range(5,limit,5)))
 
 def opdracht1c(limit = 1000):
-    sum3 = sum([x for x in range(3,limit,3)])
-    sum5 = sum([x for x in range(5,limit,5)])
-    sum15 = sum([x for x in range(15,limit,15)])
-    return sum3 + sum5 - sum15
+    return sum(range(3,limit,3)) + sum(range(5,limit,5)) - sum(range(15,limit,15))
 
 def opdracht1d(limit = 1000):
     xsum = 0
@@ -182,13 +179,11 @@ Antwoord: 25,164,150
 """
 
 def opdracht6(r = range(1, 101)):
-    sumsquare = 0
-    squaresum = 0
+    sumsquare, squaresum = 0, 0
     for x in r:
         sumsquare += x ** 2;
         squaresum += x;
-    squaresum = squaresum ** 2
-    return squaresum - sumsquare
+    return squaresum ** 2 - sumsquare
 
 """
 #7 10001st prime
@@ -2553,8 +2548,7 @@ Antwoord: 840
 """
 
 def opdracht39():
-    best_p = 0
-    best_solutions = 0
+    best_p, best_solutions = 0, 0
     for p in range(100, 1000+1, 2):
         solutions = 0
         for a in range(2, p//3):
@@ -2910,18 +2904,14 @@ words42 = ("A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACADEMIC
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH")
 
 def opdracht42(words = words42):
-    ret = 0
-    triangles = set()
-    def triangler(n):
-        return n * (n + 1) >> 1
-    for i in range(0, 20):      # 20 triangles ought to be enough
-        triangles.add(triangler(i))
+    def triangler(n): return n * (n + 1) >> 1
+    triangles = {triangler(t) for t in range(20)}
     def wordcount(word):
         count = 0
         for letter in word:
-            count += ord(letter) - ord('A')
-            count += 1
+            count += ord(letter) - ord('A') + 1
         return count
+    ret = 0
     for w in words:
         if wordcount(w) in triangles:
             ret += 1
