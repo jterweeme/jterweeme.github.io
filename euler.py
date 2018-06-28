@@ -1947,21 +1947,19 @@ def fraction(n, cnt = 10):
 """
 def cycleLength(n):
     a, t = 1, 0
-    while True:
+    while t < n:
         a = a * 10 % n
         t += 1
-        if a == 0:
-            return 0
-        if a == 1:
-            break
-    return t
+        if a == 0: return 0
+        if a == 1: return t
+    return -1
 """
 
 """
 https://www.xarg.org/puzzle/project-euler/problem-26/
 """
 
-def opdracht26():
+def opdracht26b():
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
@@ -1972,30 +1970,35 @@ def opdracht26():
                     a[n] = False
     def cycleLength(n):
         a, t = 1, 0
-        while True:
+        while t < n:
             a = a * 10 % n
             t += 1
             if a == 0: return 0
-            if a == 1: break
-        return t
+            if a == 1: return t
+        return -1
     def fullReptend(genx):
         for prime in genx:
             if cycleLength(prime) == prime - 1:
                 yield prime
     return max(fullReptend(sieve(1000)))
 
-def opdracht26b():
-    num = longest = 1
-    for n in range(3, 1000, 2):
-        if n % 5 == 0:
-            continue
-        p = 1
-        while 10**p % n != 1:
-            p += 1
-        if p > longest:
-            num = n
-            longest = p
-    return num
+def opdracht26():
+    def cycleLength(n):
+        a, t = 1, 0
+        while t < n:
+            a = a * 10 % n
+            t += 1
+            if a == 0: return 0
+            if a == 1: return t
+        return -1
+    best_n, best_length = 0, 0
+    for i in range(999, 0, -1):
+        clength = cycleLength(i)
+        if clength > best_length:
+            best_n, best_length = i, clength
+            if best_length == i - 1:
+                break
+    return best_n
 
 """
 #27: Quadratic primes
@@ -2040,21 +2043,16 @@ def opdracht27():
                     return n // preset
             return n
         for i in range(2, reducer2(n)):
-            if n % i == 0:
-                return False
+            if n % i == 0: return False
         return True
-    best_a = 0
-    best_b = 0
-    best_n = 0
+    best_a, best_b, best_n = 0, 0, 0
     for a in range(-999, 1000):
         for b in range(-1000, 1000 + 1):
             n = 0
             while isprime(abs(n * n + a * n + b)):
                 n += 1
             if n > best_n:
-                best_a = a
-                best_b = b
-                best_n = n
+                best_a, best_b, best_n = a, b, n
     return best_a * best_b
 
 """
@@ -2924,6 +2922,77 @@ def opdracht42(words = words42):
     return ret
 
 """
+#43: Sub-string divisibility
+
+The number, 1406357289, is a 0 to 9 pandigital number because it is made
+up of each of the digits 0 to 9 in some order, but it also has a rather
+interesting sub-string divisibility property.
+
+Let d1 be the 1st digit, d2 be the 2nd digit, and
+so on. In this way, we note the following:
+
+d2d3d4=406 is divisible by 2
+d3d4d5=063 is divisible by 3
+d4d5d6=635 is divisible by 5
+d5d6d7=357 is divisible by 7
+d6d7d8=572 is divisible by 11
+d7d8d9=728 is divisible by 13
+d8d9d10=289 is divisible by 17
+
+Find the sum of all 0 to 9 pandigital numbers with this property.
+
+Antwoord: 16695334890
+"""
+
+"""
+1460357289 + 4130952867 + 4106357289 + 1430952867 + 1406357289 + 4160357289 = 16695334890
+"""
+
+
+def opdracht43(a = [0,1,2,3,4,5,6,7,8,9]):
+    def factorial(n):
+        xsum = 1
+        for a in range(n, 0, -1):
+            xsum *= a
+        return xsum
+    def permGen(a, p):
+        while len(a) > 0:
+            i, p = divmod(p, factorial(len(a) - 1))
+            yield a[i]
+            a.pop(i)
+    def perm(a, p):
+        gen = permGen(list(a), p)
+        ln = len(a)
+        ret = 0
+        for i, n in enumerate(gen):
+            ret += n * 10**(ln - 1 - i)
+        return ret
+    def perms(a):
+        for i in range(0, factorial(len(a))):
+            yield perm(a, i)
+    def test(n):
+        if (n // 10**6 % 1000) % 2 != 0:
+            return False
+        if (n // 10**5 % 1000) % 3 != 0:
+            return False
+        if (n // 10**4 % 1000) % 5 != 0:
+            return False
+        if (n // 10**3 % 1000) % 7 != 0:
+            return False
+        if (n // 10**2 % 1000) % 11 != 0:
+            return False
+        if (n // 10**1 % 1000) % 13 != 0:
+            return False
+        if (n // 10**0 % 1000) % 17 != 0:
+            return False
+        return True
+    def testSeries(genx):
+        for a in genx:
+            if test(a):
+                yield a
+    return sum(testSeries(perms(a)))
+
+"""
 #48: Self powers
 
 The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
@@ -2969,7 +3038,6 @@ def opdracht49():
         return n // 10**i % 10
     def perms(n):
         a = list(reversed(list(digits(n))))
-        ret = set()
         for perm in range(factorial(decimals(n))):
             b = list(a)
             tmp = 0
@@ -2977,8 +3045,7 @@ def opdracht49():
                 i, perm = divmod(perm, factorial(len(b) - 1))
                 tmp += b[i] * 10**(len(b) - 1)
                 b.pop(i)
-            ret.add(tmp)
-        return ret
+            yield tmp
     def sequences():
         def sieve(limit):
             a = [True] * limit
@@ -2991,7 +3058,7 @@ def opdracht49():
         sprimes4 = {x for x in sieve(10**4) if x >= 1000}
         while len(sprimes4) > 0:
             for p in sprimes4:
-                tmp = perms(p) & sprimes4
+                tmp = set(perms(p)) & sprimes4
                 yield tmp
                 sprimes4 -= tmp
                 break   # we willen 1 item per loop
@@ -3014,7 +3081,8 @@ The prime 41, can be written as the sum of six consecutive primes:
 
 This is the longest sum of consecutive primes that adds to a prime below one-hundred.
 
-The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
+The longest sum of consecutive primes below one-thousand
+that adds to a prime, contains 21 terms, and is equal to 953.
 
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
 """
@@ -3134,7 +3202,9 @@ def runn2(n = 1):
         return opdracht41()
     if n == 42:
         return opdracht42()
-    if n in [43,44,45,46,47]:
+    if n == 43:
+        return opdracht43()
+    if n in [44,45,46,47]:
         return 0
     if n == 48:
         return opdracht48()
@@ -3151,7 +3221,6 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
-answers[43 - 1] = 0
 answers[44 - 1] = 0
 answers[45 - 1] = 0
 answers[46 - 1] = 0
