@@ -704,8 +704,7 @@ Antwoord: 837,799
 
 def opdracht14(limit = 10**6):
     def collatz(num, lut):
-        count = 1
-        n = num
+        count, n = 1, num
         while n > 1:
             if len(lut) >= n and lut[n - 1] > 0:
                 return count + lut[n - 1]
@@ -713,14 +712,12 @@ def opdracht14(limit = 10**6):
             count += 1
         return count
     lut = [0] * limit
-    best_start = 0
-    best_length = 0
+    best_start, best_length = 0, 0
     for n in range(1, limit):
         length = collatz(n, lut)
         lut[n - 1] = length
         if length > best_length:
-            best_start = n
-            best_length = length
+            best_start, best_length = n, length
     return best_start
 
 """
@@ -2134,8 +2131,7 @@ def opdracht29():
     def eqpow(t):
         def myRoot(n):
             for a in range(2,11):
-                b = 0
-                e = 1
+                b, e = 0, 1
                 while True:
                     b = a**e
                     if b > 100:
@@ -2410,8 +2406,7 @@ Antwoord: 872,187
 
 def opdracht36(r = range(1,10**6)):
     def ispalindrome(n, base = 10):
-        temp = n
-        rev = 0
+        temp, rev = n, 0
         while temp != 0:
             rev = rev * base + temp % base
             temp = temp // base
@@ -2518,7 +2513,7 @@ def opdracht38():
             else: return False
         return True
     def isPandigital(n):
-        return hasDigitsOnce(n, [i for i in range(1, decimals(n) + 1)])
+        return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
     for i in range(9387, 9234, -1):
         result = concat38(i, 2 * i)
         if isPandigital(result):
@@ -2634,9 +2629,20 @@ decimalen lang niet priem kunnen zijn, daarom is de limiet 7654321.
 def opdracht41():
     def find_limit():
         return 7654321
-    def is_pandigital(n, s=9):
-        n=str(n);
-        return len(n)==s and not '123456789'[:s].strip(n)
+    def decimals(n):
+        i = 0
+        while n >= 10**i:
+            i += 1
+        return i
+    def hasDigitsOnce(n, nset):
+        def digits(n):
+            while n > 0: yield n % 10; n = n // 10;
+        for i in digits(n):
+            if i in nset: nset.remove(i)
+            else: return False
+        return True
+    def isPandigital(n):
+        return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
@@ -2648,7 +2654,7 @@ def opdracht41():
     limit = find_limit()
     best = 0
     for p in sieve(limit):
-        if is_pandigital(p, 7):
+        if isPandigital(p):
             best = p
     return best
 
