@@ -71,41 +71,40 @@ What is the largest prime factor of the number 600,851,475,143?
 
 Antwoord: 6,857
 """
+
+"""
+71*839*1,471*6,857=600,851,475,143
+"""
 def maxprimefactor(n = 600851475143):
-    def appendprime(primes): #voeg een priemgetal toe aan primes array
-        if len(primes) < 1:
-            primes.append(2)
-            return primes
-        if len(primes) < 2:
-            primes.append(3)
-            return primes
-        p = primes[-1] + 2 #2, to skip all the even numbers
-        i = 2
-        while i < p:
-            if p % i == 0:  #not a prime
-                p += 1
-                i = 1
-            i += 1
-        primes.append(p)
-        return primes
-    def primefactor(primes, n = 13195):
+    def primeGen():
+        yield 2
+        yield 3
+        p = 5
+        while True:
+            div = 2
+            while div < p:
+                if p % div == 0:
+                    p += 1
+                    div = 1
+                div += 1
+            yield p
+            p += 2
+    def primefactor(primes, genx, n = 13195):
         i = 0
         while True:
             if len(primes) <= i:
-                appendprime(primes)
+                primes.append(next(genx))
             if n % primes[i] == 0:
                 return primes[i]
             i += 1
     def primefactors(n):
+        genx = primeGen()
         primes = list()
-        factors = list()
         while True:
-            factor = primefactor(primes, n)
-            factors.append(factor)
-            if factor == n:
-                break
+            factor = primefactor(primes, genx, n)
+            yield factor
+            if factor == n: break
             n = n // factor
-        return factors
     return max(primefactors(n))
 
 """
@@ -1882,14 +1881,6 @@ def opdracht25(limit = 10**999):
     return cnt
 
 """
-https://www.mathblog.dk/project-euler-25-fibonacci-sequence-1000-digits/
-"""
-
-def opdracht25b():
-    from math import log
-    return (log(10) * 999 + log(5) / 2) // log(1.6180)
-
-"""
 #26: Reciprocal cycles
 
 A unit fraction contains 1 in the numerator. The decimal representation
@@ -2905,7 +2896,7 @@ words42 = ("A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACADEMIC
 
 def opdracht42(words = words42):
     def triangler(n): return n * (n + 1) >> 1
-    triangles = {triangler(t) for t in range(20)}
+    triangles = {triangler(t) for t in range(20)}   # 20 is arbitrary long number
     def wordcount(word):
         count = 0
         for letter in word:
@@ -2937,56 +2928,235 @@ d8d9d10=289 is divisible by 17
 
 Find the sum of all 0 to 9 pandigital numbers with this property.
 
-Antwoord: 16695334890
+Antwoord: 16,695,334,890
 """
 
 """
-1460357289 + 4130952867 + 4106357289 + 1430952867 + 1406357289 + 4160357289 = 16695334890
+1,460,357,289 + 4,130,952,867 + 4,106,357,289 + 1,430,952,867 +
+1,406,357,289 + 4,160,357,289 = 16,695,334,890
 """
 
-
-def opdracht43(a = [0,1,2,3,4,5,6,7,8,9]):
-    def factorial(n):
-        xsum = 1
-        for a in range(n, 0, -1):
-            xsum *= a
-        return xsum
-    def permGen(a, p):
-        while len(a) > 0:
-            i, p = divmod(p, factorial(len(a) - 1))
-            yield a[i]
-            a.pop(i)
-    def perm(a, p):
-        gen = permGen(list(a), p)
-        ln = len(a)
+def opdracht43():
+    def permutations(iterable, r=None):
+        pool = tuple(iterable)
+        n = len(pool)
+        r = n if r is None else r
+        if r > n:
+            return
+        indices = list(range(n))
+        cycles = list(range(n, n-r, -1))
+        yield list(pool[i] for i in indices[:r])
+        while n:
+            for i in reversed(range(r)):
+                cycles[i] -= 1
+                if cycles[i] == 0:
+                    indices[i:] = indices[i+1:] + indices[i:i+1]
+                    cycles[i] = n - i
+                else:
+                    j = cycles[i]
+                    indices[i], indices[-j] = indices[-j], indices[i]
+                    yield list(pool[i] for i in indices[:r])
+                    break
+            else:
+                return
+    def concat(lst):
         ret = 0
-        for i, n in enumerate(gen):
-            ret += n * 10**(ln - 1 - i)
+        for i, n in enumerate(reversed(lst)):
+            ret += n *10**i
         return ret
     def perms(a):
-        for i in range(0, factorial(len(a))):
-            yield perm(a, i)
+        for p in permutations(a):
+            p.insert(5,5)
+            yield concat(p);
     def test(n):
-        if (n // 10**6 % 1000) % 2 != 0:
-            return False
-        if (n // 10**5 % 1000) % 3 != 0:
-            return False
-        if (n // 10**4 % 1000) % 5 != 0:
-            return False
-        if (n // 10**3 % 1000) % 7 != 0:
-            return False
-        if (n // 10**2 % 1000) % 11 != 0:
-            return False
-        if (n // 10**1 % 1000) % 13 != 0:
-            return False
-        if (n // 10**0 % 1000) % 17 != 0:
-            return False
+        divs = [17,13,11,7,5,3,2];
+        for i, div in enumerate(divs):
+            if (n // 10**i % 1000) % div != 0:
+                return False
         return True
     def testSeries(genx):
         for a in genx:
             if test(a):
                 yield a
-    return sum(testSeries(perms(a)))
+    a = [0,1,2,3,4,6,7,8,9]
+    ps = perms(a)
+    ret = sum(testSeries(ps))
+    return ret
+
+"""
+#44: Pentagon numbers
+
+Pentagonal numbers are generated by the formula,
+Pn=n(3n−1)/2. The first ten pentagonal numbers are:
+
+1, 5, 12, 22, 35, 51, 70, 92, 117, 145, ...
+
+It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However,
+their difference, 70 − 22 = 48, is not pentagonal.
+
+Find the pair of pentagonal numbers, Pj and Pk, for which
+their sum and difference are pentagonal and D = |Pk − Pj|
+is minimised; what is the value of D?
+
+Antwoord: 5482660
+"""
+
+def opdracht44(window = 10**4):
+    def pentagon(n): return n * (3 * n - 1)//2
+    lpgs = [pentagon(n) for n in range(1,window)]
+    spgs = set(lpgs)
+    for a in range(len(lpgs)):
+        for b in range(a, len(lpgs)):
+            if lpgs[a] + lpgs[b] in spgs and lpgs[b] - lpgs[a] in spgs:
+                return lpgs[b] - lpgs[a]
+    return 0
+
+"""
+#45: Triangular, pentagonal, and hexagonal
+
+Triangle, pentagonal, and hexagonal numbers are generated by the following formulae:
+Triangle     Tn=n(n+1)/2     1, 3, 6, 10, 15, ...
+Pentagonal     Pn=n(3n−1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     Hn=n(2n−1)     1, 6, 15, 28, 45, ...
+
+It can be verified that T285 = P165 = H143 = 40755.
+
+Find the next triangle number that is also pentagonal and hexagonal.
+
+Antwoord: 1,533,776,805
+"""
+
+def opdracht45():
+    def triangle(n): return n * (n + 1) // 2
+    def pentagon(n): return n * (3 * n - 1)//2
+    def hexagon(n): return n * (2 * n - 1)
+    ltriangle = [triangle(n) for n in range(286, 99999)]
+    striangle = set(ltriangle)
+    lpentagon = [pentagon(n) for n in range(166, 99999)]
+    spentagon = set(lpentagon)
+    lhexagon = [hexagon(n) for n in range(144, 99999)]
+    shexagon = set(lhexagon)
+    for t in ltriangle:
+        if t in spentagon and t in shexagon:
+            return t
+    return 0
+
+"""
+#46: Goldbach's other conjecture
+
+It was proposed by Christian Goldbach that every odd composite
+number can be written as the sum of a prime and twice a square.
+
+9 = 7 + 2×1^2
+15 = 7 + 2×2^2
+21 = 3 + 2×3^2
+25 = 7 + 2×3^2
+27 = 19 + 2×2^2
+33 = 31 + 2×1^2
+
+It turns out that the conjecture was false.
+
+What is the smallest odd composite that cannot be
+written as the sum of a prime and twice a square?
+
+Antwoord: 5,777
+"""
+
+def opdracht46():
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for (i, isprime) in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    lprimes = list(sieve(10**6))
+    sprimes = set(lprimes)
+    ssquares = {2*n**2 for n in range(100)}
+    def pair(primes, squares, n):
+        for prime in primes:
+            if prime > n:
+                break
+            if n - prime in squares:
+                return (prime, n - prime)
+        return (0, 0)
+    for i in range(3, 9**9, 2): # 9**9 is arbitrary long number
+        if i in sprimes:
+            continue
+        pr = pair(lprimes, ssquares, i)
+        if pr == (0, 0):
+            return i
+    return 0
+
+"""
+#47: Distinct primes factors
+
+The first two consecutive numbers to have two distinct prime factors are:
+
+14 = 2 × 7
+15 = 3 × 5
+
+The first three consecutive numbers to have three distinct prime factors are:
+
+644 = 2^2 × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+
+Find the first four consecutive integers to have four distinct
+prime factors each. What is the first of these numbers?
+
+Antwoord: 134,043
+"""
+
+def opdracht47(distinct = 4, svl = 10**6):
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for (i, isprime) in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    def primeGen(p = 5):
+        if p % 2 == 0:
+            return
+        while True:
+            div = 2
+            while div < p:
+                if p % div == 0:
+                    p += 1
+                    div = 1
+                div += 1
+            yield p
+            p += 2
+    def primefactor(primes, genx, n = 13195):
+        i = 0
+        while True:
+            if len(primes) <= i:
+                primes.append(next(genx))
+            if n % primes[i] == 0:
+                return primes[i]
+            i += 1
+    def primefactors(primes, genx, n):
+        while True:
+            factor = primefactor(primes, genx, n)
+            yield factor
+            if factor == n: break
+            n = n // factor
+    def distinctLen(g):
+        return len(set(g))
+    primes = list(sieve(svl))
+    genx = primeGen(primes[-1] + 2)
+    chain = 0
+    for i in range(2, 9**9):    # 9**9 is arbitrary long number
+        if distinctLen(primefactors(primes, genx, i)) == distinct:
+            chain += 1
+        else:
+            chain = 0
+        if chain == distinct:
+            return i - (distinct - 1)
+    return 0
 
 """
 #48: Self powers
@@ -3081,6 +3251,8 @@ The longest sum of consecutive primes below one-thousand
 that adds to a prime, contains 21 terms, and is equal to 953.
 
 Which prime, below one-million, can be written as the sum of the most consecutive primes?
+
+Antwoord: 997,651
 """
 
 def opdracht50(limit = 10**6):
@@ -3114,100 +3286,56 @@ Einde opdrachten
 """
 
 def runn2(n = 1):
-    if n == 1:
-        return opdracht1()
-    if n == 2:
-        return opdracht2()
-    if n == 3:
-        return maxprimefactor()
-    if n == 4:
-        return palindrome()
-    if n == 5:
-        return divide()
-    if n == 6:
-        return opdracht6()
-    if n == 7:
-        return opdracht7()
-    if n == 8:
-        return opdracht8()
-    if n == 9:
-        return opdracht9()
-    if n == 10:
-        return opdracht10()
-    if n == 11:
-        return opdracht11()
-    if n == 12:
-        return opdracht12()
-    if n == 13:
-        return opdracht13()
-    if n == 14:
-        return opdracht14()
-    if n == 15:
-        return opdracht15()
-    if n == 16:
-        return opdracht16()
-    if n == 17:
-        return opdracht17()
-    if n == 18:
-        return opdracht18()
-    if n == 19:
-        return opdracht19()
-    if n == 20:
-        return opdracht20()
-    if n == 21:
-        return amicable_pairs_sum()
-    if n == 22:
-        return opdracht22()
-    if n == 23:
-        return opdracht23()
-    if n == 24:
-        return opdracht24()
-    if n == 25:
-        return opdracht25()
-    if n == 26:
-        return opdracht26()
-    if n == 27:
-        return opdracht27()
-    if n == 28:
-        return opdracht28()
-    if n == 29:
-        return opdracht29()
-    if n == 30:
-        return opdracht30()
-    if n == 31:
-        return opdracht31()
-    if n == 32:
-        return opdracht32()
-    if n == 33:
-        return opdracht33()
-    if n == 34:
-        return findFactorialSum()
-    if n == 35:
-        return opdracht35()
-    if n == 36:
-        return opdracht36()
-    if n == 37:
-        return opdracht37()
-    if n == 38:
-        return opdracht38()
-    if n == 39:
-        return opdracht39()
-    if n == 40:
-        return opdracht40()
-    if n == 41:
-        return opdracht41()
-    if n == 42:
-        return opdracht42()
-    if n == 43:
-        return opdracht43()
-    if n in [44,45,46,47]:
-        return 0
-    if n == 48:
-        return opdracht48()
-    if n == 49:
-        return opdracht49()
-    if n == 50:
-        return opdracht50()
+    if n == 1: return opdracht1()
+    if n == 2: return opdracht2()
+    if n == 3: return maxprimefactor()
+    if n == 4: return palindrome()
+    if n == 5: return divide()
+    if n == 6: return opdracht6()
+    if n == 7: return opdracht7()
+    if n == 8: return opdracht8()
+    if n == 9: return opdracht9()
+    if n == 10: return opdracht10()
+    if n == 11: return opdracht11()
+    if n == 12: return opdracht12()
+    if n == 13: return opdracht13()
+    if n == 14: return opdracht14()
+    if n == 15: return opdracht15()
+    if n == 16: return opdracht16()
+    if n == 17: return opdracht17()
+    if n == 18: return opdracht18()
+    if n == 19: return opdracht19()
+    if n == 20: return opdracht20()
+    if n == 21: return amicable_pairs_sum()
+    if n == 22: return opdracht22()
+    if n == 23: return opdracht23()
+    if n == 24: return opdracht24()
+    if n == 25: return opdracht25()
+    if n == 26: return opdracht26()
+    if n == 27: return opdracht27()
+    if n == 28: return opdracht28()
+    if n == 29: return opdracht29()
+    if n == 30: return opdracht30()
+    if n == 31: return opdracht31()
+    if n == 32: return opdracht32()
+    if n == 33: return opdracht33()
+    if n == 34: return findFactorialSum()
+    if n == 35: return opdracht35()
+    if n == 36: return opdracht36()
+    if n == 37: return opdracht37()
+    if n == 38: return opdracht38()
+    if n == 39: return opdracht39()
+    if n == 40: return opdracht40()
+    if n == 41: return opdracht41()
+    if n == 42: return opdracht42()
+    if n == 43: return opdracht43()
+    if n == 44: return opdracht44()
+    if n == 45: return opdracht45()
+    if n == 46: return opdracht46()
+    if n == 47: return opdracht47()
+    if n == 48: return opdracht48()
+    if n == 49: return opdracht49()
+    if n == 50: return opdracht50()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3217,10 +3345,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
-answers[44 - 1] = 0
-answers[45 - 1] = 0
-answers[46 - 1] = 0
-answers[47 - 1] = 0
+#answers[46 - 1] = 0
 
 import time
 import math
@@ -3233,10 +3358,15 @@ def runjob(n):
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
 def runm(l = list(range(1, 50 + 1))):
+    ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
+    print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = list(range(1, 50 + 1))):
+def runs(l = range(1, 50 + 1)):
+    ts = time.time()
     for job in l:
         runjob(job)
+    print("Total: {}s".format(math.floor(time.time() - ts)))
+
 

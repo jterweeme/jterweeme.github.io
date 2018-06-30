@@ -322,18 +322,13 @@ public:
 };
 
 static uint64_t opdracht8(const char *series = series1)
-{
-    uint64_t best = 0;
+{   uint64_t best = 0;
     uint16_t len = strlen(series);
     Fifo<13> fifo;
-
     for (uint16_t i = 0; i < len; i++)
-    {
-        fifo.push(series[i] - '0');
+    {   fifo.push(series[i] - '0');
         uint64_t prdct = fifo.product();
-        
-        if (prdct > best)
-            best = prdct;
+        if (prdct > best) best = prdct;
     }
     return best;
 }
@@ -353,18 +348,13 @@ Antwoord: 31,875,000
 */
 
 static uint32_t opdracht9(uint32_t search = 1000)
-{
-    for (uint32_t a = 1; a <= search - 2; a++)
-    {
-        for (uint32_t b = 1; b <= search - 2; b++)
-        {
-            uint32_t c = search - a - b;
-
+{   for (uint32_t a = 1; a <= search - 2; a++)
+    {   for (uint32_t b = 1; b <= search - 2; b++)
+        {   uint32_t c = search - a - b;
             if (a * a + b * b == c * c)
                 return a * b * c;
         }
     }
-
     return 0;
 }
 
@@ -378,19 +368,16 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 */
 
-uint64_t opdracht10(uint32_t max = 1999999) {
-    uint64_t sum = 0;
+static uint64_t opdracht10(uint32_t max = 1999999)
+{   uint64_t sum = 0;
     vector<bool> v(max, true);
     v[0] = v[1] = false;
-    
     for (uint32_t p = 2; p * p <= max; p++)
         if (v[p] == true)
             for (uint32_t i = p * 2; i <= max; i += p)
                 v[i] = false;
-
     for (uint32_t i = 1; i <= max; i++)
         sum += v[i] == true ? i : 0;
-
     return sum;
 }
 
@@ -2271,6 +2258,33 @@ longest recurring cycle in its decimal fraction part.
 Antwoord: 983
 */
 
+/*
+Simpel algoritme om cycle length te bepalen, werkt niet
+voor sommige nummers met cycle length 1, dan wordt er
+0 teruggegeven. Dit zal de uitkomst van deze opdracht niet veranderen
+*/
+static uint32_t cycleLength(uint32_t n)
+{   uint32_t a = 1, t = 0;
+    while (t < n)
+    {   a = a * 10 % n, t++;
+        if (a == 0) return 0;
+        if (a == 1) return t;
+    }
+    return 0;
+}
+
+static uint32_t opdracht26()
+{   uint32_t best_n = 0, best_length = 0;
+    for (uint32_t i = 999; i > 1; i--)
+    {   uint32_t clength = cycleLength(i);
+        if (clength > best_length)
+        {   best_n = i, best_length = clength;
+            if (best_length == i - 1) break;
+        }
+    }
+    return best_n;
+}
+
 static uint32_t pow26(uint32_t base, uint32_t i)
 {   if (i == 0) return 1;
     uint32_t ret = base;
@@ -2278,7 +2292,7 @@ static uint32_t pow26(uint32_t base, uint32_t i)
     return ret;
 }
 
-static uint32_t opdracht26()
+static uint32_t opdracht26b()
 {
     return 0;
     uint32_t num = 1, longest = 1;
@@ -3032,7 +3046,6 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    answers[26 - 1] = 0;
     answers[27 - 1] = 0;
     answers[32 - 1] = 0;
     answers[38 - 1] = 0;

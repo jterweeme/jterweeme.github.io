@@ -260,7 +260,7 @@ What is the 10 001st prime number?
 function opdracht7()
 {   function reducer(n, presets = [300, 100, 8])
     {   for (var i = 0; i &lt; presets.length; i++)
-            if (n &gt; presets[i] * presets[i]) return Math.floor(n / presets[i]);
+            if (n &gt; presets[i] * presets[i]) return n / presets[i] |0;
         return n;
     }
     var p = 3, sqp = reducer(p), ret = 0, n = 10001;
