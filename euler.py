@@ -46,17 +46,20 @@ Antwoord: 4,613,732
 2 + 8 + 34 + 144 + 610 + 2,584 + 10,946 + 46,368 + 196,418 + 832,040 + 3,524,578 = 4,613,732
 """
 
+def fibonacci(term1 = 1, term2 = 2):
+    yield term1
+    yield term2
+    while True:
+        yield term1 + term2
+        term1, term2 = term2, term1 + term2
+
 def opdracht2(xmax = 4*10**6):
     def fibonacci(xmax, term1 = 1, term2 = 2):
         yield term1
         yield term2
-        while True:
-            xsum = term1 + term2
-            if xsum > xmax:
-                break
-            yield xsum
-            term1 = term2
-            term2 = xsum
+        while term1 + term2 <= xmax:
+            yield term1 + term2
+            term1, term2 = term2, term1 + term2
     def evenFib(genx):
         for term in genx:
             if term % 2 == 0:
@@ -976,19 +979,19 @@ Antwoord: 31626
 6232 - 6368
 """
 
-def amicable_pairs_sum(low = 1, high = 10000):
+def amicable_pairs_sum(low = 1, high = 10**4):
     def sum_divisors(n):
         s = 0
         for i in range(1,n):
             if n % i == 0: s += i
         return s
-    L = list()
+    l = list()
     for i in range(low, high + 1):
-        L.append(sum_divisors(i))
+        l.append(sum_divisors(i))
     xsum = 0
     for i in range(high - low + 1):
-        ind = L[i]
-        if i + low < ind and low <= ind and ind <= high and L[ind - low] == i + low:
+        ind = l[i]
+        if i + low < ind and low <= ind and ind <= high and l[ind - low] == i + low:
             xsum += (i + low) + ind
     return xsum
 
@@ -1823,7 +1826,7 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 """
 
-def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
+def opdracht24(pool = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
     def concat24(lst):
         ret = 0
         for i, n in enumerate(reversed(lst)):
@@ -1835,10 +1838,10 @@ def opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
             xsum *= a
         return xsum
     lst = list()
-    while len(a) > 0:
-        i, perm = divmod(perm, factorial(len(a) - 1))
-        lst.append(a[i])
-        a.pop(i)
+    while len(pool) > 0:
+        i, perm = divmod(perm, factorial(len(pool) - 1))
+        lst.append(pool[i])
+        pool.pop(i)
     return concat24(lst)
 
 """
@@ -2937,28 +2940,21 @@ Antwoord: 16,695,334,890
 """
 
 def opdracht43():
-    def permutations(iterable, r=None):
-        pool = tuple(iterable)
+    def permutations(pool):
         n = len(pool)
-        r = n if r is None else r
-        if r > n:
-            return
-        indices = list(range(n))
-        cycles = list(range(n, n-r, -1))
-        yield list(pool[i] for i in indices[:r])
-        while n:
-            for i in reversed(range(r)):
-                cycles[i] -= 1
-                if cycles[i] == 0:
-                    indices[i:] = indices[i+1:] + indices[i:i+1]
-                    cycles[i] = n - i
-                else:
-                    j = cycles[i]
-                    indices[i], indices[-j] = indices[-j], indices[i]
-                    yield list(pool[i] for i in indices[:r])
-                    break
+        c = [0] * n
+        yield(list(pool))
+        i = 0
+        while i < n:
+            if c[i] < i:
+                if i % 2 == 0: pool[0], pool[i] = pool[i], pool[0]
+                else: pool[c[i]], pool[i] = pool[i], pool[c[i]]
+                yield(list(pool))
+                c[i] += 1
+                i = 0
             else:
-                return
+                c[i] = 0
+                i += 1
     def concat(lst):
         ret = 0
         for i, n in enumerate(reversed(lst)):
@@ -2998,7 +2994,7 @@ Find the pair of pentagonal numbers, Pj and Pk, for which
 their sum and difference are pentagonal and D = |Pk − Pj|
 is minimised; what is the value of D?
 
-Antwoord: 5482660
+Antwoord: 5,482,660
 """
 
 def opdracht44(window = 10**4):
