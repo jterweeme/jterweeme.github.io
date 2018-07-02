@@ -217,13 +217,9 @@ Antwoord: 104,743
 */
 
 static uint32_t reducer7(uint32_t n)
-{
-    if (n > 300 * 300)
-        return n / 300;
-    if (n > 100 * 100)
-        return n / 100;
-    if (n > 8 * 8)
-        return n / 8;
+{   if (n > 300 * 300) return n / 300;
+    if (n > 100 * 100) return n / 100;
+    if (n > 8 * 8) return n / 8;
     return n;
 }
 
@@ -2150,8 +2146,7 @@ Antwoord: 4,782
 */
 
 class LongNumber25
-{
-    uint8_t _buf[1500] = {0};
+{   uint8_t _buf[1500] = {0};
 public:
     void clear() { memset(_buf, 0, sizeof(_buf)); }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
@@ -2163,20 +2158,17 @@ public:
 };
 
 void LongNumber25::set(LongNumber25 n)
-{
-    for (uint16_t i = 0; i < 1500; i++)
+{   for (uint16_t i = 0; i < 1500; i++)
         _buf[i] = n.decimal(i);
 }
 
 void LongNumber25::dump(ostream &os) const
-{
-    for (uint16_t i = digits(); i > 0; i--)
+{   for (uint16_t i = digits(); i > 0; i--)
         os << (uint16_t)_buf[i - 1];
 }
 
 uint16_t LongNumber25::digits() const
-{
-    uint16_t i;
+{   uint16_t i;
     for (i = 1500; i > 0; i--)
         if (_buf[i - 1] > 0)
             return i;
@@ -2184,14 +2176,9 @@ uint16_t LongNumber25::digits() const
 }
 
 void LongNumber25::set(uint64_t n)
-{
-    memset(_buf, 0, sizeof(_buf));
-
+{   memset(_buf, 0, sizeof(_buf));
     for (uint16_t i = 0; n > 0; i++)
-    {
-        _buf[i] = n % 10;
-        n /= 10;
-    }
+        _buf[i] = n % 10, n = n / 10;
 }
 
 void LongNumber25::add(LongNumber25 &n)
@@ -2733,33 +2720,28 @@ Antwoord: 748,317
 */
 
 uint32_t pow37(uint32_t base, uint32_t i)
-{
-    if (i == 0) return 1;
+{   if (i == 0) return 1;
     uint32_t ret = base;
     while (--i) ret = ret * base;
     return ret;
 }
 
 static uint8_t decimals37(uint32_t n)
-{
-    uint8_t i = 0;
+{   uint8_t i = 0;
     while (n > pow37(10, i)) i++;
     return i;
 }
 
 static bool isrighttruncatable(uint32_t prime, set<uint32_t> &primes)
-{
-    while (prime > 10) {
-        prime = prime / 10;
+{   while (prime > 10)
+    {   prime = prime / 10;
         if (primes.count(prime) == 0) return false;
     }
-
     return true;
 }
 
 static uint32_t truncate_left(uint32_t n)
-{
-    uint8_t exp = decimals37(n) - 1;
+{   uint8_t exp = decimals37(n) - 1;
     return n % pow37(10, exp);
 }
 
@@ -2941,6 +2923,51 @@ static uint32_t opdracht40()
 }
 
 /*
+#41: Pandigital prime
+
+We shall say that an n-digit number is pandigital if it makes use of all
+the digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital
+and is also prime.
+
+What is the largest n-digit pandigital prime that exists?
+*/
+
+static uint32_t linSearch41(vector<uint8_t> &vec, uint8_t n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
+    return 0;
+}
+
+static bool hasDigitsOnce41(uint64_t n, vector<uint8_t> &nset)
+{   while (n > 0)
+    {   uint32_t pos = linSearch41(nset, n % 10);
+        if (pos) nset.erase(nset.begin() + (pos - 1));
+        else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
+static bool isPandigital41(uint64_t n)
+{   vector<uint8_t> nset;
+    for (uint8_t i = 1; i <= decimals38(n); i++) nset.push_back(i);
+    return hasDigitsOnce41(n, nset);
+}
+
+static uint32_t opdracht41()
+{   vector<bool> sieve(7654321, true);
+    sieve[0] = sieve[1] = false;
+    for (uint32_t i = 0; i < sieve.size(); i++)
+        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
+    vector<uint32_t> primes;
+    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+    uint32_t best = 0;
+    for (auto prime : primes)
+        if (isPandigital41(prime) && prime > best) best = prime;
+    return best;
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3026,6 +3053,7 @@ static uint64_t run(uint32_t p)
         return opdracht38();
     case 39: return opdracht39();
     case 40: return opdracht40();
+    case 41: return opdracht41();
     }
 
     return 0;
@@ -3161,11 +3189,10 @@ static void singlethread(uint8_t max)
 int main()
 {
     answers[27 - 1] = 0;
-    //answers[38 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(40);
+    multithread(41);
 #else
-    singlethread(40);
+    singlethread(41);
 #endif
     return 0;
 }
