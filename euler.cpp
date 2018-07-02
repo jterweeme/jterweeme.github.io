@@ -747,14 +747,9 @@ char number13[100][51] = {
 
 static uint64_t pow13(uint64_t base, uint16_t e)
 {
-    if (e == 0)
-        return 1;
-
+    if (e == 0) return 1;
     uint64_t ret = base;
-
-    for (uint16_t i = 1; i < e; i++)
-        ret *= base;
-
+    for (uint16_t i = 1; i < e; i++) ret *= base;
     return ret;
 }
 
@@ -2085,12 +2080,8 @@ Antwoord: 2,783,915,460
 */
 
 static uint32_t fac24(uint32_t n)
-{
-    uint32_t xsum = 1;
-
-    while (n > 1)
-        xsum *= n--;
-
+{   uint32_t xsum = 1;
+    while (n > 1) xsum *= n--;
     return xsum;
 }
 
@@ -2102,13 +2093,10 @@ static uint32_t pow24(uint64_t base, uint16_t e)
 }
 
 static uint32_t concat24(vector <uint8_t> &v)
-{
-    uint32_t ret = 0;
+{   uint32_t ret = 0;
     uint8_t last = v.size() - 1;
-    
     for (uint8_t i = 0; i <= last; i++)
         ret += v.at(last - i) * pow24(10, i);
-
     return ret;
 }
 
@@ -2521,9 +2509,55 @@ include it once in your sum.
 Antwoord: 45,228
 */
 
-static uint64_t opdracht32()
-{
+uint32_t pow32(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint32_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint8_t decimals32(uint32_t n)
+{   uint8_t i = 0;
+    while (n > pow32(10, i)) i++;
+    return i;
+}
+
+static uint32_t linSearch32(vector<uint8_t> &vec, uint8_t n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
     return 0;
+}
+
+static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
+{   while (n > 0)
+    {   uint32_t pos = linSearch32(nset, n % 10);
+        if (pos) nset.erase(nset.begin() + (pos - 1));
+        else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
+static void panProducts32(set<uint32_t> &st)
+{   for (uint32_t i = 2; i < 60; i++)
+    {   uint32_t start = i < 10 ? 1234 : 123;
+        for (uint32_t j = start; j < 10000/i; j++)
+        {   vector<uint8_t> nset;
+            for (uint8_t i = 1; i <= 9; i++) nset.push_back(i);
+            if (hasDigitsOnce32(i, nset) == false) continue;
+            if (hasDigitsOnce32(j, nset) == false) continue;
+            if (hasDigitsOnce32(i * j, nset)  == false) continue;
+            st.insert(i*j);
+        }
+    }
+}
+
+static uint32_t opdracht32()
+{   set<uint32_t> st;
+    panProducts32(st);
+    uint32_t xsum = 0;
+    for (set<uint32_t>::iterator it = st.begin(); it != st.end(); it++) xsum += *it;
+    return xsum;
 }
 
 /*
@@ -2735,31 +2769,21 @@ static uint32_t truncate_left(uint32_t n)
 }
 
 static bool islefttruncatable(uint32_t prime, set<uint32_t> &primes)
-{
-    uint8_t length = decimals37(prime);
-    
+{   uint8_t length = decimals37(prime);
     for (uint8_t i = 0; i < length; i++) {
         if (primes.count(prime) == 0) return false;
         prime = truncate_left(prime);
     }
-    
     return true;
 }
 
 static void sieve37(set<uint32_t> &primes, uint32_t max)
-{
-    vector<bool> v(max, true);
+{   vector<bool> v(max, true);
     v[0] = v[1] = false;
-    
     for (uint32_t p = 2; p * p <= max; p++)
-    {
         if (v[p] == true)
-        {
             for (uint32_t i = p * 2; i <= max; i += p)
                 v[i] = false;
-        }
-    }
-
     for (uint32_t i = 1; i <= max; i++)
         if (v[i] == true)
             primes.insert(i);
@@ -2781,6 +2805,71 @@ static uint32_t opdracht37()
     }
 
     return xsum;
+}
+
+/*
+#38: Pandigital multiples
+
+Take the number 192 and multiply it by each of 1, 2, and 3:
+
+    192 × 1 = 192
+    192 × 2 = 384
+    192 × 3 = 576
+
+By concatenating each product we get the 1 to 9 pandigital, 192384576. We
+will call 192384576 the concatenated product of 192 and (1,2,3)
+
+The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4,
+and 5, giving the pandigital, 918273645, which is the concatenated product
+of 9 and (1,2,3,4,5).
+
+What is the largest 1 to 9 pandigital 9-digit number that can be formed as
+the concatenated product of an integer with (1,2, ... , n) where n > 1?
+
+Antwoord: 932,718,654
+*/
+
+uint32_t pow38(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint32_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint8_t decimals38(uint32_t n)
+{   uint8_t i = 0;
+    while (n > pow38(10, i)) i++;
+    return i;
+}
+
+static uint32_t linSearch38(vector<uint8_t> &vec, uint8_t n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
+    return 0;
+}
+
+static bool hasDigitsOnce(uint64_t n, vector<uint8_t> &nset)
+{   while (n > 0)
+    {   uint32_t pos = linSearch38(nset, n % 10);
+        if (pos) nset.erase(nset.begin() + (pos - 1));
+        else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
+static bool isPandigital(uint64_t n)
+{   vector<uint8_t> nset;
+    for (uint8_t i = 1; i <= decimals38(n); i++) nset.push_back(i);
+    return hasDigitsOnce(n, nset);
+}
+
+static uint64_t opdracht38()
+{   for (uint32_t i = 9387; i > 9234; i--)
+    {   uint64_t result = 2 * i + i * 100000;
+        if (isPandigital(result)) return result;
+    }
+    return 0;
 }
 
 /*
@@ -2909,7 +2998,7 @@ static uint64_t run(uint32_t p)
     case 37:
         return opdracht37();
     case 38:
-        return 0;
+        return opdracht38();
     case 39:
         return opdracht39();
     }
@@ -3047,8 +3136,7 @@ static void singlethread(uint8_t max)
 int main()
 {
     answers[27 - 1] = 0;
-    answers[32 - 1] = 0;
-    answers[38 - 1] = 0;
+    //answers[38 - 1] = 0;
 #ifdef MULTITHREAD
     multithread(39);
 #else

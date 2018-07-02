@@ -2241,26 +2241,32 @@ way so be sure to only include it once in your sum.
 Antwoord: 45,228
 """
 
+"""
+4*1738 + 4*1963 + 12*483 + 18*297 + 0*27*198 + 28*157 + 39*186 + 0*42*138 + 48*159 =
+6952 + 7852 + 5796 + 5346 + 0*5346 + 4396 + 7254 + 0*5796 + 7632 =
+45,228
+"""
+
 def opdracht32():
     def hasDigitsOnce(n, nset):
         for i in n:
             if i in nset: nset.remove(i)
             else: return False
         return True
-    def isPandigital(n):
-        return hasDigitsOnce(n, [i for i in range(1, len(n) + 1)])
-    p = set()
+    def isPandigital(n): return hasDigitsOnce(n, list(range(1, len(n) + 1)))
     def arrize(n):
         arr = []
         while n: arr.append(n % 10); n = n // 10
         arr.reverse()
         return arr
-    for i in range(2,  60):
-        start = 1234 if i < 10 else 123
-        for j in range(start, 10**4//i):
-            if isPandigital(arrize(i) + arrize(j) + arrize(i*j)):
-                p.add(i*j)
-    return sum(p)
+    def panProducts():
+        for i in range(2,  60):
+            start = 1234 if i < 10 else 123
+            for j in range(start, 10**4//i):
+                concat = arrize(i) + arrize(j) + arrize(i*j)
+                if isPandigital(concat):
+                    yield i*j
+    return sum(set(panProducts()))
 
 """
 #33: Digit cancelling fractions
@@ -2486,14 +2492,16 @@ the concatenated product of an integer with (1,2, ... , n) where n > 1?
 Antwoord: 932,718,654
 """
 
+"""
+9,327*10^5 + 2*9,327 = 9,327*10^5 + 18,654 = 932,718,654
+"""
+
 def opdracht38():
     def decimals(n):
         i = 0
-        while n >= 10**i:
-            i += 1
+        while n >= 10**i: i += 1
         return i
-    def concat38(a, b):
-        return b + a * 10**decimals(b)
+    def concat(a, b): return b + a * 10**decimals(b)
     def hasDigitsOnce(n, nset):
         def digits(n):
             while n > 0: yield n % 10; n = n // 10;
@@ -2504,7 +2512,7 @@ def opdracht38():
     def isPandigital(n):
         return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
     for i in range(9387, 9234, -1):
-        result = concat38(i, 2 * i)
+        result = concat(i, 2 * i)
         if isPandigital(result):
             return result
     return 0
