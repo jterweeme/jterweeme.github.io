@@ -1068,7 +1068,7 @@ static bool isLeap(uint16_t year)
     return false;
 }
 
-static uint8_t TUESDAY = 0, WEDNESDAY = 1, THURSDAY = 2, FRIDAY = 3, SATURDAY = 4,
+static constexpr uint8_t TUESDAY = 0, WEDNESDAY = 1, THURSDAY = 2, FRIDAY = 3, SATURDAY = 4,
     SUNDAY = 5, MONDAY = 6;
 
 static uint64_t opdracht19()
@@ -2280,6 +2280,7 @@ static uint32_t pow26(uint32_t base, uint32_t i)
     return ret;
 }
 
+static uint32_t opdracht26b() __attribute__((unused));
 static uint32_t opdracht26b()
 {
     return 0;
@@ -2514,12 +2515,6 @@ uint32_t pow32(uint32_t base, uint32_t i)
     uint32_t ret = base;
     while (--i) ret = ret * base;
     return ret;
-}
-
-static uint8_t decimals32(uint32_t n)
-{   uint8_t i = 0;
-    while (n > pow32(10, i)) i++;
-    return i;
 }
 
 static uint32_t linSearch32(vector<uint8_t> &vec, uint8_t n)
@@ -2904,15 +2899,45 @@ Antwoord: 840
 (399, 40, 401)
 */
 
-static uint32_t opdracht39() {
-    uint32_t best_p = 0, best_solutions = 0;
-    for (uint32_t p = 100; p <= 1000; p += 2) {
-        uint32_t solutions = 0;
+static uint32_t opdracht39()
+{   uint32_t best_p = 0, best_solutions = 0;
+    for (uint32_t p = 100; p <= 1000; p += 2)
+    {   uint32_t solutions = 0;
         for (uint32_t a = 2; a < p / 3; a++)
             solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
         if (solutions > best_solutions) best_solutions = solutions, best_p = p;
     }
     return best_p;
+}
+
+/*
+#40: Champernowne's constant
+
+An irrational decimal fraction is created by concatenating the positive integers:
+
+0.123456789101112131415161718192021...
+
+It can be seen that the 12th digit of the fractional part is 1.
+
+If dn represents the nth digit of the fractional
+part, find the value of the following expression.
+
+d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+*/
+
+static uint32_t getDigit40(uint32_t i)
+{   uint32_t offset = 0, decimals = 1, setLow = 1, setLength = 9;
+    for (uint32_t limit = 9; i >= limit; limit += setLength * decimals)
+        offset = limit, decimals++, setLow *= 10, setLength *= 10;
+    uint32_t n = (i - offset) / decimals + setLow, ind = (i - offset) % decimals;
+    for (uint32_t x = 0; x < decimals - (ind + 1); x++) n /= 10;
+    return n % 10;
+}
+
+static uint32_t opdracht40()
+{   uint32_t product = 1;
+    for (uint32_t i = 1; i <= 1000000; i *= 10) product *= getDigit40(i - 1);
+    return product;
 }
 
 /*
@@ -2999,8 +3024,8 @@ static uint64_t run(uint32_t p)
         return opdracht37();
     case 38:
         return opdracht38();
-    case 39:
-        return opdracht39();
+    case 39: return opdracht39();
+    case 40: return opdracht40();
     }
 
     return 0;
@@ -3138,9 +3163,9 @@ int main()
     answers[27 - 1] = 0;
     //answers[38 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(39);
+    multithread(40);
 #else
-    singlethread(39);
+    singlethread(40);
 #endif
     return 0;
 }

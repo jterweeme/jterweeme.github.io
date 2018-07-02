@@ -2582,7 +2582,7 @@ function opdracht40(indices = [0,9,99,999,9999,99999,999999])
             return xdigits[end - i];
         }
         var offset = 0, decimals = 1, setLow = 1, setLength = 9;
-        for (var limit = 9; i &gt; limit; limit += setLength * decimals)
+        for (var limit = 9; i &gt;= limit; limit += setLength * decimals)
             offset = limit, decimals++, setLow *= 10, setLength *= 10;
         n = Math.floor((i - offset) / decimals), ind = (i - offset) % decimals;
         return getDig(n + setLow, ind);
