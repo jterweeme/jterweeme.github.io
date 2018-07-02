@@ -744,7 +744,7 @@ oplossing 2:
 def opdracht15b(size = 20):
     def factorial(n):
         xsum = 1
-        for a in range(n, 0, -1): xsum *= a
+        for a in range(2, n + 1): xsum *= a
         return xsum
     return factorial(2 * size) // factorial(size) // factorial(size)
 
@@ -1834,7 +1834,7 @@ def opdracht24(pool = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
         return ret
     def factorial(n):
         xsum = 1
-        for a in range(n, 0, -1):
+        for a in range(2, n + 1):
             xsum *= a
         return xsum
     lst = list()
@@ -3203,8 +3203,7 @@ def opdracht49():
         return i
     def factorial(n):
         xsum = 1
-        for a in range(n, 0, -1):
-            xsum *= a
+        for a in range(2, n + 1): xsum *= a
         return xsum
     def digits(n):
         while n > 0: yield n % 10; n = n // 10;
@@ -3288,6 +3287,41 @@ def opdracht50(limit = 10**6):
                 best_prime = xsum
     return best_prime;
 
+"""
+#53: Combinatoric selections
+
+There are exactly ten ways of selecting three from five, 12345:
+
+123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+
+In combinatorics, we use the notation, 5C3 = 10.
+
+In general,
+nCr =  
+n!
+r!(n−r)!
+ ,where r ≤ n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+
+It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
+
+How many, not necessarily distinct, values of  nCr,
+for 1 ≤ n ≤ 100, are greater than one-million?
+
+"""
+
+def opdracht53():
+    def factorial(n):
+        xsum = 1
+        for a in range(2, n + 1): xsum *= a
+        return xsum
+    def combinations(n, r):
+        return factorial(n) // (factorial(r) * factorial(n - r))
+    xcount = 0
+    for a in range(23,101):
+        for b in range(4, a - 3):
+            if combinations(a, b) >= 10**6:
+                xcount += 1
+    return xcount
 
 """
 Einde opdrachten
@@ -3344,6 +3378,9 @@ def runn2(n = 1):
     if n == 48: return opdracht48()
     if n == 49: return opdracht49()
     if n == 50: return opdracht50()
+    if n == 51: return 0
+    if n == 52: return 0
+    if n == 53: return opdracht53()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3353,7 +3390,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
-#answers[46 - 1] = 0
+answers[51 - 1] = 0
+answers[52 - 1] = 0
 
 import time
 import math
@@ -3365,13 +3403,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 50 + 1))):
+def runm(l = list(range(1, 53 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 50 + 1)):
+def runs(l = range(1, 53 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)

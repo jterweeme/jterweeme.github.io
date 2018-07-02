@@ -53,15 +53,16 @@ code em {
     left: 520px;
 }
 </style>
+<script src="verkeer.js"></script>
 </head>
-<body>
+<body onload="start()">
 <?php
 require_once("mainmenu.php");
 $mm = new MainMenu();
 echo $mm;
 ?>
 
-<audio>
+<audio id="horn">
     <source src="horn.ogg" type="audio/ogg"/>
 </audio>
 <audio>
