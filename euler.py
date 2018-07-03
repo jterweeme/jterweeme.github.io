@@ -3266,7 +3266,7 @@ def opdracht50(limit = 10**6):
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
+        for i, isprime in enumerate(a):
             if isprime:
                 yield i
                 for n in range(i * i, limit, i):
@@ -3285,6 +3285,64 @@ def opdracht50(limit = 10**6):
                 best_sum = sublen
                 best_prime = xsum
     return best_prime;
+
+"""
+#51: Prime digit replacements
+
+By replacing the 1st digit of the 2-digit number *3, it turns out that six
+of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+
+By replacing the 3rd and 4th digits of 56**3 with the same digit, this
+5-digit number is the first example having seven primes among the ten
+generated numbers, yielding the family: 56003, 56113, 56333, 56443,
+56663, 56773, and 56993. Consequently 56003, being the first member of
+this family, is the smallest prime with this property.
+
+Find the smallest prime which, by replacing part of the number (not
+necessarily adjacent digits) with the same digit, is part of an eight
+prime value family.
+"""
+
+def opdracht51():
+    def binarize(n):
+        div, dec = 2, 1
+        while n:
+            yield dec if n % div else 0
+            n -= n % div
+            div *= 2
+            dec *= 10
+    def digit(n, i):
+        return n // 10**i % 10
+    def decimals(n):
+        i = 0
+        while n >= 10**i: i += 1
+        return i
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for i, isprime in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    lprimes = list(sieve(8**7))
+    sprimes = set(lprimes)
+    def family(n, mask):
+        xlen = decimals(n)
+        for i, b in enumerate(binarize(mask)):
+            n -= b * digit(n, i)
+        for a in range(0, 10):
+            tmp = n
+            for b in binarize(mask): tmp += b * a
+            if decimals(tmp) == xlen: yield tmp
+    def primeFamily(primes, n, mask):
+        for x in family(n, mask):
+            if x in primes: yield x
+    for i in lprimes:
+        for mask in range(1, 2**decimals(i)):
+            if len(set(primeFamily(sprimes, i, mask))) == 8:
+                return min(primeFamily(sprimes, i, mask))
+    return 0
 
 """
 #52: Pandigital multiples
@@ -3410,7 +3468,7 @@ def runn2(n = 1):
     if n == 48: return opdracht48()
     if n == 49: return opdracht49()
     if n == 50: return opdracht50()
-    if n == 51: return 0
+    if n == 51: return opdracht51()
     if n == 52: return opdracht52()
     if n == 53: return opdracht53()
     return 0
@@ -3422,7 +3480,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
-answers[51 - 1] = 0
+#answers[51 - 1] = 0
 
 import time
 import math

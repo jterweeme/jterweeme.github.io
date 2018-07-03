@@ -30,7 +30,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 */
 
-static uint32_t summation1(uint32_t n, uint32_t xmax)
+static constexpr uint32_t summation1(uint32_t n, uint32_t xmax)
 {   uint32_t xlen = xmax / n;
     return ((xlen * (xlen + 1)) >> 1) * n;
 }
@@ -3155,6 +3155,7 @@ static uint64_t run(uint32_t p)
     case 43: return opdracht43();
     case 44: return opdracht44();
     case 45: return opdracht45();
+    case 48: return opdracht48();
     }
     return 0;
 }
