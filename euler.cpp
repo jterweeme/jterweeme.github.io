@@ -504,7 +504,7 @@ What is the value of the first triangle number to have over five hundred divisor
 Antwoord: 76,576,500
 */
 
-static uint32_t num_divisors(uint64_t n)
+static uint32_t num_divisors(uint32_t n)
 {   if (n % 2 == 0) n = n >> 1;
     uint32_t divisors = 1, count = 0;
     while (n % 2 == 0) count++, n = n >> 1;
@@ -843,9 +843,8 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1,366
 */
 
-static uint64_t opdracht16(uint16_t e = 1000)
-{
-    uint8_t largeNum[400] = {0};
+static uint32_t opdracht16(uint16_t e = 1000)
+{   uint8_t largeNum[400] = {0};
     largeNum[0] = 2;
     uint8_t carry = 0;
     uint32_t sum = 0;
@@ -890,7 +889,7 @@ static size_t len(const char *s)
     return strlen(s);
 }
 
-static uint64_t opdracht17()
+static uint32_t opdracht17()
 {
     char arr1[][15] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
@@ -898,7 +897,7 @@ static uint64_t opdracht17()
         "twenty", "thirty", "forty", "fifty", "sixty",
         "seventy", "eighty", "ninety"};
 
-    uint64_t xsum = 0;
+    uint32_t xsum = 0;
 
     for (uint8_t i = 0; i < 19; i++)
         xsum += len(arr1[i]);
@@ -1067,7 +1066,7 @@ static bool isLeap(uint16_t year)
 static constexpr uint8_t TUESDAY = 0, WEDNESDAY = 1, THURSDAY = 2, FRIDAY = 3, SATURDAY = 4,
     SUNDAY = 5, MONDAY = 6;
 
-static uint64_t opdracht19()
+static uint32_t opdracht19()
 {
     uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     uint32_t day = 0;
@@ -1105,28 +1104,20 @@ Antwoord: 648
 */
 
 static uint32_t opdracht20(uint8_t f = 100)
-{
-    uint16_t buf[200] = {0};
+{   uint16_t buf[200] = {0};
     buf[0] = f;
-    
     for (uint8_t i = f - 1; i > 0; i--)
-    {
-        uint16_t carry = 0;
-
+    {   uint16_t carry = 0;
         for (uint8_t j = 0; j < 200; j++)
-        {
-            buf[j] *= i;
+        {   buf[j] *= i;
             buf[j] += carry;
             carry = buf[j] / 10;
             buf[j] = buf[j] % 10;
         }
     }
-
     uint32_t sum = 0;
-
     for (uint8_t i = 0; i < 200; i++)
         sum += buf[i];
-
     return sum;
 }
 
@@ -2767,20 +2758,15 @@ static void sieve37(set<uint32_t> &primes, uint32_t max)
 }
 
 static uint32_t opdracht37()
-{
-    set<uint32_t> primes;
+{   set<uint32_t> primes;
     sieve37(primes, 999999);
     uint32_t xsum = 0;
-
     for (auto prime : primes)
-    {
-        if (prime == 2 || prime == 3 || prime == 5 || prime == 7)
+    {   if (prime == 2 || prime == 3 || prime == 5 || prime == 7)
             continue;
-
         if (islefttruncatable(prime, primes) && isrighttruncatable(prime, primes))
             xsum += prime;
     }
-
     return xsum;
 }
 
@@ -2841,9 +2827,9 @@ static bool isPandigital(uint64_t n)
     return hasDigitsOnce(n, nset);
 }
 
-static uint64_t opdracht38()
+static uint32_t opdracht38()
 {   for (uint32_t i = 9387; i > 9234; i--)
-    {   uint64_t result = 2 * i + i * 100000;
+    {   uint32_t result = 2 * i + i * 100000;
         if (isPandigital(result)) return result;
     }
     return 0;
@@ -2967,6 +2953,77 @@ static uint32_t opdracht41()
     return best;
 }
 
+static uint32_t opdracht42()
+{   return 0;
+}
+
+/*
+#43: Sub-string divisibility
+
+The number, 1406357289, is a 0 to 9 pandigital number because it is made
+up of each of the digits 0 to 9 in some order, but it also has a rather
+interesting sub-string divisibility property.
+
+Let d1 be the 1st digit, d2 be the 2nd digit, and
+so on. In this way, we note the following:
+
+d2d3d4=406 is divisible by 2
+d3d4d5=063 is divisible by 3
+d4d5d6=635 is divisible by 5
+d5d6d7=357 is divisible by 7
+d6d7d8=572 is divisible by 11
+d7d8d9=728 is divisible by 13
+d8d9d10=289 is divisible by 17
+
+Find the sum of all 0 to 9 pandigital numbers with this property.
+*/
+
+uint64_t pow43(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint64_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint64_t concat43(vector<uint8_t> &v)
+{   uint64_t ret = 0;
+    for (uint32_t i = 0; i < v.size(); i++)
+        ret += v.at(v.size() - 1 - i) * pow43(10, i);
+    return ret;
+}
+
+static void permutations43(vector<uint64_t> &ps, vector<uint8_t> &pool)
+{   uint32_t n = pool.size(), i = 0, tmp = 0;
+    vector<uint8_t> c(n, 0);
+    ps.push_back(concat43(pool));
+    while (i < n)
+    {   if (c[i] < i)
+        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
+            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
+            ps.push_back(concat43(pool));
+            c[i]++, i = 0;
+        } else c[i++] = 0;
+    }
+}
+
+static bool test43(uint64_t n)
+{   uint8_t divs[] = {17,13,11,7,5,3,2};
+    for (uint8_t i = 0; i < 7; i++)
+        if ((n / pow43(10, i) % 1000) % divs[i] != 0)
+            return false;
+    return true;
+}
+
+static uint64_t opdracht43()
+{   vector<uint64_t> ps;
+    vector<uint8_t> pool;
+    for (uint8_t i = 0; i <= 9; i++) pool.push_back(i);
+    permutations43(ps, pool);
+    uint64_t xsum = 0;
+    for (auto n : ps) if (test43(n)) xsum += n;
+    return xsum;
+}
+
 /*
 Einde opdrachten
 */
@@ -3054,6 +3111,8 @@ static uint64_t run(uint32_t p)
     case 39: return opdracht39();
     case 40: return opdracht40();
     case 41: return opdracht41();
+    case 42: return opdracht42();
+    case 43: return opdracht43();
     }
 
     return 0;
@@ -3189,10 +3248,11 @@ static void singlethread(uint8_t max)
 int main()
 {
     answers[27 - 1] = 0;
+    answers[42 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(41);
+    multithread(43);
 #else
-    singlethread(41);
+    singlethread(43);
 #endif
     return 0;
 }

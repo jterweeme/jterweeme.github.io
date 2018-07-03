@@ -3307,20 +3307,22 @@ It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
 How many, not necessarily distinct, values of  nCr,
 for 1 ≤ n ≤ 100, are greater than one-million?
 
+Antwoord: 4,075
 """
 
 def opdracht53():
-    def factorial(n):
-        xsum = 1
-        for a in range(2, n + 1): xsum *= a
-        return xsum
     def combinations(n, r):
+        def factorial(n):
+            xsum = 1
+            for a in range(2, n + 1): xsum *= a
+            return xsum
         return factorial(n) // (factorial(r) * factorial(n - r))
     xcount = 0
     for a in range(23,101):
         for b in range(4, a - 3):
             if combinations(a, b) >= 10**6:
-                xcount += 1
+                xcount += a - b * 2 + 1
+                break
     return xcount
 
 """
