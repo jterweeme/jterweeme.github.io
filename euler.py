@@ -3271,9 +3271,8 @@ def opdracht50(limit = 10**6):
                 yield i
                 for n in range(i * i, limit, i):
                     a[n] = False
-    best_prime = 0
-    best_sum = 0
-    lprimes = [x for x in sieve(limit)]
+    best_prime, best_sum = 0, 0
+    lprimes = list(sieve(limit))
     sprimes = set(lprimes)
     xlen = len(lprimes)
     for i in range(xlen):
@@ -3286,6 +3285,37 @@ def opdracht50(limit = 10**6):
                 best_sum = sublen
                 best_prime = xsum
     return best_prime;
+
+"""
+#52: Pandigital multiples
+
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+
+Find the smallest positive integer, x, such that
+2x, 3x, 4x, 5x, and 6x, contain the same digits.
+
+Antwoord: 142,857
+"""
+
+def opdracht52():
+    def test(n, r = range(2, 6+1)):
+        def digits(n):
+            while n > 0: yield n % 10; n = n // 10;
+        def hasDigitsOnce(n, nset):
+            for i in digits(n):
+                if i in nset: nset.remove(i)
+                else: return False
+            return True
+        nset = list(digits(n))
+        for m in r:
+            if hasDigitsOnce(n * m, list(nset)) == False:
+                return False
+        return True
+    for n in range(2, 9**9):
+        if test(n):
+            return n
+    return 0
 
 """
 #53: Combinatoric selections
@@ -3381,7 +3411,7 @@ def runn2(n = 1):
     if n == 49: return opdracht49()
     if n == 50: return opdracht50()
     if n == 51: return 0
-    if n == 52: return 0
+    if n == 52: return opdracht52()
     if n == 53: return opdracht53()
     return 0
 
@@ -3393,7 +3423,6 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
 
 answers[51 - 1] = 0
-answers[52 - 1] = 0
 
 import time
 import math
