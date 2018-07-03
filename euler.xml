@@ -13,7 +13,8 @@
 <a href="#s37">37</a>, <a href="#s38">38</a>, <a href="#s39">39</a>,
 <a href="#s40">40</a>, <a href="#s41">41</a>, <a href="#s42">42</a>, <a href="#s43">43</a>,
 <a href="#s44">44</a>, <a href="#s45">45</a>, <a href="#s46">46</a>, <a href="#s47">47</a>,
-<a href="#s48">48</a>, <a href="#s49">49</a>, <a href="#s50">50</a>, <a href="#s53">53</a>
+<a href="#s48">48</a>, <a href="#s49">49</a>, <a href="#s50">50</a>,
+<a href="#s52">52</a>, <a href="#s53">53</a>
 
 <section id="s1">
 <h2>#1: Multiples of 3 and 5</h2>
@@ -3289,6 +3290,50 @@ function opdracht50(max = 10**6-1)
 alert(opdracht50());    // should give 997651
 </code>
 <button onclick="mycopy2('s50');">Copy</button>
+</section>
+
+<section id="s52">
+<h2>#52: Pandigital multiples</h2>
+<p>
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+</p>
+<p>
+Find the smallest positive integer, x, such that
+2x, 3x, 4x, 5x, and 6x, contain the same digits.
+</p>
+<code>
+function opdracht52()
+{   function linSearch(lst, n)
+    {   for (var i = 0; i &lt; lst.length; i++) if (lst[i] == n) return i + 1;
+        return 0;
+    }
+    function test(n)
+    {   function digits(n)
+        {   ret = [];
+            while (n) ret.push(n % 10), n = Math.floor(n / 10);
+            return ret;
+        }
+        function hasDigitsOnce(n, nset)
+        {   var digs = digits(n);
+            for (var i = 0; i &lt; digs.length; i++)
+            {   var nseti = linSearch(nset, digs[i]);
+                if (nseti) nset.splice(nseti - 1, 1); else return false;
+            }
+            return true;
+        }
+        var nset = digits(n);
+        for (var i = 2; i &lt;= 6; i++)
+            if (hasDigitsOnce(n * i, nset.slice()) == false)
+                return false;
+        return true;
+    }
+    for (var n = 2; true; n++) if (test(n)) return n;
+    return 0;
+}
+alert(opdracht52());    // should give 142,857
+</code>
+<button onclick="mycopy2('s52');">Copy</button>
 </section>
 
 <section id="s53">
