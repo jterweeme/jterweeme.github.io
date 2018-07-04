@@ -2919,6 +2919,7 @@ static bool isPandigital41(uint64_t n)
     return hasDigitsOnce41(n, nset);
 }
 
+// deze sieve is waarschijnlijk niet helemaal goed
 static uint32_t opdracht41()
 {   vector<bool> sieve(7654321, true);
     sieve[0] = sieve[1] = false;
@@ -3371,6 +3372,7 @@ static uint64_t pair46(vector<uint32_t> &primes, vector<uint32_t> &squares, uint
     return 0;
 }
 
+// controleer sieve
 static uint32_t opdracht46()
 {   vector<bool> sieve(999999, true);
     sieve[0] = sieve[1] = false;
@@ -3423,19 +3425,14 @@ static uint32_t primeFactors47(vector<uint32_t> &primes, uint32_t n)
 }
 
 static uint32_t opdracht47(uint32_t distinct = 4, uint32_t window = 200000)
-{   vector<bool> sieve(window, true);
-    sieve[0] = sieve[1] = false;
-    for (uint32_t i = 0; i < sieve.size(); i++)
-        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
+{   vector<bool> v(window, true);
+    v[0] = v[1] = false;
+    for (uint32_t p = 2; p * p < v.size(); p++)
+        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
     vector<uint32_t> primes;
-    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
     for (uint32_t i = 2, chain = 0; i < window; i++)
-    {   if (i == 14369 || i == 20353 || i == 28738 || i == 40706 ||
-            i == 43107 || i == 57476 || i == 61059 || i == 71845 ||
-            i == 81412 || i == 86214 || i == 100583 || i == 101765 ||
-            i == 114952 || i == 122118 || i == 129321) // why?
-            continue;
-        chain = primeFactors47(primes, i) == distinct ? chain + 1 : 0;
+    {   chain = primeFactors47(primes, i) == distinct ? chain + 1 : 0;
         if (chain == distinct) return i - (distinct - 1);
     }
     return 0;
