@@ -3452,6 +3452,48 @@ static uint64_t opdracht48()
     return result;
 }
 
+static uint32_t opdracht49()
+{
+    return 0;
+}
+
+/*
+#50: Consecutive prime sum
+
+The prime 41, can be written as the sum of six consecutive primes:
+41 = 2 + 3 + 5 + 7 + 11 + 13
+
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand
+that adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+
+Antwoord: 997,651
+*/
+
+static uint32_t opdracht50(uint32_t limit = 1000000)
+{   vector<bool> v(1000000, true);
+    v[0] = v[1] = false;
+    for (uint32_t p = 2; p * p < v.size(); p++)
+        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
+    vector<uint32_t> primes;
+    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
+    uint32_t best_prime = 0, best_sum = 0;
+    for (uint32_t i = 0; i < primes.size(); i++)
+    {   for (uint32_t j = i + best_sum; j < primes.size(); j++)
+        {   uint32_t xsum = 0;
+            for (uint32_t k = i; k <= j; k++) xsum += primes.at(k);
+            if (xsum >= limit) break;
+            uint32_t sublen = (j + 1) - i;
+            if (binary_search(primes.begin(), primes.end(), xsum) && sublen > best_sum)
+                best_sum = sublen, best_prime = xsum;
+        }
+    }
+    return best_prime;
+}
+
 /*
 Einde opdrachten
 */
@@ -3508,6 +3550,8 @@ static uint64_t run(uint32_t p)
     case 46: return opdracht46();
     case 47: return opdracht47();
     case 48: return opdracht48();
+    case 49: return opdracht49();
+    case 50: return opdracht50();
     }
     return 0;
 }
@@ -3642,11 +3686,11 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    answers[27 - 1] = 0;
+    answers[27 - 1] = answers[49 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(48);
+    multithread(50);
 #else
-    singlethread(48);
+    singlethread(50);
 #endif
     return 0;
 }
