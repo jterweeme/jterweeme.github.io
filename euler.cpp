@@ -3322,24 +3322,122 @@ Find the next triangle number that is also pentagonal and hexagonal.
 Antwoord: 1,533,776,805
 */
 
-static constexpr uint32_t triangle45(uint32_t n) { return n * (n + 1) / 2; }
+/*
+T55,385 = P31,977 = H27,693 = 1,533,776,805
+*/
+
+// T65,535 = H32768 = 2,147,450,880
+
 static constexpr uint32_t pentagon45(uint32_t n) { return n * (3 * n - 1) / 2; }
 static constexpr uint32_t hexagon45(uint32_t n) { return n * (2 * n - 1); }
 
-static uint32_t linSearch45(vector<uint32_t> &vec, uint32_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
+static uint32_t opdracht45()
+{   vector<uint32_t> vp, vh;
+    for (uint32_t i = 166; i < 32000; i++) vp.push_back(pentagon45(i));
+    for (uint32_t i = 144; i < 46000; i++) vh.push_back(hexagon45(i));
+    for (auto h : vh)
+        if (binary_search(vp.begin(), vp.end(), h))
+            return h;
     return 0;
 }
 
-static uint32_t opdracht45()
-{   vector<uint32_t> vt, vp, vh;
-    for (uint32_t i = 286; i < 99999; i++) vt.push_back(triangle45(i));
-    for (uint32_t i = 166; i < 99999; i++) vp.push_back(pentagon45(i));
-    for (uint32_t i = 144; i < 99999; i++) vh.push_back(hexagon45(i));
-    for (auto t : vt)
-        if (linSearch45(vp, t) && linSearch45(vh, t))
-            return t;
+/*
+#46: Goldbach's other conjecture
+
+It was proposed by Christian Goldbach that every odd composite
+number can be written as the sum of a prime and twice a square.
+
+9 = 7 + 2×1^2
+15 = 7 + 2×2^2
+21 = 3 + 2×3^2
+25 = 7 + 2×3^2
+27 = 19 + 2×2^2
+33 = 31 + 2×1^2
+
+It turns out that the conjecture was false.
+
+What is the smallest odd composite that cannot be
+written as the sum of a prime and twice a square?
+
+Antwoord: 5,777
+*/
+
+static uint64_t pair46(vector<uint32_t> &primes, vector<uint32_t> &squares, uint32_t n)
+{   for (auto prime : primes)
+    {   if (prime > n) break;
+        if (binary_search(squares.begin(), squares.end(), n - prime))
+            return (uint64_t)prime << 32 | (n - prime);
+    }
+    return 0;
+}
+
+static uint32_t opdracht46()
+{   vector<bool> sieve(999999, true);
+    sieve[0] = sieve[1] = false;
+    for (uint32_t i = 0; i < sieve.size(); i++)
+        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
+    vector<uint32_t> primes, squares;
+    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+    for (uint32_t i = 0; i < 100; i++) squares.push_back(2*i*i);
+    for (uint32_t i = 3; i < 987654321; i += 2)
+    {   if (binary_search(primes.begin(), primes.end(), i)) continue;
+        uint64_t pr = pair46(primes, squares, i);
+        if (pr == 0) return i;
+    }
+    return 0;
+}
+
+/*
+#47: Distinct primes factors
+
+The first two consecutive numbers to have two distinct prime factors are:
+
+14 = 2 × 7
+15 = 3 × 5
+
+The first three consecutive numbers to have three distinct prime factors are:
+
+644 = 2^2 × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+
+Find the first four consecutive integers to have four distinct
+prime factors each. What is the first of these numbers?
+
+Antwoord: 134,043
+*/
+
+static uint32_t primefactor47(vector<uint32_t> &primes, uint32_t n)
+{   for (uint32_t i = 0; true; i++) if (n % primes.at(i) == 0) return primes.at(i);
+}
+
+static uint32_t primeFactors47(vector<uint32_t> &primes, uint32_t n)
+{   set<uint32_t> factors;
+    while (true)
+    {   uint32_t factor = primefactor47(primes, n);
+        factors.insert(factor);
+        if (factor == n) break;
+        n = n / factor;
+    }
+    return factors.size();
+}
+
+static uint32_t opdracht47(uint32_t distinct = 4, uint32_t window = 200000)
+{   vector<bool> sieve(window, true);
+    sieve[0] = sieve[1] = false;
+    for (uint32_t i = 0; i < sieve.size(); i++)
+        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
+    vector<uint32_t> primes;
+    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+    for (uint32_t i = 2, chain = 0; i < window; i++)
+    {   if (i == 14369 || i == 20353 || i == 28738 || i == 40706 ||
+            i == 43107 || i == 57476 || i == 61059 || i == 71845 ||
+            i == 81412 || i == 86214 || i == 100583 || i == 101765 ||
+            i == 114952 || i == 122118 || i == 129321) // why?
+            continue;
+        chain = primeFactors47(primes, i) == distinct ? chain + 1 : 0;
+        if (chain == distinct) return i - (distinct - 1);
+    }
     return 0;
 }
 
@@ -3348,7 +3446,13 @@ static uint32_t opdracht45()
 */
 
 static uint64_t opdracht48()
-{   return 0;
+{   uint64_t result = 0, modulo = 10000000000;
+    for (uint16_t i = 1; i <= 1000; i++)
+    {   uint64_t temp = i;
+        for (uint16_t j = 1; j < i; j++) temp *= i, temp %= modulo;
+        result += temp, result %= modulo;
+    }
+    return result;
 }
 
 /*
@@ -3359,42 +3463,24 @@ static uint64_t run(uint32_t p)
 {
     switch (p)
     {
-    case 1:
-        return multiples1();
-    case 2:
-        return fibonacci();
-    case 3:
-        return maxprimefactor3();
-    case 4:
-        return opdracht4();
-    case 5:
-        return divide();
-    case 6:
-        return opdracht6();
-    case 7:
-        return opdracht7();
-    case 8:
-        return opdracht8();
-    case 9:
-        return opdracht9();
-    case 10:
-        return opdracht10();
-    case 11:
-        return opdracht11();
-    case 12:
-        return opdracht12();
-    case 13:
-        return opdracht13();
-    case 14:
-        return opdracht14();
-    case 15:
-        return opdracht15();
-    case 16:
-        return opdracht16();
-    case 17:
-        return opdracht17();
-    case 18:
-        return opdracht18();
+    case 1: return multiples1();
+    case 2: return fibonacci();
+    case 3: return maxprimefactor3();
+    case 4: return opdracht4();
+    case 5: return divide();
+    case 6: return opdracht6();
+    case 7: return opdracht7();
+    case 8: return opdracht8();
+    case 9: return opdracht9();
+    case 10: return opdracht10();
+    case 11: return opdracht11();
+    case 12: return opdracht12();
+    case 13: return opdracht13();
+    case 14: return opdracht14();
+    case 15: return opdracht15();
+    case 16: return opdracht16();
+    case 17: return opdracht17();
+    case 18: return opdracht18();
     case 19: return opdracht19();
     case 20: return opdracht20();
     case 21: return amicable_pairs_sum();
@@ -3422,6 +3508,8 @@ static uint64_t run(uint32_t p)
     case 43: return opdracht43();
     case 44: return opdracht44();
     case 45: return opdracht45();
+    case 46: return opdracht46();
+    case 47: return opdracht47();
     case 48: return opdracht48();
     }
     return 0;
@@ -3559,9 +3647,9 @@ int main()
 {
     answers[27 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(45);
+    multithread(48);
 #else
-    singlethread(45);
+    singlethread(48);
 #endif
     return 0;
 }

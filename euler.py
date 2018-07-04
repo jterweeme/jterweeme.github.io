@@ -3034,19 +3034,25 @@ Find the next triangle number that is also pentagonal and hexagonal.
 Antwoord: 1,533,776,805
 """
 
+"""
+T55,385 = P31,977 = H27,693 = 1,533,776,805
+
+every hexagonal number is triangular
+
+triangular root = (sqrt(8n+1)-1)/2
+pentagon root = (sqrt(24n+1)+1)/6
+hexagon root = (sqrt(8n+1)+1)/4
+
+"""
+
 def opdracht45():
-    def triangle(n): return n * (n + 1) // 2
     def pentagon(n): return n * (3 * n - 1)//2
     def hexagon(n): return n * (2 * n - 1)
-    ltriangle = [triangle(n) for n in range(286, 99999)]
-    striangle = set(ltriangle)
-    lpentagon = [pentagon(n) for n in range(166, 99999)]
-    spentagon = set(lpentagon)
+    spentagon = {pentagon(n) for n in range(166, 99999)}
     lhexagon = [hexagon(n) for n in range(144, 99999)]
-    shexagon = set(lhexagon)
-    for t in ltriangle:
-        if t in spentagon and t in shexagon:
-            return t
+    for h in lhexagon:
+        if h in spentagon:
+            return h
     return 0
 
 """
@@ -3081,7 +3087,7 @@ def opdracht46():
                     a[n] = False
     lprimes = list(sieve(10**6))
     sprimes = set(lprimes)
-    ssquares = {2*n**2 for n in range(100)}
+    ssquares = {2*n*n for n in range(100)}
     def pair(primes, squares, n):
         for prime in primes:
             if prime > n:
@@ -3117,7 +3123,7 @@ prime factors each. What is the first of these numbers?
 Antwoord: 134,043
 """
 
-def opdracht47(distinct = 4, svl = 10**6):
+def opdracht47(distinct = 4, window = 10**6):
     def sieve(limit):
         a = [True] * limit
         a[0] = a[1] = False
@@ -3126,42 +3132,22 @@ def opdracht47(distinct = 4, svl = 10**6):
                 yield i
                 for n in range(i * i, limit, i):
                     a[n] = False
-    def primeGen(p = 5):
-        if p % 2 == 0:
-            return
-        while True:
-            div = 2
-            while div < p:
-                if p % div == 0:
-                    p += 1
-                    div = 1
-                div += 1
-            yield p
-            p += 2
-    def primefactor(primes, genx, n = 13195):
+    def primefactor(primes, n):
         i = 0
         while True:
-            if len(primes) <= i:
-                primes.append(next(genx))
-            if n % primes[i] == 0:
-                return primes[i]
+            if n % primes[i] == 0: return primes[i]
             i += 1
-    def primefactors(primes, genx, n):
+    def primefactors(primes, n):
         while True:
-            factor = primefactor(primes, genx, n)
+            factor = primefactor(primes, n)
             yield factor
             if factor == n: break
             n = n // factor
-    def distinctLen(g):
-        return len(set(g))
-    primes = list(sieve(svl))
-    genx = primeGen(primes[-1] + 2)
+    def distinctLen(g): return len(set(g))
+    primes = list(sieve(window))
     chain = 0
-    for i in range(2, 9**9):    # 9**9 is arbitrary long number
-        if distinctLen(primefactors(primes, genx, i)) == distinct:
-            chain += 1
-        else:
-            chain = 0
+    for i in range(2, window):
+        chain = chain + 1 if distinctLen(primefactors(primes, i)) == distinct else 0
         if chain == distinct:
             return i - (distinct - 1)
     return 0
@@ -3480,7 +3466,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     1366, 21124, 1074, 171, 648, 31626, 871198282, 4179871, 2783915460, 4782, 983,
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
-    134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376]
+    134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
+    153, 26241, 107359, 26033, 28684]
 
 #answers[51 - 1] = 0
 
