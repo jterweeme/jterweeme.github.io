@@ -73,7 +73,14 @@ function mycopy2(x) {
 <a href="#s40">40</a>, <a href="#s41">41</a>, <a href="#s42">42</a>, <a href="#s43">43</a>,
 <a href="#s44">44</a>, <a href="#s45">45</a>, <a href="#s46">46</a>, <a href="#s47">47</a>,
 <a href="#s48">48</a>, <a href="#s49">49</a>, <a href="#s50">50</a>,
-<a href="#s52">52</a>, <a href="#s53">53</a>
+<a href="#s51">51</a>, <a href="#s52">52</a>, <a href="#s53">53</a>
+
+<p>
+<a href="https://github.com/jterweeme/jterweeme.github.io/blob/master/euler.py">In Python</a>
+</p>
+<p>
+<a href="https://github.com/jterweeme/jterweeme.github.io/blob/master/euler.cpp">In C++</a>
+</p>
 
 <section id="s1">
 <h2>#1: Multiples of 3 and 5</h2>
@@ -3349,6 +3356,79 @@ function opdracht50(max = 10**6-1)
 alert(opdracht50());    // should give 997651
 </code>
 <button onclick="mycopy2('s50');">Copy</button>
+</section>
+
+<section id="s51">
+<h2>#51: Prime digit replacements</h2>
+<p>
+By replacing the 1st digit of the 2-digit number *3, it turns out that six
+of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+</p>
+<p>
+By replacing the 3rd and 4th digits of 56**3 with the same digit, this
+5-digit number is the first example having seven primes among the ten
+generated numbers, yielding the family: 56003, 56113, 56333, 56443,
+56663, 56773, and 56993. Consequently 56003, being the first member of
+this family, is the smallest prime with this property.
+</p>
+<p>
+Find the smallest prime which, by replacing part of the number (not
+necessarily adjacent digits) with the same digit, is part of an eight
+prime value family.
+</p>
+<code>
+function opdracht51()
+{   function binarize(n)
+    {   var div = 2, dec = 1, ret = [];
+        while (n)
+        {   ret.push(n % div ? dec : 0);
+            n -= n % div;
+            div *= 2, dec *= 10;
+        }
+        return ret;
+    }
+    function binSearch(d, n)
+    {   var first = 0, last = d.length - 1;
+        var middle = Math.floor((first + last) / 2);
+        while (first &lt;= last)
+        {   if (d[middle] &lt; n) first = middle + 1;
+            else if (d[middle] == n) return true;
+            else last = middle - 1;
+            middle = Math.floor((first + last)/2);
+        }
+        return false;
+    }
+    function digit(n, i) { return Math.floor(n / 10**i) % 10; }
+    function decimals(n) { var i = 0; while (n >= 10**i) i++; return i; }
+    var sieve = Array(8**7).fill(true);
+    sieve[0] = sieve[1] = false;
+    for (var i = 0; i &lt; sieve.length; i++)
+        if (sieve[i]) for (var j = i * i; j &lt; sieve.length; j+= i) sieve[j] = false;
+    var primes = [];
+    for (var i = 0; i &lt; sieve.length; i++) if (sieve[i]) primes.push(i);
+    function primeFamily(primes, n, mask)
+    {   var xlen = decimals(n);
+        var bins = binarize(mask);
+        var ret = [];
+        for (var i = 0; i &lt; bins.length; i++) n -= bins[i] * digit(n, i);
+        for (var i = 0; i &lt;= 9; i++)
+        {   var tmp = n;
+            for (var b = 0; b &lt; bins.length; b++) tmp += bins[b] * i;
+            if (decimals(tmp) == xlen &amp;&amp; binSearch(primes, tmp)) ret.push(tmp);
+        }
+        return ret;
+    }
+    for (var i = 10; i &lt; primes.length; i++)
+    {   for (var m = 1; m &lt; 2**decimals(primes[i]); m++)
+        {   var pf = primeFamily(primes, primes[i], m);
+            if (pf.length == 8) return Math.min.apply(Math, pf);
+        }
+    }
+    return 0;
+}
+alert(opdracht51());    // should give 121,313
+</code>
+<button onclick="mycopy2('s51');">Copy</button>
 </section>
 
 <section id="s52">
