@@ -2251,41 +2251,6 @@ static uint32_t opdracht26()
     return best_n;
 }
 
-static uint32_t pow26(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
-static uint32_t opdracht26b() __attribute__((unused));
-static uint32_t opdracht26b()
-{
-    return 0;
-    uint32_t num = 1, longest = 1;
-
-    for (uint32_t n = 3; n < 1000; n += 2)
-    {
-        cout << n << "\r\n";
-        if (n % 5 == 0)
-            continue;
-        
-        uint32_t p = 1;
-        while (pow26(10, p) % n != 1)
-        {
-            cout << "    " << p << "\r\n";
-            p++;
-        }
-
-        if (p > longest)
-        {
-            num = n;
-            longest = p;
-        }
-    }
-    return num;
-}
-
 /*
 #27: Quadratic primes
 
@@ -2321,8 +2286,22 @@ number of primes for consecutive values of n, starting with n=0.
 Antwoord: -59231
 */
 
-uint32_t opdracht27()
-{
+static bool isprime27(uint32_t n)
+{   for (uint32_t i = 2; i < n; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+
+static uint32_t opdracht27()
+{   int32_t best_a = 0, best_b = 0, best_n = 0;
+    for (int32_t a = -999; a < 1000; a++)
+    {   for (int32_t b = -1000; b <= 1000; b++)
+        {   int32_t n = 0;
+            while (isprime27(abs(n * n + a * n + b))) n++;
+            if (n > best_n) best_a = a, best_b = b, best_n = n;
+        }
+    }
+    cout << best_a * best_b << "\r\n";
     return 0;
 }
 
@@ -2346,7 +2325,7 @@ in a 1001 by 1001 spiral formed in the same way?
 Antwoord: 669,171,001
 */
 
-uint32_t opdracht28(uint32_t root = 1001)
+static uint32_t opdracht28(uint32_t root = 1001)
 {   uint32_t xsum = 1;    
     for (uint32_t step = 2, foo = 1; foo < root * root; step += 2)
         for (uint8_t i = 0; i < 4; i++) foo += step, xsum += foo;
