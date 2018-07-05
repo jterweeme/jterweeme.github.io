@@ -3389,9 +3389,9 @@ Antwoord: 4,075
 def opdracht53():
     def combinations(n, r):
         def factorial(n):
-            xsum = 1
-            for a in range(2, n + 1): xsum *= a
-            return xsum
+            product = 1
+            for a in range(2, n + 1): product *= a
+            return product
         return factorial(n) // (factorial(r) * factorial(n - r))
     xcount = 0
     for a in range(23,101):

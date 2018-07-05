@@ -3495,6 +3495,121 @@ static uint32_t opdracht50(uint32_t limit = 1000000)
 }
 
 /*
+#51: Prime digit replacements
+
+By replacing the 1st digit of the 2-digit number *3, it turns out that six
+of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+
+By replacing the 3rd and 4th digits of 56**3 with the same digit, this
+5-digit number is the first example having seven primes among the ten
+generated numbers, yielding the family: 56003, 56113, 56333, 56443,
+56663, 56773, and 56993. Consequently 56003, being the first member of
+this family, is the smallest prime with this property.
+
+Find the smallest prime which, by replacing part of the number (not
+necessarily adjacent digits) with the same digit, is part of an eight
+prime value family.
+
+Antwoord: 121,313
+*/
+
+static uint32_t opdracht51()
+{
+    return 0;
+}
+
+/*
+#52: Pandigital multiples
+
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+
+Find the smallest positive integer, x, such that
+2x, 3x, 4x, 5x, and 6x, contain the same digits.
+
+Antwoord: 142,857
+*/
+
+static uint32_t linSearch52(vector<uint32_t> &vec, uint32_t n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
+    return 0;
+}
+
+static bool hasDigitsOnce52(uint32_t n, vector<uint32_t> &nset)
+{   vector<uint32_t> nset2;
+    for (auto x : nset) nset2.push_back(x);
+    while (n)
+    {   uint32_t pos = linSearch52(nset2, n % 10);
+        if (pos) nset2.erase(nset2.begin() + (pos - 1)); else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
+static bool test52(uint32_t n)
+{   vector<uint32_t> nset;
+    for (uint32_t x = n; x; x = x / 10) nset.push_back(x % 10);
+    for (uint32_t m = 2; m <= 6; m++)
+        if (hasDigitsOnce52(n * m, nset) == false) return false;
+    return true;
+}
+
+static uint32_t opdracht52()
+{   for (uint32_t n = 2; n < 200000; n++) if (test52(n)) return n;
+    return 0;
+}
+
+/*
+#53: Combinatoric selections
+
+There are exactly ten ways of selecting three from five, 12345:
+
+123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+
+In combinatorics, we use the notation, 5C3 = 10.
+
+In general,
+nCr =  
+n!
+r!(n−r)!
+ ,where r ≤ n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+
+It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
+
+How many, not necessarily distinct, values of  nCr,
+for 1 ≤ n ≤ 100, are greater than one-million?
+
+Antwoord: 4,075
+*/
+
+static uint64_t factorial53(uint64_t n)
+{   uint64_t product = 1;
+    for (uint64_t i = 2; i <= n; i++) product *= i;
+    return product;
+}
+
+static uint64_t combinations53(uint64_t n, uint64_t r)
+{   return factorial53(n) / factorial53(r) * factorial53(n - r);
+}
+
+static uint32_t opdracht53()
+{
+    return 0;
+    uint32_t xcount = 0;
+    for (uint32_t a = 23; a <= 100; a++)
+    {   for (uint32_t b = 4; b < a - 3; b++)
+        {   if (combinations53(a, b) >= 1000000)
+            {   xcount += a - b * 2 + 1;
+                break;
+            }
+        }
+    }
+    cout << xcount << "\r\n";
+    return 0;
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3552,6 +3667,9 @@ static uint64_t run(uint32_t p)
     case 48: return opdracht48();
     case 49: return opdracht49();
     case 50: return opdracht50();
+    case 51: return opdracht51();
+    case 52: return opdracht52();
+    case 53: return opdracht53();
     }
     return 0;
 }
@@ -3686,11 +3804,11 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    answers[27 - 1] = answers[49 - 1] = 0;
+    answers[27 - 1] = answers[49 - 1] = answers[51 - 1] = answers[53 - 1] = 0;
 #ifdef MULTITHREAD
-    multithread(50);
+    multithread(53);
 #else
-    singlethread(50);
+    singlethread(53);
 #endif
     return 0;
 }
