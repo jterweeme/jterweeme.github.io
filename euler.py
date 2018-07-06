@@ -3382,7 +3382,23 @@ for 1 ≤ n ≤ 100, are greater than one-million?
 Antwoord: 4,075
 """
 
-def opdracht53():
+def opdracht53(nlimit = 101, limit = 10**6):
+    tree = []
+    for i in range(nlimit):
+        tree.append([0] * nlimit)
+    tree[0][0] = 1
+    for i in range(nlimit - 1):
+        tree[i+1][0] = 1
+        for j in range(i + 1):
+            tree[i+1][j + 1] = min(sum(tree[i][j:j+2]), limit+1)
+    ncount = 0
+    for row in tree:
+        for n in row:
+            if n > limit:
+                ncount += 1
+    return ncount
+
+def opdracht53b():
     def combinations(n, r):
         def factorial(n):
             product = 1

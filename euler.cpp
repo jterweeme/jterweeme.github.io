@@ -1882,52 +1882,32 @@ char names22[][50] = {
 "SHON","LYNWOOD","JERE","HAI","ELDEN","DORSEY","DARELL","BRODERICK","ALONSO"};
 
 void swap22(char *a, char *b)
-{
-    char c;
-
-    for (uint8_t i = 0; i < 50; i++)
-    {
-        c = a[i];
-        a[i] = b[i];
-        b[i] = c;
-    }
+{   char c;
+    for (uint8_t i = 0; i < 50; i++) c = a[i], a[i] = b[i], b[i] = c;
 }
 
 void bubbleSort22()
-{
-    uint16_t i, j;
-
+{   uint16_t i, j;
     for (i = 0; i < 5163 - 1; i++)
-    {
         for (j = 0; j < 5163 - i - 1; j++)
-        {
             if (strcmp(names22[j], names22[j + 1]) > 0)
                 swap22(&names22[j][0], &names22[j + 1][0]);
-        }
-    }
 }
 
 uint8_t letterwaarde(uint8_t c)
-{
-    return c > 64 ? c - 64 : c;
+{   return c > 64 ? c - 64 : c;
 }
 
 uint32_t opdracht22()
-{
-    bubbleSort22();
+{   bubbleSort22();
     uint32_t total = 0;
-
     for (uint16_t i = 0; i < 5163; i++)
-    {
-        uint32_t score = 0;
-
+    {   uint32_t score = 0;
         for (uint8_t j = 0; j < 50; j++)
             score += letterwaarde(names22[i][j]);
-
         score = score * (i + 1);
         total += score;
     }
-
     return total;
 }
 
@@ -3715,30 +3695,28 @@ for 1 ≤ n ≤ 100, are greater than one-million?
 Antwoord: 4,075
 */
 
-static uint64_t factorial53(uint64_t n)
-{   uint64_t product = 1;
-    for (uint64_t i = 2; i <= n; i++) product *= i;
-    return product;
-}
-
-static uint64_t combinations53(uint64_t n, uint64_t r)
-{   return factorial53(n) / factorial53(r) * factorial53(n - r);
-}
-
 static uint32_t opdracht53()
 {
-    return 0;
-    uint32_t xcount = 0;
-    for (uint32_t a = 23; a <= 100; a++)
-    {   for (uint32_t b = 4; b < a - 3; b++)
-        {   if (combinations53(a, b) >= 1000000)
-            {   xcount += a - b * 2 + 1;
-                break;
-            }
+    static constexpr uint8_t nlimit = 101;
+    static constexpr uint32_t limit = 1000000;
+    uint32_t tree[nlimit][nlimit];
+    for (uint8_t i = 0; i < nlimit; i++)
+        for (uint8_t j = 0; j < nlimit; j++)
+            tree[i][j] = 0;
+    tree[0][0] = 1;
+    for (uint8_t i = 0; i < nlimit - 1; i++)
+    {   tree[i + 1][0] = 1;
+        for (uint8_t j = 0; j <= i; j++)
+        {   tree[i + 1][j + 1] = tree[i][j] + tree[i][j + 1];
+            if (tree[i + 1][j + 1] > 1000001)
+                tree[i + 1][j + 1] = 1000001;
         }
     }
-    cout << xcount << "\r\n";
-    return 0;
+    uint32_t ncount = 0;
+    for (uint8_t i = 0; i < nlimit; i++)
+        for (uint8_t j = 0; j < nlimit; j++)
+            if (tree[i][j] > limit) ncount++;
+    return ncount;
 }
 
 /*
@@ -3936,7 +3914,7 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    answers[27 - 1] = answers[53 - 1] = 0;
+    answers[27 - 1] = 0;
 #ifdef MULTITHREAD
     multithread(53);
 #else
