@@ -3184,18 +3184,17 @@ Antwoord: 296,962,999,629
 def opdracht49():
     def decimals(n):
         i = 0
-        while n >= 10**i:
+        while n:
+            n = n // 10
             i += 1
         return i
-    def factorial(n):
-        xsum = 1
-        for a in range(2, n + 1): xsum *= a
-        return xsum
-    def digits(n):
-        while n > 0: yield n % 10; n = n // 10;
-    def dig(n, i):
-        return n // 10**i % 10
     def perms(n):
+        def digits(n):
+            while n > 0: yield n % 10; n = n // 10;
+        def factorial(n):
+            xsum = 1
+            for a in range(2, n + 1): xsum *= a
+            return xsum
         a = list(reversed(list(digits(n))))
         for perm in range(factorial(decimals(n))):
             b = list(a)
@@ -3313,23 +3312,20 @@ def opdracht51():
                 yield i
                 for n in range(i * i, limit, i):
                     a[n] = False
-    lprimes = list(sieve(8**7))
+    lprimes = list(sieve(10**6))
     sprimes = set(lprimes)
-    def family(n, mask):
+    def family(primes, n, mask):
         xlen = decimals(n)
-        for i, b in enumerate(binarize(mask)):
-            n -= b * digit(n, i)
+        bmask = list(binarize(mask))
+        for i, b in enumerate(bmask): n -= b * digit(n, i)
         for a in range(0, 10):
             tmp = n
-            for b in binarize(mask): tmp += b * a
-            if decimals(tmp) == xlen: yield tmp
-    def primeFamily(primes, n, mask):
-        for x in family(n, mask):
-            if x in primes: yield x
+            for b in bmask: tmp += b * a
+            if decimals(tmp) == xlen and tmp in primes: yield tmp
     for i in lprimes:
         for mask in range(1, 2**decimals(i)):
-            if len(set(primeFamily(sprimes, i, mask))) == 8:
-                return min(primeFamily(sprimes, i, mask))
+            if len(list(family(sprimes, i, mask))) == 8:
+                return min(family(sprimes, i, mask))
     return 0
 
 """

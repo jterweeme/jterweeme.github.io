@@ -21,6 +21,20 @@
 #include <algorithm>
 using namespace std;
 
+uint32_t pow32(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint32_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint64_t pow64(uint64_t base, uint64_t e)
+{   if (e == 0) return 1;
+    uint64_t ret = base;
+    for (uint64_t i = 1; i < e; i++) ret *= base;
+    return ret;
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -113,24 +127,17 @@ static void primefactors3(vector<uint64_t> &factors, uint64_t n)
     while (true)
     {   uint64_t factor = primefactor(primes, n);
         factors.push_back(factor);
-
-        if (factor == n)
-            break;
-
+        if (factor == n) break;
         n = n / factor;
     }
 }
 
 static uint64_t maxprimefactor3(uint64_t n = 600851475143)
-{
-    vector<uint64_t> factors;
+{   vector<uint64_t> factors;
     primefactors3(factors, n);
     uint64_t best = 0;
-
     for (vector<uint64_t>::iterator it = factors.begin(); it != factors.end(); it++)
-        if (*it > best)
-            best = *it;
-
+        if (*it > best) best = *it;
     return best;
 }
 
@@ -434,12 +441,9 @@ uint8_t t11[20][20] = {{ 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91
             { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}};
 
 static uint32_t opdracht11()
-{
-    uint32_t best = 0;
-
+{   uint32_t best = 0;
     for (uint8_t i = 0; i < 20; i++)
-    {
-        for (uint8_t j = 0; j < 16; j++)
+    {   for (uint8_t j = 0; j < 16; j++)
         {
             uint32_t prod = t11[i][j] * t11[i][j+1] * t11[i][j+2] * t11[i][j+3];
             
@@ -741,39 +745,22 @@ char number13[100][51] = {
     {"20849603980134001723930671666823555245252804609722"},
     {"53503534226472524250874054075591789781264330331690"}};
 
-static uint64_t pow13(uint64_t base, uint16_t e)
-{
-    if (e == 0) return 1;
-    uint64_t ret = base;
-    for (uint16_t i = 1; i < e; i++) ret *= base;
-    return ret;
-}
-
 static uint64_t opdracht13()
-{
-    vector<uint8_t> totalSum;
+{   vector<uint8_t> totalSum;
     uint64_t sum = 0;
-    
     for (uint8_t i = 50; i > 0; i--)
-    {
-        for (uint8_t j = 0; j < 100; j++)
+    {   for (uint8_t j = 0; j < 100; j++)
             sum += number13[j][i - 1] - 48;
-
         totalSum.push_back(sum % 10);
         sum /= 10;
     }
-
     while (sum > 0)
-    {
-        totalSum.push_back(sum % 10);
+    {   totalSum.push_back(sum % 10);
         sum /= 10;
     }
-
     uint8_t start = totalSum.size() - 10;
-
     for (uint8_t i = 0; i < 10; i++)
-        sum += totalSum[start + i] * pow13(10, i);
-
+        sum += totalSum[start + i] * pow64(10, i);
     return sum;
 }
 
@@ -994,39 +981,18 @@ static uint8_t triangle[][15] = {
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
 #endif
 
-static uint32_t pow18(uint64_t base, uint16_t e)
-{
-    if (e == 0)
-        return 1;
-
-    uint32_t ret = base;
-
-    for (uint16_t i = 1; i < e; i++)
-        ret *= base;
-
-    return ret;
-}
-
 static uint32_t opdracht18()
-{
-    uint32_t possibilities = pow18(2, sizeof(triangle[0]) - 1);
+{   uint32_t possibilities = pow64(2, sizeof(triangle[0]) - 1);
     uint32_t best = 0;
-    
     for (uint32_t i = 0; i <= possibilities; i++)
-    {
-        uint32_t index = 0;
+    {   uint32_t index = 0;
         uint32_t sum = triangle[0][0];
-
         for (uint32_t j = 0; j < sizeof(triangle[0]) - 1; j++)
-        {
-            index = index + (i >> j & 1);
+        {   index = index + (i >> j & 1);
             uint8_t value = triangle[j + 1][index];
             sum += value;
         }
-
-        if (sum > best)
-            best = sum;
-
+        if (sum > best) best = sum;
     }
     return best;
 }
@@ -1053,13 +1019,8 @@ Antwoord: 171
 */
 
 static bool isLeap(uint16_t year)
-{
-    if (year % 4 > 0)
-        return false;
-
-    if (year % 100 > 0)
-        return true;
-
+{   if (year % 4 > 0) return false;
+    if (year % 100 > 0) return true;
     return false;
 }
 
@@ -1067,22 +1028,15 @@ static constexpr uint8_t TUESDAY = 0, WEDNESDAY = 1, THURSDAY = 2, FRIDAY = 3, S
     SUNDAY = 5, MONDAY = 6;
 
 static uint32_t opdracht19()
-{
-    uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+{   uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     uint32_t day = 0;
     uint32_t sunday_count = 0;
-
     for (uint32_t year = 1901; year <= 2000; year++)
-    {
-        bool leap = isLeap(year);
-
+    {   bool leap = isLeap(year);
         for (uint8_t m = 0; m < 12; m++)
-        {
-            if (day % 7 == SUNDAY)
+        {   if (day % 7 == SUNDAY)
                 sunday_count++;
-
             day += months[m];
-
             if (leap == true && months[m] == 28)
                 day++;
         }
@@ -1989,7 +1943,11 @@ is less than n and it is called abundant if this sum exceeds n.
 
 As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest
 number that can be written as the sum of two abundant numbers is 24. By
-mathematical analysis, it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers. However, this upper limit cannot be reduced any further by analysis even though it is known that the greatest number that cannot be expressed as the sum of two abundant numbers is less than this limit.
+mathematical analysis, it can be shown that all integers greater than 28123
+can be written as the sum of two abundant numbers. However, this upper limit
+cannot be reduced any further by analysis even though it is known that the
+greatest number that cannot be expressed as the sum of two abundant numbers
+is less than this limit.
 
 Find the sum of all the positive integers which
 cannot be written as the sum of two abundant numbers.
@@ -1998,13 +1956,9 @@ Antwoord: 4,179,871
 */
 
 static uint16_t divsum(uint32_t n)
-{
-    uint16_t xsum = 0;
-    
+{   uint16_t xsum = 0;
     for (uint32_t i = 1; i <= n / 2; i++)
-        if (n % i == 0)
-            xsum += i;
-    
+        if (n % i == 0) xsum += i;
     return xsum;
 }
 
@@ -2013,40 +1967,24 @@ static bool find23(vector<uint16_t> &d, uint16_t n)
 }
 
 static uint32_t opdracht23()
-{
-    uint16_t xmax = 28123;
+{   uint16_t xmax = 28123;
     vector<uint16_t> abundants;
-
     for (uint16_t i = 1; i <= xmax; i++)
         if (divsum(i) > i)
             abundants.push_back(i);
-
     uint32_t xsum = 1;
-
     for (uint16_t i = 2; i <= xmax; i++)
-    {
-        bool boo = true;
-        
+    {   bool boo = true;
         for (auto x : abundants)
-        {
-            if (x < i)
-            {
-                if (find23(abundants, i - x))
-                {
-                    boo = false;
+        {   if (x < i)
+            {   if (find23(abundants, i - x))
+                {   boo = false;
                     break;
                 }
-            }
-            else
-            {
-                break;
-            }
+            } else break;
         }
-
-        if (boo == true)
-            xsum += i;
+        if (boo == true) xsum += i;
     }
-    
     return xsum;
 }
 
@@ -2072,34 +2010,23 @@ static uint32_t fac24(uint32_t n)
     return xsum;
 }
 
-static uint32_t pow24(uint64_t base, uint16_t e)
-{   if (e == 0) return 1;
-    uint32_t ret = base;
-    for (uint16_t i = 1; i < e; i++) ret *= base;
-    return ret;
-}
-
 static uint32_t concat24(vector <uint8_t> &v)
 {   uint32_t ret = 0;
     uint8_t last = v.size() - 1;
     for (uint8_t i = 0; i <= last; i++)
-        ret += v.at(last - i) * pow24(10, i);
+        ret += v.at(last - i) * pow32(10, i);
     return ret;
 }
 
 static uint32_t opdracht24()
-{
-    uint8_t a[] = {0,1,2,3,4,5,6,7,8,9};
+{   uint8_t a[] = {0,1,2,3,4,5,6,7,8,9};
     vector<uint8_t> b;
     vector<uint8_t> result;
     uint32_t perm = 999999;
-
     for (uint8_t i = 0; i < 10; i++)
         b.push_back(a[i]);
-
     while (b.size() > 0)
-    {
-        uint8_t i = perm / fac24(b.size() - 1);
+    {   uint8_t i = perm / fac24(b.size() - 1);
         perm = perm % fac24(b.size() - 1);
         result.push_back(b.at(i));
         b.erase(b.begin() + i);
@@ -2352,16 +2279,9 @@ How many distinct terms are in the sequence generated by ab for 2 ≤ a ≤ 100 
 Antwoord: 9,183
 */
 
-static uint32_t pow29(uint32_t base, uint16_t e)
-{   if (e == 0) return 1;
-    uint32_t ret = base;
-    for (uint16_t i = 1; i < e; i++) ret *= base;
-    return ret;
-}
-
 static uint32_t myRoot(uint32_t n)
 {   for (uint8_t a = 2; a <= 10; a++)
-        for (uint32_t e = 1, b = 0; (b = pow29(a, e)) <= 100; e++)
+        for (uint32_t e = 1, b = 0; (b = pow32(a, e)) <= 100; e++)
             if (b == (n & 0xffff0000) >> 16) return a << 16 | e;
     return n;
 }
@@ -2403,16 +2323,9 @@ Antwoord: 443,839
 4,150 + 4,151 + 54,748 + 92,727 + 93,084 + 194,979 = 443,83
 */
 
-uint32_t pow30(uint32_t base, uint8_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
 bool test30(uint32_t n, uint8_t p)
 {   uint32_t xsum = 0, tmp = n;
-    while (tmp > 0) xsum += pow30(tmp % 10, p), tmp = tmp / 10;
+    while (tmp > 0) xsum += pow32(tmp % 10, p), tmp = tmp / 10;
     return xsum == n;
 }
 
@@ -2466,13 +2379,6 @@ include it once in your sum.
 
 Antwoord: 45,228
 */
-
-uint32_t pow32(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
 
 static uint32_t linSearch32(vector<uint8_t> &vec, uint8_t n)
 {   for (uint32_t i = 0; i < vec.size(); i++)
@@ -2590,22 +2496,15 @@ Antwoord: 55
 939391, 993319, 999331
 */
 
-uint32_t pow35(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
 static uint8_t decimals35(uint32_t n)
 {   uint8_t i = 0;
-    while (n > pow35(10, i)) i++;
+    while (n > pow32(10, i)) i++;
     return i;
 }
 
 static uint32_t rotate(uint32_t n)
 {   uint8_t length = decimals35(n), digit = n % 10;
-    return n / 10 + digit * pow35(10, length - 1);
+    return n / 10 + digit * pow32(10, length - 1);
 }
 
 static void rotations(vector<uint32_t> &rts, uint32_t n)
@@ -3452,8 +3351,188 @@ static uint64_t opdracht48()
     return result;
 }
 
-static uint32_t opdracht49()
-{
+/*
+#49: Prime permutations
+
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+
+What 12-digit number do you form by concatenating the three terms in this sequence?
+
+Antwoord: 296,962,999,629
+*/
+
+/*
+[{9049, 4099, 4909}, {2503, 2053, 5023}, {6151}, {6203, 2063}, {4111},
+{8209, 2089}, {6361, 6163, 1663}, {2609, 2069, 6029}, {9281, 2819, 8291, 1289, 8219},
+{3617, 1637, 6317, 3761, 3671, 6173, 1367, 3167}, {2281, 8221},
+{4271, 4721, 2417, 1427, 2741, 4217, 4127}, {2081, 2801}, {1249, 4129, 9421, 1429, 9241, 4219},
+{2083, 2803}, {1433, 3413, 4133}, {2087}, {1283, 8231, 2381, 3821, 8123, 1823},
+{8233, 3823, 2833, 2383}, {4931, 3491, 9413, 4391, 4139, 1493, 9431, 9341, 1439},
+{8237, 7823, 8273, 7283, 2837}, {9209, 2099, 2909, 9029}, {8243, 2843, 4283, 8423},
+{1697, 6917, 6791, 7691, 6197, 6971, 6719}, {1699, 9619, 6199, 6991},
+{4513, 5413, 1543, 1453, 3541, 5431, 4153},
+{4517, 5147, 5417, 5741, 4751, 7541, 7451, 4157, 5471},
+{2111}, {4519, 5419, 1549, 4591, 1459, 4951, 4159},
+{2113, 1123, 2311, 1321, 1231, 3121, 2131, 1213}, {2161, 6121, 6211, 1621},
+{8623, 2683, 8263, 6823}, {7621, 6217, 2671, 2617, 1627, 6271}, {2621, 6221},
+{2689, 8269, 6829, 8629}, {1229, 2129, 9221}, {4177, 1747, 7417, 7741},
+{2269, 6229}, {2137, 7321, 2371, 3271, 2731, 7213, 1327, 3217, 1237, 2713, 1723},
+{2411, 4211, 2141}, {1423, 2341, 2143, 4231}, {8287, 2887},
+{9283, 8293, 8329, 2389, 8923}, {6247, 6427, 2467, 2647},
+{2531, 2153, 5231, 2351, 3251, 1523},
+{4201, 4021}, {2789, 8297, 2897, 7829, 2879}, {2657, 6257}, {6263, 2663},
+{3181, 8311, 1381, 1831}, {6269}, {8713, 1873, 3187, 1783, 8731, 8317},
+{2179, 1279, 2917, 9127, 2791, 9721, 1297, 7219, 7129, 2971, 2719},
+{4229}, {2677, 6277, 2767}, {6827, 8627, 2687, 6287}, {2441, 4241, 4421},
+{4243, 4423}, {2203},
+{2969, 2699, 6299, 9629}, {4523, 4253, 2543}, {3061, 6301, 1063},
+{2027, 2207}, {8353, 3853, 3583}, {2549, 2459, 4259},
+{2213, 3221, 1223}, {6421, 4621, 4261},
+{6113, 6311, 1163, 1613, 1361, 6131}, {6833, 8363, 3863}, {2221},
+{2437, 4327, 2473, 7243, 2347, 4273, 4723}, {8963, 6983, 8369, 6389, 8693},
+{2633, 6323, 3623},
+{6329, 2963, 2693, 9623}, {8737, 8377, 7873, 3877}, {2273, 2237},
+{2293, 3229, 2239}, {4289, 8429}, {6337, 6373, 6733, 3637, 3673},
+{2243, 2423}, {8387, 8837, 7883, 8783}, {8389, 8839, 3889, 9883, 8893},
+{3463, 3643, 4363, 6343}, {4297, 4729, 2749}, {2521, 2251},
+{6353}, {6359, 3659, 5693, 5639}, {2267}, {6673, 6763, 6637, 6367},
+{1489, 8419, 8941}, {6793, 7369, 6379, 3697, 7639, 3769, 7963, 6397, 3967},
+{2287}, {8431, 1483, 4813, 4831},
+{7433, 4337, 3347, 4373, 4733}, {4933, 3943, 4339, 9433, 9343},
+{2729, 9227, 2927, 2297, 7229}, {9811, 9181, 8191}, {4483, 8443},
+{3449, 4349, 4493, 4943}, {8447},
+{2309, 3209, 2903, 9203, 2039}, {3457, 5347, 4357, 5743, 3547, 5437},
+{8641, 8461, 6481, 6841, 4861}, {8467, 8647},
+{3323, 2333}, {3329, 2339, 9323, 3923, 2393},
+{9473, 4937, 3947, 4397, 4973, 9743, 7349, 4793, 9437}, {4649, 6449},
+{5641, 4651, 6451, 4561}, {2753, 3257, 7523, 3527, 2357, 7253, 5237, 5273},
+{5801, 5081, 8501},
+{4049, 4409}, {8513, 5381, 3851, 1583, 5813, 3581}, {6469},
+{2377, 7723, 7237, 3727}, {4673, 6473, 3467, 7643, 4637},
+{8521, 5281, 2851, 5821}, {2857, 5827, 8527}, {4441}, {6491, 4691, 9461},
+{5387, 7853, 8753, 5783, 8537, 8573, 7583}, {8539, 5839},
+{3299, 9923, 9293, 9239, 3929, 2939, 2399}, {4447}, {5843, 4583, 5483, 8543},
+{5441, 4451}, {4457, 4547}, {4643, 4463}, {8563, 5683}, {6521, 5261},
+{4481}, {6529, 2659}, {5881, 8581}, {2447}, {4657, 4567, 6547, 5647},
+{9857, 5987, 7589, 5897, 9587, 8597, 5879}, {5651, 6551}, {9859, 8599}, {4057, 4507, 5407},
+{8609, 6089, 8069}, {5449, 4549}, {8663, 6863}, {8669, 6689, 6869},
+{7867, 8677, 7687}, {8681, 8861}, {8689}, {7459, 5479, 9547, 4597, 5749, 4759, 7549, 4957},
+{6043, 4603}, {8969, 6899, 9689, 8699}, {8707},
+{1987, 9187, 8971, 9871, 8719, 8179, 9781, 1879, 9817, 1789}, {9463, 9643, 3469, 4639},
+{7841, 8741, 4871, 1487, 4817, 8147, 1847, 7481}, {8747, 4877, 4787, 7487},
+{4663}, {7681, 8167, 1867, 6871, 8761, 6781}, {7649, 6947, 4967, 4679, 9467},
+{9787, 8779, 7789, 7879},
+{4073, 7043, 4703, 3407}, {8803}, {8087, 8807}, {1889, 8819},
+{8821}, {3881, 8831}, {8849, 4889}, {6883, 8863}, {8867},
+{4783, 3847}, {7489, 4987, 4789}, {8887},
+{9479, 7499, 7949, 9749, 9497, 4799}, {4801}, {8929, 9829}, {9833, 3389, 8933},
+{9851, 5981, 5189, 8951}, {4903, 3049, 9043, 9403, 4093}, {8999}, {9001, 1009}, {9007},
+{1091, 1901, 9011, 1109, 1019}, {3109, 1093, 3019, 1039, 9103, 9013},
+{9419, 9491, 9941, 4919, 1499, 1949}, {1409, 9041, 4019, 1049, 4091},
+{9059, 5099}, {4969, 9649, 6949}, {9067, 6709, 6907, 7069, 6079},
+{4993, 3499, 9349, 9439}, {9091, 9901, 9109}, {9949, 4999},
+{5003}, {5009}, {1051, 5011, 5101}, {5021}, {9133, 1933, 3319, 3931, 3391},
+{5039, 5309, 5903}, {3719, 3917, 9137, 1973, 9173, 7193, 9371},
+{5051, 5501}, {1951, 9151, 5119, 9511},
+{5059}, {9157, 7591, 1579, 5197, 7951, 1759, 7159, 5179, 1597, 5791},
+{9161, 1619, 6911}, {7057, 7507, 5077}, {5087, 5807},
+{9199, 1999}, {5107, 5701}, {3011, 1031, 1103, 1013, 1301},
+{1153, 1531, 5113, 3511}, {1201, 2011, 1021}, {1033, 3301, 1303},
+{5153, 5531, 1553, 5351}, {6101, 1601, 6011, 1061},
+{5927, 9257, 7529, 2957, 5297, 2579, 5279}, {1609, 9601, 6091, 1069},
+{7561, 6571, 5167, 1657, 1567},
+{5171, 1571, 7151, 5711}, {7297, 9277, 2797, 7927}, {8017, 1087},
+{7109, 1097, 7019, 1709, 1907, 7901}, {5209},
+{1171, 1117}, {1319, 3911, 1193, 1931, 3119, 3191, 1913, 9311},
+{9319, 1993, 9931, 9391, 3919, 1399}, {1129, 1291},
+{5227}, {5233, 5323, 3253}, {7393, 9733, 3793, 9337, 3739, 7933},
+{1151, 1511}, {1811, 1181, 8111}, {9377, 7937, 3779, 7793, 3797},
+{1187, 8117, 1871, 8171}, {9973, 9739, 9397, 7993}, {5303},
+{1217, 7211, 7121, 2711, 1721}, {5333, 3533},
+{9521, 1259, 2591}, {1277, 7127}, {3593, 5393, 3539, 9533, 3359},
+{5939, 9539, 5399}, {3701, 1307, 7013, 7103},
+{5443}, {5519, 5591, 9551, 1559}, {3137, 7331, 1733, 3371, 1373},
+{7457, 7547, 5477}, {5503}, {5507}, {3169, 3691, 9613, 1693, 9631},
+{5521, 2551}, {2557, 5527}, {1447}, {1451}, {5557},
+{6553, 5563, 5653}, {6691, 1669, 6961, 6619, 9661}, {7411, 1741, 1471},
+{5569, 5659}, {3557, 5573}, {1481}, {5851, 5581}, {6977, 6779, 9677, 9767},
+{9697, 9769, 9679, 9967, 7699, 6997}, {5623}, {1997, 7919, 9719, 1979, 9791}, {5657},
+{6569, 6659, 5669}, {5689, 5869}, {6701, 1607}, {3089, 9803, 8093, 8039}, {7517, 5717},
+{7753, 5737, 7537, 7573}, {3989, 9839}, {6761, 1667}, {5779, 7759}, {9887}, {9907},
+{9929, 2999}, {1753, 3571, 3517, 7351}, {5849}, {5857}, {5861, 6581},
+{6857, 5867}, {1777, 7717, 7177},
+{7817, 7187, 1877, 1787}, {1801, 8011, 8101},
+{2593, 5923, 2953, 3529, 2539, 3259}, {5953, 3559}, {8161, 1861},
+{6007}, {6703, 7603, 6037, 3607, 6073, 3067}, {6047}, {6053}, {6067, 6607},
+{2003}, {2017}, {2029}, {3361, 3631, 6133, 3163, 3613},
+{3461, 6143}, {6563, 6653}, {2477, 7247},
+{6577}, {6959, 6599}, {6661}, {6967, 7669, 6679}, {6737, 3677, 7673, 3767},
+{2707, 7027, 7207}, {6803}, {2777, 7727}, {2861}, {7001},
+{3907, 3079, 7309, 3709, 7039}, {7907, 7079}, {3001}, {3203, 3023}, {3307, 3037},
+{3041, 4013}, {3083, 3803}, {7307, 7703},
+{3373, 3733, 7333}, {3313, 3331}, {3433, 3343}, {7477}, {7559}, {7577, 7757},
+{7607}, {7877}, {3833}, {8009}, {8053}, {8059}, {8081}, {8089}, {4001}, {4003},
+{4007}, {4027}, {4051}, {4079}]
+*/
+
+uint32_t pow49(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint32_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint32_t decimals49(uint32_t n) __attribute__((unused));
+static uint32_t decimals49(uint32_t n)
+{   uint32_t i = 0;
+    while (n) n = n / 10, i++;
+    return i;
+}
+
+static uint32_t factorial49(uint32_t n) __attribute__((unused));
+static uint32_t factorial49(uint32_t n)
+{   uint32_t product = 1;
+    for (uint32_t a = 2; a <= n; a++) product *= a;
+    return product;
+}
+
+static uint32_t dig(uint32_t n, uint32_t i) __attribute__((unused));
+static uint32_t dig(uint32_t n, uint32_t i)
+{   return n / pow49(10, i) % 10;
+}
+
+// not yet finished, shortcut here
+static uint32_t seq[] = {2969, 2699, 6299, 9629};
+
+static uint32_t linSearch49(vector<uint32_t> &vec, uint32_t n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
+    return 0;
+}
+
+static uint64_t check(vector<uint32_t> &v)
+{   for (auto n : v)
+        if (linSearch49(v, n + 3330) && linSearch49(v, n + 6660))
+            return (n + 6660) + (n + 3330) * 10000 + (uint64_t)n * 100000000;
+    return 0;
+}
+
+static uint64_t opdracht49()
+{   vector<bool> v(10000, true);
+    v[0] = v[1] = false;
+    for (uint32_t p = 2; p * p < v.size(); p++)
+        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
+    set<uint32_t> primes4;
+    for (uint32_t i = 1000; i < v.size(); i++) if (v[i]) primes4.insert(i);
+    vector<uint32_t> lseq;
+    for (uint32_t i = 0; i < 4; i++) lseq.push_back(seq[i]);
+    if (check(lseq)) return check(lseq);
     return 0;
 }
 
@@ -3513,8 +3592,61 @@ prime value family.
 Antwoord: 121,313
 */
 
+uint32_t pow51(uint32_t base, uint32_t i)
+{   if (i == 0) return 1;
+    uint32_t ret = base;
+    while (--i) ret = ret * base;
+    return ret;
+}
+
+static uint32_t decimals51(uint32_t n)
+{   uint32_t i = 0;
+    while (n) n = n / 10, i++;
+    return i;
+}
+
+static void binarize51(vector<uint32_t> &out, uint32_t n)
+{   uint32_t div = 2, dec = 1;
+    while (n)
+    {   out.push_back(n % div ? dec : 0);
+        n -= n % div;
+        div *= 2;
+        dec *= 10;
+    }
+}
+
+static uint32_t digit51(uint32_t n, uint32_t i)
+{   return n / pow51(10, i) % 10;
+}
+
+static void family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n, uint32_t mask)
+{   uint32_t xlen = decimals51(n);
+    vector<uint32_t> bmask;
+    binarize51(bmask, mask);
+    for (uint32_t i = 0; i < bmask.size(); i++)
+        n -= bmask.at(i) * digit51(n, i);
+    for (uint32_t i = 0; i < 10; i++)
+    {   uint32_t tmp = n;
+        for (auto b : bmask) tmp += b * i;
+        if (decimals51(tmp) == xlen && binary_search(primes.begin(), primes.end(), tmp))
+            out.push_back(tmp);
+    }
+}
+
 static uint32_t opdracht51()
-{
+{   vector<bool> v(1000000, true);
+    v[0] = v[1] = false;
+    for (uint32_t p = 2; p * p < v.size(); p++)
+        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
+    vector<uint32_t> primes;
+    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
+    for (auto p : primes)
+    {   for (uint32_t mask = 1; mask < pow51(2, decimals51(p)); mask++)
+        {   vector<uint32_t> fam;
+            family51(fam, primes, p, mask);
+            if (fam.size() == 8) return fam.at(0);
+        }
+    }
     return 0;
 }
 
@@ -3804,7 +3936,7 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    answers[27 - 1] = answers[49 - 1] = answers[51 - 1] = answers[53 - 1] = 0;
+    answers[27 - 1] = answers[53 - 1] = 0;
 #ifdef MULTITHREAD
     multithread(53);
 #else
