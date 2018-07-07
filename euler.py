@@ -3182,6 +3182,30 @@ Antwoord: 296,962,999,629
 """
 
 def opdracht49():
+    def digits(n):
+        while n > 0: yield n % 10; n = n // 10;
+    def hasDigitsOnce(n, nset):
+        for i in digits(n):
+            if i in nset: nset.remove(i)
+            else: return False
+        return True
+    def sameDigs(a, b):
+        return hasDigitsOnce(b, list(digits(a)))
+    def sieve(limit):
+        a = [True] * limit
+        a[0] = a[1] = False
+        for i, isprime in enumerate(a):
+            if isprime:
+                yield i
+                for n in range(i * i, limit, i):
+                    a[n] = False
+    sp4 = {x for x in sieve(10**4) if x >= 1487}
+    for p in sp4:
+        if p+3330 in sp4 and p+6660 in sp4 and sameDigs(p,p+3330) and sameDigs(p,p+6660):
+            return (p + 6660) + (p + 3330) * 10**4 + p * 10**8
+    return 0
+
+def opdracht49b():
     def decimals(n):
         i = 0
         while n:
@@ -3213,7 +3237,7 @@ def opdracht49():
                     yield i
                     for n in range(i * i, limit, i):
                         a[n] = False
-        sprimes4 = {x for x in sieve(10**4) if x >= 1000}
+        sprimes4 = {x for x in sieve(10**4) if x >= 1487}
         while len(sprimes4) > 0:
             for p in sprimes4:
                 tmp = set(perms(p)) & sprimes4
