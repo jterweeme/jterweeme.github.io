@@ -21,18 +21,64 @@
 #include <algorithm>
 using namespace std;
 
-uint32_t pow32(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
+template <typename T> T myPow(T base, T e)
+{   if (e == 0) return 1;
+    T ret = base;
+    while (--e) ret *= base;
     return ret;
 }
 
-static uint64_t pow64(uint64_t base, uint64_t e)
-{   if (e == 0) return 1;
-    uint64_t ret = base;
-    for (uint64_t i = 1; i < e; i++) ret *= base;
-    return ret;
+static uint32_t fac32(uint32_t n)
+{   uint32_t product = 1;
+    while (n > 1) product *= n--;
+    return product;
+}
+
+static uint32_t decimals32(uint32_t n)
+{   uint32_t i = 0;
+    while (n) n = n / 10, i++;
+    return i;
+}
+
+static uint32_t digit32(uint32_t n, uint32_t i)
+{   return n / myPow<uint32_t>(10, i) % 10;
+}
+
+static void sieve32(vector<uint32_t> &out, uint32_t limit)
+{   vector<bool> sv(limit, true);
+    sv[0] = sv[1] = false;
+    for (uint32_t p = 2; p * p < sv.size(); p++)
+        if (sv[p] == true)
+            for (uint32_t i = p * 2; i < sv.size(); i += p)
+                sv[i] = false;
+    for (uint32_t i = 0; i < sv.size(); i++)
+        if (sv.at(i)) out.push_back(i);
+}
+
+static constexpr uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
+static constexpr uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
+static constexpr uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
+
+static bool ispalindrome32(uint32_t n, uint8_t base = 10)
+{   uint32_t rev = 0;
+    for (uint32_t temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
+    return n == rev;
+}
+
+template <typename T> uint32_t linSearch32(vector<T> &vec, T n)
+{   for (uint32_t i = 0; i < vec.size(); i++)
+        if (vec.at(i) == n) return i + 1;
+    return 0;
+}
+
+static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
+{   while (n > 0)
+    {   uint32_t pos = linSearch32<uint8_t>(nset, n % 10);
+        if (pos) nset.erase(nset.begin() + (pos - 1));
+        else return false;
+        n = n / 10;
+    }
+    return true;
 }
 
 /*
@@ -150,18 +196,12 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-static bool ispalindrome(uint32_t n)
-{   uint32_t temp = n, rev = 0;
-    while (temp != 0) rev = rev * 10 + temp % 10, temp = temp / 10;
-    return n == rev;
-}
-
 static uint32_t opdracht4()
 {   uint32_t best = 0;
     for (uint32_t a = 0; a < 1000; a++)
     {   for (uint32_t b = 0; b < 1000; b++)
         {   uint32_t c = a * b;
-            if (ispalindrome(c) && c > best)
+            if (ispalindrome32(c) && c > best)
                 best = c;
         }
     }
@@ -294,44 +334,13 @@ static char series1[] = "73167176531330624919225119674426574742355349194934"
         "05886116467109405077541002256983155200055935729725"
         "71636269561882670428252483600823257530420752963450";
 
-template <size_t T> class Fifo
-{
-private:
-    uint8_t _buf[T] = {0};
-public:
-    void dump(ostream &os)
-    {
-        for (uint8_t i = 0; i < T; i++)
-            os.put(_buf[i] + '0');
-    }
-
-    void push(uint8_t n)
-    {
-        for (uint8_t i = 0; i < T - 1; i++)
-            _buf[i] = _buf[i + 1];
-
-        _buf[T - 1] = n;
-    }
-
-    uint64_t product() const
-    {
-        uint64_t ret = _buf[0];
-
-        for (uint8_t i = 1; i < T; i++)
-            ret *= _buf[i];
-
-        return ret;
-    }
-};
-
-static uint64_t opdracht8(const char *series = series1)
-{   uint64_t best = 0;
-    uint16_t len = strlen(series);
-    Fifo<13> fifo;
-    for (uint16_t i = 0; i < len; i++)
-    {   fifo.push(series[i] - '0');
-        uint64_t prdct = fifo.product();
-        if (prdct > best) best = prdct;
+static uint64_t opdracht8(char *s = series1)
+{   uint64_t cur = 0, best = 0;
+    while (*s)
+    {   cur = (cur % 1000000000000) * 10 + (*s++ - '0');
+        uint64_t peel = cur, product = 1;
+        while (peel) product *= peel % 10, peel = peel / 10;
+        if (product > best) best = product;
     }
     return best;
 }
@@ -371,17 +380,12 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 */
 
-static uint64_t opdracht10(uint32_t max = 1999999)
-{   uint64_t sum = 0;
-    vector<bool> v(max, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p <= max; p++)
-        if (v[p] == true)
-            for (uint32_t i = p * 2; i <= max; i += p)
-                v[i] = false;
-    for (uint32_t i = 1; i <= max; i++)
-        sum += v[i] == true ? i : 0;
-    return sum;
+static uint64_t opdracht10(uint32_t limit = 2000000)
+{   vector<uint32_t> primes;
+    sieve32(primes, limit);
+    uint64_t xsum = 0;
+    for (auto p : primes) xsum += p;
+    return xsum;
 }
 
 /*
@@ -760,7 +764,7 @@ static uint64_t opdracht13()
     }
     uint8_t start = totalSum.size() - 10;
     for (uint8_t i = 0; i < 10; i++)
-        sum += totalSum[start + i] * pow64(10, i);
+        sum += totalSum[start + i] * myPow<uint64_t>(10, i);
     return sum;
 }
 
@@ -982,7 +986,7 @@ static uint8_t triangle[][15] = {
 #endif
 
 static uint32_t opdracht18()
-{   uint32_t possibilities = pow64(2, sizeof(triangle[0]) - 1);
+{   uint32_t possibilities = myPow<uint64_t>(2, sizeof(triangle[0]) - 1);
     uint32_t best = 0;
     for (uint32_t i = 0; i <= possibilities; i++)
     {   uint32_t index = 0;
@@ -1101,38 +1105,22 @@ Antwoord: 31,626
 */
 
 static uint32_t sum_divisors(uint32_t n)
-{
-    uint32_t sum = 0;
-
+{   uint32_t sum = 0;
     for (uint32_t i = 1; i < n; i++)
-        if (n % i == 0)
-            sum += i;
-
+        sum += n % i == 0 ? i : 0;
     return sum;
 }
 
 static uint32_t amicable_pairs_sum(uint32_t low = 1, uint32_t high = 10000)
-{
-    uint32_t l[high - low] = {0};
-
+{   uint32_t l[high - low] = {0};
     for (uint32_t i = low; i <= high; i++)
         l[i - low] = sum_divisors(i);
-
     uint32_t sum = 0;
-
     for (uint32_t i = 0; i <= (high - low); i++)
-    {
-        uint32_t ind = l[i];
-
+    {   uint32_t ind = l[i];
         if (i + low < ind && low <= ind && ind <= high && l[ind - low] == i + low)
-        {
-#if 0
-            cout << i + low << " " << ind << "\r\n";
-#endif
             sum += (i + low) + ind;
-        }
     }
-
     return sum;
 }
 
@@ -1178,12 +1166,12 @@ char names22[][50] = {
 "LAURIE","KATIE","KRISTEN","VANESSA","ALMA","SUE","ELSIE","BETH","JEANNE",
 "VICKI","CARLA","TARA","ROSEMARY","EILEEN","TERRI","GERTRUDE","LUCY","TONYA",
 "ELLA","STACEY","WILMA","GINA","KRISTIN","JESSIE","NATALIE","AGNES","VERA",
-"WILLIE","CHARLENE","BESSIE","DELORES","MELINDA","PEARL","ARLENE","MAUREEN","COLLEEN",
-"ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE","LILLIE","CLAUDIA",
-"JACKIE","MARCIA","TANYA","NELLIE",
-"MINNIE","MARLENE","HEIDI","GLENDA","LYDIA","VIOLA","COURTNEY","MARIAN","STELLA",
-"CAROLINE","DORA","JO","VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL",
-"MARSHA","MYRTLE","LENA","CHRISTY",
+"WILLIE","CHARLENE","BESSIE","DELORES","MELINDA","PEARL","ARLENE","MAUREEN",
+"COLLEEN","ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE","LILLIE","CLAUDIA",
+"JACKIE","MARCIA","TANYA","NELLIE","MINNIE","MARLENE","HEIDI","GLENDA",
+"LYDIA","VIOLA","COURTNEY","MARIAN","STELLA","CAROLINE","DORA","JO",
+"VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL","MARSHA","MYRTLE","LENA",
+"CHRISTY",
 "DEANNA","PATSY","HILDA","GWENDOLYN","JENNIE","NORA","MARGIE","NINA","CASSANDRA",
 "LEAH","PENNY","KAY","PRISCILLA","NAOMI","CAROLE","BRANDY","OLGA",
 "BILLIE","DIANNE","TRACEY","LEONA","JENNY",
@@ -1881,12 +1869,12 @@ char names22[][50] = {
 "EDMUNDO","SID","PORTER","LEIF","JERAMY","BUCK","WILLIAN", "VINCENZO",
 "SHON","LYNWOOD","JERE","HAI","ELDEN","DORSEY","DARELL","BRODERICK","ALONSO"};
 
-void swap22(char *a, char *b)
+static void swap22(char *a, char *b)
 {   char c;
     for (uint8_t i = 0; i < 50; i++) c = a[i], a[i] = b[i], b[i] = c;
 }
 
-void bubbleSort22()
+static void bubbleSort22()
 {   uint16_t i, j;
     for (i = 0; i < 5163 - 1; i++)
         for (j = 0; j < 5163 - i - 1; j++)
@@ -1894,11 +1882,11 @@ void bubbleSort22()
                 swap22(&names22[j][0], &names22[j + 1][0]);
 }
 
-uint8_t letterwaarde(uint8_t c)
+static constexpr uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
 
-uint32_t opdracht22()
+static uint32_t opdracht22()
 {   bubbleSort22();
     uint32_t total = 0;
     for (uint16_t i = 0; i < 5163; i++)
@@ -1984,17 +1972,11 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 */
 
-static uint32_t fac24(uint32_t n)
-{   uint32_t xsum = 1;
-    while (n > 1) xsum *= n--;
-    return xsum;
-}
-
 static uint32_t concat24(vector <uint8_t> &v)
 {   uint32_t ret = 0;
     uint8_t last = v.size() - 1;
     for (uint8_t i = 0; i <= last; i++)
-        ret += v.at(last - i) * pow32(10, i);
+        ret += v.at(last - i) * myPow<uint32_t>(10, i);
     return ret;
 }
 
@@ -2006,8 +1988,8 @@ static uint32_t opdracht24()
     for (uint8_t i = 0; i < 10; i++)
         b.push_back(a[i]);
     while (b.size() > 0)
-    {   uint8_t i = perm / fac24(b.size() - 1);
-        perm = perm % fac24(b.size() - 1);
+    {   uint8_t i = perm / fac32(b.size() - 1);
+        perm = perm % fac32(b.size() - 1);
         result.push_back(b.at(i));
         b.erase(b.begin() + i);
     }
@@ -2261,7 +2243,7 @@ Antwoord: 9,183
 
 static uint32_t myRoot(uint32_t n)
 {   for (uint8_t a = 2; a <= 10; a++)
-        for (uint32_t e = 1, b = 0; (b = pow32(a, e)) <= 100; e++)
+        for (uint32_t e = 1, b = 0; (b = myPow<uint32_t>(a, e)) <= 100; e++)
             if (b == (n & 0xffff0000) >> 16) return a << 16 | e;
     return n;
 }
@@ -2305,7 +2287,7 @@ Antwoord: 443,839
 
 bool test30(uint32_t n, uint8_t p)
 {   uint32_t xsum = 0, tmp = n;
-    while (tmp > 0) xsum += pow32(tmp % 10, p), tmp = tmp / 10;
+    while (tmp > 0) xsum += myPow<uint32_t>(tmp % 10, p), tmp = tmp / 10;
     return xsum == n;
 }
 
@@ -2359,22 +2341,6 @@ include it once in your sum.
 
 Antwoord: 45,228
 */
-
-static uint32_t linSearch32(vector<uint8_t> &vec, uint8_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
-    return 0;
-}
-
-static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
-{   while (n > 0)
-    {   uint32_t pos = linSearch32(nset, n % 10);
-        if (pos) nset.erase(nset.begin() + (pos - 1));
-        else return false;
-        n = n / 10;
-    }
-    return true;
-}
 
 static void panProducts32(set<uint32_t> &st)
 {   for (uint32_t i = 2; i < 60; i++)
@@ -2476,52 +2442,34 @@ Antwoord: 55
 939391, 993319, 999331
 */
 
-static uint8_t decimals35(uint32_t n)
-{   uint8_t i = 0;
-    while (n > pow32(10, i)) i++;
-    return i;
-}
-
 static uint32_t rotate(uint32_t n)
-{   uint8_t length = decimals35(n), digit = n % 10;
-    return n / 10 + digit * pow32(10, length - 1);
+{   uint32_t length = decimals32(n), digit = n % 10;
+    return n / 10 + digit * myPow<uint32_t>(10, length - 1);
 }
 
 static void rotations(vector<uint32_t> &rts, uint32_t n)
-{   for (uint8_t i = 0; i < decimals35(n); i++)
+{   for (uint8_t i = 0; i < decimals32(n); i++)
     {   n = rotate(n);
         rts.push_back(n);
     }
 }
 
-static bool iscircular(uint32_t n, set<uint32_t> &primes)
+static bool iscircular(uint32_t n, vector<uint32_t> &primes)
 {   vector<uint32_t> rts;
     rotations(rts, n);
     for (auto rotation : rts)
-        if (primes.count(rotation) == 0) return false;
+        if (binary_search(primes.begin(), primes.end(), rotation) == false) return false;
     return true;
 }
 
-static void sieve35(set<uint32_t> &primes, uint32_t max)
-{   vector<bool> v(max, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p <= max; p++)
-        if (v[p] == true)
-            for (uint32_t i = p * 2; i <= max; i += p)
-                v[i] = false;
-    for (uint32_t i = 1; i <= max; i++)
-        if (v[i] == true)
-            primes.insert(i);
-}
-
 static uint32_t opdracht35()
-{   set<uint32_t> primes;
-    sieve35(primes, 999999);
-    set<uint32_t> cprimes;
+{   vector<uint32_t> primes;
+    sieve32(primes, 999999);
+    uint32_t ncount = 0;
     for (auto prime : primes)
         if (iscircular(prime, primes))
-            cprimes.insert(prime);
-    return cprimes.size();
+            ncount++;
+    return ncount;
 }
 
 /*
@@ -2536,16 +2484,10 @@ Find the sum of all numbers, less than one million, which are palindromic in bas
 Antwoord: 872,187
 */
 
-static bool ispalindrome36(uint32_t n, uint8_t base = 10)
-{   uint32_t rev = 0;
-    for (uint32_t temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
-    return n == rev;
-}
-
 static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
 {   uint32_t xsum = 0;
     for (uint32_t i = min; i < limit; i++)
-        if (ispalindrome36(i, 10) && ispalindrome36(i, 2)) xsum += i;
+        if (ispalindrome32(i, 10) && ispalindrome32(i, 2)) xsum += i;
     return xsum;
 }
 
@@ -2568,56 +2510,31 @@ Antwoord: 748,317
 23 + 37 + 53 + 73 + 313 + 317 + 373 + 797 + 3,137 + 3,797 + 739,397 = 748,317
 */
 
-uint32_t pow37(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
-static uint8_t decimals37(uint32_t n)
-{   uint8_t i = 0;
-    while (n > pow37(10, i)) i++;
-    return i;
-}
-
-static bool isrighttruncatable(uint32_t prime, set<uint32_t> &primes)
+static bool isrighttruncatable(uint32_t prime, vector<uint32_t> &primes)
 {   while (prime > 10)
     {   prime = prime / 10;
-        if (primes.count(prime) == 0) return false;
+        if (binary_search(primes.begin(), primes.end(), prime) == 0) return false;
     }
     return true;
 }
 
 static uint32_t truncate_left(uint32_t n)
-{   uint8_t exp = decimals37(n) - 1;
-    return n % pow37(10, exp);
+{   uint8_t exp = decimals32(n) - 1;
+    return n % myPow<uint32_t>(10, exp);
 }
 
-static bool islefttruncatable(uint32_t prime, set<uint32_t> &primes)
-{   uint8_t length = decimals37(prime);
-    for (uint8_t i = 0; i < length; i++) {
-        if (primes.count(prime) == 0) return false;
+static bool islefttruncatable(uint32_t prime, vector<uint32_t> &primes)
+{   uint8_t length = decimals32(prime);
+    for (uint8_t i = 0; i < length; i++)
+    {   if (binary_search(primes.begin(), primes.end(), prime) == 0) return false;
         prime = truncate_left(prime);
     }
     return true;
 }
 
-static void sieve37(set<uint32_t> &primes, uint32_t max)
-{   vector<bool> v(max, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p <= max; p++)
-        if (v[p] == true)
-            for (uint32_t i = p * 2; i <= max; i += p)
-                v[i] = false;
-    for (uint32_t i = 1; i <= max; i++)
-        if (v[i] == true)
-            primes.insert(i);
-}
-
 static uint32_t opdracht37()
-{   set<uint32_t> primes;
-    sieve37(primes, 999999);
+{   vector<uint32_t> primes;
+    sieve32(primes, 999999);
     uint32_t xsum = 0;
     for (auto prime : primes)
     {   if (prime == 2 || prime == 3 || prime == 5 || prime == 7)
@@ -2650,39 +2567,10 @@ the concatenated product of an integer with (1,2, ... , n) where n > 1?
 Antwoord: 932,718,654
 */
 
-uint32_t pow38(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
-static uint8_t decimals38(uint32_t n)
-{   uint8_t i = 0;
-    while (n > pow38(10, i)) i++;
-    return i;
-}
-
-static uint32_t linSearch38(vector<uint8_t> &vec, uint8_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
-    return 0;
-}
-
-static bool hasDigitsOnce(uint64_t n, vector<uint8_t> &nset)
-{   while (n > 0)
-    {   uint32_t pos = linSearch38(nset, n % 10);
-        if (pos) nset.erase(nset.begin() + (pos - 1));
-        else return false;
-        n = n / 10;
-    }
-    return true;
-}
-
-static bool isPandigital(uint64_t n)
+static bool isPandigital(uint32_t n)
 {   vector<uint8_t> nset;
-    for (uint8_t i = 1; i <= decimals38(n); i++) nset.push_back(i);
-    return hasDigitsOnce(n, nset);
+    for (uint8_t i = 1; i <= decimals32(n); i++) nset.push_back(i);
+    return hasDigitsOnce32(n, nset);
 }
 
 static uint32_t opdracht38()
@@ -2749,7 +2637,11 @@ If dn represents the nth digit of the fractional
 part, find the value of the following expression.
 
 d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+
+Antwoord: 210
 */
+
+// 1*1*5*3*7*2*1=210
 
 static uint32_t getDigit40(uint32_t i)
 {   uint32_t offset = 0, decimals = 1, setLow = 1, setLength = 9;
@@ -2774,38 +2666,19 @@ the digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital
 and is also prime.
 
 What is the largest n-digit pandigital prime that exists?
+
+Antwoord: 7,652,413
 */
 
-static uint32_t linSearch41(vector<uint8_t> &vec, uint8_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
-    return 0;
-}
-
-static bool hasDigitsOnce41(uint64_t n, vector<uint8_t> &nset)
-{   while (n > 0)
-    {   uint32_t pos = linSearch41(nset, n % 10);
-        if (pos) nset.erase(nset.begin() + (pos - 1));
-        else return false;
-        n = n / 10;
-    }
-    return true;
-}
-
-static bool isPandigital41(uint64_t n)
+static bool isPandigital41(uint32_t n)
 {   vector<uint8_t> nset;
-    for (uint8_t i = 1; i <= decimals38(n); i++) nset.push_back(i);
-    return hasDigitsOnce41(n, nset);
+    for (uint8_t i = 1; i <= decimals32(n); i++) nset.push_back(i);
+    return hasDigitsOnce32(n, nset);
 }
 
-// deze sieve is waarschijnlijk niet helemaal goed
 static uint32_t opdracht41()
-{   vector<bool> sieve(7654321, true);
-    sieve[0] = sieve[1] = false;
-    for (uint32_t i = 0; i < sieve.size(); i++)
-        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
-    vector<uint32_t> primes;
-    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+{   vector<uint32_t> primes;
+    sieve32(primes, 7654321);
     uint32_t best = 0;
     for (auto prime : primes)
         if (isPandigital41(prime) && prime > best) best = prime;
@@ -3064,27 +2937,19 @@ static char words42[][100] =
 "WRITE","WRITER","WRITING","WRONG","YARD","YEAH","YEAR","YES","YESTERDAY",
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH"};
 
-static constexpr uint32_t triangle42(uint32_t n) { return n * (n + 1) >> 1; }
-
 static uint32_t wordcount42(char *w)
 {   uint32_t count = 0;
     while (*w) count += *w++ - 64;
     return count;
 }
 
-static uint32_t linSearch42(vector<uint32_t> &vec, uint32_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
-    return 0;
-}
-
 static uint32_t opdracht42()
 {   vector<uint32_t> triangles;
-    for (uint32_t i = 0; i < 20; i++) triangles.push_back(triangle42(i));
+    for (uint32_t i = 0; i < 20; i++) triangles.push_back(triangle32(i));
     uint32_t ret = 0;
     uint32_t count = sizeof(words42) / 100;
     for (uint32_t i = 0; i < count; i++)
-        if (linSearch42(triangles, wordcount42(words42[i])))
+        if (linSearch32<uint32_t>(triangles, wordcount42(words42[i])))
             ret++;
     return ret;
 }
@@ -3110,17 +2975,10 @@ d8d9d10=289 is divisible by 17
 Find the sum of all 0 to 9 pandigital numbers with this property.
 */
 
-uint64_t pow43(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint64_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
 static uint64_t concat43(vector<uint8_t> &v)
 {   uint64_t ret = 0;
     for (uint32_t i = 0; i < v.size(); i++)
-        ret += v.at(v.size() - 1 - i) * pow43(10, i);
+        ret += v.at(v.size() - 1 - i) * myPow<uint64_t>(10, i);
     return ret;
 }
 
@@ -3141,7 +2999,7 @@ static void permutations43(vector<uint64_t> &ps, vector<uint8_t> &pool)
 static bool test43(uint64_t n)
 {   uint8_t divs[] = {17,13,11,7,5,3,2};
     for (uint8_t i = 0; i < 7; i++)
-        if ((n / pow43(10, i) % 1000) % divs[i] != 0)
+        if ((n / myPow<uint32_t>(10, i) % 1000) % divs[i] != 0)
             return false;
     return true;
 }
@@ -3174,11 +3032,9 @@ is minimised; what is the value of D?
 Antwoord: 5,482,660
 */
 
-static constexpr uint32_t pentagon44(uint32_t n) { return n * (3 * n - 1) / 2; }
-
 static uint32_t opdracht44()
 {   vector<uint32_t> lpgs;
-    for (uint32_t i = 1; i < 9999; i++) lpgs.push_back(pentagon44(i));
+    for (uint32_t i = 1; i < 9999; i++) lpgs.push_back(pentagon32(i));
     for (uint32_t i = 0; i < lpgs.size(); i++)
         for (uint32_t j = i; j < lpgs.size(); j++)
             if (binary_search(lpgs.begin() + j, lpgs.end(), lpgs[i] + lpgs[j]) &&
@@ -3208,13 +3064,10 @@ T55,385 = P31,977 = H27,693 = 1,533,776,805
 
 // T65,535 = H32768 = 2,147,450,880
 
-static constexpr uint32_t pentagon45(uint32_t n) { return n * (3 * n - 1) / 2; }
-static constexpr uint32_t hexagon45(uint32_t n) { return n * (2 * n - 1); }
-
 static uint32_t opdracht45()
 {   vector<uint32_t> vp, vh;
-    for (uint32_t i = 166; i < 32000; i++) vp.push_back(pentagon45(i));
-    for (uint32_t i = 144; i < 46000; i++) vh.push_back(hexagon45(i));
+    for (uint32_t i = 166; i < 32000; i++) vp.push_back(pentagon32(i));
+    for (uint32_t i = 144; i < 46000; i++) vh.push_back(hexagon32(i));
     for (auto h : vh)
         if (binary_search(vp.begin(), vp.end(), h))
             return h;
@@ -3251,14 +3104,9 @@ static uint64_t pair46(vector<uint32_t> &primes, vector<uint32_t> &squares, uint
     return 0;
 }
 
-// controleer sieve
 static uint32_t opdracht46()
-{   vector<bool> sieve(999999, true);
-    sieve[0] = sieve[1] = false;
-    for (uint32_t i = 0; i < sieve.size(); i++)
-        if (sieve[i]) for (uint32_t j = i * i; j < sieve.size(); j += i) sieve[j] = false;
-    vector<uint32_t> primes, squares;
-    for (uint32_t i = 0; i < sieve.size(); i++) if (sieve.at(i)) primes.push_back(i);
+{   vector<uint32_t> primes, squares;
+    sieve32(primes, 999999);
     for (uint32_t i = 0; i < 100; i++) squares.push_back(2*i*i);
     for (uint32_t i = 3; i < 987654321; i += 2)
     {   if (binary_search(primes.begin(), primes.end(), i)) continue;
@@ -3461,56 +3309,18 @@ Antwoord: 296,962,999,629
 {4007}, {4027}, {4051}, {4079}]
 */
 
-uint32_t pow49(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
-static uint32_t decimals49(uint32_t n) __attribute__((unused));
-static uint32_t decimals49(uint32_t n)
-{   uint32_t i = 0;
-    while (n) n = n / 10, i++;
-    return i;
-}
-
-static uint32_t factorial49(uint32_t n) __attribute__((unused));
-static uint32_t factorial49(uint32_t n)
-{   uint32_t product = 1;
-    for (uint32_t a = 2; a <= n; a++) product *= a;
-    return product;
-}
-
-static uint32_t dig(uint32_t n, uint32_t i) __attribute__((unused));
-static uint32_t dig(uint32_t n, uint32_t i)
-{   return n / pow49(10, i) % 10;
-}
-
 // not yet finished, shortcut here
 static uint32_t seq[] = {2969, 2699, 6299, 9629};
 
-static uint32_t linSearch49(vector<uint32_t> &vec, uint32_t n)
-{   for (uint32_t i = 0; i < vec.size(); i++)
-        if (vec.at(i) == n) return i + 1;
-    return 0;
-}
-
 static uint64_t check(vector<uint32_t> &v)
 {   for (auto n : v)
-        if (linSearch49(v, n + 3330) && linSearch49(v, n + 6660))
+        if (linSearch32<uint32_t>(v, n + 3330) && linSearch32<uint32_t>(v, n + 6660))
             return (n + 6660) + (n + 3330) * 10000 + (uint64_t)n * 100000000;
     return 0;
 }
 
 static uint64_t opdracht49()
-{   vector<bool> v(10000, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p < v.size(); p++)
-        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
-    set<uint32_t> primes4;
-    for (uint32_t i = 1000; i < v.size(); i++) if (v[i]) primes4.insert(i);
-    vector<uint32_t> lseq;
+{   vector<uint32_t> lseq;
     for (uint32_t i = 0; i < 4; i++) lseq.push_back(seq[i]);
     if (check(lseq)) return check(lseq);
     return 0;
@@ -3572,19 +3382,6 @@ prime value family.
 Antwoord: 121,313
 */
 
-uint32_t pow51(uint32_t base, uint32_t i)
-{   if (i == 0) return 1;
-    uint32_t ret = base;
-    while (--i) ret = ret * base;
-    return ret;
-}
-
-static uint32_t decimals51(uint32_t n)
-{   uint32_t i = 0;
-    while (n) n = n / 10, i++;
-    return i;
-}
-
 static void binarize51(vector<uint32_t> &out, uint32_t n)
 {   uint32_t div = 2, dec = 1;
     while (n)
@@ -3595,20 +3392,16 @@ static void binarize51(vector<uint32_t> &out, uint32_t n)
     }
 }
 
-static uint32_t digit51(uint32_t n, uint32_t i)
-{   return n / pow51(10, i) % 10;
-}
-
 static void family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n, uint32_t mask)
-{   uint32_t xlen = decimals51(n);
+{   uint32_t xlen = decimals32(n);
     vector<uint32_t> bmask;
     binarize51(bmask, mask);
     for (uint32_t i = 0; i < bmask.size(); i++)
-        n -= bmask.at(i) * digit51(n, i);
+        n -= bmask.at(i) * digit32(n, i);
     for (uint32_t i = 0; i < 10; i++)
     {   uint32_t tmp = n;
         for (auto b : bmask) tmp += b * i;
-        if (decimals51(tmp) == xlen && binary_search(primes.begin(), primes.end(), tmp))
+        if (decimals32(tmp) == xlen && binary_search(primes.begin(), primes.end(), tmp))
             out.push_back(tmp);
     }
 }
@@ -3621,7 +3414,7 @@ static uint32_t opdracht51()
     vector<uint32_t> primes;
     for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
     for (auto p : primes)
-    {   for (uint32_t mask = 1; mask < pow51(2, decimals51(p)); mask++)
+    {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals32(p)); mask++)
         {   vector<uint32_t> fam;
             family51(fam, primes, p, mask);
             if (fam.size() == 8) return fam.at(0);
@@ -3696,8 +3489,7 @@ Antwoord: 4,075
 */
 
 static uint32_t opdracht53()
-{
-    static constexpr uint8_t nlimit = 101;
+{   static constexpr uint8_t nlimit = 101;
     static constexpr uint32_t limit = 1000000;
     uint32_t tree[nlimit][nlimit];
     for (uint8_t i = 0; i < nlimit; i++)
