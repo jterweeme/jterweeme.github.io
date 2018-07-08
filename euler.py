@@ -3495,7 +3495,7 @@ hand there is a clear winner.
 How many hands does Player 1 win?
 """
 
-hands = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
+hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 "5C AD 5D AC 9C   7C 5H 8D TD KS",
 "3H 7H 6S KC JS   QH TD JC 2D 8S",
 "TH 8H 5C QS TC   9H 4D JC KS JS",
@@ -4496,193 +4496,24 @@ hands = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 "QC KC 3S JC KD   2C 8D AH QS TS",
 "AS KD 3D JD 8H   7C 8C 5C QD 6C")
 
-cards = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14}
-
-def getSorted(hand):
-    a = []
-    for i in [0,3,6,9,12]:
-        a.append(cards[hand[i]])
-    a.sort()
-    return a
-
-def flush(hand):
-    return hand[1] == hand[4] == hand[7] == hand[10] == hand[13]
-
-def straight(hand):
-    a = getSorted(hand)
-    for i in range(4):
-        if a[i+1] != a[i] + 1: return False
-    return True
-
-def identical(lst):
-    for n in lst:
-        if n != lst[0]: return False
-    return True
-
-def highcard(hand):
-    a = getSorted(hand)
-    return max(a)
-
-def pair(hand):
-    a = getSorted(hand)
-    other = []
-    ret = 0
-    for i in range(4):
-        if a[i] == a[i+1]:
-            ret = a[i]
-        elif a[i] != ret:
-            other.append(a[i])
-    if a[4] != ret:
-        other.append(a[4])
-    return (ret + 13) * 2 + max(other) if ret else 0
-
-def twopair(hand):
-    a = getSorted(hand)
-    pairs = []
-    for i in range(4):
-        if a[i] == a[i + 1]:
-            pairs.append(a[i])
-    if len(pairs) == 2:
-        return max(pairs)
-    return 0
-
-def three(hand):
-    a = getSorted(hand)
-    for i in range(3):
-        if identical(a[i:i+3]): return True
-    return False
-
-def fullhouse(hand):
-    a = getSorted(hand)
-    if identical(a[0:3]) and identical(a[3:5]):
-        return a[0]
-    if identical(a[0:2]) and identical(a[2:5]):
-        return a[2]
-    return 0
-
-def carre(hand):
-    a = getSorted(hand)
-    if identical(a[:4]) or identical(a[1:]): return True
-    return False
-
-def score(hand):
-    if carre(hand):
-        return 2500
-    if fullhouse(hand):
-        return 1500 + fullhouse(hand)
-    if flush(hand):
-        return 1000
-    if straight(hand):
-        return 500
-    if three(hand):
-        return 200
-    if twopair(hand):
-        return 100 + twopair(hand)
-    if pair(hand):
-        return pair(hand)
-    return highcard(hand)
-
-def who(hands):
-    player1 = score(hands[:14])
-    player2 = score(hands[17:])
-    #return (player1, player2)
-    if player1 > player2: return 1
-    if player2 > player1: return 2
-    return 0
-
 """
-[full-house] (geen dubbele)
-8S JS 6D 4H JH   6H 6S 6C KS KH
-4H 9H QH JS 2D   TH TD TC KD KS
-
-[three-of-kind] (geen dubbele)
-2S 8D 8C 4C TS   9S 9D 9C AC 3D
-AD 3C 3D KS 3S   5C 9C 8C TS 4S
-3D AD 3C 3S 4C   QC AS 5D TH 8C
-4H 5S 8D 3D 4D   2S KC 2H JS 2C
-4H 8H 8D 5H 6C   AH 5S AS AD 8S
-4S 6H 7C QD 9D   AS AH 6S AD 3C
-6C TD 5S TC 8S   AH 2C 5D AS AC
-3C 9S AC 7S QH   2H 3D 6S 3S 3H
-QD 9H 5S QS QC   9C 5H JC TH 4H
-JD JS JC TH 2D   3D QD 8C AC 5H
-4S 5D AC 8D 4D   7C AD AS AH 9C
-AS JS 2S QD KH   8H 4S AC 8D 8S
-2H 4C 6C AH 8S   TD 3H TH 7C TS
-4H 5S 3H AC TC   TH 9C 9H 9S 8D
-QH AS 9H 4D JD   KS KD TS KH 5H
-6D 4H TS 9C 5H   JS JH 6S JD 4C
-6H 4H 6C 7H 6S   2S 8S KH QC 8C
-KD AD KH 7H 7S   5D 5H 5S 2D 9C
-QH KH 6S QS 5S   4H 3C QD 3S 3H
-AC 7D 2S 3D QD   JC 2D 8D JD JH
-2H JC 2D 7H 2C   3C 8D KD TD 4H
-2C QD 2S 2H JC   9C 5D 2D JD JH
-4S 6S 2C 6H 8S   3S 3D 9H 3H JS
-JC JH JD 3S 7S   8S JS QC 3H 4S
-8C JH 2H 5H 7C   5D QH QS KH QC
-3S TD 3H 7C KC   8D 5H 8S KH 8C
-AH 9D 2C 8D 4D   2D 6H 6C KC 6S
-3S 8D 8S KS 8C   JC 5C KH 2H 5D
-4C 3H QS QC 9S   9H 6D KC 9D 9C
-8C 2D 2H 2C 4S   4C 6S 7D 5S 3S
-TH QC 5D TD 3C   QS KD KC KS AS
-JS 6D JD JC 2H   AC 6C 3D KH 8D
-3D 5C 6H 3S 3C   JC 5S 7S 2S QH
-4H QC 8H JD 4C   KD KS 5C KC 7S
-QD AD AH KH 9D   JS 9H JC KD JD
-KH JS 4H 5D 9D   TC TD QC JD TS
-
-[straight] (geen dubbele)
-6H 4H 5C 3H 2H   3S QH 5S 6S AS
-TS 8H 9S 6S 7S   QH 3C AH 7H 8C
-6H 5D 7S 5H 9C   9H JH 8S TH 7H
-3C 6D 4S QC KC   JH QD TH KH AD
-2C 7C JC 5S AS   6C 7D 8S 5H 9C
-2S 4C AD 7H JC   5C 2D 6D 4H 3D
-KC AS 2D KH 9H   2C 5S 4D 3D 6H
-AD 3C 4H AC 8D   8H 7S 9S TD JC
-3C 2D 4C 5S 6C   4S QS 3S JD 3D
-KS JC QD TH 9S   KD 8D 8C 2D 9C
-8C 2D 2H 2C 4S   4C 6S 7D 5S 3S
-JD TS 8S QD AH   4C 6H 3S 5S 2C
-
-[flush] (geen dubbele)
-AD 6C 6S 7D TH   6H 2H 8H KH 4H
-7C 4C 9C 2C 5C   AS 5D KD 4D QH
-
-* geen four-of-a-kinds
-* geen straight-flushes
-* geen royal-flushes
-
-"""
-
-"""
-6C 8S 3H 6D KS   QD 5D 5C 8H TC
-KH 6S 8H 4S KD   7D 9D TS QD QC
-AH AD TH 6D 9C   9S KD KS QH 4H
-9H 4S 4H 5C 7D   KC 2D 2H 9D JH
-8H 6H JH 6C 5D   8D 8S 4H AD 2C
-5H 8C 5S 3C 4S   3D 7C 8D AS 3H
-2S 9S 8S 4C 8C   3D 6H QD 7C 7H
+https://blog.dreamshire.com/project-euler-54-solution/
 """
 
 def opdracht54():
-    print(score("6C 8S 3H 6D KS"))
-    print(score("QD 5D 5C 8H TC"))
-    p1 = 0
-    for hand in hands:
-        if who(hand) == 0:
-            print(hand)
-        p1 += 1 if who(hand) == 1 else 0
-    return p1
-    print(who("5H 5C 6S 7S KD   2C 3S 8S 8D TD"))   # 2: Pair 8
-    print(who("5D 8C 9S JS AC   2C 5C 7D 8S QH"))   # 1: High A
-    print(who("2D 9C AS AH AC   3D 6D 7D TD QD"))   # 2: Flush
-    print(who("4D 6S 9H QH QC   3D 6D 7H QD QS"))   # 1: Pair Q, High 9
-    print(who("2H 2D 4C 4D 4S   3C 3D 3S 9S 9D"))   # 1: Full-House 3x4
-    print(who("8C TS KC 9H 4S   7D 2S 5D 3S AC"))   # 2: High A
-    return 0
+    from collections import Counter
+    hands = (line.split() for line in hands54)
+    values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
+    straights = [(v, v-1, v-2, v-3, v-4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
+    ranks = [(1,1,1,1,1),(2,1,1,1),(2,2,1),(3,1,1),(),(),(3,2),(4,1)]
+    def hand_rank(hand):
+        score = list(zip(*sorted(((v, values[k]) for
+            k,v in Counter(x[0] for x in hand).items()), reverse=True)))
+        score[0] = ranks.index(score[0])
+        if len(set(card[1] for card in hand)) == 1: score[0] = 5  # flush
+        if score[1] in straights: score[0] = 8 if score[0] == 5 else 4  # str./str. flush
+        return score
+    return sum(hand_rank(hand[:5]) > hand_rank(hand[5:]) for hand in hands)
 
 """
 Einde opdrachten
@@ -4742,6 +4573,7 @@ def runn2(n = 1):
     if n == 51: return opdracht51()
     if n == 52: return opdracht52()
     if n == 53: return opdracht53()
+    if n == 54: return opdracht54()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -4764,13 +4596,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 53 + 1))):
+def runm(l = list(range(1, 54 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 53 + 1)):
+def runs(l = range(1, 54 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
