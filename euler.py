@@ -1,4 +1,70 @@
 """
+Project Euler
+"""
+
+"""
+Common functions
+"""
+
+def sieve(limit):
+    a = [True] * limit
+    a[0] = a[1] = False
+    for i, isprime in enumerate(a):
+        if isprime:
+            yield i
+            for n in range(i * i, limit, i):
+                a[n] = False
+
+def triangler(n): return n * (n + 1) >> 1
+def pentagon(n): return n * (3 * n - 1)//2
+def hexagon(n): return n * (2 * n - 1)
+
+def decimals(n):
+    i = 0
+    while n: n = n // 10; i += 1
+    return i
+
+def digits(n):
+    while n: yield n % 10; n = n // 10;
+
+def digit(n, i):
+    return n // 10**i % 10
+
+def product(l):
+    xsum = 1
+    for n in l: xsum *= n
+    return xsum
+
+def factorial(n):
+    return product(range(2, n + 1))
+
+def ispalindrome(n, base = 10):
+    temp, rev = n, 0
+    while temp != 0:
+        rev = rev * base + temp % base
+        temp = temp // base
+    return n == rev
+
+def hasOnce(n, nset):
+    for i in n:
+        if i in nset: nset.remove(i)
+        else: return False
+    return True
+
+def hasDigitsOnce(n, nset):
+    return hasOnce(digits(n), nset)
+
+def isPandigital(n):
+    return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
+
+def fibonacci(xmax, term1 = 1, term2 = 2):
+    yield term1
+    yield term2
+    while term1 + term2 <= xmax:
+        yield term1 + term2
+        term1, term2 = term2, term1 + term2
+
+"""
 #1 Multiples of 3 and 5
 
 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -10,23 +76,7 @@ Antwoord: 233,168
 """
 
 def opdracht1(limit = 1000):
-    def summation(n, xmax):
-        xlen = xmax // n
-        return ((xlen * (xlen + 1)) // 2) * n
-    return summation(3, limit - 1) + summation(5, limit - 1) - summation(15, limit - 1)
-
-def opdracht1b(limit = 1000):
     return sum(set(range(3,limit,3)) | set(range(5,limit,5)))
-
-def opdracht1c(limit = 1000):
-    return sum(range(3,limit,3)) + sum(range(5,limit,5)) - sum(range(15,limit,15))
-
-def opdracht1d(limit = 1000):
-    xsum = 0
-    for x in range(1, limit):
-        if x % 3 == 0 or x % 5 == 0:
-            xsum += x
-    return xsum
 
 """
 #2 Even Fibonacci numbers
@@ -46,25 +96,8 @@ Antwoord: 4,613,732
 2 + 8 + 34 + 144 + 610 + 2,584 + 10,946 + 46,368 + 196,418 + 832,040 + 3,524,578 = 4,613,732
 """
 
-def fibonacci(term1 = 1, term2 = 2):
-    yield term1
-    yield term2
-    while True:
-        yield term1 + term2
-        term1, term2 = term2, term1 + term2
-
 def opdracht2(xmax = 4*10**6):
-    def fibonacci(xmax, term1 = 1, term2 = 2):
-        yield term1
-        yield term2
-        while term1 + term2 <= xmax:
-            yield term1 + term2
-            term1, term2 = term2, term1 + term2
-    def evenFib(genx):
-        for term in genx:
-            if term % 2 == 0:
-                yield term
-    return sum(evenFib(fibonacci(xmax)))
+    return sum([x for x in fibonacci(xmax) if x % 2 == 0])
 
 """
 #3 Largest prime factor
@@ -78,7 +111,7 @@ Antwoord: 6,857
 """
 71*839*1,471*6,857=600,851,475,143
 """
-def maxprimefactor(n = 600851475143):
+def opdracht3(n = 600851475143):
     def primeGen():
         yield 2
         yield 3
@@ -121,14 +154,7 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 """
 
-def palindrome(x = range(100, 1000), y = range(999, 99, -1)):
-    def ispalindrome(n):
-        temp = n
-        rev = 0
-        while temp != 0:
-            rev = rev * 10 + temp % 10
-            temp = temp // 10
-        return n == rev
+def opdracht4(x = range(100, 1000), y = range(999, 99, -1)):
     best = 0
     for a in x:
         for b in y:
@@ -150,7 +176,7 @@ divisible by all of the numbers from 1 to 20?
 Antwoord: 232,792,560
 """
 
-def divide(l = (11,12,13,14,15,16,17,18,19,20)):
+def opdracht5(l = (11,12,13,14,15,16,17,18,19,20)):
     def isdivisible(n, l):
         for x in l:
             if n % x > 0:
@@ -276,15 +302,7 @@ series8 = ("73167176531330624919225119674426574742355349194934"
 
 def opdracht8(series1 = series8):
     series3 = [ord(x) - ord('0') for x in series1]
-    length = len(series3)
-    best = 0
-    for i in range(0, length - 13):
-        subseries = series3[i:i+13]
-        product = 1
-        for n in subseries:
-            product *= n
-        best = max(best, product)
-    return best
+    return max(product(series3[i:i+13]) for i in range(0, len(series3) - 13))
 
 """
 #9 Special Pythagorean triplet
@@ -319,14 +337,6 @@ Antwoord: 142,913,828,922
 """
 
 def opdracht10(limit = 2*10**6):
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     return sum(sieve(limit))
 
 """
@@ -430,8 +440,6 @@ Antwoord: 76,576,500
 """
 
 def opdracht12(divisors = 500):
-    def triangler(n):
-        return n * (n + 1) >> 1
     def num_divisors(n):
         if n % 2 == 0:
             n = n >> 1
@@ -669,8 +677,7 @@ digits13 = ("37107287533902102798797998220837590246510135740250",
     "53503534226472524250874054075591789781264330331690")
 
 def opdracht13(digits = digits13):
-    som = 0;
-    e = 0
+    som, e = 0, 0;
     for i in range(50, 0, -1):
         for n in digits:
             som += (ord(n[i - 1]) - 48) * 10**e;
@@ -728,25 +735,8 @@ How many such routes are there through a 20×20 grid?
 Antwoord: 137,846,528,820
 """
 
-"""
-oplossing 1: bij hele grote input merkbaar sneller
-"""
-
 def opdracht15(size = 20):
-    paths = 1
-    for i in range(0, size): paths = (paths * (2 * size - i)) // (i + 1)
-    return paths
-
-"""
-oplossing 2:
-"""
-
-def opdracht15b(size = 20):
-    def factorial(n):
-        xsum = 1
-        for a in range(2, n + 1): xsum *= a
-        return xsum
-    return factorial(2 * size) // factorial(size) // factorial(size)
+    return factorial(2 * size) // factorial(size)**2
 
 """
 #16 Power digit sum
@@ -759,11 +749,7 @@ Antwoord: 1366
 """
 
 def opdracht16(e = 1000):
-    def digits(n):
-        while n > 0: yield n % 10; n = n // 10;
-    xsum = 0;
-    for n in digits(2**e): xsum += n;
-    return xsum;
+    return sum(digits(2**e))
 
 """
 #17 Number letter counts
@@ -905,10 +891,8 @@ Antwoord: 171
 
 def opdracht19():
     def isLeap(year):
-        if year % 4 > 0:
-            return False
-        if year % 100 > 0:
-            return True
+        if year % 4 > 0: return False
+        if year % 100 > 0: return True
         return False
     months = (31,28,31,30,31,30,31,31,30,31,30,31)
     days = ('Tuesday','Wednesday', 'Thursday','Friday','Saturday', 'Sunday', 'Monday')
@@ -940,19 +924,7 @@ Antwoord: 648
 """
 
 def opdracht20(f = 100):
-    buf = [f]
-    for i in range(f - 1, 0, -1):
-        carry = 0
-        j = 0
-        while j < len(buf):
-            buf[j] *= i
-            buf[j] += carry
-            carry = buf[j] // 10
-            if j == len(buf) - 1 and carry > 0:
-                buf.append(0)
-            buf[j] = buf[j] % 10
-            j += 1
-    return sum([x for x in buf])
+    return sum(digits(factorial(f)))
 
 """
 #21 Amicable numbers
@@ -979,7 +951,7 @@ Antwoord: 31626
 6232 - 6368
 """
 
-def amicable_pairs_sum(low = 1, high = 10**4):
+def opdracht21(low = 1, high = 10**4):
     def sum_divisors(n):
         s = 0
         for i in range(1,n):
@@ -1009,7 +981,7 @@ COLIN would obtain a score of 938 × 53 = 49714.
 
 What is the total of all the name scores in the file?
 
-Antwoord: 871198282
+Antwoord: 871,198,282
 """
 
 
@@ -1783,9 +1755,7 @@ Upper bound is actually 20,161
 
 def opdracht23():
     def GetSumOfDivs(n):
-        i = 2
-        upper = n
-        total = 1
+        i, upper, total = 2, n, 1
         while i < upper:
             if n%i == 0:
                 upper = n//i
@@ -1827,22 +1797,12 @@ Antwoord: 2,783,915,460
 """
 
 def opdracht24(pool = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
-    def concat24(lst):
-        ret = 0
-        for i, n in enumerate(reversed(lst)):
-            ret += n *10**i
-        return ret
-    def factorial(n):
-        xsum = 1
-        for a in range(2, n + 1):
-            xsum *= a
-        return xsum
     lst = list()
     while len(pool) > 0:
         i, perm = divmod(perm, factorial(len(pool) - 1))
         lst.append(pool[i])
         pool.pop(i)
-    return concat24(lst)
+    return sum(n*10**i for i, n in enumerate(reversed(lst)))
 
 """
 #25: 1000-digit Fibonacci number
@@ -1874,14 +1834,7 @@ Antwoord: 4,782
 """
 
 def opdracht25(limit = 10**999):
-    i = 0
-    cnt = 2
-    fib = [1,0,1]
-    while fib[i] <= limit:
-        i = (i + 1) % 3
-        cnt += 1
-        fib[i] = fib[(i + 1) % 3] + fib[(i + 2) % 3];
-    return cnt
+    return len(list(fibonacci(limit))) + 2
 
 """
 #26: Reciprocal cycles
@@ -1946,14 +1899,6 @@ https://www.xarg.org/puzzle/project-euler/problem-26/
 """
 
 def opdracht26b():
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     def cycleLength(n):
         a, t = 1, 0
         while t < n:
@@ -2116,52 +2061,12 @@ generated by ab for 2 ≤ a ≤ 100 and 2 ≤ b ≤ 100?
 Antwoord: 9,183
 """
 
-def opdracht29():
-    def eqpow(t):
-        def myRoot(n):
-            for a in range(2,11):
-                b, e = 0, 1
-                while True:
-                    b = a**e
-                    if b > 100:
-                        break
-                    if b == n[0]:
-                        return (a, e)
-                    e += 1
-            return n
-        root = myRoot(t)
-        return (root[0], t[1] * root[1])
-    st = set()
-    for a in range(2,100+1):
-        for b in range(2,100+1):
-            smallform = eqpow((a, b))
-            st.add(smallform)
-    return len(st)
-
-def opdracht29b(ar = range(2, 100+1), br = range(2,100+1)):
+def opdracht29(ar = range(2, 100+1), br = range(2,100+1)):
     def genPowers(ar, br):
         for a in ar:
             for b in br:
                 yield a ** b
     return len(set(genPowers(ar, br)))
-
-def opdracht29d():
-    def genx(base):
-        for e in range(2, 101):
-            yield (base, e)
-    def pwrt(t):
-        return t[0] ** t[1]
-    def schemaAppend(schm, t):
-        for a in schm:
-            if pwrt(t) == pwrt(a[0]):
-                a.append(t)
-                return
-        schm.append([t])
-    schema = []
-    for a in range(2, 101):
-        for b in genx(a):
-            schemaAppend(schema, b)
-    return len(schema)
 
 """
 #30: Digit fifth powers
@@ -2188,16 +2093,8 @@ Antwoord: 443,839
 """
 
 def opdracht30(p = 5):
-    def digits(n):
-        while n: yield n % 10; n = n // 10;
-    def test(n, p):
-        xsum = 0
-        for d in digits(n): xsum += d**p
-        return xsum == n
-    xsum = 0
-    for i in range(2, 10**6):
-        if test(i, p): xsum += i
-    return xsum
+    def test(n, p): return n if sum(d**p for d in digits(n)) == n else 0
+    return sum(test(i, p) for i in range(2, 10**6))
 
 """
 #31: Coin sums
@@ -2248,24 +2145,15 @@ Antwoord: 45,228
 """
 
 def opdracht32():
-    def hasDigitsOnce(n, nset):
-        for i in n:
-            if i in nset: nset.remove(i)
-            else: return False
-        return True
-    def isPandigital(n): return hasDigitsOnce(n, list(range(1, len(n) + 1)))
-    def arrize(n):
-        arr = []
-        while n: arr.append(n % 10); n = n // 10
-        arr.reverse()
-        return arr
     def panProducts():
         for i in range(2,  60):
             start = 1234 if i < 10 else 123
             for j in range(start, 10**4//i):
-                concat = arrize(i) + arrize(j) + arrize(i*j)
-                if isPandigital(concat):
-                    yield i*j
+                digs = list(range(1, 10))
+                if not hasDigitsOnce(i, digs): continue
+                if not hasDigitsOnce(j, digs): continue
+                if not hasDigitsOnce(i * j, digs): continue
+                yield i * j
     return sum(set(panProducts()))
 
 """
@@ -2311,17 +2199,10 @@ Antwoord: 40,730
 145 + 40585 = 40730
 """
 
-def findFactorialSum():
+def opdracht34():
     factorials = (1,1,2,6,24,120,720,5040,40320,362880);
-    total_sum = 0
-    def facsumdig(n):
-        def digits(n):
-            while n: yield n % 10; n = n // 10;
-        return sum([factorials[x] for x in digits(n)]);
-    for k in range(10, factorials[9] * 7): # 9999999 is way more than its fact-sum
-        if facsumdig(k) == k:
-            total_sum += k
-    return total_sum
+    def facsumdig(n): return sum(factorials[x] for x in digits(n));
+    return sum(k for k in range(10, factorials[9] * 7) if facsumdig(k) == k)
 
 """
 #35: Circular primes
@@ -2347,40 +2228,20 @@ Antwoord: 55
 def opdracht35(xmax = 10**6-1):
     def iscircular(n, lst):
         def rotations(n):
-            def decimals(n):
-                i = 0
-                while n >= 10**i:
-                    i += 1
-                return i
             def rotate(n):
                 length = decimals(n)
                 n, digit = divmod(n, 10)
                 n += digit * 10**(length - 1)
                 return n
-            ret = list()
             for i in range(0, decimals(n)):
                 n = rotate(n)
-                ret.append(n)
-            return ret
-        rts = rotations(n)
-        for rotation in rts:
+                yield n
+        for rotation in rotations(n):
             if rotation not in lst:
                 return False
         return True
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     primes = set(sieve(xmax))
-    cprimes = set()
-    for prime in primes:
-        if iscircular(prime, primes):
-            cprimes.add(prime)
-    return len(cprimes)
+    return sum(1 for p in primes if iscircular(p, primes))
 
 """
 #36: Double-base palindromes
@@ -2400,17 +2261,7 @@ Antwoord: 872,187
 """
 
 def opdracht36(r = range(1,10**6)):
-    def ispalindrome(n, base = 10):
-        temp, rev = n, 0
-        while temp != 0:
-            rev = rev * base + temp % base
-            temp = temp // base
-        return n == rev
-    xsum = 0
-    for i in r:
-        if ispalindrome(i, 10) and ispalindrome(i, 2):
-            xsum += i
-    return xsum
+    return sum(i for i in r if ispalindrome(i, 10) and ispalindrome(i, 2))
 
 """
 #37: Truncatable primes
@@ -2432,52 +2283,30 @@ Antwoord: 748,317
 """
 
 def opdracht37():
-    def isrighttruncatable(prime, primes):
+    def right(prime, primes):
         while prime > 10:
             prime = prime // 10
-            if prime not in primes:
-                return False
+            if prime not in primes: return False
         return True
-    def islefttruncatable(prime, primes):
-        def decimals(n):
-            i = 0
-            while n >= 10**i:
-                i += 1
-            return i
+    def left(prime, primes):
         def truncate_left(n):
             exp = decimals(n) - 1
             return n % 10**exp
-        length = decimals(prime)
-        for i in range(0, length):
-            if prime not in primes:
-                return False
+        for i in range(0, decimals(prime)):
+            if prime not in primes: return False
             prime = truncate_left(prime)
         return True
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     primes = set(sieve(999999))
-    xsum = 0
-    for prime in primes:
-        if prime in [2,3,5,7]:
-            continue
-        if islefttruncatable(prime, primes) and isrighttruncatable(prime, primes):
-            xsum += prime
-    return xsum
+    return sum(p for p in primes if left(p, primes) and right(p, primes)) - sum([2,3,5,7])
 
 """
 #38: Pandigital multiples
 
 Take the number 192 and multiply it by each of 1, 2, and 3:
 
-    192 × 1 = 192
-    192 × 2 = 384
-    192 × 3 = 576
+192 × 1 = 192
+192 × 2 = 384
+192 × 3 = 576
 
 By concatenating each product we get the 1 to 9 pandigital, 192384576. We
 will call 192384576 the concatenated product of 192 and (1,2,3)
@@ -2497,20 +2326,7 @@ Antwoord: 932,718,654
 """
 
 def opdracht38():
-    def decimals(n):
-        i = 0
-        while n >= 10**i: i += 1
-        return i
     def concat(a, b): return b + a * 10**decimals(b)
-    def hasDigitsOnce(n, nset):
-        def digits(n):
-            while n > 0: yield n % 10; n = n // 10;
-        for i in digits(n):
-            if i in nset: nset.remove(i)
-            else: return False
-        return True
-    def isPandigital(n):
-        return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
     for i in range(9387, 9234, -1):
         result = concat(i, 2 * i)
         if isPandigital(result):
@@ -2586,16 +2402,9 @@ Antwoord: 210
 def opdracht40(indices = [0,9,99,999,9999,99999,999999]):
     def getDigit(i):
         def getDig(n, i):
-            def digits(n):
-                while n > 0: yield n % 10; n = n // 10;
-            xdigits = [x for x in digits(n)]
-            end = len(xdigits) - 1
-            return xdigits[end - i]
-        offset = 0
-        decimals = 1
-        setLow = 1
-        setLength = 9
-        limit = 9
+            xdigits = list(reversed(list(digits(n))))
+            return xdigits[i];
+        offset, decimals, setLow, setLength, limit = 0, 1, 1, 9, 9
         while i > limit:
             offset = limit
             decimals += 1
@@ -2604,10 +2413,7 @@ def opdracht40(indices = [0,9,99,999,9999,99999,999999]):
             limit += setLength * decimals
         n, ind = divmod(i - offset, decimals)
         return getDig(n + setLow, ind)
-    product = 1
-    for i in indices:
-        product *= getDigit(i)
-    return product
+    return product(getDigit(i) for i in indices)
 
 """
 #41: Pandigital prime
@@ -2626,37 +2432,8 @@ divisibility rule vertelt ons dat pandigitale getallen van negen of acht
 decimalen lang niet priem kunnen zijn, daarom is de limiet 7654321.
 """
 
-def opdracht41():
-    def find_limit():
-        return 7654321
-    def decimals(n):
-        i = 0
-        while n >= 10**i:
-            i += 1
-        return i
-    def hasDigitsOnce(n, nset):
-        def digits(n):
-            while n > 0: yield n % 10; n = n // 10;
-        for i in digits(n):
-            if i in nset: nset.remove(i)
-            else: return False
-        return True
-    def isPandigital(n):
-        return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
-    limit = find_limit()
-    best = 0
-    for p in sieve(limit):
-        if isPandigital(p):
-            best = p
-    return best
+def opdracht41(limit = 7654321):
+    return max(p for p in sieve(limit) if isPandigital(p))
 
 """
 #42: Coded triangle numbers
@@ -2910,18 +2687,10 @@ words42 = ("A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACADEMIC
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH")
 
 def opdracht42(words = words42):
-    def triangler(n): return n * (n + 1) >> 1
     triangles = {triangler(t) for t in range(20)}   # 20 is arbitrary long number
     def wordcount(word):
-        count = 0
-        for letter in word:
-            count += ord(letter) - ord('A') + 1
-        return count
-    ret = 0
-    for w in words:
-        if wordcount(w) in triangles:
-            ret += 1
-    return ret
+        return sum(ord(letter) - 64 for letter in word)
+    return sum(1 for w in words if wordcount(w) in triangles)
 
 """
 #43: Sub-string divisibility
@@ -3010,7 +2779,6 @@ Antwoord: 5,482,660
 """
 
 def opdracht44(window = 10**4):
-    def pentagon(n): return n * (3 * n - 1)//2
     lpgs = [pentagon(n) for n in range(1,window)]
     spgs = set(lpgs)
     for a in range(len(lpgs)):
@@ -3046,11 +2814,8 @@ hexagon root = (sqrt(8n+1)+1)/4
 """
 
 def opdracht45():
-    def pentagon(n): return n * (3 * n - 1)//2
-    def hexagon(n): return n * (2 * n - 1)
     spentagon = {pentagon(n) for n in range(166, 99999)}
-    lhexagon = [hexagon(n) for n in range(144, 99999)]
-    for h in lhexagon:
+    for h in [hexagon(n) for n in range(144, 99999)]:
         if h in spentagon:
             return h
     return 0
@@ -3077,14 +2842,6 @@ Antwoord: 5,777
 """
 
 def opdracht46():
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     lprimes = list(sieve(10**6))
     sprimes = set(lprimes)
     ssquares = {2*n*n for n in range(100)}
@@ -3124,14 +2881,6 @@ Antwoord: 134,043
 """
 
 def opdracht47(distinct = 4, window = 10**6):
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for (i, isprime) in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     def primefactor(primes, n):
         i = 0
         while True:
@@ -3163,7 +2912,7 @@ Antwoord: 9,110,846,700
 """
 
 def opdracht48():
-    return sum([x**x for x in range(1,1001)]) % 10**10
+    return sum(x**x for x in range(1,1001)) % 10**10
 
 """
 #49: Prime permutations
@@ -3182,77 +2931,11 @@ Antwoord: 296,962,999,629
 """
 
 def opdracht49():
-    def digits(n):
-        while n > 0: yield n % 10; n = n // 10;
-    def hasDigitsOnce(n, nset):
-        for i in digits(n):
-            if i in nset: nset.remove(i)
-            else: return False
-        return True
-    def sameDigs(a, b):
-        return hasDigitsOnce(b, list(digits(a)))
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
+    def sameDigs(a, b): return hasDigitsOnce(b, list(digits(a)))
     sp4 = {x for x in sieve(10**4) if x >= 1487}
     for p in sp4:
         if p+3330 in sp4 and p+6660 in sp4 and sameDigs(p,p+3330) and sameDigs(p,p+6660):
             return (p + 6660) + (p + 3330) * 10**4 + p * 10**8
-    return 0
-
-def opdracht49b():
-    def decimals(n):
-        i = 0
-        while n:
-            n = n // 10
-            i += 1
-        return i
-    def perms(n):
-        def digits(n):
-            while n > 0: yield n % 10; n = n // 10;
-        def factorial(n):
-            xsum = 1
-            for a in range(2, n + 1): xsum *= a
-            return xsum
-        a = list(reversed(list(digits(n))))
-        for perm in range(factorial(decimals(n))):
-            b = list(a)
-            tmp = 0
-            while len(b) > 0:
-                i, perm = divmod(perm, factorial(len(b) - 1))
-                tmp += b[i] * 10**(len(b) - 1)
-                b.pop(i)
-            yield tmp
-    def sequences():
-        def sieve(limit):
-            a = [True] * limit
-            a[0] = a[1] = False
-            for i, isprime in enumerate(a):
-                if isprime:
-                    yield i
-                    for n in range(i * i, limit, i):
-                        a[n] = False
-        sprimes4 = {x for x in sieve(10**4) if x >= 1487}
-        while len(sprimes4) > 0:
-            for p in sprimes4:
-                tmp = set(perms(p)) & sprimes4
-                yield tmp
-                sprimes4 -= tmp
-                break   # we willen 1 item per loop
-    lseq = list(sequences())
-    def check(a):
-        for s in a:
-            if s + 3330 in a and s + 6660 in a:
-                return (s + 6660) + (s + 3330) * 10**4 + s * 10**8
-        return 0
-    for s in lseq:
-        if check(s):
-            return check(s)
     return 0
 
 """
@@ -3272,14 +2955,6 @@ Antwoord: 997,651
 """
 
 def opdracht50(limit = 10**6):
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     best_prime, best_sum = 0, 0
     lprimes = list(sieve(limit))
     sprimes = set(lprimes)
@@ -3291,8 +2966,7 @@ def opdracht50(limit = 10**6):
                 break
             sublen = (j + 1) - i;
             if xsum in sprimes and sublen > best_sum:
-                best_sum = sublen
-                best_prime = xsum
+                best_sum, best_prime = sublen, xsum
     return best_prime;
 
 """
@@ -3322,20 +2996,6 @@ def opdracht51():
             n -= n % div
             div *= 2
             dec *= 10
-    def digit(n, i):
-        return n // 10**i % 10
-    def decimals(n):
-        i = 0
-        while n >= 10**i: i += 1
-        return i
-    def sieve(limit):
-        a = [True] * limit
-        a[0] = a[1] = False
-        for i, isprime in enumerate(a):
-            if isprime:
-                yield i
-                for n in range(i * i, limit, i):
-                    a[n] = False
     lprimes = list(sieve(10**6))
     sprimes = set(lprimes)
     def family(primes, n, mask):
@@ -3364,15 +3024,17 @@ Find the smallest positive integer, x, such that
 Antwoord: 142,857
 """
 
+"""
+https://blog.dreamshire.com/project-euler-52-solution/
+"""
+def opdracht52a():
+    f = lambda n:sorted(str(n))
+    n = 99999
+    while not f(n*2) == f(n*3) == f(n*4) == f(n*5) == f(n*6): n += 9
+    return n
+
 def opdracht52():
     def test(n, r = range(2, 6+1)):
-        def digits(n):
-            while n > 0: yield n % 10; n = n // 10;
-        def hasDigitsOnce(n, nset):
-            for i in digits(n):
-                if i in nset: nset.remove(i)
-                else: return False
-            return True
         nset = list(digits(n))
         for m in r:
             if hasDigitsOnce(n * m, list(nset)) == False:
@@ -3424,10 +3086,6 @@ def opdracht53(nlimit = 101, limit = 10**6):
 
 def opdracht53b():
     def combinations(n, r):
-        def factorial(n):
-            product = 1
-            for a in range(2, n + 1): product *= a
-            return product
         return factorial(n) // (factorial(r) * factorial(n - r))
     xcount = 0
     for a in range(23,101):
@@ -3443,16 +3101,16 @@ def opdracht53b():
 In the card game poker, a hand consists of five cards and
 are ranked, from lowest to highest, in the following way:
 
-    High Card: Highest value card.
-    One Pair: Two cards of the same value.
-    Two Pairs: Two different pairs.
-    Three of a Kind: Three cards of the same value.
-    Straight: All cards are consecutive values.
-    Flush: All cards of the same suit.
-    Full House: Three of a kind and a pair.
-    Four of a Kind: Four cards of the same value.
-    Straight Flush: All cards are consecutive values of same suit.
-    Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
+High Card: Highest value card.
+One Pair: Two cards of the same value.
+Two Pairs: Two different pairs.
+Three of a Kind: Three cards of the same value.
+Straight: All cards are consecutive values.
+Flush: All cards of the same suit.
+Full House: Three of a kind and a pair.
+Four of a Kind: Four cards of the same value.
+Straight Flush: All cards are consecutive values of same suit.
+Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
 
 The cards are valued in the order:
 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
@@ -3493,6 +3151,8 @@ repeated cards), each player's hand is in no specific order, and in each
 hand there is a clear winner.
 
 How many hands does Player 1 win?
+
+Antwoord: 376
 """
 
 hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
@@ -4500,6 +4160,8 @@ hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 https://blog.dreamshire.com/project-euler-54-solution/
 """
 
+
+
 def opdracht54():
     from collections import Counter
     hands = (line.split() for line in hands54)
@@ -4510,10 +4172,49 @@ def opdracht54():
         score = list(zip(*sorted(((v, values[k]) for
             k,v in Counter(x[0] for x in hand).items()), reverse=True)))
         score[0] = ranks.index(score[0])
-        if len(set(card[1] for card in hand)) == 1: score[0] = 5  # flush
-        if score[1] in straights: score[0] = 8 if score[0] == 5 else 4  # str./str. flush
+        if len(set(card[1] for card in hand)) == 1:
+            score[0] = 5  # flush
+        if score[1] in straights:
+            score[0] = 8 if score[0] == 5 else 4  # str./str. flush
         return score
     return sum(hand_rank(hand[:5]) > hand_rank(hand[5:]) for hand in hands)
+
+"""
+#55: Lychrel numbers
+
+If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+
+Not all numbers produce palindromes so quickly. For example,
+
+349 + 943 = 1292,
+1292 + 2921 = 4213
+4213 + 3124 = 7337
+
+That is, 349 took three iterations to arrive at a palindrome.
+
+Although no one has proved it yet, it is thought that some numbers, like
+196, never produce a palindrome. A number that never forms a palindrome
+through the reverse and add process is called a Lychrel number. Due to the
+theoretical nature of these numbers, and for the purpose of this problem,
+we shall assume that a number is Lychrel until proven otherwise. In
+addition you are given that for every number below ten-thousand, it will
+either (i) become a palindrome in less than fifty iterations, or, (ii) no
+one, with all the computing power that exists, has managed so far to map it
+to a palindrome. In fact, 10677 is the first number to be shown to require
+over fifty iterations before producing a palindrome:
+4668731596684224866951378664 (53 iterations, 28-digits).
+
+Surprisingly, there are palindromic numbers that are
+themselves Lychrel numbers; the first example is 4994.
+
+How many Lychrel numbers are there below ten-thousand?
+
+NOTE: Wording was modified slightly on 24 April 2007 to
+emphasise the theoretical nature of Lychrel numbers.
+"""
+
+def opdracht55():
+    return 0
 
 """
 Einde opdrachten
@@ -4522,9 +4223,9 @@ Einde opdrachten
 def runn2(n = 1):
     if n == 1: return opdracht1()
     if n == 2: return opdracht2()
-    if n == 3: return maxprimefactor()
-    if n == 4: return palindrome()
-    if n == 5: return divide()
+    if n == 3: return opdracht3()
+    if n == 4: return opdracht4()
+    if n == 5: return opdracht5()
     if n == 6: return opdracht6()
     if n == 7: return opdracht7()
     if n == 8: return opdracht8()
@@ -4540,7 +4241,7 @@ def runn2(n = 1):
     if n == 18: return opdracht18()
     if n == 19: return opdracht19()
     if n == 20: return opdracht20()
-    if n == 21: return amicable_pairs_sum()
+    if n == 21: return opdracht21()
     if n == 22: return opdracht22()
     if n == 23: return opdracht23()
     if n == 24: return opdracht24()
@@ -4553,7 +4254,7 @@ def runn2(n = 1):
     if n == 31: return opdracht31()
     if n == 32: return opdracht32()
     if n == 33: return opdracht33()
-    if n == 34: return findFactorialSum()
+    if n == 34: return opdracht34()
     if n == 35: return opdracht35()
     if n == 36: return opdracht36()
     if n == 37: return opdracht37()
