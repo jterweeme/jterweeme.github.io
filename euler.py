@@ -15,9 +15,28 @@ def sieve(limit):
             for n in range(i * i, limit, i):
                 a[n] = False
 
-def triangler(n): return n * (n + 1) >> 1
+def triangle(n): return n * (n + 1) >> 1
 def pentagon(n): return n * (3 * n - 1)//2
 def hexagon(n): return n * (2 * n - 1)
+
+def figurizer(limit, n = 1):
+    step = 1
+    ret = 0
+    while ret < limit:
+        yield ret
+        ret += step
+        step += n
+
+def binSearch(d, n):
+    if n > d[-1]: return False
+    first, last = 0, len(d)
+    middle = (first + last) // 2
+    while first <= last:
+        if d[middle] < n: first = middle + 1
+        elif d[middle] == n: return True
+        else: last = middle - 1
+        middle = (first + last) // 2
+    return False
 
 def decimals(n):
     i = 0
@@ -56,6 +75,45 @@ def hasDigitsOnce(n, nset):
 
 def isPandigital(n):
     return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
+
+def primefactor(primes, n):
+    for i in range(len(primes)):
+        if n % primes[i] == 0:
+            return primes[i]
+    raise Exception("Ran out of primes!")
+
+def primefactors(primes, n):
+    while True:
+        factor = primefactor(primes, n)
+        yield factor
+        if factor == n: break
+        n = n // factor
+
+def properDivs(n):
+    for i in range(1, n // 2 + 1):
+        if n % i == 0: yield i
+
+def divisors(n):
+    for div in properDivs(n): yield div
+    yield n
+
+def frequencies(l):
+    count = 0
+    buf = l[0]
+    for n in l:
+        if n == buf:
+            count += 1
+        else:
+            yield count
+            buf = n
+            count = 1
+    yield count
+
+def n_divs(lprimes, n):
+    if n <= 1: return n
+    pfactors = list(primefactors(lprimes, n))
+    return product(x + 1 for x in frequencies(pfactors))
+    
 
 def fibonacci(xmax, term1 = 1, term2 = 2):
     yield term1
@@ -111,37 +169,9 @@ Antwoord: 6,857
 """
 71*839*1,471*6,857=600,851,475,143
 """
+
 def opdracht3(n = 600851475143):
-    def primeGen():
-        yield 2
-        yield 3
-        p = 5
-        while True:
-            div = 2
-            while div < p:
-                if p % div == 0:
-                    p += 1
-                    div = 1
-                div += 1
-            yield p
-            p += 2
-    def primefactor(primes, genx, n = 13195):
-        i = 0
-        while True:
-            if len(primes) <= i:
-                primes.append(next(genx))
-            if n % primes[i] == 0:
-                return primes[i]
-            i += 1
-    def primefactors(n):
-        genx = primeGen()
-        primes = list()
-        while True:
-            factor = primefactor(primes, genx, n)
-            yield factor
-            if factor == n: break
-            n = n // factor
-    return max(primefactors(n))
+    return max(primefactors(list(sieve(7000)), n))
 
 """
 #4 Largest palindrome product
@@ -439,32 +469,12 @@ What is the value of the first triangle number to have over five hundred divisor
 Antwoord: 76,576,500
 """
 
-def opdracht12(divisors = 500):
-    def num_divisors(n):
-        if n % 2 == 0:
-            n = n >> 1
-        divisors = 1
-        count = 0
-        while n % 2 == 0:
-            count += 1
-            n = n >> 1
-        divisors = divisors * (count + 1)
-        p = 3
-        while n != 1:
-            count = 0
-            while n % p == 0: count += 1; n = n//p
-            divisors = divisors * (count + 1)
-            p += 2
-        return divisors
-    def find_triangular_index(factor_limit = 500):
-        n = 1
-        lnum, rnum = num_divisors(n), num_divisors(n+1)
-        while lnum * rnum < factor_limit:
-            n += 1
-            lnum, rnum = rnum, num_divisors(n+1)
-        return n
-    index = find_triangular_index(divisors)
-    return triangler(index)
+def opdracht12(ndivs = 500):
+    lprimes = list(sieve(10**5))
+    for n in figurizer(10**8, 1):
+        if n_divs(lprimes, n) > ndivs: return n
+    raise Exception("Answer not found")
+    return 0
 
 """
 #13 Large sum
@@ -858,8 +868,7 @@ def opdracht18(triangle = triangle18):
     possibilities = 2**(root-1)
     best = 0
     for i in range(0, possibilities + 1):
-        index = 0
-        xsum = triangle[0][0]
+        index, xsum = 0, triangle[0][0]
         for j in range(0, root - 1):
             index = index + (i >> j & 1)
             value = triangle[j + 1][index]
@@ -952,14 +961,7 @@ Antwoord: 31626
 """
 
 def opdracht21(low = 1, high = 10**4):
-    def sum_divisors(n):
-        s = 0
-        for i in range(1,n):
-            if n % i == 0: s += i
-        return s
-    l = list()
-    for i in range(low, high + 1):
-        l.append(sum_divisors(i))
+    l = [sum(properDivs(i)) for i in range(low, high + 1)]
     xsum = 0
     for i in range(high - low + 1):
         ind = l[i]
@@ -2400,20 +2402,17 @@ Antwoord: 210
 """
 
 def opdracht40(indices = [0,9,99,999,9999,99999,999999]):
-    def getDigit(i):
-        def getDig(n, i):
-            xdigits = list(reversed(list(digits(n))))
-            return xdigits[i];
+    def champernowne(i):
         offset, decimals, setLow, setLength, limit = 0, 1, 1, 9, 9
-        while i > limit:
+        while i >= limit:
             offset = limit
             decimals += 1
             setLow *= 10
             setLength *= 10
             limit += setLength * decimals
         n, ind = divmod(i - offset, decimals)
-        return getDig(n + setLow, ind)
-    return product(getDigit(i) for i in indices)
+        return digit(n + setLow, decimals - (ind + 1))
+    return product(champernowne(i) for i in indices)
 
 """
 #41: Pandigital prime
@@ -2687,7 +2686,7 @@ words42 = ("A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACADEMIC
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH")
 
 def opdracht42(words = words42):
-    triangles = {triangler(t) for t in range(20)}   # 20 is arbitrary long number
+    triangles = {triangle(t) for t in range(20)}   # 20 is arbitrary long number
     def wordcount(word):
         return sum(ord(letter) - 64 for letter in word)
     return sum(1 for w in words if wordcount(w) in triangles)
@@ -2755,8 +2754,7 @@ def opdracht43():
         for a in genx:
             if test(a):
                 yield a
-    a = [0,1,2,3,4,6,7,8,9]
-    ps = perms(a)
+    ps = perms([0,1,2,3,4,6,7,8,9])
     ret = sum(testSeries(ps))
     return ret
 
@@ -2814,10 +2812,9 @@ hexagon root = (sqrt(8n+1)+1)/4
 """
 
 def opdracht45():
-    spentagon = {pentagon(n) for n in range(166, 99999)}
+    spentagon = set(figurizer(2*10**9, 3))
     for h in [hexagon(n) for n in range(144, 99999)]:
-        if h in spentagon:
-            return h
+        if h in spentagon: return h
     return 0
 
 """
@@ -2843,21 +2840,16 @@ Antwoord: 5,777
 
 def opdracht46():
     lprimes = list(sieve(10**6))
-    sprimes = set(lprimes)
     ssquares = {2*n*n for n in range(100)}
     def pair(primes, squares, n):
         for prime in primes:
-            if prime > n:
-                break
-            if n - prime in squares:
-                return (prime, n - prime)
+            if prime > n: break
+            if n - prime in squares: return (prime, n - prime)
         return (0, 0)
     for i in range(3, 9**9, 2): # 9**9 is arbitrary long number
-        if i in sprimes:
-            continue
+        if binSearch(lprimes, i): continue
         pr = pair(lprimes, ssquares, i)
-        if pr == (0, 0):
-            return i
+        if pr == (0, 0): return i
     return 0
 
 """
@@ -2881,17 +2873,6 @@ Antwoord: 134,043
 """
 
 def opdracht47(distinct = 4, window = 10**6):
-    def primefactor(primes, n):
-        i = 0
-        while True:
-            if n % primes[i] == 0: return primes[i]
-            i += 1
-    def primefactors(primes, n):
-        while True:
-            factor = primefactor(primes, n)
-            yield factor
-            if factor == n: break
-            n = n // factor
     def distinctLen(g): return len(set(g))
     primes = list(sieve(window))
     chain = 0
@@ -2957,15 +2938,13 @@ Antwoord: 997,651
 def opdracht50(limit = 10**6):
     best_prime, best_sum = 0, 0
     lprimes = list(sieve(limit))
-    sprimes = set(lprimes)
     xlen = len(lprimes)
     for i in range(xlen):
         for j in range(i + best_sum, xlen):
             xsum = sum(lprimes[i:j + 1])
-            if xsum >= limit:
-                break
+            if xsum >= limit: break
             sublen = (j + 1) - i;
-            if xsum in sprimes and sublen > best_sum:
+            if binSearch(lprimes, xsum) and sublen > best_sum:
                 best_sum, best_prime = sublen, xsum
     return best_prime;
 
@@ -4159,8 +4138,6 @@ hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 """
 https://blog.dreamshire.com/project-euler-54-solution/
 """
-
-
 
 def opdracht54():
     from collections import Counter
