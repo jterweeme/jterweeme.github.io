@@ -2872,7 +2872,24 @@ prime factors each. What is the first of these numbers?
 Antwoord: 134,043
 """
 
-def opdracht47(distinct = 4, window = 10**6):
+"""
+https://blog.dreamshire.com/project-euler-47/
+"""
+
+def opdracht47(L = 3*10**5, nf = 4, ns = 4):
+	L+= ns
+	f = [0]*L
+	for n in range(2, L):
+		if f[n] == nf:
+			c+= 1
+			if c == ns:
+				return n-ns+1
+				c-= 1
+		else:
+			c = 0
+			if f[n] == 0: f[n::n] = [x+1 for x in f[n::n]]
+
+def opdracht47b(distinct = 4, window = 10**6):
     def distinctLen(g): return len(set(g))
     primes = list(sieve(window))
     chain = 0
@@ -4135,11 +4152,60 @@ hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 "QC KC 3S JC KD   2C 8D AH QS TS",
 "AS KD 3D JD 8H   7C 8C 5C QD 6C")
 
+handsTest = ("3D 6D 7D TD QD   7D 2S 5D 3S AC",
+"5C AD 5D AC 9C   7C 5H 8D TD KS",
+"3H 7H 6S KC JS   QH TD JC 2D 8S",
+"TH 8H 5C QS TC   9H 4D JC KS JS",
+"7C 5H KC QH JD   AS KH 4C AD 4S")
+
+def flush(hand):
+    suit0 = (hand & 48<<0) >> 4
+    for i in range(1,5):
+        if (hand & 48<<i*6)>>i*6+4 != suit0: return False
+    return True
+
+def score(hand):
+    for i in range(5):
+        print(((hand & 15<<i*6)>>i*6, (hand & 48<<i*6) >> i*6+4))
+    if flush(hand): return 1000
+    return 0
+
+def parseHand(hand):
+    for i in range(5):
+        yield ((hand & 15<<i*6)>>i*6, (hand & 48<<i*6) >> i*6+4)
+
+def parse2Hands(twohands):
+    return (tuple(parseHand(twohands[0])), tuple(parseHand(twohands[1])))
+
+def dealHands(data):
+    for twohands in data:
+        yield parse2Hands(twohands)
+
+def parser(hands):
+    values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
+    suits = {r:i for i,r in enumerate('CDHS')}
+    for hand in hands:
+        player1, player2, ofs1, ofs2 = 0,0,0,17
+        for i in range(5):
+            player1 |= values[hand[i*3+ofs1]] << i*6 | suits[hand[i*3+1+ofs1]] << i*6+4
+            player2 |= values[hand[i*3+ofs2]] << i*6 | suits[hand[i*3+1+ofs2]] << i*6+4
+        yield (player1, player2)
+
+def opdracht54():
+    data = list(parser(handsTest))
+    hands = list(dealHands(data))
+    lst = list()
+    for twoHands in hands:
+        for hand in twoHands:
+            print(list(frequencies(sorted(list(card[0] for card in hand)))))
+    return 0
+    return list(dealHands(data))
+
 """
 https://blog.dreamshire.com/project-euler-54-solution/
 """
 
-def opdracht54():
+def opdracht54b():
     from collections import Counter
     hands = (line.split() for line in hands54)
     values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
