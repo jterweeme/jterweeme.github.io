@@ -21,14 +21,7 @@
 #include <algorithm>
 using namespace std;
 
-#if __cplusplus < 201103L
-static string to_string(uint32_t n)
-{
-    return string("abc");
-}
-#endif
-
-template <typename T> T myPow(T base, T e)
+template <typename T> static T myPow(T base, T e)
 {   if (e == 0) return 1;
     T ret = base;
     while (--e) ret *= base;
@@ -41,14 +34,18 @@ static uint32_t fac32(uint32_t n)
     return product;
 }
 
-static uint32_t decimals32(uint32_t n)
-{   uint32_t i = 0;
+template <typename T> static uint8_t decimals(T n)
+{   uint8_t i = 0;
     while (n) n = n / 10, i++;
     return i;
 }
 
 static uint32_t digit32(uint32_t n, uint32_t i)
 {   return n / myPow<uint32_t>(10, i) % 10;
+}
+
+static uint64_t digit64(uint64_t n, uint8_t i)
+{   return n / myPow<uint64_t>(10, i) % 10;
 }
 
 static void sieve32(vector<uint32_t> &out, uint32_t limit)
@@ -87,6 +84,28 @@ static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
     return true;
 }
 
+static string to_string64(uint64_t n)
+{   char buf[50];
+    uint8_t len = decimals<uint64_t>(n), i = 0;
+    for (i = 0; i < len; i++) buf[i] = digit64(n, len - (i + 1)) + '0';
+    buf[i] = 0;
+    return string(buf);
+}
+
+static string to_string32(uint32_t n)
+{   char tmp[50];
+    uint32_t len = decimals<uint32_t>(n), i = 0;
+    for (i = 0; i < len; i++) tmp[i] = digit32(n, len - (i + 1)) + '0';
+    tmp[i] = 0;
+    return string(tmp);
+}
+
+static string to_string32s(int32_t n)
+{   char tmp[50];
+    snprintf(tmp, 50, "%d", n);
+    return string(tmp);
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -106,7 +125,7 @@ static uint32_t multiples1(uint32_t limit = 1000)
 }
 
 static string multiples2()
-{   return to_string(multiples1());
+{   return to_string32(multiples1());
 }
 
 /*
@@ -133,7 +152,7 @@ static uint32_t fibonacci(uint32_t xmax = 4000000)
 }
 
 static string fibonacci2()
-{   return to_string(fibonacci());
+{   return to_string32(fibonacci());
 }
 
 /*
@@ -192,7 +211,7 @@ static void primefactors3(vector<uint64_t> &factors, uint64_t n)
     }
 }
 
-static uint64_t maxprimefactor3(uint64_t n = 600851475143)
+static uint64_t maxprimefactor3(uint64_t n = 600851475143ULL)
 {   vector<uint64_t> factors;
     primefactors3(factors, n);
     uint64_t best = 0;
@@ -202,7 +221,7 @@ static uint64_t maxprimefactor3(uint64_t n = 600851475143)
 }
 
 static string opdracht3()
-{   return to_string(maxprimefactor3());
+{   return to_string64(maxprimefactor3());
 }
 
 /*
@@ -227,7 +246,7 @@ static uint32_t opdracht4()
 }
 
 static string problem4()
-{   return to_string(opdracht4());
+{   return to_string32(opdracht4());
 }
 
 /*
@@ -253,7 +272,7 @@ static uint32_t divide(uint32_t lower = 11, uint32_t max = 20)
 }
 
 static string problem5()
-{   return to_string(divide());
+{   return to_string32(divide());
 }
 
 /*
@@ -281,7 +300,7 @@ static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100)
 }
 
 static string problem6()
-{   return to_string(opdracht6());
+{   return to_string32(opdracht6());
 }
 
 /*
@@ -311,7 +330,7 @@ static uint32_t opdracht7(uint32_t n = 10001)
 }
 
 static string problem7()
-{   return to_string(opdracht7());
+{   return to_string32(opdracht7());
 }
 
 /*
@@ -371,7 +390,7 @@ static char series1[] = "73167176531330624919225119674426574742355349194934"
 static uint64_t opdracht8(char *s = series1)
 {   uint64_t cur = 0, best = 0;
     while (*s)
-    {   cur = (cur % 1000000000000) * 10 + (*s++ - '0');
+    {   cur = (cur % 1000000000000ULL) * 10 + (*s++ - '0');
         uint64_t peel = cur, product = 1;
         while (peel) product *= peel % 10, peel = peel / 10;
         if (product > best) best = product;
@@ -380,7 +399,7 @@ static uint64_t opdracht8(char *s = series1)
 }
 
 static string problem8()
-{   return to_string(opdracht8());
+{   return to_string64(opdracht8());
 }
 
 /*
@@ -409,7 +428,7 @@ static uint32_t opdracht9(uint32_t search = 1000)
 }
 
 static string problem9()
-{   return to_string(opdracht9());
+{   return to_string32(opdracht9());
 }
 
 /*
@@ -432,7 +451,7 @@ static uint64_t opdracht10(uint32_t limit = 2000000)
 }
 
 static string problem10()
-{   return to_string(opdracht10());
+{   return to_string64(opdracht10());
 }
 
 /*
@@ -517,7 +536,7 @@ static uint32_t opdracht11()
 }
 
 static string problem11()
-{   return to_string(opdracht11());
+{   return to_string32(opdracht11());
 }
 
 /*
@@ -573,7 +592,7 @@ static uint32_t opdracht12(uint16_t divisors = 500)
 }
 
 static string problem12()
-{   return to_string(opdracht12());
+{   return to_string32(opdracht12());
 }
 
 /*
@@ -807,7 +826,7 @@ static uint64_t opdracht13()
 }
 
 static string problem13()
-{   return to_string(opdracht13());
+{   return to_string64(opdracht13());
 }
 
 /*
@@ -849,7 +868,7 @@ static uint32_t opdracht14(uint32_t lower = 1, uint32_t upper = 1000000)
 }
 
 static string problem14()
-{   return to_string(opdracht14());
+{   return to_string32(opdracht14());
 }
 
 /*
@@ -871,7 +890,7 @@ static uint64_t opdracht15(uint8_t size = 20)
 }
 
 static string problem15()
-{   return to_string(opdracht15());
+{   return to_string64(opdracht15());
 }
 
 /*
@@ -905,7 +924,7 @@ static uint32_t opdracht16(uint16_t e = 1000)
 }
 
 static string problem16()
-{   return to_string(opdracht16());
+{   return to_string32(opdracht16());
 }
 
 /*
@@ -973,7 +992,7 @@ static uint32_t opdracht17()
 }
 
 static string problem17()
-{   return to_string(opdracht17());
+{   return to_string32(opdracht17());
 }
 
 /*
@@ -1057,7 +1076,7 @@ static uint32_t opdracht18()
 }
 
 static string problem18()
-{   return to_string(opdracht18());
+{   return to_string32(opdracht18());
 }
 
 /*
@@ -1108,7 +1127,7 @@ static uint32_t opdracht19()
 }
 
 static string problem19()
-{   return to_string(opdracht19());
+{   return to_string32(opdracht19());
 }
 
 /*
@@ -1144,7 +1163,7 @@ static uint32_t opdracht20(uint8_t f = 100)
 }
 
 static string problem20()
-{   return to_string(opdracht20());
+{   return to_string32(opdracht20());
 }
 
 /*
@@ -1194,7 +1213,7 @@ static uint32_t opdracht21(uint32_t low = 1, uint32_t high = 10000)
 }
 
 static string problem21()
-{   return to_string(opdracht21());
+{   return to_string32(opdracht21());
 }
 
 /*
@@ -1973,7 +1992,7 @@ static uint32_t opdracht22()
 }
 
 static string problem22()
-{   return to_string(opdracht22());
+{   return to_string32(opdracht22());
 }
 
 /*
@@ -2034,7 +2053,7 @@ static uint32_t opdracht23()
 }
 
 static string problem23()
-{   return to_string(opdracht23());
+{   return to_string32(opdracht23());
 }
 
 /*
@@ -2078,7 +2097,7 @@ static uint32_t opdracht24()
 }
 
 static string problem24()
-{   return to_string(opdracht24());
+{   return to_string32(opdracht24());
 }
 
 /*
@@ -2111,9 +2130,10 @@ Antwoord: 4,782
 */
 
 class LongNumber25
-{   uint8_t _buf[1500] = {0};
+{   uint8_t _buf[1500];
 public:
     void clear() { memset(_buf, 0, sizeof(_buf)); }
+    LongNumber25() { clear(); }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
     void add(LongNumber25 &n);
     void set(uint64_t n);
@@ -2174,7 +2194,7 @@ uint32_t opdracht25()
 }
 
 static string problem25()
-{   return to_string(opdracht25());
+{   return to_string32(opdracht25());
 }
 
 /*
@@ -2230,7 +2250,7 @@ static uint32_t opdracht26()
 }
 
 static string problem26()
-{   return to_string(opdracht26());
+{   return to_string32(opdracht26());
 }
 
 /*
@@ -2283,7 +2303,7 @@ static string opdracht27()
             if (n > best_n) best_a = a, best_b = b, best_n = n;
         }
     }
-    return to_string(best_a * best_b);
+    return to_string32s(best_a * best_b);
 }
 
 /*
@@ -2314,7 +2334,7 @@ static uint32_t opdracht28(uint32_t root = 1001)
 }
 
 static string problem28()
-{   return to_string(opdracht28());
+{   return to_string32(opdracht28());
 }
 
 /*
@@ -2358,7 +2378,7 @@ static uint32_t opdracht29()
 }
 
 static string problem29()
-{   return to_string(opdracht29());
+{   return to_string32(opdracht29());
 }
 
 /*
@@ -2398,7 +2418,7 @@ uint32_t opdracht30(uint8_t p = 5)
 }
 
 static string problem30()
-{   return to_string(opdracht30());
+{   return to_string32(opdracht30());
 }
 
 /*
@@ -2418,7 +2438,7 @@ How many different ways can £2 be made using any number of coins?
 Antwoord: 73,682
 */
 
-static uint64_t opdracht31()
+static uint32_t opdracht31()
 {   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
     uint32_t ways[target + 1];
     memset(ways, 0, (target + 1) * 4);
@@ -2430,7 +2450,7 @@ static uint64_t opdracht31()
 }
 
 static string problem31()
-{   return to_string(opdracht31());
+{   return to_string32(opdracht31());
 }
 
 /*
@@ -2456,7 +2476,7 @@ static void panProducts32(set<uint32_t> &st)
     {   uint32_t start = i < 10 ? 1234 : 123;
         for (uint32_t j = start; j < 10000/i; j++)
         {   vector<uint8_t> nset;
-            for (uint8_t i = 1; i <= 9; i++) nset.push_back(i);
+            for (uint8_t n = 1; n <= 9; n++) nset.push_back(n);
             if (hasDigitsOnce32(i, nset) == false) continue;
             if (hasDigitsOnce32(j, nset) == false) continue;
             if (hasDigitsOnce32(i * j, nset)  == false) continue;
@@ -2474,7 +2494,7 @@ static uint32_t opdracht32()
 }
 
 static string problem32()
-{   return to_string(opdracht32());
+{   return to_string32(opdracht32());
 }
 
 /*
@@ -2508,7 +2528,7 @@ static uint32_t opdracht33()
 }
 
 static string problem33()
-{   return to_string(opdracht33());
+{   return to_string32(opdracht33());
 }
 
 /*
@@ -2523,7 +2543,7 @@ Note: as 1! = 1 and 2! = 2 are not sums they are not included.
 Antwoord: 40,730
 */
 
-static uint32_t factorials34[] { 1,1,2,6,24,120,720,5040,40320,362880};
+static uint32_t factorials34[] = { 1,1,2,6,24,120,720,5040,40320,362880};
 
 static uint32_t facsumdig34(uint32_t n)
 {   uint32_t sum = 0;
@@ -2539,7 +2559,7 @@ static uint32_t opdracht34()
 }
 
 static string problem34()
-{   return to_string(opdracht34());
+{   return to_string32(opdracht34());
 }
 
 /*
@@ -2564,12 +2584,12 @@ Antwoord: 55
 */
 
 static uint32_t rotate(uint32_t n)
-{   uint32_t length = decimals32(n), digit = n % 10;
+{   uint32_t length = decimals<uint32_t>(n), digit = n % 10;
     return n / 10 + digit * myPow<uint32_t>(10, length - 1);
 }
 
 static void rotations(vector<uint32_t> &rts, uint32_t n)
-{   for (uint8_t i = 0; i < decimals32(n); i++)
+{   for (uint8_t i = 0; i < decimals<uint32_t>(n); i++)
     {   n = rotate(n);
         rts.push_back(n);
     }
@@ -2594,7 +2614,7 @@ static uint32_t opdracht35()
 }
 
 static string problem35()
-{   return to_string(opdracht35());
+{   return to_string32(opdracht35());
 }
 
 /*
@@ -2617,7 +2637,7 @@ static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
 }
 
 static string problem36()
-{   return to_string(opdracht36());
+{   return to_string32(opdracht36());
 }
 
 /*
@@ -2648,12 +2668,12 @@ static bool isrighttruncatable(uint32_t prime, vector<uint32_t> &primes)
 }
 
 static uint32_t truncate_left(uint32_t n)
-{   uint8_t exp = decimals32(n) - 1;
+{   uint8_t exp = decimals<uint32_t>(n) - 1;
     return n % myPow<uint32_t>(10, exp);
 }
 
 static bool islefttruncatable(uint32_t prime, vector<uint32_t> &primes)
-{   uint8_t length = decimals32(prime);
+{   uint8_t length = decimals<uint32_t>(prime);
     for (uint8_t i = 0; i < length; i++)
     {   if (binary_search(primes.begin(), primes.end(), prime) == 0) return false;
         prime = truncate_left(prime);
@@ -2675,7 +2695,7 @@ static uint32_t opdracht37()
 }
 
 static string problem37()
-{   return to_string(opdracht37());
+{   return to_string32(opdracht37());
 }
 
 /*
@@ -2702,7 +2722,7 @@ Antwoord: 932,718,654
 
 static bool isPandigital(uint32_t n)
 {   vector<uint8_t> nset;
-    for (uint8_t i = 1; i <= decimals32(n); i++) nset.push_back(i);
+    for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
     return hasDigitsOnce32(n, nset);
 }
 
@@ -2715,7 +2735,7 @@ static uint32_t opdracht38()
 }
 
 static string problem38()
-{   return to_string(opdracht38());
+{   return to_string32(opdracht38());
 }
 
 /*
@@ -2762,7 +2782,7 @@ static uint32_t opdracht39()
 }
 
 static string problem39()
-{   return to_string(opdracht39());
+{   return to_string32(opdracht39());
 }
 
 /*
@@ -2800,7 +2820,7 @@ static uint32_t opdracht40()
 }
 
 static string problem40()
-{   return to_string(opdracht40());
+{   return to_string32(opdracht40());
 }
 
 /*
@@ -2817,7 +2837,7 @@ Antwoord: 7,652,413
 
 static bool isPandigital41(uint32_t n)
 {   vector<uint8_t> nset;
-    for (uint8_t i = 1; i <= decimals32(n); i++) nset.push_back(i);
+    for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
     return hasDigitsOnce32(n, nset);
 }
 
@@ -2831,7 +2851,7 @@ static uint32_t opdracht41()
 }
 
 static string problem41()
-{   return to_string(opdracht41());
+{   return to_string32(opdracht41());
 }
 
 /*
@@ -3104,7 +3124,7 @@ static uint32_t opdracht42()
 }
 
 static string problem42()
-{   return to_string(opdracht42());
+{   return to_string32(opdracht42());
 }
 
 /*
@@ -3169,7 +3189,9 @@ static uint64_t opdracht43()
 }
 
 static string problem43()
-{   return to_string(opdracht43());
+{
+    return string("0");
+    return to_string64(opdracht43());
 }
 
 /*
@@ -3202,7 +3224,7 @@ static uint32_t opdracht44()
 }
 
 static string problem44()
-{   return to_string(opdracht44());
+{   return to_string32(opdracht44());
 }
 
 /*
@@ -3237,7 +3259,7 @@ static uint32_t opdracht45()
 }
 
 static string problem45()
-{   return to_string(opdracht45());
+{   return to_string32(opdracht45());
 }
 
 /*
@@ -3283,7 +3305,7 @@ static uint32_t opdracht46()
 }
 
 static string problem46()
-{   return to_string(opdracht46());
+{   return to_string64(opdracht46());
 }
 
 /*
@@ -3306,37 +3328,22 @@ prime factors each. What is the first of these numbers?
 Antwoord: 134,043
 */
 
-static uint32_t primefactor47(vector<uint32_t> &primes, uint32_t n)
-{   for (uint32_t i = 0; true; i++) if (n % primes.at(i) == 0) return primes.at(i);
-}
+/*
+interpreted from https://blog.dreamshire.com/project-euler-47/
+*/
 
-static uint32_t primeFactors47(vector<uint32_t> &primes, uint32_t n)
-{   set<uint32_t> factors;
-    while (true)
-    {   uint32_t factor = primefactor47(primes, n);
-        factors.insert(factor);
-        if (factor == n) break;
-        n = n / factor;
-    }
-    return factors.size();
-}
-
-static uint32_t opdracht47(uint32_t distinct = 4, uint32_t window = 200000)
-{   vector<bool> v(window, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p < v.size(); p++)
-        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
-    vector<uint32_t> primes;
-    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
-    for (uint32_t i = 2, chain = 0; i < window; i++)
-    {   chain = primeFactors47(primes, i) == distinct ? chain + 1 : 0;
-        if (chain == distinct) return i - (distinct - 1);
+static uint32_t opdracht47(uint32_t L = 300000, uint32_t nf = 4, uint32_t ns = 4)
+{   uint32_t f[L], c = 0;
+    memset(f, 0, 4*L);
+    for (uint32_t n = 2; n < L - ns; n++)
+    {   if (f[n] == nf) { if (++c == ns) return n - ns + 1; }
+        else { c = 0; if (f[n] == 0) for (uint32_t i = n; i < L; i += n) f[i]++; }
     }
     return 0;
 }
 
 static string problem47()
-{   return to_string(opdracht47());
+{   return to_string32(opdracht47());
 }
 
 /*
@@ -3344,7 +3351,7 @@ static string problem47()
 */
 
 static uint64_t opdracht48()
-{   uint64_t result = 0, modulo = 10000000000;
+{   uint64_t result = 0, modulo = 10000000000ULL;
     for (uint16_t i = 1; i <= 1000; i++)
     {   uint64_t temp = i;
         for (uint16_t j = 1; j < i; j++) temp *= i, temp %= modulo;
@@ -3354,7 +3361,7 @@ static uint64_t opdracht48()
 }
 
 static string problem48()
-{   return to_string(opdracht48());
+{   return to_string64(opdracht48());
 }
 
 /*
@@ -3398,7 +3405,7 @@ static uint64_t opdracht49()
 }
 
 static string problem49()
-{   return to_string(opdracht49());
+{   return to_string64(opdracht49());
 }
 
 /*
@@ -3439,7 +3446,7 @@ static uint32_t opdracht50(uint32_t limit = 1000000)
 }
 
 static string problem50()
-{   return to_string(opdracht50());
+{   return to_string32(opdracht50());
 }
 
 /*
@@ -3472,7 +3479,7 @@ static void binarize51(vector<uint32_t> &out, uint32_t n)
 }
 
 static void family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n, uint32_t mask)
-{   uint32_t xlen = decimals32(n);
+{   uint32_t xlen = decimals<uint32_t>(n);
     vector<uint32_t> bmask;
     binarize51(bmask, mask);
     for (uint32_t i = 0; i < bmask.size(); i++)
@@ -3481,7 +3488,7 @@ static void family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n
     {   uint32_t tmp = n;
         for (vector<uint32_t>::iterator it = bmask.begin(); it != bmask.end(); it++)
             tmp += *it * i;
-        if (decimals32(tmp) == xlen && binary_search(primes.begin(), primes.end(), tmp))
+        if (decimals<uint32_t>(tmp) == xlen && binary_search(primes.begin(), primes.end(), tmp))
             out.push_back(tmp);
     }
 }
@@ -3494,7 +3501,7 @@ static uint32_t opdracht51()
     vector<uint32_t> primes;
     for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
     for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
-    {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals32(*it)); mask++)
+    {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals<uint32_t>(*it)); mask++)
         {   vector<uint32_t> fam;
             family51(fam, primes, *it, mask);
             if (fam.size() == 8) return fam.at(0);
@@ -3504,7 +3511,7 @@ static uint32_t opdracht51()
 }
 
 static string problem51()
-{   return to_string(opdracht51());
+{   return to_string32(opdracht51());
 }
 
 /*
@@ -3537,7 +3544,7 @@ static uint32_t opdracht52()
 }
 
 static string problem52()
-{   return to_string(opdracht52());
+{   return to_string32(opdracht52());
 }
 
 /*
@@ -3587,75 +3594,12 @@ static uint32_t opdracht53()
 }
 
 static string problem53()
-{   return to_string(opdracht53());
+{   return to_string32(opdracht53());
 }
 
 /*
 Einde opdrachten
 */
-
-#if 0
-static uint64_t run(uint32_t p)
-{
-    switch (p)
-    {
-    case 1: return multiples1();
-    case 2: return fibonacci();
-    case 3: return maxprimefactor3();
-    case 4: return opdracht4();
-    case 5: return divide();
-    case 6: return opdracht6();
-    case 7: return opdracht7();
-    case 8: return opdracht8();
-    case 9: return opdracht9();
-    case 10: return opdracht10();
-    case 11: return opdracht11();
-    case 12: return opdracht12();
-    case 13: return opdracht13();
-    case 14: return opdracht14();
-    case 15: return opdracht15();
-    case 16: return opdracht16();
-    case 17: return opdracht17();
-    case 18: return opdracht18();
-    case 19: return opdracht19();
-    case 20: return opdracht20();
-    case 21: return opdracht21();
-    case 22: return opdracht22();
-    case 23: return opdracht23();
-    case 24: return opdracht24();
-    case 25: return opdracht25();
-    case 26: return opdracht26();
-    case 27: return 0;
-    case 28: return opdracht28();
-    case 29: return opdracht29();
-    case 30: return opdracht30();
-    case 31: return opdracht31();
-    case 32: return opdracht32();
-    case 33: return opdracht33();
-    case 34: return opdracht34();
-    case 35: return opdracht35();
-    case 36: return opdracht36();
-    case 37: return opdracht37();
-    case 38: return opdracht38();
-    case 39: return opdracht39();
-    case 40: return opdracht40();
-    case 41: return opdracht41();
-    case 42: return opdracht42();
-    case 43: return opdracht43();
-    case 44: return opdracht44();
-    case 45: return opdracht45();
-    case 46: return opdracht46();
-    case 47: return opdracht47();
-    case 48: return opdracht48();
-    case 49: return opdracht49();
-    case 50: return opdracht50();
-    case 51: return opdracht51();
-    case 52: return opdracht52();
-    case 53: return opdracht53();
-    }
-    return 0;
-}
-#endif
 
 static string run2(uint32_t p)
 {
@@ -3717,13 +3661,6 @@ static string run2(uint32_t p)
     }
     return 0;
 }
-
-uint64_t answers[] = {233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
-    31875000, 142913828922, 70600674, 76576500, 5537376230, 837799, 137846528820,
-    1366, 21124, 1074, 171, 648, 31626, 871198282, 4179871, 2783915460, 4782, 983, 0,
-    669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
-    932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
-    134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376};
 
 static char answers2[][50] = {"233168", "4613732", "6857",
     "906609", "232792560", "25164150", "104743", "23514624000",
@@ -3821,24 +3758,6 @@ inline ThreadPool::~ThreadPool()
 
 volatile bool simple_locked = false;
 
-#if 0
-static void runjob(uint32_t n)
-{
-    time_t begin = time(0);
-    uint64_t answer = run(n);
-
-    if (answer != answers[n - 1])
-        throw "error";
-
-    time_t end = time(0);
-    
-    while (simple_locked);
-    simple_locked = true;
-    cout << "#" << (uint16_t)n << ": " << answer << " " << end - begin << "s\r\n";
-    simple_locked = false;
-}
-#endif
-
 static void runjob2(uint32_t n)
 {
     time_t begin = time(0);
@@ -3863,21 +3782,21 @@ static void multithread(uint8_t max)
     }
 }
 #else
-#if 0
-static void singlethread(uint8_t max)
-{   for (uint8_t i = 29; i <= max; i++)
-        runjob(i);   
-}
-#endif
 static void singlethread2(uint8_t max)
-{   for (uint8_t i = 1; i <= max; i++)
+{
+    time_t begin = time(0);
+
+    for (uint8_t i = 1; i <= max; i++)
         runjob2(i);
+
+    time_t end = time(0);
+    cout << "Total: " << end - begin << "s\r\n";
 }
 #endif
 
 int main()
 {
-    answers[27 - 1] = 0;
+    strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
     multithread(53);
 #else

@@ -57,6 +57,9 @@ def product(l):
 def factorial(n):
     return product(range(2, n + 1))
 
+def combinations(n, r):
+    return factorial(n) // (factorial(r) * factorial(n - r))
+
 def ispalindrome(n, base = 10):
     temp, rev = n, 0
     while temp != 0:
@@ -746,7 +749,7 @@ Antwoord: 137,846,528,820
 """
 
 def opdracht15(size = 20):
-    return factorial(2 * size) // factorial(size)**2
+    return combinations(2*size, size)
 
 """
 #16 Power digit sum
@@ -2877,17 +2880,15 @@ https://blog.dreamshire.com/project-euler-47/
 """
 
 def opdracht47(L = 3*10**5, nf = 4, ns = 4):
-	L+= ns
-	f = [0]*L
-	for n in range(2, L):
-		if f[n] == nf:
-			c+= 1
-			if c == ns:
-				return n-ns+1
-				c-= 1
-		else:
-			c = 0
-			if f[n] == 0: f[n::n] = [x+1 for x in f[n::n]]
+    f = [0]*L
+    for n in range(2, L - ns):
+        if f[n] == nf:
+            c+= 1
+            if c == ns: return n-ns+1
+        else:
+            c = 0
+            if f[n] == 0:
+                for i in range(n, len(f), n): f[i] += 1
 
 def opdracht47b(distinct = 4, window = 10**6):
     def distinctLen(g): return len(set(g))
@@ -3081,8 +3082,6 @@ def opdracht53(nlimit = 101, limit = 10**6):
     return ncount
 
 def opdracht53b():
-    def combinations(n, r):
-        return factorial(n) // (factorial(r) * factorial(n - r))
     xcount = 0
     for a in range(23,101):
         for b in range(4, a - 3):
