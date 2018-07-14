@@ -40,23 +40,38 @@ template <typename T> static uint8_t decimals(T n)
     return i;
 }
 
-static uint32_t digit32(uint32_t n, uint32_t i)
-{   return n / myPow<uint32_t>(10, i) % 10;
+template <typename T> static T digit(T n, T i)
+{   return n / myPow<T>(10, i) % 10;
 }
 
-static uint64_t digit64(uint64_t n, uint8_t i)
-{   return n / myPow<uint64_t>(10, i) % 10;
-}
+class Sieve
+{
+private:
+    uint8_t *_sieve;
+    uint32_t _limit;
+    uint32_t _next;
+    bool _hasNext;
+    vector<uint32_t> _primes;
+    vector<uint32_t>::iterator _it;
+public:
+    Sieve(uint32_t limit);
+    ~Sieve() { delete[] _sieve; }
+    bool hasNext() { return _it != _primes.end(); }
+    uint32_t next() { return *_it++; }
+};
 
-static void sieve32(vector<uint32_t> &out, uint32_t limit)
-{   vector<bool> sv(limit, true);
-    sv[0] = sv[1] = false;
-    for (uint32_t p = 2; p * p < sv.size(); p++)
-        if (sv[p] == true)
-            for (uint32_t i = p * 2; i < sv.size(); i += p)
-                sv[i] = false;
-    for (uint32_t i = 0; i < sv.size(); i++)
-        if (sv.at(i)) out.push_back(i);
+Sieve::Sieve(uint32_t limit)
+{   _limit = limit;
+    _sieve = new uint8_t[limit];
+    for (uint32_t i = 0; i < limit; i++) _sieve[i] = 1;
+    _sieve[0] = _sieve[1] = 0;
+    for (uint32_t p = 2; p * p < limit; p++)
+        if (_sieve[p] == 1)
+            for (uint32_t i = p * 2; i < limit; i += p)
+                _sieve[i] = 0;
+    for (uint32_t i = 0; i < limit; i++)
+        if (_sieve[i]) { _primes.push_back(i); }
+    _it = _primes.begin();
 }
 
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
@@ -84,20 +99,12 @@ static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
     return true;
 }
 
-static string to_string64(uint64_t n)
+template <typename T> static string twostring(T n)
 {   char buf[50];
-    uint8_t len = decimals<uint64_t>(n), i = 0;
-    for (i = 0; i < len; i++) buf[i] = digit64(n, len - (i + 1)) + '0';
+    uint8_t len = decimals<T>(n), i = 0;
+    for (i = 0; i < len; i++) buf[i] = digit<T>(n, len - (i + 1)) + '0';
     buf[i] = 0;
     return string(buf);
-}
-
-static string to_string32(uint32_t n)
-{   char tmp[50];
-    uint32_t len = decimals<uint32_t>(n), i = 0;
-    for (i = 0; i < len; i++) tmp[i] = digit32(n, len - (i + 1)) + '0';
-    tmp[i] = 0;
-    return string(tmp);
 }
 
 static string to_string32s(int32_t n)
@@ -125,7 +132,7 @@ static uint32_t multiples1(uint32_t limit = 1000)
 }
 
 static string multiples2()
-{   return to_string32(multiples1());
+{   return twostring<uint32_t>(multiples1());
 }
 
 /*
@@ -140,7 +147,7 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 */
 
-static uint32_t fibonacci(uint32_t xmax = 4000000)
+static string fibonacci(uint32_t xmax = 4000000)
 {   uint32_t term1 = 1, term2 = 2, temp = 0, xsum = 2;
     while (true)
     {   temp = term1 + term2;
@@ -148,11 +155,7 @@ static uint32_t fibonacci(uint32_t xmax = 4000000)
         if (temp % 2 == 0) xsum += temp;
         term1 = term2, term2 = temp;
     }
-    return xsum;
-}
-
-static string fibonacci2()
-{   return to_string32(fibonacci());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -195,33 +198,38 @@ uint32_t Primes::get(uint16_t i)
     return _primes[i];
 }
 
-static uint64_t primefactor(Primes &primes, uint64_t n)
-{   for (uint64_t i = 0; ; i++)
-        if (n % primes.get(i) == 0)
-            return primes.get(i);
-}
+class PrimeFactors
+{
+private:
+    Primes _primes;
+    uint64_t _n;
+public:
+    PrimeFactors(uint64_t n) : _n(n) { }
+    bool hasNext() { return _n > 1; }
+    uint64_t next();
+};
 
-static void primefactors3(vector<uint64_t> &factors, uint64_t n)
-{   Primes primes;
-    while (true)
-    {   uint64_t factor = primefactor(primes, n);
-        factors.push_back(factor);
-        if (factor == n) break;
-        n = n / factor;
+uint64_t PrimeFactors::next()
+{   uint64_t factor = 0;
+    for (uint64_t i = 0; true; i++)
+    {   if (_n % _primes.get(i) == 0)
+        {   factor = _primes.get(i);
+            break;
+        }
     }
+    _n = _n / factor;
+    return factor;
 }
 
-static uint64_t maxprimefactor3(uint64_t n = 600851475143ULL)
-{   vector<uint64_t> factors;
-    primefactors3(factors, n);
-    uint64_t best = 0;
-    for (vector<uint64_t>::iterator it = factors.begin(); it != factors.end(); it++)
-        if (*it > best) best = *it;
-    return best;
-}
-
-static string opdracht3()
-{   return to_string64(maxprimefactor3());
+static string problem3(uint64_t n = 600851475143ULL)
+{   uint64_t best = 0;
+    vector<uint64_t> factors;
+    PrimeFactors pf(n);
+    while (pf.hasNext())
+    {   uint64_t factor = pf.next();
+        best = max(factor, best);
+    }
+    return twostring<uint64_t>(best);
 }
 
 /*
@@ -233,7 +241,7 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-static uint32_t opdracht4()
+static string problem4()
 {   uint32_t best = 0;
     for (uint32_t a = 0; a < 1000; a++)
     {   for (uint32_t b = 0; b < 1000; b++)
@@ -242,11 +250,7 @@ static uint32_t opdracht4()
                 best = c;
         }
     }
-    return best;
-}
-
-static string problem4()
-{   return to_string32(opdracht4());
+    return twostring<uint32_t>(best);
 }
 
 /*
@@ -264,15 +268,10 @@ static inline bool isdivisible(uint32_t n, uint32_t lower, uint32_t max)
     return true;
 }
 
-static uint32_t divide(uint32_t lower = 11, uint32_t max = 20)
+static string problem5(uint32_t lower = 11, uint32_t max = 20)
 {   uint32_t start = 2520, number = start;
-    while (isdivisible(number, lower, max) == false)
-        number += start;
-    return number;
-}
-
-static string problem5()
-{   return to_string32(divide());
+    while (isdivisible(number, lower, max) == false) number += start;
+    return twostring<uint32_t>(number);
 }
 
 /*
@@ -291,16 +290,12 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-static uint32_t opdracht6(uint32_t min = 1, uint32_t max = 100)
+static string problem6(uint32_t min = 1, uint32_t max = 100)
 {   uint32_t sumsquare = 0, squaresum = 0;
     for (uint32_t i = min; i <= max; i++) sumsquare += i * i;
     for (uint32_t i = min; i <= max; i++) squaresum += i;
     squaresum = squaresum * squaresum;
-    return squaresum - sumsquare;
-}
-
-static string problem6()
-{   return to_string32(opdracht6());
+    return twostring<uint32_t>(squaresum - sumsquare);
 }
 
 /*
@@ -319,18 +314,14 @@ static uint32_t reducer7(uint32_t n)
     return n;
 }
 
-static uint32_t opdracht7(uint32_t n = 10001)
+static string problem7(uint32_t n = 10001)
 {   uint32_t p = 3, sqp = reducer7(p), ret = 0;
     for (uint32_t j = 0; j < n - 1; j++)
     {   for (uint32_t i = 2; i < sqp; i++)
             if (p % i == 0) sqp = reducer7(++p), i = 1;
         ret = p, p += 2, sqp = reducer7(p);
     }
-    return ret;
-}
-
-static string problem7()
-{   return to_string32(opdracht7());
+    return twostring<uint32_t>(ret);
 }
 
 /*
@@ -387,7 +378,7 @@ static char series1[] = "73167176531330624919225119674426574742355349194934"
         "05886116467109405077541002256983155200055935729725"
         "71636269561882670428252483600823257530420752963450";
 
-static uint64_t opdracht8(char *s = series1)
+static string problem8(char *s = series1)
 {   uint64_t cur = 0, best = 0;
     while (*s)
     {   cur = (cur % 1000000000000ULL) * 10 + (*s++ - '0');
@@ -395,11 +386,7 @@ static uint64_t opdracht8(char *s = series1)
         while (peel) product *= peel % 10, peel = peel / 10;
         if (product > best) best = product;
     }
-    return best;
-}
-
-static string problem8()
-{   return to_string64(opdracht8());
+    return twostring<uint64_t>(best);
 }
 
 /*
@@ -428,7 +415,7 @@ static uint32_t opdracht9(uint32_t search = 1000)
 }
 
 static string problem9()
-{   return to_string32(opdracht9());
+{   return twostring<uint32_t>(opdracht9());
 }
 
 /*
@@ -441,17 +428,11 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 */
 
-static uint64_t opdracht10(uint32_t limit = 2000000)
-{   vector<uint32_t> primes;
-    sieve32(primes, limit);
+static string opdracht10(uint32_t limit = 2000000)
+{   Sieve sieve(limit);
     uint64_t xsum = 0;
-    for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
-        xsum += *it;
-    return xsum;
-}
-
-static string problem10()
-{   return to_string64(opdracht10());
+    while (sieve.hasNext()) xsum += sieve.next();
+    return twostring<uint64_t>(xsum);
 }
 
 /*
@@ -510,7 +491,7 @@ uint8_t t11[20][20] = {{ 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91
             {20,73,35,29,78,31,90, 1,74,31,49,71,48,86,81,16,23,57, 5,54},
             { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}};
 
-static uint32_t opdracht11()
+static string problem11()
 {   uint32_t best = 0;
     for (uint8_t i = 0; i < 20; i++)
     {   for (uint8_t j = 0; j < 16; j++)
@@ -532,11 +513,7 @@ static uint32_t opdracht11()
             if (prod > best) best = prod;
         }
     }
-    return best;
-}
-
-static string problem11()
-{   return to_string32(opdracht11());
+    return twostring<uint32_t>(best);
 }
 
 /*
@@ -586,13 +563,9 @@ static uint32_t find_triangular_index(uint16_t factor_limit = 500)
     return n;
 }
 
-static uint32_t opdracht12(uint16_t divisors = 500)
+static string problem12(uint16_t divisors = 500)
 {   uint32_t i = find_triangular_index(divisors);
-    return (i * (i + 1)) >> 1;
-}
-
-static string problem12()
-{   return to_string32(opdracht12());
+    return twostring<uint32_t>((i * (i + 1)) >> 1);
 }
 
 /*
@@ -826,7 +799,7 @@ static uint64_t opdracht13()
 }
 
 static string problem13()
-{   return to_string64(opdracht13());
+{   return twostring<uint64_t>(opdracht13());
 }
 
 /*
@@ -857,18 +830,14 @@ static uint32_t collatz(uint32_t n)
     return count;
 }
 
-static uint32_t opdracht14(uint32_t lower = 1, uint32_t upper = 1000000)
+static string problem14(uint32_t lower = 1, uint32_t upper = 1000000)
 {   uint32_t best_start = 0, best_length = 0;
     for (uint32_t i = lower; i < upper; i++)
     {   uint32_t length = collatz(i);
         if (length > best_length)
             best_start = i, best_length = length;
     }
-    return best_start;
-}
-
-static string problem14()
-{   return to_string32(opdracht14());
+    return twostring<uint32_t>(best_start);
 }
 
 /*
@@ -882,15 +851,11 @@ How many such routes are there through a 20×20 grid?
 Antwoord: 137,846,528,820
 */
 
-static uint64_t opdracht15(uint8_t size = 20)
+static string problem15(uint8_t size = 20)
 {   uint64_t paths = 1;
     for (uint8_t i = 0; i < size; i++)
         paths = (paths * (2 * size - i)) / (i + 1);
-    return paths;
-}
-
-static string problem15()
-{   return to_string64(opdracht15());
+    return twostring<uint64_t>(paths);
 }
 
 /*
@@ -903,7 +868,7 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1,366
 */
 
-static uint32_t opdracht16(uint16_t e = 1000)
+static string problem16(uint16_t e = 1000)
 {   uint8_t largeNum[400];
     memset(largeNum, 0, 400);
     largeNum[0] = 2;
@@ -917,14 +882,9 @@ static uint32_t opdracht16(uint16_t e = 1000)
             largeNum[i] = largeNum[i] % 10;
         }
     }
-
     for (uint16_t i = 0; i < sizeof(largeNum); i++)
         sum += largeNum[i];
-    return sum;
-}
-
-static string problem16()
-{   return to_string32(opdracht16());
+    return twostring<uint32_t>(sum);
 }
 
 /*
@@ -950,49 +910,32 @@ static size_t len(const char *s)
     return strlen(s);
 }
 
-static uint32_t opdracht17()
-{
-    char arr1[][15] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+static string problem17()
+{   char arr1[][15] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
         "seventeen", "eighteen", "nineteen",
         "twenty", "thirty", "forty", "fifty", "sixty",
         "seventy", "eighty", "ninety"};
-
     uint32_t xsum = 0;
-
     for (uint8_t i = 0; i < 19; i++)
         xsum += len(arr1[i]);
-
     for (uint8_t i = 19; i < 27; i++)
-    {
-        xsum += len(arr1[i]);
-
+    {   xsum += len(arr1[i]);
         for (uint8_t j = 0; j < 9; j++)
             xsum += len(arr1[i]) + len(arr1[j]);
     }
-
     for (uint8_t i = 0; i < 9; i++)
-    {
-        xsum += len(arr1[i]) + len("hundred");
-
+    {   xsum += len(arr1[i]) + len("hundred");
         for (uint8_t j = 0; j < 19; j++)
             xsum += len(arr1[i]) + len("hundred") + len("and") + len(arr1[j]);
-
         for (uint8_t j = 19; j < 27; j++)
-        {
-            xsum += len(arr1[i]) + len("hundred") + len("and") + len(arr1[j]);
-
+        {   xsum += len(arr1[i]) + len("hundred") + len("and") + len(arr1[j]);
             for (uint8_t k = 0; k < 9; k++)
                 xsum += len(arr1[i]) + len("hundredand") + len(arr1[j]) + len(arr1[k]);
         }
     }
-
     xsum += len("onethousand");
-    return xsum;
-}
-
-static string problem17()
-{   return to_string32(opdracht17());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -1059,7 +1002,7 @@ static uint8_t triangle[][15] = {
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
 #endif
 
-static uint32_t opdracht18()
+static string opdracht18()
 {   uint32_t possibilities = myPow<uint64_t>(2, sizeof(triangle[0]) - 1);
     uint32_t best = 0;
     for (uint32_t i = 0; i <= possibilities; i++)
@@ -1072,11 +1015,7 @@ static uint32_t opdracht18()
         }
         if (sum > best) best = sum;
     }
-    return best;
-}
-
-static string problem18()
-{   return to_string32(opdracht18());
+    return twostring<uint32_t>(best);
 }
 
 /*
@@ -1109,7 +1048,7 @@ static bool isLeap(uint16_t year)
 static const uint8_t TUESDAY = 0, WEDNESDAY = 1, THURSDAY = 2, FRIDAY = 3, SATURDAY = 4,
     SUNDAY = 5, MONDAY = 6;
 
-static uint32_t opdracht19()
+static string opdracht19()
 {   uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     uint32_t day = 0;
     uint32_t sunday_count = 0;
@@ -1123,11 +1062,7 @@ static uint32_t opdracht19()
                 day++;
         }
     }
-    return sunday_count;
-}
-
-static string problem19()
-{   return to_string32(opdracht19());
+    return twostring<uint32_t>(sunday_count);
 }
 
 /*
@@ -1143,7 +1078,7 @@ Find the sum of the digits in the number 100!
 Antwoord: 648
 */
 
-static uint32_t opdracht20(uint8_t f = 100)
+static string opdracht20(uint8_t f = 100)
 {   uint16_t buf[200];
     memset(buf, 0, 400);
     buf[0] = f;
@@ -1157,13 +1092,8 @@ static uint32_t opdracht20(uint8_t f = 100)
         }
     }
     uint32_t sum = 0;
-    for (uint8_t i = 0; i < 200; i++)
-        sum += buf[i];
-    return sum;
-}
-
-static string problem20()
-{   return to_string32(opdracht20());
+    for (uint8_t i = 0; i < 200; i++) sum += buf[i];
+    return twostring<uint32_t>(sum);
 }
 
 /*
@@ -1198,7 +1128,7 @@ static uint32_t sum_divisors(uint32_t n)
     return sum;
 }
 
-static uint32_t opdracht21(uint32_t low = 1, uint32_t high = 10000)
+static string problem21(uint32_t low = 1, uint32_t high = 10000)
 {   uint32_t l[high - low];
     memset(l, 0, (high - low) * 4);
     for (uint32_t i = low; i <= high; i++)
@@ -1209,11 +1139,7 @@ static uint32_t opdracht21(uint32_t low = 1, uint32_t high = 10000)
         if (i + low < ind && low <= ind && ind <= high && l[ind - low] == i + low)
             sum += (i + low) + ind;
     }
-    return sum;
-}
-
-static string problem21()
-{   return to_string32(opdracht21());
+    return twostring<uint32_t>(sum);
 }
 
 /*
@@ -1262,8 +1188,7 @@ char names22[][50] = {
 "COLLEEN","ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE","LILLIE","CLAUDIA",
 "JACKIE","MARCIA","TANYA","NELLIE","MINNIE","MARLENE","HEIDI","GLENDA",
 "LYDIA","VIOLA","COURTNEY","MARIAN","STELLA","CAROLINE","DORA","JO",
-"VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL","MARSHA","MYRTLE","LENA",
-"CHRISTY",
+"VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL","MARSHA","MYRTLE","LENA","CHRISTY",
 "DEANNA","PATSY","HILDA","GWENDOLYN","JENNIE","NORA","MARGIE","NINA","CASSANDRA",
 "LEAH","PENNY","KAY","PRISCILLA","NAOMI","CAROLE","BRANDY","OLGA",
 "BILLIE","DIANNE","TRACEY","LEONA","JENNY",
@@ -1978,7 +1903,7 @@ static const uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
 
-static uint32_t opdracht22()
+static string problem22()
 {   bubbleSort22();
     uint32_t total = 0;
     for (uint16_t i = 0; i < 5163; i++)
@@ -1988,11 +1913,7 @@ static uint32_t opdracht22()
         score = score * (i + 1);
         total += score;
     }
-    return total;
-}
-
-static string problem22()
-{   return to_string32(opdracht22());
+    return twostring<uint32_t>(total);
 }
 
 /*
@@ -2030,7 +1951,7 @@ static bool find23(vector<uint16_t> &d, uint16_t n)
 {   return binary_search(d.begin(), d.end(), n);
 }
 
-static uint32_t opdracht23()
+static string problem23()
 {   uint16_t xmax = 28123;
     vector<uint16_t> abundants;
     for (uint16_t i = 1; i <= xmax; i++)
@@ -2049,11 +1970,7 @@ static uint32_t opdracht23()
         }
         if (boo == true) xsum += i;
     }
-    return xsum;
-}
-
-static string problem23()
-{   return to_string32(opdracht23());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2080,7 +1997,7 @@ static uint32_t concat24(vector <uint8_t> &v)
     return ret;
 }
 
-static uint32_t opdracht24()
+static string problem24()
 {   uint8_t a[] = {0,1,2,3,4,5,6,7,8,9};
     vector<uint8_t> b;
     vector<uint8_t> result;
@@ -2093,11 +2010,7 @@ static uint32_t opdracht24()
         result.push_back(b.at(i));
         b.erase(b.begin() + i);
     }
-    return concat24(result);
-}
-
-static string problem24()
-{   return to_string32(opdracht24());
+    return twostring<uint32_t>(concat24(result));
 }
 
 /*
@@ -2175,7 +2088,7 @@ void LongNumber25::add(LongNumber25 &n)
     }
 }
 
-uint32_t opdracht25()
+static string problem25()
 {   uint8_t i = 0;
     uint16_t cnt = 2;
     LongNumber25 fib[3];
@@ -2190,11 +2103,7 @@ uint32_t opdracht25()
         tmp.add(fib[(i + 2) % 3]);
         fib[i].set(tmp);
     }
-    return cnt;
-}
-
-static string problem25()
-{   return to_string32(opdracht25());
+    return twostring<uint32_t>(cnt);
 }
 
 /*
@@ -2250,7 +2159,7 @@ static uint32_t opdracht26()
 }
 
 static string problem26()
-{   return to_string32(opdracht26());
+{   return twostring<uint32_t>(opdracht26());
 }
 
 /*
@@ -2326,15 +2235,11 @@ in a 1001 by 1001 spiral formed in the same way?
 Antwoord: 669,171,001
 */
 
-static uint32_t opdracht28(uint32_t root = 1001)
+static string problem28(uint32_t root = 1001)
 {   uint32_t xsum = 1;    
     for (uint32_t step = 2, foo = 1; foo < root * root; step += 2)
         for (uint8_t i = 0; i < 4; i++) foo += step, xsum += foo;
-    return xsum;
-}
-
-static string problem28()
-{   return to_string32(opdracht28());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2369,16 +2274,12 @@ static uint32_t eqpow(uint32_t n)
     return (root & 0xffff0000) | (n & 0xffff) * (root & 0xffff);
 }
 
-static uint32_t opdracht29()
+static string problem29()
 {   set<uint32_t> st;
     for (uint16_t a = 2; a <= 100; a++)
         for (uint16_t b = 2; b <= 100; b++)
             st.insert(eqpow(a << 16 | b));
-    return st.size();
-}
-
-static string problem29()
-{   return to_string32(opdracht29());
+    return twostring<uint32_t>(st.size());
 }
 
 /*
@@ -2405,20 +2306,16 @@ Antwoord: 443,839
 4,150 + 4,151 + 54,748 + 92,727 + 93,084 + 194,979 = 443,83
 */
 
-bool test30(uint32_t n, uint8_t p)
+static bool test30(uint32_t n, uint8_t p)
 {   uint32_t xsum = 0, tmp = n;
     while (tmp > 0) xsum += myPow<uint32_t>(tmp % 10, p), tmp = tmp / 10;
     return xsum == n;
 }
 
-uint32_t opdracht30(uint8_t p = 5)
+static string problem30(uint8_t p = 5)
 {   uint32_t xsum = 0;
     for (uint32_t i = 2; i < 1000000; i++) xsum += test30(i, p) ? i : 0;
-    return xsum;
-}
-
-static string problem30()
-{   return to_string32(opdracht30());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2438,7 +2335,7 @@ How many different ways can £2 be made using any number of coins?
 Antwoord: 73,682
 */
 
-static uint32_t opdracht31()
+static string problem31()
 {   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
     uint32_t ways[target + 1];
     memset(ways, 0, (target + 1) * 4);
@@ -2446,11 +2343,7 @@ static uint32_t opdracht31()
     for (uint8_t i = 0; i < sizeof(coins); i++)
         for (uint8_t j = coins[i]; j <= target; j++)
             ways[j] += ways[j - coins[i]];
-    return ways[target];
-}
-
-static string problem31()
-{   return to_string32(opdracht31());
+    return twostring<uint32_t>(ways[target]);
 }
 
 /*
@@ -2485,16 +2378,12 @@ static void panProducts32(set<uint32_t> &st)
     }
 }
 
-static uint32_t opdracht32()
+static string problem32()
 {   set<uint32_t> st;
     panProducts32(st);
     uint32_t xsum = 0;
     for (set<uint32_t>::iterator it = st.begin(); it != st.end(); it++) xsum += *it;
-    return xsum;
-}
-
-static string problem32()
-{   return to_string32(opdracht32());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2528,7 +2417,7 @@ static uint32_t opdracht33()
 }
 
 static string problem33()
-{   return to_string32(opdracht33());
+{   return twostring<uint32_t>(opdracht33());
 }
 
 /*
@@ -2551,15 +2440,11 @@ static uint32_t facsumdig34(uint32_t n)
     return sum;
 }
 
-static uint32_t opdracht34()
+static string opdracht34()
 {   uint32_t totalSum = 0;
     for (uint32_t k = 10; k < factorials34[9] * 7; k++)
         if (facsumdig34(k) == k) totalSum += k;
-    return totalSum;
-}
-
-static string problem34()
-{   return to_string32(opdracht34());
+    return twostring<uint32_t>(totalSum);
 }
 
 /*
@@ -2603,18 +2488,14 @@ static bool iscircular(uint32_t n, vector<uint32_t> &primes)
     return true;
 }
 
-static uint32_t opdracht35()
+static string opdracht35()
 {   vector<uint32_t> primes;
-    sieve32(primes, 999999);
+    Sieve sieve(999999);
+    while (sieve.hasNext()) primes.push_back(sieve.next());
     uint32_t ncount = 0;
     for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
-        if (iscircular(*it, primes))
-            ncount++;
-    return ncount;
-}
-
-static string problem35()
-{   return to_string32(opdracht35());
+        if (iscircular(*it, primes)) ncount++;
+    return twostring<uint32_t>(ncount);
 }
 
 /*
@@ -2629,15 +2510,11 @@ Find the sum of all numbers, less than one million, which are palindromic in bas
 Antwoord: 872,187
 */
 
-static uint32_t opdracht36(uint32_t min = 1, uint32_t limit = 1000000)
+static string problem36(uint32_t min = 1, uint32_t limit = 1000000)
 {   uint32_t xsum = 0;
     for (uint32_t i = min; i < limit; i++)
         if (ispalindrome32(i, 10) && ispalindrome32(i, 2)) xsum += i;
-    return xsum;
-}
-
-static string problem36()
-{   return to_string32(opdracht36());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2681,9 +2558,10 @@ static bool islefttruncatable(uint32_t prime, vector<uint32_t> &primes)
     return true;
 }
 
-static uint32_t opdracht37()
+static string opdracht37()
 {   vector<uint32_t> primes;
-    sieve32(primes, 999999);
+    Sieve sieve(999999);
+    while (sieve.hasNext()) primes.push_back(sieve.next());
     uint32_t xsum = 0;
     for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
     {   if (*it == 2 || *it == 3 || *it == 5 || *it == 7)
@@ -2691,11 +2569,7 @@ static uint32_t opdracht37()
         if (islefttruncatable(*it, primes) && isrighttruncatable(*it, primes))
             xsum += *it;
     }
-    return xsum;
-}
-
-static string problem37()
-{   return to_string32(opdracht37());
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -2735,7 +2609,7 @@ static uint32_t opdracht38()
 }
 
 static string problem38()
-{   return to_string32(opdracht38());
+{   return twostring<uint32_t>(opdracht38());
 }
 
 /*
@@ -2770,7 +2644,7 @@ Antwoord: 840
 (399, 40, 401)
 */
 
-static uint32_t opdracht39()
+static string problem39()
 {   uint32_t best_p = 0, best_solutions = 0;
     for (uint32_t p = 100; p <= 1000; p += 2)
     {   uint32_t solutions = 0;
@@ -2778,11 +2652,7 @@ static uint32_t opdracht39()
             solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
         if (solutions > best_solutions) best_solutions = solutions, best_p = p;
     }
-    return best_p;
-}
-
-static string problem39()
-{   return to_string32(opdracht39());
+    return twostring<uint32_t>(best_p);
 }
 
 /*
@@ -2813,14 +2683,10 @@ static uint32_t getDigit40(uint32_t i)
     return n % 10;
 }
 
-static uint32_t opdracht40()
+static string problem40()
 {   uint32_t product = 1;
     for (uint32_t i = 1; i <= 1000000; i *= 10) product *= getDigit40(i - 1);
-    return product;
-}
-
-static string problem40()
-{   return to_string32(opdracht40());
+    return twostring<uint32_t>(product);
 }
 
 /*
@@ -2841,17 +2707,14 @@ static bool isPandigital41(uint32_t n)
     return hasDigitsOnce32(n, nset);
 }
 
-static uint32_t opdracht41()
+static string opdracht41()
 {   vector<uint32_t> primes;
-    sieve32(primes, 7654321);
+    Sieve sieve(7654321);
+    while (sieve.hasNext()) primes.push_back(sieve.next());
     uint32_t best = 0;
     for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
         if (isPandigital41(*it) && *it > best) best = *it;
-    return best;
-}
-
-static string problem41()
-{   return to_string32(opdracht41());
+    return twostring<uint32_t>(best);
 }
 
 /*
@@ -3112,7 +2975,7 @@ static uint32_t wordcount42(char *w)
     return count;
 }
 
-static uint32_t opdracht42()
+static string problem42()
 {   vector<uint32_t> triangles;
     for (uint32_t i = 0; i < 20; i++) triangles.push_back(triangle32(i));
     uint32_t ret = 0;
@@ -3120,11 +2983,7 @@ static uint32_t opdracht42()
     for (uint32_t i = 0; i < count; i++)
         if (linSearch32<uint32_t>(triangles, wordcount42(words42[i])))
             ret++;
-    return ret;
-}
-
-static string problem42()
-{   return to_string32(opdracht42());
+    return twostring<uint32_t>(ret);
 }
 
 /*
@@ -3146,7 +3005,32 @@ d7d8d9=728 is divisible by 13
 d8d9d10=289 is divisible by 17
 
 Find the sum of all 0 to 9 pandigital numbers with this property.
+
+Antwoord: 16,695,334,890
 */
+
+class Permutations
+{
+private:
+    vector<uint8_t> _pool;
+    uint32_t _size;
+    uint32_t _i;
+    uint8_t *_c;
+public:
+    Permutations(uint8_t max);
+    ~Permutations() { delete[] _c; }
+    bool hasNext() { return _i < _size; }
+    uint64_t next();
+};
+
+Permutations::Permutations(uint8_t max)
+{   for (uint8_t i = 0; i <= max; i++)
+        _pool.push_back(i);
+    _size = max + 1;
+    _i = 0;
+    _c = new uint8_t[_size];
+    memset(_c, 0, _size);
+}
 
 static uint64_t concat43(vector<uint8_t> &v)
 {   uint64_t ret = 0;
@@ -3155,18 +3039,16 @@ static uint64_t concat43(vector<uint8_t> &v)
     return ret;
 }
 
-static void permutations43(vector<uint64_t> &ps, vector<uint8_t> &pool)
-{   uint32_t n = pool.size(), i = 0, tmp = 0;
-    vector<uint8_t> c(n, 0);
-    ps.push_back(concat43(pool));
-    while (i < n)
-    {   if (c[i] < i)
-        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
-            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
-            ps.push_back(concat43(pool));
-            c[i]++, i = 0;
-        } else c[i++] = 0;
-    }
+uint64_t Permutations::next()
+{   uint32_t tmp = 0;
+    while (hasNext())
+        if (_c[_i] < _i)
+        {   if (_i % 2 == 0) tmp = _pool[0], _pool[0] = _pool[_i], _pool[_i] = tmp;
+            else tmp = _pool[_c[_i]], _pool[_c[_i]] = _pool[_i], _pool[_i] = tmp;
+            _c[_i]++, _i = 0;
+            return concat43(_pool);
+        } else _c[_i++] = 0;
+    return 0;   // moet eigenlijk origineel teruggeven
 }
 
 static bool test43(uint64_t n)
@@ -3177,21 +3059,15 @@ static bool test43(uint64_t n)
     return true;
 }
 
-static uint64_t opdracht43()
-{   vector<uint64_t> ps;
-    vector<uint8_t> pool;
-    for (uint8_t i = 0; i <= 9; i++) pool.push_back(i);
-    permutations43(ps, pool);
-    uint64_t xsum = 0;
-    for (vector<uint64_t>::iterator it = ps.begin(); it != ps.end(); it++)
-        if (test43(*it)) xsum += *it;
-    return xsum;
-}
-
 static string problem43()
-{
-    return string("0");
-    return to_string64(opdracht43());
+{   Permutations perms(9);
+    vector<uint64_t> ps;
+    uint64_t xsum = 0;
+    while (perms.hasNext())
+    {   uint64_t p = perms.next();
+        xsum += test43(p) ? p : 0;
+    }
+    return twostring<uint64_t>(xsum);
 }
 
 /*
@@ -3224,7 +3100,7 @@ static uint32_t opdracht44()
 }
 
 static string problem44()
-{   return to_string32(opdracht44());
+{   return twostring<uint32_t>(opdracht44());
 }
 
 /*
@@ -3259,7 +3135,7 @@ static uint32_t opdracht45()
 }
 
 static string problem45()
-{   return to_string32(opdracht45());
+{   return twostring<uint32_t>(opdracht45());
 }
 
 /*
@@ -3294,7 +3170,8 @@ static uint64_t pair46(vector<uint32_t> &primes, vector<uint32_t> &squares, uint
 
 static uint32_t opdracht46()
 {   vector<uint32_t> primes, squares;
-    sieve32(primes, 999999);
+    Sieve sieve(999999);
+    while (sieve.hasNext()) primes.push_back(sieve.next());
     for (uint32_t i = 0; i < 100; i++) squares.push_back(2*i*i);
     for (uint32_t i = 3; i < 987654321; i += 2)
     {   if (binary_search(primes.begin(), primes.end(), i)) continue;
@@ -3305,7 +3182,7 @@ static uint32_t opdracht46()
 }
 
 static string problem46()
-{   return to_string64(opdracht46());
+{   return twostring<uint64_t>(opdracht46());
 }
 
 /*
@@ -3343,25 +3220,21 @@ static uint32_t opdracht47(uint32_t L = 300000, uint32_t nf = 4, uint32_t ns = 4
 }
 
 static string problem47()
-{   return to_string32(opdracht47());
+{   return twostring<uint32_t>(opdracht47());
 }
 
 /*
 #48: Self powers
 */
 
-static uint64_t opdracht48()
+static string problem48()
 {   uint64_t result = 0, modulo = 10000000000ULL;
     for (uint16_t i = 1; i <= 1000; i++)
     {   uint64_t temp = i;
         for (uint16_t j = 1; j < i; j++) temp *= i, temp %= modulo;
         result += temp, result %= modulo;
     }
-    return result;
-}
-
-static string problem48()
-{   return to_string64(opdracht48());
+    return twostring<uint64_t>(result);
 }
 
 /*
@@ -3396,16 +3269,13 @@ static uint64_t check(vector<uint32_t> &v)
     return 0;
 }
 
-static uint64_t opdracht49()
+static string opdracht49()
 {   vector<uint32_t> primes, primes4;
-    sieve32(primes, 9999);
+    Sieve sieve(9999);
+    while (sieve.hasNext()) primes.push_back(sieve.next());
     for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
         if (*it > 1487) primes4.push_back(*it);
-    return check(primes4);
-}
-
-static string problem49()
-{   return to_string64(opdracht49());
+    return twostring<uint64_t>(check(primes4));
 }
 
 /*
@@ -3424,13 +3294,10 @@ Which prime, below one-million, can be written as the sum of the most consecutiv
 Antwoord: 997,651
 */
 
-static uint32_t opdracht50(uint32_t limit = 1000000)
-{   vector<bool> v(1000000, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p < v.size(); p++)
-        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
-    vector<uint32_t> primes;
-    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
+static string problem50(uint32_t limit = 1000000)
+{   vector<uint32_t> primes;
+    Sieve sv(999999);
+    while (sv.hasNext()) primes.push_back(sv.next());
     uint32_t best_prime = 0, best_sum = 0;
     for (uint32_t i = 0; i < primes.size(); i++)
     {   for (uint32_t j = i + best_sum; j < primes.size(); j++)
@@ -3442,11 +3309,7 @@ static uint32_t opdracht50(uint32_t limit = 1000000)
                 best_sum = sublen, best_prime = xsum;
         }
     }
-    return best_prime;
-}
-
-static string problem50()
-{   return to_string32(opdracht50());
+    return twostring<uint32_t>(best_prime);
 }
 
 /*
@@ -3483,7 +3346,7 @@ static void family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n
     vector<uint32_t> bmask;
     binarize51(bmask, mask);
     for (uint32_t i = 0; i < bmask.size(); i++)
-        n -= bmask.at(i) * digit32(n, i);
+        n -= bmask.at(i) * digit<uint32_t>(n, i);
     for (uint32_t i = 0; i < 10; i++)
     {   uint32_t tmp = n;
         for (vector<uint32_t>::iterator it = bmask.begin(); it != bmask.end(); it++)
@@ -3511,7 +3374,7 @@ static uint32_t opdracht51()
 }
 
 static string problem51()
-{   return to_string32(opdracht51());
+{   return twostring<uint32_t>(opdracht51());
 }
 
 /*
@@ -3544,7 +3407,7 @@ static uint32_t opdracht52()
 }
 
 static string problem52()
-{   return to_string32(opdracht52());
+{   return twostring<uint32_t>(opdracht52());
 }
 
 /*
@@ -3570,7 +3433,7 @@ for 1 ≤ n ≤ 100, are greater than one-million?
 Antwoord: 4,075
 */
 
-static uint32_t opdracht53()
+static string problem53()
 {   static const uint8_t nlimit = 101;
     static const uint32_t limit = 1000000;
     uint32_t tree[nlimit][nlimit];
@@ -3590,11 +3453,7 @@ static uint32_t opdracht53()
     for (uint8_t i = 0; i < nlimit; i++)
         for (uint8_t j = 0; j < nlimit; j++)
             if (tree[i][j] > limit) ncount++;
-    return ncount;
-}
-
-static string problem53()
-{   return to_string32(opdracht53());
+    return twostring<uint32_t>(ncount);
 }
 
 /*
@@ -3606,15 +3465,15 @@ static string run2(uint32_t p)
     switch (p)
     {
     case 1: return multiples2();
-    case 2: return fibonacci2();
-    case 3: return opdracht3();
+    case 2: return fibonacci();
+    case 3: return problem3();
     case 4: return problem4();
     case 5: return problem5();
     case 6: return problem6();
     case 7: return problem7();
     case 8: return problem8();
     case 9: return problem9();
-    case 10: return problem10();
+    case 10: return opdracht10();
     case 11: return problem11();
     case 12: return problem12();
     case 13: return problem13();
@@ -3622,9 +3481,9 @@ static string run2(uint32_t p)
     case 15: return problem15();
     case 16: return problem16();
     case 17: return problem17();
-    case 18: return problem18();
-    case 19: return problem19();
-    case 20: return problem20();
+    case 18: return opdracht18();
+    case 19: return opdracht19();
+    case 20: return opdracht20();
     case 21: return problem21();
     case 22: return problem22();
     case 23: return problem23();
@@ -3638,14 +3497,14 @@ static string run2(uint32_t p)
     case 31: return problem31();
     case 32: return problem32();
     case 33: return problem33();
-    case 34: return problem34();
-    case 35: return problem35();
+    case 34: return opdracht34();
+    case 35: return opdracht35();
     case 36: return problem36();
-    case 37: return problem37();
+    case 37: return opdracht37();
     case 38: return problem38();
     case 39: return problem39();
     case 40: return problem40();
-    case 41: return problem41();
+    case 41: return opdracht41();
     case 42: return problem42();
     case 43: return problem43();
     case 44: return problem44();
@@ -3653,7 +3512,7 @@ static string run2(uint32_t p)
     case 46: return problem46();
     case 47: return problem47();
     case 48: return problem48();
-    case 49: return problem49();
+    case 49: return opdracht49();
     case 50: return problem50();
     case 51: return problem51();
     case 52: return problem52();
@@ -3796,7 +3655,7 @@ static void singlethread2(uint8_t max)
 
 int main()
 {
-    strcpy(answers2[43-1], "0");
+    //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
     multithread(53);
 #else
