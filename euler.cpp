@@ -74,6 +74,12 @@ Sieve::Sieve(uint32_t limit)
     _it = _primes.begin();
 }
 
+static uint64_t sum(Sieve &s)
+{   uint64_t xsum = 0;
+    while (s.hasNext()) xsum += s.next();
+    return xsum;
+}
+
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
@@ -209,6 +215,12 @@ public:
     uint64_t next();
 };
 
+static uint64_t max(PrimeFactors &p)
+{   uint64_t best = 0;
+    while (p.hasNext()) best = max(p.next(), best);
+    return best;
+}
+
 uint64_t PrimeFactors::next()
 {   uint64_t factor = 0;
     for (uint64_t i = 0; true; i++)
@@ -222,14 +234,8 @@ uint64_t PrimeFactors::next()
 }
 
 static string problem3(uint64_t n = 600851475143ULL)
-{   uint64_t best = 0;
-    vector<uint64_t> factors;
-    PrimeFactors pf(n);
-    while (pf.hasNext())
-    {   uint64_t factor = pf.next();
-        best = max(factor, best);
-    }
-    return twostring<uint64_t>(best);
+{   PrimeFactors pf(n);
+    return twostring<uint64_t>(max(pf));
 }
 
 /*
@@ -430,9 +436,7 @@ Antwoord: 142,913,828,922
 
 static string opdracht10(uint32_t limit = 2000000)
 {   Sieve sieve(limit);
-    uint64_t xsum = 0;
-    while (sieve.hasNext()) xsum += sieve.next();
-    return twostring<uint64_t>(xsum);
+    return twostring<uint64_t>(sum(sieve));
 }
 
 /*
@@ -779,7 +783,7 @@ char number13[100][51] = {
     {"20849603980134001723930671666823555245252804609722"},
     {"53503534226472524250874054075591789781264330331690"}};
 
-static uint64_t opdracht13()
+static string problem13()
 {   vector<uint8_t> totalSum;
     uint64_t sum = 0;
     for (uint8_t i = 50; i > 0; i--)
@@ -795,11 +799,7 @@ static uint64_t opdracht13()
     uint8_t start = totalSum.size() - 10;
     for (uint8_t i = 0; i < 10; i++)
         sum += totalSum[start + i] * myPow<uint64_t>(10, i);
-    return sum;
-}
-
-static string problem13()
-{   return twostring<uint64_t>(opdracht13());
+    return twostring<uint64_t>(sum);
 }
 
 /*

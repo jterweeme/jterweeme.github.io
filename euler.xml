@@ -3521,10 +3521,10 @@ Consider the following five hands dealt to two players:
 <td>Player 2</td>
 </tr>
 <tr>
-<th>4</th><td>4D 6S 9H QH QC      3D 6D 7H QD QS      Player 1
-     Pair of Queens      Pair of Queens
-    Highest card Nine  Highest card Seven
-</td>
+<th>4</th>
+<td>4D 6S 9H QH QC<br/>Pair of Queens<br/>Highest card Nine</td>
+<td>3D 6D 7H QD QS<br/>Pair of Queens<br/>Highest card Seven</td>
+<td>Player 1</td>
 </tr>
 <tr>
 <th>  
@@ -3542,7 +3542,8 @@ space): the first five are Player 1's cards and the last five are Player 2's
 cards. You can assume that all hands are valid (no invalid characters or
 repeated cards), each player's hand is in no specific order, and in each
 hand there is a clear winner.
-
+</p>
+<p>
 How many hands does Player 1 win?
 </p>
 <code>

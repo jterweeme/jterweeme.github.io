@@ -15,6 +15,16 @@ def sieve(limit):
             for n in range(i * i, limit, i):
                 a[n] = False
 
+def isprime(n, presets = (3000, 300, 100, 8)):
+    def reducer2(n, presets = (300, 100, 8)):
+        for preset in presets:
+            if n > preset * preset:
+                return n // preset
+        return n
+    for i in range(2, reducer2(n, presets)):
+        if n % i == 0: return False
+    return True
+
 def triangle(n): return n * (n + 1) >> 1
 def pentagon(n): return n * (3 * n - 1)//2
 def hexagon(n): return n * (2 * n - 1)
@@ -60,7 +70,15 @@ def factorial(n):
 def combinations(n, r):
     return factorial(n) // (factorial(r) * factorial(n - r))
 
+def reverse(n, base = 10):
+    temp, rev = n, 0
+    while temp != 0:
+        rev = rev * base + temp % base
+        temp = temp // base
+    return rev
+
 def ispalindrome(n, base = 10):
+    return n == reverse(n, base)
     temp, rev = n, 0
     while temp != 0:
         rev = rev * base + temp % base
@@ -100,23 +118,20 @@ def divisors(n):
     for div in properDivs(n): yield div
     yield n
 
-def frequencies(l):
-    count = 0
-    buf = l[0]
-    for n in l:
-        if n == buf:
-            count += 1
-        else:
-            yield count
-            buf = n
-            count = 1
-    yield count
+def kounter(hand):
+    dct = dict()
+    for card in hand:
+        if card in dct: dct[card] += 1
+        else: dct[card] = 1
+    return dct
+
+def frequencies(hand):
+    return (x[1] for x in kounter(hand).items())
 
 def n_divs(lprimes, n):
     if n <= 1: return n
     pfactors = list(primefactors(lprimes, n))
     return product(x + 1 for x in frequencies(pfactors))
-    
 
 def fibonacci(xmax, term1 = 1, term2 = 2):
     yield term1
@@ -1972,16 +1987,7 @@ Antwoord: -59231
 """
 
 def opdracht27():
-    def isprime(n):
-        def reducer2(n, presets = (300, 100, 8)):
-            for preset in presets:
-                if n > preset * preset:
-                    return n // preset
-            return n
-        for i in range(2, reducer2(n)):
-            if n % i == 0: return False
-        return True
-    best_a, best_b, best_n = 0, 0, 0
+    best_a = best_b = best_n = 0
     for a in range(-999, 1000):
         for b in range(-1000, 1000 + 1):
             n = 0
@@ -2027,6 +2033,17 @@ Antwoord: 669,171,001
 145 144 143 142 141 140 139 138 137 136 135 134 133
 """
 
+"""
+def genCorners(root):
+    yield 1
+    corner, step = 1, 2
+    while corner < root * root:
+        for i in range(4):
+            corner += step
+            yield corner
+        step += 2
+"""
+
 def opdracht28(root = 1001):
     def genRings(root):
         yield 1
@@ -2035,14 +2052,6 @@ def opdracht28(root = 1001):
             yield ring
             ring += step
             step += 32
-    def genCorners(root):
-        yield 1
-        corner, step = 1, 2
-        while corner < root * root:
-            for i in range(4):
-                corner += step
-                yield corner
-            step += 2
     return sum(genRings(root))
 
 """
@@ -2179,12 +2188,31 @@ lowest common terms, find the value of the denominator.
 Antwoord: 100
 """
 
+"""
+16/64 = 1/4, 19/95 = 1/5, 26/65 = 2/5, 49/98 = 4/8
+4*5*5*8/8 = 100
+"""
+def gcd(a, b):
+    while b: a, b = b, a % b
+    return a
+
 def opdracht33():
+    dp, np = 1,1
+    for c in range(1,10):
+        for d in range(1,c):
+            for n in range(1,d):
+                if (n * 10 + c) * d == (c * 10 + d) * n:
+                    np *= n
+                    dp *= d
+    return dp // gcd(np, dp)
+
+def opdracht33b():
     d = 1
     for i in range(1, 10):
         for j in range(1, i):
             q, r = divmod(9*j*i, 10*j-i)
             if not r and q <= 9:
+                print("{}/{}".format(i, j))
                 d*= i/j
     return int(d)
 
@@ -2931,7 +2959,7 @@ Antwoord: 296,962,999,629
 
 def opdracht49():
     def sameDigs(a, b): return hasDigitsOnce(b, list(digits(a)))
-    sp4 = {x for x in sieve(10**4) if x >= 1487}
+    sp4 = {x for x in sieve(10**4) if x > 1487}
     for p in sp4:
         if p+3330 in sp4 and p+6660 in sp4 and sameDigs(p,p+3330) and sameDigs(p,p+6660):
             return (p + 6660) + (p + 3330) * 10**4 + p * 10**8
@@ -4151,68 +4179,25 @@ hands54 = ("8C TS KC 9H 4S   7D 2S 5D 3S AC",
 "QC KC 3S JC KD   2C 8D AH QS TS",
 "AS KD 3D JD 8H   7C 8C 5C QD 6C")
 
-handsTest = ("3D 6D 7D TD QD   7D 2S 5D 3S AC",
-"5C AD 5D AC 9C   7C 5H 8D TD KS",
+handsTest = ("7D 7S 5D 7S 7C   3D 6D 7D TD QD",
+"5C AD 5D AC 9C   7C 7H 8D 8D 7S",
 "3H 7H 6S KC JS   QH TD JC 2D 8S",
 "TH 8H 5C QS TC   9H 4D JC KS JS",
 "7C 5H KC QH JD   AS KH 4C AD 4S")
-
-def flush(hand):
-    suit0 = (hand & 48<<0) >> 4
-    for i in range(1,5):
-        if (hand & 48<<i*6)>>i*6+4 != suit0: return False
-    return True
-
-def score(hand):
-    for i in range(5):
-        print(((hand & 15<<i*6)>>i*6, (hand & 48<<i*6) >> i*6+4))
-    if flush(hand): return 1000
-    return 0
-
-def parseHand(hand):
-    for i in range(5):
-        yield ((hand & 15<<i*6)>>i*6, (hand & 48<<i*6) >> i*6+4)
-
-def parse2Hands(twohands):
-    return (tuple(parseHand(twohands[0])), tuple(parseHand(twohands[1])))
-
-def dealHands(data):
-    for twohands in data:
-        yield parse2Hands(twohands)
-
-def parser(hands):
-    values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
-    suits = {r:i for i,r in enumerate('CDHS')}
-    for hand in hands:
-        player1, player2, ofs1, ofs2 = 0,0,0,17
-        for i in range(5):
-            player1 |= values[hand[i*3+ofs1]] << i*6 | suits[hand[i*3+1+ofs1]] << i*6+4
-            player2 |= values[hand[i*3+ofs2]] << i*6 | suits[hand[i*3+1+ofs2]] << i*6+4
-        yield (player1, player2)
-
-def opdracht54():
-    data = list(parser(handsTest))
-    hands = list(dealHands(data))
-    lst = list()
-    for twoHands in hands:
-        for hand in twoHands:
-            print(list(frequencies(sorted(list(card[0] for card in hand)))))
-    return 0
-    return list(dealHands(data))
 
 """
 https://blog.dreamshire.com/project-euler-54-solution/
 """
 
-def opdracht54b():
-    from collections import Counter
+def opdracht54():
     hands = (line.split() for line in hands54)
     values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
     straights = [(v, v-1, v-2, v-3, v-4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
     ranks = [(1,1,1,1,1),(2,1,1,1),(2,2,1),(3,1,1),(),(),(3,2),(4,1)]
     def hand_rank(hand):
-        score = list(zip(*sorted(((v, values[k]) for
-            k,v in Counter(x[0] for x in hand).items()), reverse=True)))
+        values2 = (x[0] for x in hand)
+        cnt2 = kounter(values2).items()
+        score = list(zip(*sorted(((v, values[k]) for k,v in cnt2), reverse=True)))
         score[0] = ranks.index(score[0])
         if len(set(card[1] for card in hand)) == 1:
             score[0] = 5  # flush
@@ -4253,10 +4238,114 @@ How many Lychrel numbers are there below ten-thousand?
 
 NOTE: Wording was modified slightly on 24 April 2007 to
 emphasise the theoretical nature of Lychrel numbers.
+
+Antwoord: 249
 """
 
-def opdracht55():
-    return 0
+def islychrel(n, it = 50):
+    for i in range(it):
+        n = n + reverse(n)
+        if ispalindrome(n): return False
+    return True
+
+def opdracht55(r = range(10000)):
+    return sum(islychrel(n) for n in r)
+
+"""
+#56: Powerful digit sum
+
+A googol (10^100) is a massive number: one followed by one-hundred zeros;
+100^100 is almost unimaginably large: one followed by two-hundred zeros.
+Despite their size, the sum of the digits in each number is only 1.
+
+Considering natural numbers of the form, ab,
+where a, b < 100, what is the maximum digital sum?
+
+Antwoord: 972
+"""
+
+def opdracht56():
+    best = 0
+    for a in range(100):
+        for b in range(100):
+            best = max(best, sum(digits(a**b)))
+    return best
+
+"""
+#57: Square root convergents
+
+It is possible to show that the square root of two
+can be expressed as an infinite continued fraction.
+
+√ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+
+By expanding this for the first four iterations, we get:
+
+1 + 1/2 = 3/2 = 1.5
+1 + 1/(2 + 1/2) = 7/5 = 1.4
+1 + 1/(2 + 1/(2 + 1/2)) = 17/12 = 1.41666...
+1 + 1/(2 + 1/(2 + 1/(2 + 1/2))) = 41/29 = 1.41379...
+
+The next three expansions are 99/70, 239/169, and 577/408, but the eighth
+expansion, 1393/985, is the first example where the number of digits
+in the numerator exceeds the number of digits in the denominator.
+
+In the first one-thousand expansions, how many fractions
+contain a numerator with more digits than denominator?
+
+Antwoord: 153
+"""
+
+"""
+https://www.xarg.org/puzzle/project-euler/problem-57/
+"""
+
+def problem57(N=1000):
+  c = 0
+  n = d = 1
+  np = dp = 10
+  for k in range(N):
+    n, d = 2 * d + n, d + n
+    if n >= np:
+      np*= 10
+    if d >= dp:
+      dp*= 10
+    if np > dp:
+      c+= 1
+  return c
+
+"""
+#58: Spiral primes
+
+Starting with 1 and spiralling anticlockwise in the following
+way, a square spiral with side length 7 is formed.
+
+37 36 35 34 33 32 31
+38 17 16 15 14 13 30
+39 18  5  4  3 12 29
+40 19  6  1  2 11 28
+41 20  7  8  9 10 27
+42 21 22 23 24 25 26
+43 44 45 46 47 48 49
+
+It is interesting to note that the odd squares lie along the bottom right diagonal, but what is more interesting is that 8 out of the 13 numbers lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+
+If one complete new layer is wrapped around the spiral above, a square spiral with side length 9 will be formed. If this process is continued, what is the side length of the square spiral for which the ratio of primes along both diagonals first falls below 10%?
+
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-58-solution/
+"""
+
+def problem58():
+    n_prime, d, avg, n = 0, 1, 1, 2
+    while avg >= 0.10:
+        n_prime += isprime(d + n) + isprime(d + n*2) + isprime(d + n*3)
+        d += n*4
+        n += 2
+        avg = n_prime / (2.0 * n)
+    return n - 1
 
 """
 Einde opdrachten
@@ -4317,6 +4406,10 @@ def runn2(n = 1):
     if n == 52: return opdracht52()
     if n == 53: return opdracht53()
     if n == 54: return opdracht54()
+    if n == 55: return opdracht55()
+    if n == 56: return opdracht56()
+    if n == 57: return problem57()
+    if n == 58: return problem58()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -4331,21 +4424,21 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
 
 import time
 import math
-import concurrent.futures
+#import concurrent.futures
 
 def runjob(n):
     ts = time.time()
     ret = runn2(n)
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
-
-def runm(l = list(range(1, 54 + 1))):
+"""
+def runm(l = list(range(1, 58 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
-
-def runs(l = range(1, 54 + 1)):
+"""
+def runs(l = range(1, 58 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
