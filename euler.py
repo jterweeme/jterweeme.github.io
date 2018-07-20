@@ -75,11 +75,6 @@ def reverse(n, base = 10):
 
 def ispalindrome(n, base = 10):
     return n == reverse(n, base)
-    temp, rev = n, 0
-    while temp != 0:
-        rev = rev * base + temp % base
-        temp = temp // base
-    return n == rev
 
 def hasOnce(n, nset):
     for i in n:
@@ -2201,7 +2196,7 @@ Antwoord: 249
 
 def islychrel(n, it = 50):
     for i in range(it):
-        n = n + reverse(n)
+        n += reverse(n)
         if ispalindrome(n): return False
     return True
 

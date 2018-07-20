@@ -86,12 +86,6 @@ static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
 
-static bool ispalindrome32(uint32_t n, uint8_t base = 10)
-{   uint32_t rev = 0;
-    for (uint32_t temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
-    return n == rev;
-}
-
 template <typename T> uint32_t linSearch32(vector<T> &vec, T n)
 {   for (uint32_t i = 0; i < vec.size(); i++)
         if (vec.at(i) == n) return i + 1;
@@ -122,17 +116,44 @@ static string to_string32s(int32_t n)
 }
 
 class LongNumber25
-{   uint8_t _buf[1500];
+{
+public:
+    uint8_t _buf[1500];
 public:
     void clear() { memset(_buf, 0, sizeof(_buf)); }
     LongNumber25() { clear(); }
+    LongNumber25(uint64_t n) { set(n); }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
     void add(LongNumber25 &n);
+    void operator+=(LongNumber25 n) { add(n); }
     void set(uint64_t n);
+    void operator=(uint64_t n) { set(n); }
     void set(LongNumber25 n);
     void dump(ostream &os) const;
+    bool equals(LongNumber25 n);
     uint16_t digits() const;
+    LongNumber25 reverse();
+    bool ispalindrome();
 };
+
+bool LongNumber25::equals(LongNumber25 n)
+{
+    for (uint16_t i = 0; i < 1500; i++)
+        if (_buf[i] != n._buf[i])
+            return false;
+    return true;
+}
+
+LongNumber25 LongNumber25::reverse()
+{   LongNumber25 a;
+    for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
+        a._buf[j] = _buf[i - 1];
+    return a;
+}
+
+bool LongNumber25::ispalindrome()
+{   return equals(reverse());
+}
 
 void LongNumber25::set(LongNumber25 n)
 {   for (uint16_t i = 0; i < 1500; i++)
@@ -165,6 +186,16 @@ void LongNumber25::add(LongNumber25 &n)
         carry = _buf[i] / 10;
         _buf[i] = _buf[i] % 10;
     }
+}
+
+template <typename T> static T reverse(T n, uint8_t base = 10)
+{   T rev = 0;
+    for (T temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
+    return rev;
+}
+
+template <typename T> static bool ispalindrome(T n, uint8_t base = 10)
+{   return n == reverse<T>(n, base);
 }
 
 class Kounter
@@ -360,7 +391,7 @@ static string problem4()
     for (uint32_t a = 0; a < 1000; a++)
     {   for (uint32_t b = 0; b < 1000; b++)
         {   uint32_t c = a * b;
-            if (ispalindrome32(c) && c > best)
+            if (ispalindrome<uint32_t>(c) && c > best)
                 best = c;
         }
     }
@@ -1325,16 +1356,15 @@ static string problem25()
 {   uint8_t i = 0;
     uint16_t cnt = 2;
     LongNumber25 fib[3];
-    fib[0].set(1);
-    fib[1].set(0);
-    fib[2].set(1);
+    fib[0] = 1;
+    fib[1] = 0;
+    fib[2] = 1;
     while (fib[i].digits() < 1000)
     {   i = (i + 1) % 3;
         cnt++;
-        LongNumber25 tmp;
-        tmp.set(fib[(i + 1) % 3]);
-        tmp.add(fib[(i + 2) % 3]);
-        fib[i].set(tmp);
+        LongNumber25 tmp = fib[(i + 1) % 3];
+        tmp += fib[(i + 2) % 3];
+        fib[i] = tmp;
     }
     return twostring<uint32_t>(cnt);
 }
@@ -1742,7 +1772,7 @@ Antwoord: 872,187
 static string problem36(uint32_t min = 1, uint32_t limit = 1000000)
 {   uint32_t xsum = 0;
     for (uint32_t i = min; i < limit; i++)
-        if (ispalindrome32(i, 10) && ispalindrome32(i, 2)) xsum += i;
+        if (ispalindrome<uint32_t>(i, 10) && ispalindrome<uint32_t>(i, 2)) xsum += i;
     return twostring<uint32_t>(xsum);
 }
 
@@ -1973,8 +2003,7 @@ static uint32_t wordcount42(const char *w)
 }
 
 static string problem42()
-{
-    vector<string> words;
+{   vector<string> words;
     ifstream ifs;
     ifs.open("euler42.txt");
     string tmp;
@@ -2647,6 +2676,60 @@ static string problem54()
 }
 
 /*
+#55: Lychrel numbers
+
+If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+
+Not all numbers produce palindromes so quickly. For example,
+
+349 + 943 = 1292,
+1292 + 2921 = 4213
+4213 + 3124 = 7337
+
+That is, 349 took three iterations to arrive at a palindrome.
+
+Although no one has proved it yet, it is thought that some numbers, like
+196, never produce a palindrome. A number that never forms a palindrome
+through the reverse and add process is called a Lychrel number. Due to the
+theoretical nature of these numbers, and for the purpose of this problem,
+we shall assume that a number is Lychrel until proven otherwise. In
+addition you are given that for every number below ten-thousand, it will
+either (i) become a palindrome in less than fifty iterations, or, (ii) no
+one, with all the computing power that exists, has managed so far to map it
+to a palindrome. In fact, 10677 is the first number to be shown to require
+over fifty iterations before producing a palindrome:
+4668731596684224866951378664 (53 iterations, 28-digits).
+
+Surprisingly, there are palindromic numbers that are
+themselves Lychrel numbers; the first example is 4994.
+
+How many Lychrel numbers are there below ten-thousand?
+
+NOTE: Wording was modified slightly on 24 April 2007 to
+emphasise the theoretical nature of Lychrel numbers.
+
+Antwoord: 249
+*/
+
+#if 1
+
+static uint8_t isLychrel(LongNumber25 n, uint8_t it = 50)
+{   while (it--)
+    {   n += n.reverse();
+        if (n.ispalindrome()) return 0;
+    }
+    return 1;
+}
+
+static string problem55()
+{   uint16_t ret = 0;
+    for (uint16_t i = 0; i < 10000; i++)
+        ret += isLychrel(LongNumber25(i));
+    return twostring<uint16_t>(ret);
+}
+#endif
+
+/*
 Einde opdrachten
 */
 
@@ -2708,6 +2791,7 @@ static string run2(uint32_t p)
     case 52: return problem52();
     case 53: return problem53();
     case 54: return problem54();
+    case 55: return problem55();
     }
     return 0;
 }
@@ -2719,7 +2803,7 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "4179871", "2783915460", "4782", "983", "-59231",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
-    "134043", "9110846700", "296962999629", "997651", "121313", "142857", "4075", "376"};
+    "134043", "9110846700", "296962999629", "997651", "121313", "142857", "4075", "376", "249"};
 
 
 #ifdef MULTITHREAD
@@ -2848,9 +2932,9 @@ int main()
 {
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
-    multithread(54);
+    multithread(55);
 #else
-    singlethread2(54);
+    singlethread2(55);
     //singlethread(53);
 #endif
     return 0;
