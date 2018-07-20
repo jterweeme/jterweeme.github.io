@@ -5,7 +5,7 @@ function start()
     lampen[0].style = "fill: red";
     cars = document.getElementsByClassName("car");
     horn = document.getElementById("horn");
-    cars[0].onclick = function() { horn.play(); }
+    cars[1].onclick = function() { horn.play(); }
 }
 
 
