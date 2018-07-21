@@ -46,6 +46,21 @@ template <typename T> static T digit(T n, T i)
 {   return n / myPow<T>(10, i) % 10;
 }
 
+static uint32_t primeHelper(uint32_t n)
+{   uint16_t presets[] = {3000,300,100,8};
+    for (uint8_t i = 0; i < 4; i++)
+        if (n > presets[i] * presets[i]) return n / presets[i];
+    return n;
+}
+
+static bool isprime27(uint32_t n)
+{   if (n == 0 || n == 1) return false;
+    uint32_t limit = primeHelper(n);
+    for (uint32_t i = 2; i < limit; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+
 class Sieve
 {
 private:
@@ -80,6 +95,24 @@ static uint64_t sum(Sieve &s)
 {   uint64_t xsum = 0;
     while (s.hasNext()) xsum += s.next();
     return xsum;
+}
+
+static void testPrimes()
+{
+    Sieve sieve(99999);
+    vector<uint32_t> primes;
+    vector<bool> primes2;
+    for (uint32_t i = 0; sieve.hasNext();)
+    {   uint32_t prime = sieve.next();
+        for (; i < prime; i++)
+            primes2.push_back(false);
+        primes2.push_back(true);
+        i++;
+    }
+    for (uint32_t i = 0; i < primes2.size(); i++)
+    {   if (isprime27(i) != primes2.at(i))
+            cout << "ERROR\r\n";
+    }
 }
 
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
@@ -118,9 +151,9 @@ static string to_string32s(int32_t n)
 class LongNumber25
 {
 public:
-    uint8_t _buf[1500];
+    uint16_t _buf[1500];
 public:
-    void clear() { memset(_buf, 0, sizeof(_buf)); }
+    void clear() { set(0); }
     LongNumber25() { clear(); }
     LongNumber25(uint64_t n) { set(n); }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
@@ -134,6 +167,7 @@ public:
     uint16_t digits() const;
     LongNumber25 reverse();
     bool ispalindrome();
+    void mul(uint8_t n);
 };
 
 bool LongNumber25::equals(LongNumber25 n)
@@ -183,6 +217,18 @@ void LongNumber25::add(LongNumber25 &n)
 {   uint8_t carry = 0;
     for (uint16_t i = 0; i < 1500; i++)
     {   _buf[i] += carry + n.decimal(i);
+        carry = _buf[i] / 10;
+        _buf[i] = _buf[i] % 10;
+    }
+}
+
+void LongNumber25::mul(uint8_t n)
+{
+    uint8_t carry = 0;
+    for (uint16_t i = 0; i < 1500; i++)
+    {
+        _buf[i] *= n;
+        _buf[i] += carry;
         carry = _buf[i] / 10;
         _buf[i] = _buf[i] % 10;
     }
@@ -1456,12 +1502,6 @@ number of primes for consecutive values of n, starting with n=0.
 Antwoord: -59231
 */
 
-static bool isprime27(uint32_t n)
-{   for (uint32_t i = 2; i < n; i++)
-        if (n % i == 0) return false;
-    return true;
-}
-
 static string opdracht27()
 {   int32_t best_a = 0, best_b = 0, best_n = 0;
     for (int32_t a = -999; a < 1000; a++)
@@ -2646,7 +2686,7 @@ static void translate(uint64_t hand, ostream &os) __attribute__((unused));
 static void translate(uint64_t hand, ostream &os)
 {   char value[] = "23456789TJQKA";
     char suit[] = "CDHS";
-    uint32_t player1 = hand & 0xffffffff, player2 = (hand & 0xffffffff00000000) >> 32;
+    uint32_t player1 = hand & 0xffffffff, player2 = (hand & 0xffffffff00000000ULL) >> 32;
     for (uint8_t i = 0; i < 5; i++)
     {   os.put(value[(player1 >> i * 6 & 0xf) - 2]);
         os.put(suit[player1 >> (i * 6 + 4) & 3]);
@@ -2670,7 +2710,7 @@ static string problem54()
     ifs.close();
     uint32_t ret = 0;
     for (vector<uint64_t>::iterator it = twoHands.begin(); it != twoHands.end(); it++)
-        if (score(*it & 0xffffffff) > score((*it & 0xffffffff00000000) >> 32))
+        if (score(*it & 0xffffffff) > score((*it & 0xffffffff00000000ULL) >> 32))
             ret++;
     return twostring<uint32_t>(ret);
 }
@@ -2711,8 +2751,6 @@ emphasise the theoretical nature of Lychrel numbers.
 Antwoord: 249
 */
 
-#if 1
-
 static uint8_t isLychrel(LongNumber25 n, uint8_t it = 50)
 {   while (it--)
     {   n += n.reverse();
@@ -2727,7 +2765,36 @@ static string problem55()
         ret += isLychrel(LongNumber25(i));
     return twostring<uint16_t>(ret);
 }
-#endif
+
+/*
+#56: Powerful digit sum
+
+A googol (10^100) is a massive number: one followed by one-hundred zeros;
+100^100 is almost unimaginably large: one followed by two-hundred zeros.
+Despite their size, the sum of the digits in each number is only 1.
+
+Considering natural numbers of the form, ab,
+where a, b < 100, what is the maximum digital sum?
+
+Antwoord: 972
+*/
+
+static string problem56()
+{   uint16_t best = 0;
+    for (uint8_t a = 1; a < 100; a++)
+    {   for (uint8_t b = 1; b < 100; b++)
+        {   LongNumber25 n(a);
+            for (uint8_t c = 1; c < b; c++)
+                n.mul(a);
+            uint16_t sum = 0;
+            uint32_t digits = n.digits();
+            for (uint32_t i = 0; i < digits; i++)
+                sum += n.decimal(i);
+            best = max(best, sum);
+        }
+    }
+    return twostring<uint16_t>(best);
+}
 
 /*
 Einde opdrachten
@@ -2792,6 +2859,7 @@ static string run2(uint32_t p)
     case 53: return problem53();
     case 54: return problem54();
     case 55: return problem55();
+    case 56: return problem56();
     }
     return 0;
 }
@@ -2803,7 +2871,8 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "4179871", "2783915460", "4782", "983", "-59231",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
-    "134043", "9110846700", "296962999629", "997651", "121313", "142857", "4075", "376", "249"};
+    "134043", "9110846700", "296962999629", "997651",
+    "121313", "142857", "4075", "376", "249", "972"};
 
 
 #ifdef MULTITHREAD
@@ -2932,9 +3001,9 @@ int main()
 {
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
-    multithread(55);
+    multithread(56);
 #else
-    singlethread2(55);
+    singlethread2(56);
     //singlethread(53);
 #endif
     return 0;

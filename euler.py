@@ -133,52 +133,27 @@ def fibonacci(xmax, term1 = 1, term2 = 2):
 
 import random
 
-def miller_rabin_pass(a, s, d, n):
-    a_to_power = pow(a, d, n)
-    if a_to_power == 1:
-        return True
-    for i in range(s-1):
-        if a_to_power == n - 1:
-            return True
-        a_to_power = (a_to_power * a_to_power) % n
-    return a_to_power == n - 1
-
-def miller_rabin2(n):
-    d = n - 1
-    s = 0
-    while d % 2 == 0:
-        d >>= 1
-        s += 1
-    for repeat in range(20):
-        a = 0
-        while a == 0:
-            a = random.randrange(n)
-        if not miller_rabin_pass(a, s, d, n):
-            return False
-    return True
-
 def miller_rabin(n, k = 3):
     if n < 6:  # assuming n >= 0 in all cases... shortcut small cases here
         return [False, False, True, True, False, True][n]
-    elif n % 2 == 0:  # should be faster than n % 2
+    if n % 2 == 0:  # should be faster than n % 2
         return False
-    else:
-        s, d = 0, n - 1
-        while d % 2 == 0:
-            s, d = s + 1, d >> 1
-        for a in random.sample(range(2, n-2), k):
-            x = pow(a, d, n)
-            if x != 1 and x + 1 != n:
-                for r in range(1, s):
-                    x = pow(x, 2, n)
-                    if x == 1:
-                        return False  # composite for sure
-                    elif x == n - 1:
-                        a = 0  # so we know loop didn't continue to end
-                        break  # could be strong liar, try another a
-                if a:
-                    return False  # composite if we reached end of this loop
-        return True  # probably prime if reached end of outer loop
+    s, d = 0, n - 1
+    while d % 2 == 0:
+        s, d = s + 1, d >> 1
+    for a in random.sample(range(2, n-2), k):
+        x = pow(a, d, n)
+        if x != 1 and x + 1 != n:
+            for r in range(1, s):
+                x = pow(x, 2, n)
+                if x == 1:
+                    return False  # composite for sure
+                elif x == n - 1:
+                    a = 0  # so we know loop didn't continue to end
+                    break  # could be strong liar, try another a
+            if a:
+                return False  # composite if we reached end of this loop
+    return True  # probably prime if reached end of outer loop
 
 
 """
@@ -2154,7 +2129,6 @@ def opdracht54():
     player1 = 0
     for hand in hands:
         if hand_rank(hand[:5]) > hand_rank(hand[5:]):
-            print(hand)
             player1 += 1
     return player1
 
@@ -2253,18 +2227,15 @@ https://www.xarg.org/puzzle/project-euler/problem-57/
 """
 
 def problem57(N=1000):
-  c = 0
-  n = d = 1
-  np = dp = 10
-  for k in range(N):
-    n, d = 2 * d + n, d + n
-    if n >= np:
-      np*= 10
-    if d >= dp:
-      dp*= 10
-    if np > dp:
-      c+= 1
-  return c
+    c = 0
+    n = d = 1
+    np = dp = 10
+    for k in range(N):
+        n, d = 2 * d + n, d + n
+        if n >= np: np*= 10
+        if d >= dp: dp*= 10
+        if np > dp: c+= 1
+    return c
 
 """
 #58: Spiral primes
