@@ -2226,6 +2226,17 @@ Antwoord: 153
 https://www.xarg.org/puzzle/project-euler/problem-57/
 """
 
+import math
+def problem57a(N=1000):
+  c = 0
+  n = d = 1
+  for k in range(N):
+    n, d = 2 * d + n, d + n
+    print("{}: log10({}) = {}, log10({}) = {}".format(k, n, math.log10(n), d, math.log10(d)))
+    if int(math.log10(n)) > int(math.log10(d)):
+      c+= 1
+  return c
+
 def problem57(N=1000):
     c = 0
     n = d = 1

@@ -10,6 +10,7 @@
 #include <ctime>
 #include <cstring>
 #include <math.h>
+#include <boost/multiprecision/cpp_int.hpp>
 #ifdef MULTITHREAD
 #include <future>
 #include <functional>
@@ -22,6 +23,7 @@
 #endif
 #include <algorithm>
 using namespace std;
+using namespace boost::multiprecision;
 
 template <typename T> static T myPow(T base, T e)
 {   if (e == 0) return 1;
@@ -2779,21 +2781,154 @@ where a, b < 100, what is the maximum digital sum?
 Antwoord: 972
 */
 
+/*
+http://euler.stephan-brumme.com/56/
+*/
+
+struct BigNum : public std::vector<unsigned int>
+{   static const uint32_t MaxDigit = 10;
+    BigNum(uint64_t x = 0)
+    {   do
+        {   push_back(x % MaxDigit);
+            x /= MaxDigit;
+        } while (x > 0);
+    }
+    BigNum operator+(const BigNum& other) const
+    {   auto result = *this;
+        if (result.size() < other.size())
+            result.resize(other.size(), 0);
+        uint32_t carry = 0;
+        for (size_t i = 0; i < result.size(); i++)
+        {   carry += result[i];
+            if (i < other.size()) carry += other[i];
+            else if (carry == 0) return result;
+            if (carry < MaxDigit) result[i] = carry, carry = 0;
+            else result[i] = carry - MaxDigit, carry = 1;
+        }
+        if (carry > 0) result.push_back(carry);
+        return result;
+    }
+    BigNum operator*(unsigned int factor) const
+    {
+        unsigned long long carry = 0;
+        auto result = *this;
+
+        for (auto& i : result)
+        {
+            carry += i * (unsigned long long)factor;
+            i      = carry % MaxDigit;
+            carry /= MaxDigit;
+        }
+        while (carry > 0)
+        {
+            result.push_back(carry % MaxDigit);
+            carry /= MaxDigit;
+        }
+        return result;
+    }
+};
+
 static string problem56()
-{   uint16_t best = 0;
-    for (uint8_t a = 1; a < 100; a++)
-    {   for (uint8_t b = 1; b < 100; b++)
-        {   LongNumber25 n(a);
-            for (uint8_t c = 1; c < b; c++)
-                n.mul(a);
-            uint16_t sum = 0;
-            uint32_t digits = n.digits();
-            for (uint32_t i = 0; i < digits; i++)
-                sum += n.decimal(i);
-            best = max(best, sum);
+{   uint32_t maximum = 100, maxSum = 1;
+    for (unsigned int base = 1; base <= maximum; base++)
+    {   BigNum power = 1;
+        for (uint32_t exponent = 1; exponent <= maximum; exponent++)
+        {
+            unsigned int sum = 0;
+            for (auto digit : power) sum += digit;
+            if (maxSum < sum) maxSum = sum;
+            power = power * base;
         }
     }
-    return twostring<uint16_t>(best);
+    return twostring<uint32_t>(maxSum);
+}
+
+/*
+#57: Square root convergents
+
+It is possible to show that the square root of two
+can be expressed as an infinite continued fraction.
+
+√ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+
+By expanding this for the first four iterations, we get:
+
+1 + 1/2 = 3/2 = 1.5
+1 + 1/(2 + 1/2) = 7/5 = 1.4
+1 + 1/(2 + 1/(2 + 1/2)) = 17/12 = 1.41666...
+1 + 1/(2 + 1/(2 + 1/(2 + 1/2))) = 41/29 = 1.41379...
+
+The next three expansions are 99/70, 239/169, and 577/408, but the eighth
+expansion, 1393/985, is the first example where the number of digits
+in the numerator exceeds the number of digits in the denominator.
+
+In the first one-thousand expansions, how many fractions
+contain a numerator with more digits than denominator?
+
+Antwoord: 153
+*/
+
+/*
+http://euler.stephan-brumme.com/57/
+*/
+
+static string problem57()
+{   uint32_t iterations = 1000;
+    BigNum a = 1, b = 1;
+    uint32_t count = 0;
+    for (uint32_t i = 0; i <= iterations; i++)
+    {   if (a.size() > b.size()) count++;
+        BigNum twoB  = b + b;
+        BigNum nextA = a + twoB;
+        BigNum nextB = b + a;
+        a = std::move(nextA);
+        b = std::move(nextB);
+    }
+    return twostring<uint32_t>(count);
+}
+
+/*
+#58: Spiral primes
+
+Starting with 1 and spiralling anticlockwise in the following
+way, a square spiral with side length 7 is formed.
+
+37 36 35 34 33 32 31
+38 17 16 15 14 13 30
+39 18  5  4  3 12 29
+40 19  6  1  2 11 28
+41 20  7  8  9 10 27
+42 21 22 23 24 25 26
+43 44 45 46 47 48 49
+
+It is interesting to note that the odd squares lie along the bottom right
+diagonal, but what is more interesting is that 8 out of the 13 numbers
+lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+
+If one complete new layer is wrapped around the spiral above, a square
+spiral with side length 9 will be formed. If this process is continued,
+what is the side length of the square spiral for which the ratio of primes
+along both diagonals first falls below 10%?
+
+Antwoord: 26,241
+*/
+
+/*
+https://www.mathblog.dk/project-euler-58-primes-diagonals-spiral/
+*/
+
+static string problem58()
+{
+    uint32_t sl = 2, cnt = 3, c = 9;
+    while ((double)cnt / (2*sl+1) >= 0.10)
+    {   sl += 2;
+        for (uint8_t i = 0; i < 3; i++)
+        {   c += sl;
+            if (isprime27(c)) cnt++;
+        }
+        c += sl;
+    }
+    return twostring<uint32_t>(sl + 1);
 }
 
 /*
@@ -2860,6 +2995,8 @@ static string run2(uint32_t p)
     case 54: return problem54();
     case 55: return problem55();
     case 56: return problem56();
+    case 57: return problem57();
+    case 58: return problem58();
     }
     return 0;
 }
@@ -2872,7 +3009,7 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
-    "121313", "142857", "4075", "376", "249", "972"};
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241"};
 
 
 #ifdef MULTITHREAD
@@ -3001,9 +3138,9 @@ int main()
 {
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
-    multithread(56);
+    multithread(58);
 #else
-    singlethread2(56);
+    singlethread2(58);
     //singlethread(53);
 #endif
     return 0;
