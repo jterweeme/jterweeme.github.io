@@ -63,6 +63,146 @@ static bool isprime27(uint32_t n)
     return true;
 }
 
+static uint64_t mulmod(uint64_t a, uint64_t b, uint64_t modulo)
+{
+    if (a <= 0xFFFFFFF && b <= 0xFFFFFFF)
+        return (a * b) % modulo;
+    uint64_t result = 0;
+    uint64_t factor = a % modulo;
+    while (b > 0)
+    {
+        if (b & 1)
+        {
+            result += factor;
+            if (result >= modulo)
+                result %= modulo;
+        }
+
+           // b is even ? a*b = (2*a)*(b/2)
+
+           factor <<= 1;
+
+           if (factor >= modulo)
+
+             factor %= modulo;
+
+        
+
+           // next bit
+
+           b >>= 1;
+
+         }
+
+        
+
+         return result;
+
+       }
+
+static uint64_t powmod(uint64_t base, unsigned long long exponent, unsigned long long modulo)
+
+       {
+
+         unsigned long long result = 1;
+
+         while (exponent > 0)
+
+         {
+
+           // fast exponentation:
+
+           // odd exponent ? a^b = a*a^(b-1)
+
+           if (exponent & 1)
+
+             result = mulmod(result, base, modulo);
+
+        
+
+           // even exponent ? a^b = (a*a)^(b/2)
+
+           base = mulmod(base, base, modulo);
+
+           exponent >>= 1;
+
+         }
+
+         return result;
+
+       }
+
+// some code from      https://ronzii.wordpress.com/2012/03/04/miller-rabin-primality-test/
+// with optimizations from    http://ceur-ws.org/Vol-1326/020-Forisek.pdf
+// good bases can be found at http://miller-rabin.appspot.com/
+
+static bool isPrime(uint64_t p)
+{
+    const uint32_t bitmaskPrimes2to31 = (1 <<  2) | (1 <<  3) | (1 <<  5) | (1 <<  7) |
+                                        (1 << 11) | (1 << 13) | (1 << 17) | (1 << 19) |
+                                        (1 << 23) | (1 << 29); // = 0x208A28Ac
+
+    if (p < 31)
+        return (bitmaskPrimes2to31 & (1 << p)) != 0;
+
+    if (p %  2 == 0 || p %  3 == 0 || p %  5 == 0 || p % 7 == 0 || 
+        p % 11 == 0 || p % 13 == 0 || p % 17 == 0)
+        return false;
+
+    if (p < 17*19)
+        return true;
+
+    const unsigned int STOP = 0;
+    const unsigned int TestAgainst1[] = { 377687, STOP };
+    const unsigned int TestAgainst2[] = { 31, 73, STOP };
+    const unsigned int TestAgainst3[] = { 2, 7, 61, STOP };
+    const unsigned int TestAgainst4[] = { 2, 13, 23, 1662803, STOP };
+    const unsigned int TestAgainst7[] = { 2, 325, 9375, 28178, 450775, 9780504, 1795265022, STOP };
+    const unsigned int* testAgainst = TestAgainst7;
+
+    if (p < 5329)
+           testAgainst = TestAgainst1;
+    else if (p < 9080191)
+           testAgainst = TestAgainst2;
+    else if (p < 4759123141ULL)
+           testAgainst = TestAgainst3;
+    else if (p < 1122004669633ULL)
+           testAgainst = TestAgainst4;
+
+    auto d = p - 1;
+    d >>= 1;
+    unsigned int shift = 0;
+    while ((d & 1) == 0)
+    {
+       shift++;
+       d >>= 1;
+    }
+
+    do
+    {
+        auto x = powmod(*testAgainst++, d, p);
+        if (x == 1 || x == p - 1)
+            continue;
+        bool maybePrime = false;
+
+        for (unsigned int r = 0; r < shift; r++)
+        {
+            x = powmod(x, 2, p);
+            if (x == 1)
+                return false;
+
+            if (x == p - 1)
+            {
+               maybePrime = true;
+               break;
+            }
+        }
+        if (!maybePrime)
+            return false;
+    } while (*testAgainst != STOP);
+    return true;
+}
+
 class Sieve
 {
 private:
@@ -99,6 +239,7 @@ static uint64_t sum(Sieve &s)
     return xsum;
 }
 
+static void testPrimes() __attribute__((unused));
 static void testPrimes()
 {
     Sieve sieve(99999);
@@ -365,7 +506,6 @@ private:
     void _add();
 public:
     Primes();
-    static bool test(uint64_t p);
     uint32_t get(uint16_t i);
 };
 
@@ -374,15 +514,9 @@ Primes::Primes()
     _primes.push_back(3);
 }
 
-bool Primes::test(uint64_t p)
-{   for (uint64_t i = 2; i < p; i++)
-        if (p % i == 0) return false;
-    return true;
-}
-
 void Primes::_add()
 {   uint64_t p = _primes.back() + 2;
-    while (test(p) == false) p += 2;
+    while (isPrime(p) == false) p += 2;
     _primes.push_back(p);
 }
 
@@ -1509,7 +1643,7 @@ static string opdracht27()
     for (int32_t a = -999; a < 1000; a++)
     {   for (int32_t b = -1000; b <= 1000; b++)
         {   int32_t n = 0;
-            while (isprime27(abs(n * n + a * n + b))) n++;
+            while (isPrime(abs(n * n + a * n + b))) n++;
             if (n > best_n) best_a = a, best_b = b, best_n = n;
         }
     }
@@ -2924,7 +3058,7 @@ static string problem58()
     {   sl += 2;
         for (uint8_t i = 0; i < 3; i++)
         {   c += sl;
-            if (isprime27(c)) cnt++;
+            if (isPrime(c)) cnt++;
         }
         c += sl;
     }

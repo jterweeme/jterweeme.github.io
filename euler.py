@@ -73,8 +73,7 @@ def reverse(n, base = 10):
         temp = temp // base
     return rev
 
-def ispalindrome(n, base = 10):
-    return n == reverse(n, base)
+ispalindrome = lambda n, base = 10: n == reverse(n, base)
 
 def hasOnce(n, nset):
     for i in n:
@@ -82,16 +81,23 @@ def hasOnce(n, nset):
         else: return False
     return True
 
-def hasDigitsOnce(n, nset):
-    return hasOnce(digits(n), nset)
+hasDigitsOnce = lambda n, nset: hasOnce(digits(n), nset)
 
 def isPandigital(n):
     return hasDigitsOnce(n, list(range(1, decimals(n) + 1)))
 
+def kounter(hand):
+    dct = dict()
+    for card in hand:
+        if card in dct: dct[card] += 1
+        else: dct[card] = 1
+    return dct
+
+frequencies = lambda hand: (x[1] for x in kounter(hand).items())
+
 def primefactor(primes, n):
-    for i in range(len(primes)):
-        if n % primes[i] == 0:
-            return primes[i]
+    for prime in primes:
+        if n % prime == 0: return prime
     raise Exception("Ran out of primes!")
 
 def primefactors(primes, n):
@@ -101,28 +107,52 @@ def primefactors(primes, n):
         if factor == n: break
         n = n // factor
 
+# yields proper divisors
 def properDivs(n):
     for i in range(1, n // 2 + 1):
         if n % i == 0: yield i
 
+# yields all divisors (proper divisors + number itself)
 def divisors(n):
     for div in properDivs(n): yield div
     yield n
 
-def kounter(hand):
-    dct = dict()
-    for card in hand:
-        if card in dct: dct[card] += 1
-        else: dct[card] = 1
-    return dct
+# number of all divisors
+def n_divs1(n):
+    if n <= 2: return n
+    return len(list(divisors(n)))
 
-def frequencies(hand):
-    return (x[1] for x in kounter(hand).items())
-
-def n_divs(lprimes, n):
-    if n <= 1: return n
-    pfactors = list(primefactors(lprimes, n))
+# number of all divisors using prime factorization
+def n_divs2(lprimes, n):
+    if n <= 2: return n
+    pfactors = primefactors(lprimes, n)
     return product(x + 1 for x in frequencies(pfactors))
+
+# sum of proper divisors
+sumProperDivs1 = lambda n: sum(properDivs(n))
+
+# sum of all divisors
+def sum_divs1(n):
+    return sumProperDivs1(n) + n
+
+# sum of all divisors using prime factorization
+def sum_divs2(lprimes, n):
+    return product(sum_divs1(key ** value)
+        for key, value in kounter(primefactors(lprimes, n)).items())
+
+# sum of proper divisors using prime factorization
+def sumProperDivs2(lprimes, n):
+    return sum_divs2(lprimes, n) - n
+
+"""
+ret = 0
+for a in range(5):
+    for b in range(3):
+        ret += 2**a * 3**b
+"""
+
+def sumDivs(lprimes, n):
+    pass
 
 def fibonacci(xmax, term1 = 1, term2 = 2):
     yield term1
@@ -130,6 +160,9 @@ def fibonacci(xmax, term1 = 1, term2 = 2):
     while term1 + term2 <= xmax:
         yield term1 + term2
         term1, term2 = term2, term1 + term2
+
+def isprime2(n):
+    pass
 
 import random
 
@@ -501,7 +534,7 @@ Antwoord: 76,576,500
 def opdracht12(ndivs = 500):
     lprimes = list(sieve(10**5))
     for n in polygonizer(10**8, 1):
-        if n_divs(lprimes, n) > ndivs: return n
+        if n_divs2(lprimes, n) > ndivs: return n
     raise Exception("Answer not found")
     return 0
 
@@ -881,7 +914,7 @@ Antwoord: 31626
 """
 
 def opdracht21(low = 1, high = 10**4):
-    l = [sum(properDivs(i)) for i in range(low, high + 1)]
+    l = [sumProperDivs1(i) for i in range(low, high + 1)]
     xsum = 0
     for i in range(high - low + 1):
         ind = l[i]
@@ -947,18 +980,9 @@ Upper bound is actually 20,161
 """
 
 def opdracht23():
-    def GetSumOfDivs(n):
-        i, upper, total = 2, n, 1
-        while i < upper:
-            if n%i == 0:
-                upper = n//i
-                total += upper
-                if upper != i: total += i
-            i += 1
-        return total
-    def isabundant(n):
-        return GetSumOfDivs(n) > n
-    lAbundants = set(x for x in range(12, 28123 + 1) if isabundant(x) == True)
+    isabundant = lambda lprimes, n: sumProperDivs2(lprimes, n) > n
+    lprimes = list(sieve(99999))
+    lAbundants = set(x for x in range(12, 28123 + 1) if isabundant(lprimes, x) == True)
     sums = 1
     for i in range(2, 28123 + 1):
         boo = True
@@ -1052,28 +1076,6 @@ Find the value of d < 1000 for which 1/d contains the
 longest recurring cycle in its decimal fraction part.
 
 Antwoord: 983
-"""
-
-"""
-from pprint import pprint
-set1k = set(range(2,1000))
-d0 = {2**a*10**b for a in range(10) for b in range(3)}
-d0 |= {int(1/2**a*10**a)*10**b for a in range(0,5) for b in range(0,3)}
-d0 = d0 & set1k
-d1 = {3*2**a*10**b for a in range(9) for b in range(3)}
-d1 |= {9,90,900,15,150,18,180}
-d1 = d1 & set1k
-
-pprint([10**40//a for a in d0])
-pprint([10**40//a for a in d1])
-
-def fraction(n, cnt = 10):
-    a = 1
-    while (cnt):
-        div, mod = divmod(a, n)
-        yield div
-        a = mod * 10
-        cnt -= 1
 """
 
 """
