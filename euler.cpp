@@ -78,59 +78,30 @@ static uint64_t mulmod(uint64_t a, uint64_t b, uint64_t modulo)
                 result %= modulo;
         }
 
-           // b is even ? a*b = (2*a)*(b/2)
+        factor <<= 1;
+        if (factor >= modulo)
+            factor %= modulo;
 
-           factor <<= 1;
-
-           if (factor >= modulo)
-
-             factor %= modulo;
-
-        
-
-           // next bit
-
-           b >>= 1;
-
-         }
-
-        
-
-         return result;
-
-       }
+        b >>= 1;
+    }
+    return result;
+}
 
 static uint64_t powmod(uint64_t base, unsigned long long exponent, unsigned long long modulo)
-
-       {
-
-         unsigned long long result = 1;
-
-         while (exponent > 0)
+{
+    unsigned long long result = 1;
+    while (exponent > 0)
 
          {
-
-           // fast exponentation:
-
-           // odd exponent ? a^b = a*a^(b-1)
-
            if (exponent & 1)
-
              result = mulmod(result, base, modulo);
 
-        
-
-           // even exponent ? a^b = (a*a)^(b/2)
-
            base = mulmod(base, base, modulo);
-
            exponent >>= 1;
 
          }
-
          return result;
-
-       }
+}
 
 // some code from      https://ronzii.wordpress.com/2012/03/04/miller-rabin-primality-test/
 // with optimizations from    http://ceur-ws.org/Vol-1326/020-Forisek.pdf
@@ -203,7 +174,26 @@ static bool isPrime(uint64_t p)
     return true;
 }
 
-class Sieve
+template <typename T> class Generator
+{
+public:
+    virtual bool hasNext() = 0;
+    virtual T next() = 0;
+};
+
+static uint64_t max(Generator<uint64_t> &p)
+{   uint64_t best = 0;
+    while (p.hasNext()) best = max(p.next(), best);
+    return best;
+}
+
+static uint64_t sum(Generator<uint32_t> &s)
+{   uint64_t xsum = 0;
+    while (s.hasNext()) xsum += s.next();
+    return xsum;
+}
+
+class Sieve : public Generator<uint32_t>
 {
 private:
     uint8_t *_sieve;
@@ -231,12 +221,6 @@ Sieve::Sieve(uint32_t limit)
     for (uint32_t i = 0; i < limit; i++)
         if (_sieve[i]) { _primes.push_back(i); }
     _it = _primes.begin();
-}
-
-static uint64_t sum(Sieve &s)
-{   uint64_t xsum = 0;
-    while (s.hasNext()) xsum += s.next();
-    return xsum;
 }
 
 static void testPrimes() __attribute__((unused));
@@ -447,6 +431,78 @@ void Kounter::dump(ostream &os) const
         os << it->first << ": " << it->second << "\r\n";
 }
 
+class Primes
+{
+private:
+    vector<uint64_t> _primes;
+    void _add();
+public:
+    Primes();
+    uint32_t get(uint16_t i);
+};
+
+class PrimeFactors2 : public Generator<uint64_t>
+{
+private:
+    vector<uint32_t>::iterator _begin;
+    vector<uint32_t>::iterator _end;
+    uint64_t _n;
+public:
+    PrimeFactors2(vector<uint32_t>::iterator begin,
+        vector<uint32_t>::iterator end, uint64_t n) : _begin(begin), _end(end), _n(n) { }
+    bool hasNext() { return _n > 1; }
+    uint64_t next();
+};
+
+uint64_t PrimeFactors2::next()
+{   uint64_t factor = 0;
+    for (vector<uint32_t>::iterator it = _begin; it != _end; it++)
+    {   if (_n % *it == 0)
+        {   factor = *it;
+            break;
+        }
+    }
+    _n = _n / factor;
+    return factor;
+}
+
+static uint32_t sumProperDivs1(uint32_t n)
+{   uint32_t sum = 0;
+    for (uint32_t i = 1; i <= n / 2; i++)
+        sum += n % i == 0 ? i : 0;
+    return sum;
+}
+
+static uint32_t sumDivs1(uint32_t n) __attribute__((unused));
+static uint32_t sumDivs1(uint32_t n)
+{   return sumProperDivs1(n) + n;
+}
+
+static uint32_t sumDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
+    uint32_t n) __attribute__((unused));
+static uint32_t sumDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
+    uint32_t n)
+{
+    PrimeFactors2 gen(begin, end, n);
+    uint32_t previous = 0, ret = 1, current = 1;
+    while (gen.hasNext())
+    {
+        uint32_t pf = gen.next();
+        if (pf != previous)
+        {   ret *= sumDivs1(current);
+            current = 1;
+        }
+        current *= pf;
+        previous = pf;
+    }
+    return ret * sumDivs1(current);
+}
+
+static uint32_t sumProperDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
+    uint32_t n)
+{   return sumDivs2(begin, end, n) - n;
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -499,64 +555,14 @@ What is the largest prime factor of the number 600,851,475,143?
 Antwoord: 6,857
 */
 
-class Primes
-{
-private:
-    vector<uint64_t> _primes;
-    void _add();
-public:
-    Primes();
-    uint32_t get(uint16_t i);
-};
-
-Primes::Primes()
-{   _primes.push_back(2);
-    _primes.push_back(3);
-}
-
-void Primes::_add()
-{   uint64_t p = _primes.back() + 2;
-    while (isPrime(p) == false) p += 2;
-    _primes.push_back(p);
-}
-
-uint32_t Primes::get(uint16_t i)
-{   while (_primes.size() <= i) _add();
-    return _primes[i];
-}
-
-class PrimeFactors
-{
-private:
-    Primes _primes;
-    uint64_t _n;
-public:
-    PrimeFactors(uint64_t n) : _n(n) { }
-    bool hasNext() { return _n > 1; }
-    uint64_t next();
-};
-
-static uint64_t max(PrimeFactors &p)
-{   uint64_t best = 0;
-    while (p.hasNext()) best = max(p.next(), best);
-    return best;
-}
-
-uint64_t PrimeFactors::next()
-{   uint64_t factor = 0;
-    for (uint64_t i = 0; true; i++)
-    {   if (_n % _primes.get(i) == 0)
-        {   factor = _primes.get(i);
-            break;
-        }
-    }
-    _n = _n / factor;
-    return factor;
-}
-
 static string problem3(uint64_t n = 600851475143ULL)
-{   PrimeFactors pf(n);
-    return twostring<uint64_t>(max(pf));
+{
+    Sieve sieve(9999);
+    vector<uint32_t> lprimes;
+    while (sieve.hasNext())
+        lprimes.push_back(sieve.next());
+    PrimeFactors2 pf2(lprimes.begin(), lprimes.end(), n);
+    return twostring<uint64_t>(max(pf2));
 }
 
 /*
@@ -1346,18 +1352,11 @@ Antwoord: 31,626
 6232 & 6368
 */
 
-static uint32_t sum_divisors(uint32_t n)
-{   uint32_t sum = 0;
-    for (uint32_t i = 1; i < n; i++)
-        sum += n % i == 0 ? i : 0;
-    return sum;
-}
-
 static string problem21(uint32_t low = 1, uint32_t high = 10000)
 {   uint32_t l[high - low];
     memset(l, 0, (high - low) * 4);
     for (uint32_t i = low; i <= high; i++)
-        l[i - low] = sum_divisors(i);
+        l[i - low] = sumProperDivs1(i);
     uint32_t sum = 0;
     for (uint32_t i = 0; i <= (high - low); i++)
     {   uint32_t ind = l[i];
@@ -1432,22 +1431,19 @@ cannot be written as the sum of two abundant numbers.
 Antwoord: 4,179,871
 */
 
-static uint16_t divsum(uint32_t n)
-{   uint16_t xsum = 0;
-    for (uint32_t i = 1; i <= n / 2; i++)
-        if (n % i == 0) xsum += i;
-    return xsum;
-}
-
 static bool find23(vector<uint16_t> &d, uint16_t n)
 {   return binary_search(d.begin(), d.end(), n);
 }
 
 static string problem23()
 {   uint16_t xmax = 28123;
+    vector<uint32_t> lprimes;
+    Sieve sieve(99999);
+    while (sieve.hasNext())
+        lprimes.push_back(sieve.next());
     vector<uint16_t> abundants;
     for (uint16_t i = 1; i <= xmax; i++)
-        if (divsum(i) > i)
+        if (sumProperDivs2(lprimes.begin(), lprimes.end(), i) > i)
             abundants.push_back(i);
     uint32_t xsum = 1;
     for (uint16_t i = 2; i <= xmax; i++)
@@ -3246,19 +3242,20 @@ static void runjob2(uint32_t n)
 
 #ifdef MULTITHREAD
 static void multithread(uint8_t max)
-{
+{   time_t begin = time(0);
     ThreadPool pool(4);
     std::vector< std::future<void> > results;
 
     for (uint8_t i = 1; i <= max; ++i)
     {
-        results.emplace_back(pool.enqueue([i] { runjob(i); }));
+        results.emplace_back(pool.enqueue([i] { runjob2(i); }));
     }
+    time_t end = time(0);
+    //cout << "Total: " << end - begin << "s\r\n";
 }
 #else
 static void singlethread2(uint8_t max)
-{
-    time_t begin = time(0);
+{   time_t begin = time(0);
 
     for (uint8_t i = 1; i <= max; i++)
         runjob2(i);

@@ -137,6 +137,17 @@ def sum_divs1(n):
 
 # sum of all divisors using prime factorization
 def sum_divs2(lprimes, n):
+    previous, ret, current = 0, 1, 1
+    for p in primefactors(lprimes, n):
+        if p != previous:
+            ret *= sum_divs1(current)
+            current = 1
+        current *= p
+        previous = p
+    return ret * sum_divs1(current)
+
+# sum of all divisors using prime factorization
+def sum_divs3(lprimes, n):
     return product(sum_divs1(key ** value)
         for key, value in kounter(primefactors(lprimes, n)).items())
 
@@ -144,25 +155,12 @@ def sum_divs2(lprimes, n):
 def sumProperDivs2(lprimes, n):
     return sum_divs2(lprimes, n) - n
 
-"""
-ret = 0
-for a in range(5):
-    for b in range(3):
-        ret += 2**a * 3**b
-"""
-
-def sumDivs(lprimes, n):
-    pass
-
 def fibonacci(xmax, term1 = 1, term2 = 2):
     yield term1
     yield term2
     while term1 + term2 <= xmax:
         yield term1 + term2
         term1, term2 = term2, term1 + term2
-
-def isprime2(n):
-    pass
 
 import random
 
