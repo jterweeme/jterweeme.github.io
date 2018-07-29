@@ -1,4 +1,4 @@
-//#define MULTITHREAD
+#define MULTITHREAD
 
 #include <iostream>
 #include <iomanip>

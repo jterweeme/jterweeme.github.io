@@ -1161,10 +1161,11 @@ Antwoord: -59231
 
 def opdracht27():
     best_a = best_b = best_n = 0
+    sprimes = set(sieve(17000))
     for a in range(-999, 1000):
         for b in range(-1000, 1000 + 1):
             n = 0
-            while isprime(abs(n * n + a * n + b)):
+            while abs(n * n + a * n + b) in sprimes:
                 n += 1
             if n > best_n:
                 best_a, best_b, best_n = a, b, n
@@ -2477,20 +2478,20 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
 
 import time
 import math
-#import concurrent.futures
+import concurrent.futures
 
 def runjob(n):
     ts = time.time()
     ret = runn2(n)
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
-"""
+
 def runm(l = list(range(1, 60 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
-"""
+
 def runs(l = range(1, 60 + 1)):
     ts = time.time()
     for job in l:
