@@ -1,15 +1,14 @@
-#define MULTITHREAD
+//#define MULTITHREAD
 
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <fstream>
 #include <map>
 #include <ctime>
 #include <algorithm>
 #include <queue>
-#ifdef MULTITHREAD
 #include <functional>
+#ifdef MULTITHREAD
 #include <future>
 #endif
 using namespace std;
