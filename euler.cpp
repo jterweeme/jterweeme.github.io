@@ -4,26 +4,84 @@
 #include <iomanip>
 #include <vector>
 #include <fstream>
-#include <set>
 #include <map>
-#include <stdint.h>
 #include <ctime>
-#include <cstring>
-#include <math.h>
-#include <boost/multiprecision/cpp_int.hpp>
-#ifdef MULTITHREAD
-#include <future>
-#include <functional>
-#include <condition_variable>
-#include <mutex>
-#include <memory>
-#include <thread>
-#include <queue>
-#include <stdexcept>
-#endif
 #include <algorithm>
+#include <queue>
+#ifdef MULTITHREAD
+#include <functional>
+#include <future>
+#endif
 using namespace std;
-using namespace boost::multiprecision;
+
+size_t strlen(const char *s)
+{   size_t i;
+    for (i = 0; s[i] != '\0'; i++);
+    return i;
+}
+
+void *memset(void *s, int c, size_t n)
+{   uint8_t *p = (uint8_t *)s;
+    while (n--) *p++ = (uint8_t)c;
+    return s;
+}
+
+#if 0
+template <class etype> class queue
+{
+    class qnode
+    {
+    public:
+        etype element;
+        qnode *next;
+        qnode(etype e = 0) : element(e), next(NULL) { }
+    };
+    qnode *first;
+    qnode *last;
+public:
+    queue() : first(NULL), last(NULL) { }
+    inline bool isempty() const { return first == NULL; }
+    inline bool empty() const { return isempty(); }
+    void enqueue(const etype x);
+    etype dequeue();
+    void makeempty();
+};
+
+template <class T> void queue<T>::enqueue(const T x)
+{
+    if (empty())
+    {
+        first = new qnode(x);
+        last = first;
+    }
+    else
+    {
+        qnode *p = new qnode(x);
+        last->next = p;
+        last = last->next;
+    }
+}
+
+template <class etype> etype queue<etype>::dequeue()
+{
+    etype x;
+    qnode *p;
+    if (!isempty())
+    {
+        x = first->element;
+        p = first;
+        first = first->next;
+        delete p;
+        return x;
+    }
+}
+
+template <class etype> void queue<etype>::makeempty( )
+{
+  while ( !isempty( ) )
+    dequeue( );
+}
+#endif
 
 template <typename T> static T myPow(T base, T e)
 {   if (e == 0) return 1;
@@ -1706,11 +1764,13 @@ static uint32_t eqpow(uint32_t n)
 }
 
 static string problem29()
-{   set<uint32_t> st;
+{   uint32_t buf[99*99];
     for (uint16_t a = 2; a <= 100; a++)
         for (uint16_t b = 2; b <= 100; b++)
-            st.insert(eqpow(a << 16 | b));
-    return twostring<uint32_t>(st.size());
+            buf[(a-2)*99+(b-2)] = eqpow(a << 16 | b);
+    sort(buf, buf + 99*99);
+    uint32_t *foo = unique(buf, buf + 99*99);
+    return twostring<uint32_t>(foo - buf);
 }
 
 /*
@@ -1795,7 +1855,7 @@ include it once in your sum.
 Antwoord: 45,228
 */
 
-static void panProducts32(set<uint32_t> &st)
+static void panProducts32(vector<uint32_t> &st)
 {   for (uint32_t i = 2; i < 60; i++)
     {   uint32_t start = i < 10 ? 1234 : 123;
         for (uint32_t j = start; j < 10000/i; j++)
@@ -1804,16 +1864,18 @@ static void panProducts32(set<uint32_t> &st)
             if (hasDigitsOnce32(i, nset) == false) continue;
             if (hasDigitsOnce32(j, nset) == false) continue;
             if (hasDigitsOnce32(i * j, nset)  == false) continue;
-            st.insert(i*j);
+            st.push_back(i*j);
         }
     }
 }
 
 static string problem32()
-{   set<uint32_t> st;
+{   vector<uint32_t> st;
     panProducts32(st);
+    sort(st.begin(), st.end());
+    vector<uint32_t>::iterator foo = unique(st.begin(), st.end());
     uint32_t xsum = 0;
-    for (set<uint32_t>::iterator it = st.begin(); it != st.end(); it++) xsum += *it;
+    for (vector<uint32_t>::iterator it = st.begin(); it != foo; it++) xsum += *it;
     return twostring<uint32_t>(xsum);
 }
 
@@ -3147,22 +3209,16 @@ class ThreadPool {
 public:
     ThreadPool(size_t);
     template<class F, class... Args>
-    auto enqueue(F&& f, Args&&... args)
-        -> std::future<typename std::result_of<F(Args...)>::type>;
+        auto enqueue(F&& f, Args&&... args)-> future<typename result_of<F(Args...)>::type>;
     ~ThreadPool();
 private:
-    // need to keep track of threads so we can join them
-    std::vector< std::thread > workers;
-    // the task queue
-    std::queue< std::function<void()> > tasks;
-
-    // synchronization
-    std::mutex queue_mutex;
-    std::condition_variable condition;
+    vector<thread> workers;
+    queue<function<void()> > tasks;
+    mutex queue_mutex;
+    condition_variable condition;
     bool stop;
 };
 
-// the constructor just launches some amount of workers
 inline ThreadPool::ThreadPool(size_t threads) : stop(false)
 {
     for(size_t i = 0;i<threads;++i)
@@ -3190,8 +3246,7 @@ inline ThreadPool::ThreadPool(size_t threads) : stop(false)
 }
 
 template<class F, class... Args>
-auto ThreadPool::enqueue(F&& f, Args&&... args)
-    -> std::future<typename std::result_of<F(Args...)>::type>
+auto ThreadPool::enqueue(F &&f, Args&&... args)->future<typename result_of<F(Args...)>::type>
 {
     using return_type = typename std::result_of<F(Args...)>::type;
 
@@ -3199,9 +3254,9 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
             std::bind(std::forward<F>(f), std::forward<Args>(args)...)
         );
 
-    std::future<return_type> res = task->get_future();
+    future<return_type> res = task->get_future();
     {
-        std::unique_lock<std::mutex> lock(queue_mutex);
+        unique_lock<std::mutex> lock(queue_mutex);
 
         // don't allow enqueueing after stopping the pool
         if(stop)
@@ -3213,7 +3268,6 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
     return res;
 }
 
-// the destructor joins all threads
 inline ThreadPool::~ThreadPool()
 {
     {
@@ -3242,38 +3296,32 @@ static void runjob2(uint32_t n)
 
 #ifdef MULTITHREAD
 static void multithread(uint8_t max)
-{   time_t begin = time(0);
+{
     ThreadPool pool(4);
-    std::vector< std::future<void> > results;
+    std::vector<std::future<void> > results;
 
     for (uint8_t i = 1; i <= max; ++i)
-    {
         results.emplace_back(pool.enqueue([i] { runjob2(i); }));
-    }
-    time_t end = time(0);
-    //cout << "Total: " << end - begin << "s\r\n";
 }
 #else
-static void singlethread2(uint8_t max)
-{   time_t begin = time(0);
-
+static void singlethread(uint8_t max)
+{
     for (uint8_t i = 1; i <= max; i++)
         runjob2(i);
-
-    time_t end = time(0);
-    cout << "Total: " << end - begin << "s\r\n";
 }
 #endif
 
 int main()
 {
+    time_t begin = time(0);
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
     multithread(58);
 #else
-    singlethread2(58);
-    //singlethread(53);
+    singlethread(58);
 #endif
+    time_t end = time(0);
+    cout << "Total: " << end - begin << "s\r\n";
     return 0;
 }
 
