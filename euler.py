@@ -252,6 +252,10 @@ def permutations2(iterable, r=None):
         else:
             return
 
+def gcd(a, b):
+    while b: a, b = b, a % b
+    return a
+
 """
 #1 Multiples of 3 and 5
 
@@ -1238,9 +1242,6 @@ Antwoord: 100
 16/64 = 1/4, 19/95 = 1/5, 26/65 = 2/5, 49/98 = 4/8
 4*5*5*8/8 = 100
 """
-def gcd(a, b):
-    while b: a, b = b, a % b
-    return a
 
 def opdracht33():
     dp, np = 1,1
@@ -1251,16 +1252,6 @@ def opdracht33():
                     np *= n
                     dp *= d
     return dp // gcd(np, dp)
-
-def opdracht33b():
-    d = 1
-    for i in range(1, 10):
-        for j in range(1, i):
-            q, r = divmod(9*j*i, 10*j-i)
-            if not r and q <= 9:
-                print("{}/{}".format(i, j))
-                d*= i/j
-    return int(d)
 
 """
 #34: Digit factorials
@@ -2490,6 +2481,57 @@ def problem67(fn = "euler67.txt", root = 100):
     return triangle2[0]
 
 """
+#69: Totient maximum
+
+Euler's Totient function, φ(n) [sometimes called the phi function], is
+used to determine the number of numbers less than n which are relatively
+prime to n. For example, as 1, 2, 4, 5, 7, and 8, are all less than nine
+and relatively prime to nine, φ(9)=6.
+
+Antwoord: 510,510
+"""
+
+def coprime(a, b):
+    return gcd(a, b) == 1
+
+def coprimes(n):
+    for i in range(1,n):
+        if coprime(n, i): yield i
+
+def totient(n):
+    return len(list(coprimes(n)))
+
+def opdracht69a():
+    best_n = 0
+    best_frac = 0
+    for n in range(2, 10**6 + 1):
+        tot = totient(n)
+        frac = n / tot
+        print("{} / {} = {}".format(n, tot, frac))
+        if frac > best_frac:
+            best_n = n
+            best_frac = frac
+    return best_n
+
+def totient2(lprimes, n):
+    spfactors = set(primefactors(lprimes, n))
+    for pf in spfactors:
+        n *= (pf-1)/pf
+    return n
+
+def problem69():
+    lprimes = list(sieve(10**6))
+    best_n = 0
+    best_frac = 0
+    for n in range(2, 10**6 + 1):
+        tot = totient2(lprimes, n)
+        frac = n / tot
+        if frac > best_frac:
+            best_n = n
+            best_frac = frac
+    return best_n
+
+"""
 #76: Counting summations
 
 It is possible to write five as a sum in exactly six different ways:
@@ -2587,6 +2629,8 @@ def runn2(n = 1):
     if n == 65: return problem65()
     if n == 66: return problem66()
     if n == 67: return problem67()
+    if n == 68: return problem68()
+    if n == 69: return problem69()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2595,7 +2639,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
-    153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273]
+    153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273, 0,
+    510510]
 
 #answers[61 - 1] = 0
 
@@ -2609,13 +2654,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 67 + 1))):
+def runm(l = list(range(1, 69 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 67 + 1)):
+def runs(l = range(1, 69 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
