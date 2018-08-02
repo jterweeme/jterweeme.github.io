@@ -2293,6 +2293,8 @@ pentagonal (P5,44=2882), is represented by a different number in the set.
 Find the sum of the only ordered set of six cyclic 4-digit numbers for which
 each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal,
 and octagonal, is represented by a different number in the set.
+
+Antwoord: 28,684
 """
 
 """
@@ -2332,6 +2334,8 @@ digits which are also cube.
 
 Find the smallest cube for which exactly
 five permutations of its digits are cube.
+
+Antwoord: 127,035,954,683
 """
 
 def problem62():
@@ -2354,6 +2358,8 @@ The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
 the 9-digit number, 134217728=8^9, is a ninth power.
 
 How many n-digit positive integers exist which are also an nth power?
+
+Antwoord: 49
 """
 
 """
@@ -2374,38 +2380,47 @@ def problem63():
 
 """
 #64: Odd period square roots
+
+Antwoord: 1,322
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-64-solution/
 """
 
 def problem64():
-    return 0
+    L, odd_period = 10000, 0
+    for N in range(2, L + 1):
+        r = limit = floorsqrt(N)
+        if limit ** 2 == N: continue
+        k, period = 1, 0
+        while k != 1 or period == 0:
+            k = (N - r * r) // k
+            r = (limit + r) // k * k - r
+            period += 1
+        if period % 2 == 1: odd_period += 1
+    return odd_period
 
 """
 #65: Convergents of e
+
+Antwoord: 272
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-65-solution/
 """
 
 def problem65():
-    return 0
+    n0, n1, L = 1, 2, 100
+    for i in range(2, L+1): 
+        n0, n1 = n1, n0 + n1 * (1 if i%3 else 2 * i//3)
+    return sum(map(int, str(n1)))
 
 """
 #66: Diophantine equation
 
 Antwoord: 661
-"""
-
-"""
-9   - 2*4 = 1
-4   - 3*1 = 1
-81  - 5*16 = 1
-25  - 6*4 = 1
-64  - 7*9 = 1
-9   - 8*1 = 1
-361 - 10*36 = 1
-100 - 11*9 = 1
-49  - 12*4 = 1
-24335*24335 - 46*3588**2 = 1
-66249*66249 - 53*9100*9100 = 1
-1766319049**2 - 61*226153980**2 = 1
-10*10 - 99*1 = 1
 """
 
 """
@@ -2460,7 +2475,7 @@ altogether! If you could check one trillion (1012) routes every second
 it would take over twenty billion years to check them all. There is an
 efficient algorithm to solve it. ;o)
 
-Antwoord: 7273
+Antwoord: 7,273
 """
 
 """ adapted from opdracht18 """
@@ -2488,6 +2503,8 @@ It is possible to write five as a sum in exactly six different ways:
 
 How many different ways can one hundred be written
 as a sum of at least two positive integers?
+
+Antwoord: 190,569,291
 """
 
 """ adapted from opdracht31 """
@@ -2578,7 +2595,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
-    153, 26241, 107359, 26033, 28684, 127035954683, 49, 0, 0, 661, 7273]
+    153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273]
 
 #answers[61 - 1] = 0
 
