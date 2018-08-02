@@ -54,6 +54,9 @@ ishexagon = lambda n: ispolygon(n, 4)
 isheptagon = lambda n: ispolygon(n, 5)
 isoctagon = lambda n: ispolygon(n, 6)
 
+def floorsqrt(n):
+    return len(list(polygonizer(n + 1, 2))) - 1
+
 def binSearch(d, n):
     if n > d[-1]: return False
     first, last = 0, len(d)
@@ -469,7 +472,8 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 """
 
-opdracht10 = lambda limit = 2*10**6: sum(sieve(limit))
+def opdracht10(limit = 2*10**6):
+    return sum(sieve(limit))
 
 """
 #11 Largest product in a grid
@@ -702,35 +706,15 @@ solved by brute force, and requires a clever method! ;o)
 Antwoord: 1,074
 """
 
-triangle18 = (
-    (75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (17,47,82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (18,35,87,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (20, 4,82,47,65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (19, 1,23,75, 3,34, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-    (88, 2,77,73, 7,63,67, 0, 0, 0, 0, 0, 0, 0, 0),
-    (99,65, 4,28, 6,16,70,92, 0, 0, 0, 0, 0, 0, 0),
-    (41,41,26,56,83,40,80,70,33, 0, 0, 0, 0, 0, 0),
-    (41,48,72,33,47,32,37,16,94,29, 0, 0, 0, 0, 0),
-    (53,71,44,65,25,43,91,52,97,51,14, 0, 0, 0, 0),
-    (70,11,33,28,77,73,17,78,39,68,17,57, 0, 0, 0),
-    (91,71,52,38,17,14,91,43,58,50,27,29,48, 0, 0),
-    (63,66, 4,68,89,53,67,30,73,16,69,87,40,31, 0),
-    ( 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23));
-
-def opdracht18(triangle = triangle18):
-    root = len(triangle[0])
-    possibilities = 2**(root-1)
-    best = 0
-    for i in range(0, possibilities + 1):
-        index, xsum = 0, triangle[0][0]
-        for j in range(0, root - 1):
-            index = index + (i >> j & 1)
-            value = triangle[j + 1][index]
-            xsum += value
-        best = max(best, xsum)
-    return best
+def problem18(fn = "euler18.txt", root = 15):
+    triangle2 = [int(n) for n in open(fn).read().split()]
+    while root > 1:
+        for i in range(root - 1):
+            j = triangle(root - 2) + i
+            k = triangle(root - 1) + i
+            triangle2[j] += max(triangle2[k], triangle2[k + 1])
+        root -= 1
+    return triangle2[0]
 
 """
 #19 Counting Sundays
@@ -1762,7 +1746,7 @@ Antwoord: 9,110,846,700
 """
 
 def opdracht48(r = range(1,1001)):
-    return sum(x**x for x in r % 10**10)
+    return sum(x**x for x in r) % 10**10
 
 """
 #49: Prime permutations
@@ -1875,7 +1859,7 @@ Antwoord: 142,857
 """
 https://blog.dreamshire.com/project-euler-52-solution/
 """
-def opdracht52a():
+def problem52():
     f = lambda n:sorted(digits(n))
     n = 99999
     while not f(n*2) == f(n*3) == f(n*4) == f(n*5) == f(n*6): n += 9
@@ -2364,6 +2348,157 @@ def problem62():
     return 0
 
 """
+#63: Powerful digit counts
+
+The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
+the 9-digit number, 134217728=8^9, is a ninth power.
+
+How many n-digit positive integers exist which are also an nth power?
+"""
+
+"""
+1^1 ~ 9^1, 4^2 ~ 9^2, 5^3 ~ 9^3, 6^4 ~ 9^4, 7^5 ~ 9^5, 7^6 ~ 9^6,
+8^7, 9^7, 8^8, 9^8, 8^9, 9^9, 8^10, 9^10, 9^11, 9^12, 9^13, 9^14,
+9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
+"""
+
+def problem63():
+    xsum = 0
+    for e in range(1,999999):
+        subsum = 0
+        for base in range(1,10):
+            subsum += decimals(base**e) == e
+        xsum += subsum
+        if subsum == 0: break
+    return xsum
+
+"""
+#64: Odd period square roots
+"""
+
+def problem64():
+    return 0
+
+"""
+#65: Convergents of e
+"""
+
+def problem65():
+    return 0
+
+"""
+#66: Diophantine equation
+
+Antwoord: 661
+"""
+
+"""
+9   - 2*4 = 1
+4   - 3*1 = 1
+81  - 5*16 = 1
+25  - 6*4 = 1
+64  - 7*9 = 1
+9   - 8*1 = 1
+361 - 10*36 = 1
+100 - 11*9 = 1
+49  - 12*4 = 1
+24335*24335 - 46*3588**2 = 1
+66249*66249 - 53*9100*9100 = 1
+1766319049**2 - 61*226153980**2 = 1
+10*10 - 99*1 = 1
+"""
+
+"""
+adapted from: https://euler.stephan-brumme.com/66/
+"""
+
+def problem66():
+    best_x, best_d = 0, 0
+    for d in range(2, 1001):
+        root = floorsqrt(d)
+        if root * root == d:
+            continue
+        a, numerator, denominator = root, 0, 1
+        x = [0, 1, root]
+        y = [0, 0, 1]
+        while True:
+            numerator = denominator * a - numerator
+            denominator = (d - numerator * numerator) // denominator
+            a = (root + numerator) // denominator
+            x[0] = x[1]
+            x[1] = x[2]
+            x[2] = x[1] * a + x[0]
+            y[0] = y[1]
+            y[1] = y[2]
+            y[2] = y[1] * a + y[0]
+            if x[2]**2 == y[2]**2 * d + 1:
+                break
+        if best_x < x[2]:
+            best_x, best_d = x[2], d
+    return best_d
+
+"""
+#67: Maximum path sum II
+
+By starting at the top of the triangle below and moving to adjacent
+numbers on the row below, the maximum total from top to bottom is 23.
+
+3
+7 4
+2 4 6
+8 5 9 3
+
+That is, 3 + 7 + 4 + 9 = 23.
+
+Find the maximum total from top to bottom in triangle.txt (right click
+and 'Save Link/Target As...'), a 15K text file containing a triangle with
+one-hundred rows.
+
+NOTE: This is a much more difficult version of Problem 18. It is not
+possible to try every route to solve this problem, as there are 299
+altogether! If you could check one trillion (1012) routes every second
+it would take over twenty billion years to check them all. There is an
+efficient algorithm to solve it. ;o)
+
+Antwoord: 7273
+"""
+
+""" adapted from opdracht18 """
+def problem67(fn = "euler67.txt", root = 100):
+    triangle2 = [int(n) for n in open(fn).read().split()]
+    while root > 1:
+        for i in range(root - 1):
+            j = triangle(root - 2) + i
+            k = triangle(root - 1) + i
+            triangle2[j] += max(triangle2[k], triangle2[k + 1])
+        root -= 1
+    return triangle2[0]
+
+"""
+#76: Counting summations
+
+It is possible to write five as a sum in exactly six different ways:
+
+4 + 1
+3 + 2
+3 + 1 + 1
+2 + 2 + 1
+2 + 1 + 1 + 1
+1 + 1 + 1 + 1 + 1
+
+How many different ways can one hundred be written
+as a sum of at least two positive integers?
+"""
+
+""" adapted from opdracht31 """
+def opdracht76(target = 100, coins = list(range(100))):
+    ways = [1] + [0]*target
+    for coin in coins:
+        for i in range(coin, target + 1):
+            ways[i] += ways[i - coin]
+    return ways[target]
+
+"""
 Einde opdrachten
 """
 
@@ -2385,7 +2520,7 @@ def runn2(n = 1):
     if n == 15: return opdracht15()
     if n == 16: return opdracht16()
     if n == 17: return opdracht17()
-    if n == 18: return opdracht18()
+    if n == 18: return problem18()
     if n == 19: return opdracht19()
     if n == 20: return opdracht20()
     if n == 21: return opdracht21()
@@ -2419,7 +2554,7 @@ def runn2(n = 1):
     if n == 49: return opdracht49()
     if n == 50: return opdracht50()
     if n == 51: return opdracht51()
-    if n == 52: return opdracht52()
+    if n == 52: return problem52()
     if n == 53: return opdracht53()
     if n == 54: return opdracht54()
     if n == 55: return opdracht55()
@@ -2430,6 +2565,11 @@ def runn2(n = 1):
     if n == 60: return problem60()
     if n == 61: return problem61()
     if n == 62: return problem62()
+    if n == 63: return problem63()
+    if n == 64: return problem64()
+    if n == 65: return problem65()
+    if n == 66: return problem66()
+    if n == 67: return problem67()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2438,7 +2578,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
-    153, 26241, 107359, 26033, 28684, 127035954683]
+    153, 26241, 107359, 26033, 28684, 127035954683, 49, 0, 0, 661, 7273]
 
 #answers[61 - 1] = 0
 
@@ -2452,13 +2592,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 62 + 1))):
+def runm(l = list(range(1, 67 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 62 + 1)):
+def runs(l = range(1, 67 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
