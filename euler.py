@@ -2602,35 +2602,52 @@ def totient(n):
     if n <= 1: return n
     return len(list(coprimes(n)))
 
-def opdracht69a():
-    best_n = 0
-    best_frac = 0
-    for n in range(2, 10**6 + 1):
-        tot = totient(n)
-        frac = n / tot
-        print("{} / {} = {}".format(n, tot, frac))
-        if frac > best_frac:
-            best_n = n
-            best_frac = frac
-    return best_n
-
 def totient2(lprimes, n):
     spfactors = set(primefactors(lprimes, n))
     for pf in spfactors:
         n *= (pf-1)/pf
     return n
+"""
+https://blog.dreamshire.com/project-euler-69-solution/
+"""
 
-def problem69():
-    lprimes = list(sieve(10**6))
-    best_n = 0
-    best_frac = 0
-    for n in range(2, 10**6 + 1):
-        tot = totient2(lprimes, n)
-        frac = n / tot
-        if frac > best_frac:
-            best_n = n
-            best_frac = frac
-    return best_n
+def problem69(L = 10**6):
+    lprimes = list(sieve(100))
+    maxn = 1
+    for p in lprimes:
+        if maxn*p > L: return maxn
+        maxn *= p
+    raise "Buy me some more prime numbers!"
+    return 0
+
+"""
+#70: Totient permutation
+
+Euler's Totient function, φ(n) [sometimes called the phi function],
+is used to determine the number of positive numbers less than or equal to
+n which are relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8,
+are all less than nine and relatively prime to nine, φ(9)=6.
+The number 1 is considered to be relatively prime to every positive number, so φ(1)=1.
+
+Interestingly, φ(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
+
+Find the value of n, 1 < n < 107, for which φ(n) is a
+permutation of n and the ratio n/φ(n) produces a minimum.
+"""
+
+def problem70():
+    lprimes = list(sieve(10**7))
+    min_ratio = 999.0
+    min_n = 0
+    for n in range(2, 10**7):
+        phi = totient2(lprimes, n)
+        if sameDigs(n, phi):
+            ratio = n / phi
+            if ratio < min_ratio:
+                min_ratio = ratio
+                min_n = n
+            print("{}: {}".format(n, phi))
+    return min_n
 
 """
 #76: Counting summations
