@@ -2591,22 +2591,6 @@ and relatively prime to nine, φ(9)=6.
 Antwoord: 510,510
 """
 
-def coprime(a, b):
-    return gcd(a, b) == 1
-
-def coprimes(n):
-    for i in range(1,n):
-        if coprime(n, i): yield i
-
-def totient(n):
-    if n <= 1: return n
-    return len(list(coprimes(n)))
-
-def totient2(lprimes, n):
-    spfactors = set(primefactors(lprimes, n))
-    for pf in spfactors:
-        n *= (pf-1)/pf
-    return n
 """
 https://blog.dreamshire.com/project-euler-69-solution/
 """
@@ -2633,21 +2617,28 @@ Interestingly, φ(87109)=79180, and it can be seen that 87109 is a permutation o
 
 Find the value of n, 1 < n < 107, for which φ(n) is a
 permutation of n and the ratio n/φ(n) produces a minimum.
+
+Answer: 8,319,823
 """
 
-def problem70():
-    lprimes = list(sieve(10**7))
-    min_ratio = 999.0
-    min_n = 0
-    for n in range(2, 10**7):
-        phi = totient2(lprimes, n)
-        if sameDigs(n, phi):
-            ratio = n / phi
-            if ratio < min_ratio:
-                min_ratio = ratio
-                min_n = n
-            print("{}: {}".format(n, phi))
-    return min_n
+"""
+https://blog.dreamshire.com/project-euler-70-solution/
+"""
+
+def problem70(L = 10**7):
+    primes = list(sieve(int(floorsqrt(L) * 1.2)))
+    min_q, min_n, i = 2, 0, 0
+    for p1 in primes:
+        i+=1
+        for p2 in primes[i:]:
+            if (p1+p2)%9 != 1: continue
+            n = p1 * p2
+            if n > L: return min_n
+            phi = (p1-1) * (p2-1)
+            q = n / float(phi)
+            if sameDigs(phi, n) and min_q>q: min_q, min_n = q, n
+    raise("Answer not found")
+    return 0
 
 """
 #76: Counting summations
@@ -2749,6 +2740,7 @@ def runn2(n = 1):
     if n == 67: return problem67()
     if n == 68: return problem68()
     if n == 69: return problem69()
+    if n == 70: return problem70()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2758,7 +2750,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
-    6531031914842725, 510510]
+    6531031914842725, 510510, 8319823]
 
 #answers[61 - 1] = 0
 
@@ -2772,13 +2764,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 69 + 1))):
+def runm(l = list(range(1, 70 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 69 + 1)):
+def runs(l = range(1, 70 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
