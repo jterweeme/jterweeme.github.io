@@ -286,7 +286,8 @@ Antwoord: 4,613,732
 2 + 8 + 34 + 144 + 610 + 2,584 + 10,946 + 46,368 + 196,418 + 832,040 + 3,524,578 = 4,613,732
 """
 
-opdracht2 = lambda xmax = 4*10**6: sum(x for x in fibonacci(xmax) if x % 2 == 0)
+def opdracht2(xmax = 4*10**6):
+    return sum(x for x in fibonacci(xmax) if x % 2 == 0)
 
 """
 #3 Largest prime factor
@@ -301,7 +302,8 @@ Antwoord: 6,857
 71*839*1,471*6,857=600,851,475,143
 """
 
-opdracht3 = lambda n = 600851475143: max(primefactors(list(sieve(7000)), n))
+def opdracht3(n = 600851475143):
+    return max(primefactors(list(sieve(7000)), n))
 
 """
 #4 Largest palindrome product
@@ -1280,7 +1282,8 @@ def opdracht34():
 The number, 197, is called a circular prime because all rotations
 of the digits: 197, 971, and 719, are themselves prime.
 
-There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+There are thirteen such primes below 100: 2, 3,
+5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
 
 How many circular primes are there below one million?
 
@@ -2136,15 +2139,32 @@ def problem58():
 """
 #59: XOR decryption
 
-Each character on a computer is assigned a unique code and the preferred standard is ASCII (American Standard Code for Information Interchange). For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
+Each character on a computer is assigned a unique code and the preferred
+standard is ASCII (American Standard Code for Information Interchange).
+For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
 
-A modern encryption method is to take a text file, convert the bytes to ASCII, then XOR each byte with a given value, taken from a secret key. The advantage with the XOR function is that using the same encryption key on the cipher text, restores the plain text; for example, 65 XOR 42 = 107, then 107 XOR 42 = 65.
+A modern encryption method is to take a text file, convert the bytes to
+ASCII, then XOR each byte with a given value, taken from a secret key. The
+advantage with the XOR function is that using the same encryption key on
+the cipher text, restores the plain text; for example, 65 XOR 42 = 107,
+then 107 XOR 42 = 65.
 
-For unbreakable encryption, the key is the same length as the plain text message, and the key is made up of random bytes. The user would keep the encrypted message and the encryption key in different locations, and without both "halves", it is impossible to decrypt the message.
+For unbreakable encryption, the key is the same length as the plain text
+message, and the key is made up of random bytes. The user would keep the
+encrypted message and the encryption key in different locations, and
+without both "halves", it is impossible to decrypt the message.
 
-Unfortunately, this method is impractical for most users, so the modified method is to use a password as a key. If the password is shorter than the message, which is likely, the key is repeated cyclically throughout the message. The balance for this method is using a sufficiently long password key for security, but short enough to be memorable.
+Unfortunately, this method is impractical for most users, so the modified
+method is to use a password as a key. If the password is shorter than the
+message, which is likely, the key is repeated cyclically throughout the
+message. The balance for this method is using a sufficiently long password
+key for security, but short enough to be memorable.
 
-Your task has been made easy, as the encryption key consists of three lower case characters. Using cipher.txt (right click and 'Save Link/Target As...'), a file containing the encrypted ASCII codes, and the knowledge that the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the original text.
+Your task has been made easy, as the encryption key consists of three lower
+case characters. Using cipher.txt (right click and 'Save Link/Target As...'),
+a file containing the encrypted ASCII codes, and the knowledge that the plain
+text must contain common English words, decrypt the message and find the sum
+of the ASCII values in the original text.
 """
 
 msg59 = [79, 59, 12, 2, 79, 35, 8, 28, 20, 2, 3, 68, 8, 9, 68, 45,
@@ -2154,10 +2174,23 @@ msg59 = [79, 59, 12, 2, 79, 35, 8, 28, 20, 2, 3, 68, 8, 9, 68, 45,
 19, 10, 0, 73, 79, 44, 2, 79, 19, 6, 28, 68, 16, 6, 16, 15, 79, 35,
 8, 11, 72, 71, 14, 10, 3, 79, 12, 2, 79, 19, 6, 28, 68, 32, 0, 0, 73,
 79, 86, 71, 39, 1, 71, 24, 5, 20, 79, 13, 9, 79, 16, 15, 10, 68, 5, 10,
-3, 14, 1, 10, 14, 1, 3, 71, 24, 13, 19, 7, 68, 32, 0, 0, 73, 79, 87, 71, 39, 1, 71, 12, 22, 2, 14, 16, 2, 11, 68, 2, 25, 1, 21, 22, 16, 15, 6, 10, 0, 79, 16, 15, 10, 22, 2, 79, 13, 20, 65, 68,
-41, 0, 16, 15, 6, 10, 0, 79, 1, 31, 6, 23, 19, 28, 68, 19, 7, 5, 19, 79, 12, 2, 79, 0, 14, 11, 10, 64, 27, 68, 10, 14, 15, 2, 65, 68, 83, 79, 40, 14, 9, 1, 71, 6, 16, 20, 10, 8, 1, 79, 19, 6, 28, 68, 14, 1, 68, 15, 6, 9, 75, 79, 5, 9, 11, 68, 19, 7, 13, 20, 79, 8, 14, 9, 1, 71, 8, 13, 17, 10, 23, 71, 3, 13, 0, 7, 16, 71, 27, 11, 71, 10, 18, 2, 29,
-29, 8, 1, 1, 73, 79, 81, 71, 59, 12, 2, 79, 8, 14, 8, 12, 19, 79, 23, 15, 6, 10, 2, 28, 68, 19, 7, 22, 8, 26, 3, 15, 79, 16, 15, 10, 68, 3, 14, 22, 12, 1, 1, 20, 28, 72, 71, 14, 10, 3, 79, 16, 15, 10, 68, 3, 14, 22, 12, 1, 1, 20, 28, 68, 4, 14, 10, 71, 1,
-1, 17, 10, 22, 71, 10, 28, 19, 6, 10, 0, 26, 13, 20, 7, 68, 14, 27, 74, 71, 89, 68, 32, 0, 0, 71, 28, 1, 9, 27, 68, 45, 0, 12, 9, 79, 16, 15, 10, 68, 37, 14, 20, 19, 6, 23, 19, 79, 83, 71, 27, 11, 71, 27, 1, 11, 3, 68, 2, 25, 1, 21, 22, 11, 9, 10, 68, 6, 13, 11, 18, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7, 16, 71, 28, 11, 71, 27, 12, 6, 27, 68,
+3, 14, 1, 10, 14, 1, 3, 71, 24, 13, 19, 7, 68, 32, 0, 0, 73, 79, 87, 71,
+39, 1, 71, 12, 22, 2, 14, 16, 2, 11, 68, 2, 25, 1, 21, 22, 16, 15, 6, 10,
+0, 79, 16, 15, 10, 22, 2, 79, 13, 20, 65, 68,
+41, 0, 16, 15, 6, 10, 0, 79, 1, 31, 6, 23, 19, 28, 68, 19, 7, 5, 19, 79,
+12, 2, 79, 0, 14, 11, 10, 64, 27, 68, 10, 14, 15, 2, 65, 68, 83, 79, 40,
+14, 9, 1, 71, 6, 16, 20, 10, 8, 1, 79, 19, 6, 28, 68, 14, 1, 68, 15, 6,
+9, 75, 79, 5, 9, 11, 68, 19, 7, 13, 20, 79, 8, 14, 9, 1, 71, 8, 13, 17,
+10, 23, 71, 3, 13, 0, 7, 16, 71, 27, 11, 71, 10, 18, 2, 29,
+29, 8, 1, 1, 73, 79, 81, 71, 59, 12, 2, 79, 8, 14, 8, 12, 19, 79, 23, 15,
+6, 10, 2, 28, 68, 19, 7, 22, 8, 26, 3, 15, 79, 16, 15, 10, 68, 3, 14, 22,
+12, 1, 1, 20, 28, 72, 71, 14, 10, 3, 79, 16, 15, 10, 68, 3, 14, 22, 12, 1,
+1, 20, 28, 68, 4, 14, 10, 71, 1,
+1, 17, 10, 22, 71, 10, 28, 19, 6, 10, 0, 26, 13, 20, 7, 68, 14, 27, 74, 71,
+89, 68, 32, 0, 0, 71, 28, 1, 9, 27, 68, 45, 0, 12, 9, 79, 16, 15, 10, 68,
+37, 14, 20, 19, 6, 23, 19, 79, 83, 71, 27, 11, 71, 27, 1, 11, 3, 68, 2, 25,
+1, 21, 22, 11, 9, 10, 68, 6, 13, 11, 18, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7,
+16, 71, 28, 11, 71, 27, 12, 6, 27, 68,
 2, 25, 1, 21, 22, 11, 9, 10, 68, 10, 6, 3, 15, 27, 68, 5, 10, 8, 14, 10, 18, 2, 79, 6, 2, 12, 5, 18, 28, 1, 71, 0, 2, 71, 7, 13, 20, 79, 16, 2, 28, 16, 14, 2, 11, 9, 22, 74, 71, 87, 68, 45, 0, 12, 9, 79, 12, 14, 2, 23, 2, 3, 2, 71, 24, 5, 20, 79, 10, 8, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7, 16, 92, 79, 12, 2, 79, 19, 6, 28, 68, 8, 1, 8,
 30, 79, 5, 71, 24, 13, 19, 1, 1, 20, 28, 68, 19, 0, 68, 19, 7, 1, 71,
 3, 13, 0, 7, 16, 73, 79, 93, 71, 59, 12, 2, 79, 11, 9, 10, 68, 16, 7,
@@ -2481,6 +2514,73 @@ def problem67(fn = "euler67.txt", root = 100):
     return triangle2[0]
 
 """
+#68: Magic 5-gon ring
+
+Consider the following "magic" 3-gon ring, filled
+with the numbers 1 to 6, and each line adding to nine.
+
+Working clockwise, and starting from the group of three with the
+numerically lowest external node (4,3,2 in this example), each
+solution can be described uniquely. For example, the above solution
+can be described by the set: 4,3,2; 6,2,1; 5,1,3.
+
+It is possible to complete the ring with four different
+totals: 9, 10, 11, and 12. There are eight solutions in total.
+
+Total    Solution Set
+  9   4,2,3; 5,3,1; 6,1,2
+  9   4,3,2; 6,2,1; 5,1,3
+  10  2,3,5; 4,5,1; 6,1,3
+  10  2,5,3; 6,3,1; 4,1,5
+  11  1,4,6; 3,6,2; 5,2,4
+  11  1,6,4; 5,4,2; 3,2,6
+  12  1,5,6; 2,6,4; 3,4,5
+  12  1,6,5; 3,5,4; 2,4,6
+
+By concatenating each group it is possible to form 9-digit
+strings; the maximum string for a 3-gon ring is 432621513.
+
+Using the numbers 1 to 10, and depending on arrangements, it is
+possible to form 16- and 17-digit strings. What is the maximum
+16-digit string for a "magic" 5-gon ring?
+
+Antwoord: 6,531,031,914,842,725
+"""
+
+def ngon3():
+    for p in permutations2(range(1,7)):
+        if p[0] + p[3] + p[4] != p[1] + p[4] + p[5]: continue
+        if p[0] + p[3] + p[4] != p[2] + p[5] + p[3]: continue
+        if p[0] > p[1] or p[0] > p[2]: continue
+        print("{}  {},{},{}; {},{},{}; {},{},{}".format(
+            p[0] + p[3] + p[4], p[0], p[3], p[4], p[1], p[4], p[5], p[2], p[5], p[3]))
+
+def sumEqual(lst):
+    for i in range(1,5):
+        if sum(lst[0]) != sum(lst[i]):
+            return False
+    return True
+
+def ngon5():
+    for p in permutations2(range(1,11)):
+        lines = list();
+        lines.append((p[0], p[5], p[6]))
+        lines.append((p[1], p[6], p[7]))
+        lines.append((p[2], p[7], p[8]))
+        lines.append((p[3], p[8], p[9]))
+        lines.append((p[4], p[9], p[5]))
+        if sumEqual(lines) == False: continue
+        if p[0] > p[1] or p[0] > p[2] or p[0] > p[3] or p[0] > p[4]: continue
+        xstr = str()
+        for line in lines:
+            for n in line:
+                xstr += str(n)
+        yield int(xstr)
+
+def problem68():
+    return last(ngon5())
+
+"""
 #69: Totient maximum
 
 Euler's Totient function, φ(n) [sometimes called the phi function], is
@@ -2499,6 +2599,7 @@ def coprimes(n):
         if coprime(n, i): yield i
 
 def totient(n):
+    if n <= 1: return n
     return len(list(coprimes(n)))
 
 def opdracht69a():
@@ -2639,8 +2740,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     -59231, 669171001, 9183, 443839, 73682, 45228, 100, 40730, 55, 872187, 748317,
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
-    153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273, 0,
-    510510]
+    153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
+    6531031914842725, 510510]
 
 #answers[61 - 1] = 0
 
