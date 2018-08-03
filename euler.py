@@ -2641,6 +2641,54 @@ def problem70(L = 10**7):
     return 0
 
 """
+#71: Ordered fractions
+
+Consider the fraction, n/d, where n and d are positive integers.
+If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions
+for d ≤ 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2,
+4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that 2/5 is the fraction immediately to the left of 3/7.
+
+By listing the set of reduced proper fractions for d ≤ 1,000,000 in
+ascending order of size, find the numerator of the fraction immediately
+to the left of 3/7.
+
+Antwoord: 428,570
+"""
+
+"""
+Adapted from:
+https://www.mathblog.dk/project-euler-71-proper-fractions-ascending-order/
+"""
+
+def problem71():
+    a, b, r, s, limit = 3,7,0,1,10**6
+    q = limit
+    while q > 2:
+        p = (a * q - 1) // b
+        if p * s > r * q:
+            s, r = q, p
+        q -= 1
+    return r
+
+def problem72():
+    return 0
+
+def problem73():
+    return 0
+
+def problem74():
+    return 0
+
+def problem75():
+    return 0
+
+"""
 #76: Counting summations
 
 It is possible to write five as a sum in exactly six different ways:
@@ -2659,7 +2707,7 @@ Antwoord: 190,569,291
 """
 
 """ adapted from opdracht31 """
-def opdracht76(target = 100, coins = list(range(100))):
+def problem76(target = 100, coins = list(range(100))):
     ways = [1] + [0]*target
     for coin in coins:
         for i in range(coin, target + 1):
@@ -2741,6 +2789,12 @@ def runn2(n = 1):
     if n == 68: return problem68()
     if n == 69: return problem69()
     if n == 70: return problem70()
+    if n == 71: return problem71()
+    if n == 72: return problem72()
+    if n == 73: return problem73()
+    if n == 74: return problem74()
+    if n == 75: return problem75()
+    if n == 76: return problem76()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2750,7 +2804,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
-    6531031914842725, 510510, 8319823]
+    6531031914842725, 510510, 8319823, 428570, 0, 0, 0, 0, 381138582]
 
 #answers[61 - 1] = 0
 
@@ -2764,13 +2818,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 70 + 1))):
+def runm(l = list(range(1, 76 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 70 + 1)):
+def runs(l = range(1, 76 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
