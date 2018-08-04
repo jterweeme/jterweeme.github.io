@@ -2856,6 +2856,38 @@ def problem76(target = 100, coins = list(range(100))):
     return ways[target]
 
 """
+#77: Prime summations
+
+It is possible to write ten as the sum of primes in exactly five different ways:
+
+7 + 3
+5 + 5
+5 + 3 + 2
+3 + 3 + 2 + 2
+2 + 2 + 2 + 2 + 2
+
+What is the first value which can be written as the
+sum of primes in over five thousand different ways?
+
+Antwoord: 71
+"""
+
+def ways(target, coins):
+    ways = [1] + [0]*target
+    for coin in coins:
+        for i in range(coin, target + 1):
+            ways[i] += ways[i - coin]
+    return ways[target]
+
+def problem77():
+    lprimes = list(sieve(100))
+    for n in range(10, 100):
+        if ways(n, lprimes) > 5000:
+            return n
+    raise("Answer not found")
+    return 0
+
+"""
 Einde opdrachten
 """
 
@@ -2936,6 +2968,7 @@ def runn2(n = 1):
     if n == 74: return problem74()
     if n == 75: return problem75()
     if n == 76: return problem76()
+    if n == 77: return problem77()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2946,7 +2979,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582]
+    381138582, 71]
 
 #answers[61 - 1] = 0
 
@@ -2960,13 +2993,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 76 + 1))):
+def runm(l = list(range(1, 77 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 76 + 1)):
+def runs(l = range(1, 77 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
