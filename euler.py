@@ -256,6 +256,13 @@ def gcd(a, b):
     while b: a, b = b, a % b
     return a
 
+def ways(target, coins):
+    ways = [1] + [0]*target
+    for coin in coins:
+        for i in range(coin, target + 1):
+            ways[i] += ways[i - coin]
+    return ways[target]
+
 """
 #1 Multiples of 3 and 5
 
@@ -266,7 +273,9 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 
 Antwoord: 233,168
 """
-opdracht1 = lambda limit = 1000: sum(set(range(3,limit,3)) | set(range(5,limit,5)))
+
+def opdracht1(limit = 1000):
+    return sum(set(range(3,limit,3)) | set(range(5,limit,5)))
 
 """
 #2 Even Fibonacci numbers
@@ -629,7 +638,8 @@ How many such routes are there through a 20×20 grid?
 Antwoord: 137,846,528,820
 """
 
-opdracht15 = lambda size = 20: combinations(2*size, size)
+def opdracht15(size = 20):
+    return combinations(2*size, size)
 
 """
 #16 Power digit sum
@@ -641,7 +651,8 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1366
 """
 
-opdracht16 = lambda e = 1000: sum(digits(2**e))
+def opdracht16(e = 1000):
+    return sum(digits(2**e))
 
 """
 #17 Number letter counts
@@ -943,7 +954,8 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 Antwoord: 4,782
 """
 
-opdracht25 = lambda limit = 10**999: len(list(fibonacci(limit))) + 2
+def opdracht25(limit = 10**999):
+    return len(list(fibonacci(limit))) + 2
 
 """
 #26: Reciprocal cycles
@@ -1180,11 +1192,7 @@ Antwoord: 73,682
 """
 
 def opdracht31(target = 200, coins = (1,2,5,10,20,50,100,200)):
-    ways = [1] + [0]*target
-    for coin in coins:
-        for i in range(coin, target + 1):
-            ways[i] += ways[i - coin]
-    return ways[target]
+    return ways(target, coins)
 
 """
 #32: Pandigital products
@@ -2849,11 +2857,7 @@ Antwoord: 190,569,291
 
 """ adapted from opdracht31 """
 def problem76(target = 100, coins = list(range(100))):
-    ways = [1] + [0]*target
-    for coin in coins:
-        for i in range(coin, target + 1):
-            ways[i] += ways[i - coin]
-    return ways[target]
+    return ways(target, coins)
 
 """
 #77: Prime summations
@@ -2872,13 +2876,6 @@ sum of primes in over five thousand different ways?
 Antwoord: 71
 """
 
-def ways(target, coins):
-    ways = [1] + [0]*target
-    for coin in coins:
-        for i in range(coin, target + 1):
-            ways[i] += ways[i - coin]
-    return ways[target]
-
 def problem77():
     lprimes = list(sieve(100))
     for n in range(10, 100):
@@ -2886,6 +2883,41 @@ def problem77():
             return n
     raise("Answer not found")
     return 0
+
+"""
+#78: Coin partitions
+
+Let p(n) represent the number of different ways in which n coins can be
+separated into piles. For example, five coins can be separated into piles
+in exactly seven different ways, so p(5)=7.
+
+  OOOOO
+ OOOO O
+ OOO OO
+ OOO O O
+ OO OO O
+OO O O O
+O O O O O
+
+Find the least value of n for which p(n) is divisible by one million.
+
+Antwoord: 55,374
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-78-solution/
+"""
+def problem78():
+    k = sum([[i*(3*i - 1)//2, i*(3*i - 1)//2 + i] for i in range(1, 250)], [])
+    p, sgn, n, m  = [1], [1, 1, -1, -1], 0, 1e6
+    while p[n]>0:    # expand generating function to calculate p(n)
+        n += 1
+        px, i = 0, 0
+        while k[i] <= n:
+            px += p[n - k[i]] * sgn[i%4]
+            i += 1
+        p.append(px % m)
+    return n
 
 """
 Einde opdrachten
@@ -2969,6 +3001,7 @@ def runn2(n = 1):
     if n == 75: return problem75()
     if n == 76: return problem76()
     if n == 77: return problem77()
+    if n == 78: return problem78()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -2979,7 +3012,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71]
+    381138582, 71, 55374]
 
 #answers[61 - 1] = 0
 
@@ -2993,13 +3026,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 77 + 1))):
+def runm(l = list(range(1, 78 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 77 + 1)):
+def runs(l = range(1, 78 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
