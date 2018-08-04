@@ -2191,7 +2191,11 @@ msg59 = [79, 59, 12, 2, 79, 35, 8, 28, 20, 2, 3, 68, 8, 9, 68, 45,
 37, 14, 20, 19, 6, 23, 19, 79, 83, 71, 27, 11, 71, 27, 1, 11, 3, 68, 2, 25,
 1, 21, 22, 11, 9, 10, 68, 6, 13, 11, 18, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7,
 16, 71, 28, 11, 71, 27, 12, 6, 27, 68,
-2, 25, 1, 21, 22, 11, 9, 10, 68, 10, 6, 3, 15, 27, 68, 5, 10, 8, 14, 10, 18, 2, 79, 6, 2, 12, 5, 18, 28, 1, 71, 0, 2, 71, 7, 13, 20, 79, 16, 2, 28, 16, 14, 2, 11, 9, 22, 74, 71, 87, 68, 45, 0, 12, 9, 79, 12, 14, 2, 23, 2, 3, 2, 71, 24, 5, 20, 79, 10, 8, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7, 16, 92, 79, 12, 2, 79, 19, 6, 28, 68, 8, 1, 8,
+2, 25, 1, 21, 22, 11, 9, 10, 68, 10, 6, 3, 15, 27, 68, 5, 10, 8, 14, 10, 18,
+2, 79, 6, 2, 12, 5, 18, 28, 1, 71, 0, 2, 71, 7, 13, 20, 79, 16, 2, 28, 16,
+14, 2, 11, 9, 22, 74, 71, 87, 68, 45, 0, 12, 9, 79, 12, 14, 2, 23, 2, 3, 2,
+71, 24, 5, 20, 79, 10, 8, 27, 68, 19, 7, 1, 71, 3, 13, 0, 7, 16, 92, 79, 12,
+2, 79, 19, 6, 28, 68, 8, 1, 8,
 30, 79, 5, 71, 24, 13, 19, 1, 1, 20, 28, 68, 19, 0, 68, 19, 7, 1, 71,
 3, 13, 0, 7, 16, 73, 79, 93, 71, 59, 12, 2, 79, 11, 9, 10, 68, 16, 7,
 11, 71, 6, 23, 71, 27, 12, 2, 79, 16, 21, 26, 1, 71, 3, 13, 0, 7, 16,
@@ -2679,7 +2683,7 @@ def problem71(limit = 10**6):
 """
 #72: Counting fractions
 
-Antwoord: 303963552391
+Antwoord: 303,963,552,391
 """
 
 def problem72(L = 10**6):
@@ -2722,8 +2726,44 @@ def problem73():
 def problem74():
     return 0
 
+"""
+#75: Singular integer right triangles
+
+It turns out that 12 cm is the smallest length of wire that can be bent
+to form an integer sided right angle triangle in exactly one way, but
+there are many more examples.
+
+12 cm: (3,4,5)
+24 cm: (6,8,10)
+30 cm: (5,12,13)
+36 cm: (9,12,15)
+40 cm: (8,15,17)
+48 cm: (12,16,20)
+
+In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer sided right angle triangle, and other lengths allow more than one solution to be found; for example, using 120 cm it is possible to form exactly three different integer sided right angle triangles.
+
+120 cm: (30,40,50), (20,48,52), (24,45,51)
+
+Given that L is the length of the wire, for how many values of L ≤ 1,500,000 can exactly one integer sided right angle triangle be formed?
+
+Antwoord: 161667
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-75-solution/
+"""
+
 def problem75():
-    return 0
+    L = 15*10**5+1
+    maybe = set()
+    nope = set()
+    for m in range(2, floorsqrt(L//2)):
+        for n in range(m - 1, 0, -2):
+            if gcd(m, n) == 1:
+                s = 2 * (m * m + m * n)
+                for k in range(1, L//s + 1):
+                    nope.add(k*s) if k*s in maybe else maybe.add(k*s)
+    return len(maybe-nope)
 
 """
 #76: Counting summations
@@ -2841,7 +2881,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     932718654, 840, 210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
-    6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 0, 0, 381138582]
+    6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 0, 161667,
+    381138582]
 
 #answers[61 - 1] = 0
 
