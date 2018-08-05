@@ -560,6 +560,15 @@ static uint32_t sumProperDivs2(vector<uint32_t>::iterator begin, vector<uint32_t
 {   return sumDivs2(begin, end, n) - n;
 }
 
+static uint32_t gcd(uint32_t a, uint32_t b)
+{   while (b)
+    {   uint32_t c = b;
+        b = a % b;
+        a = c;
+    }
+    return a;
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -1896,20 +1905,16 @@ lowest common terms, find the value of the denominator.
 Antwoord: 100
 */
 
-static uint32_t opdracht33()
-{   double d = 1;
-    for (uint32_t i = 1; i < 10; i++)
-    {   for (uint32_t j = 1; j < i; j++)
-        {   uint32_t a = 9 * j * i, b = 10 * j - i, q = a / b, r = a % b;
-            if (r == 0 && q <= 9)
-                d *= i / (double)j;
+static string problem33()
+{   uint32_t dp = 1, np = 1;
+    for (uint32_t c = 1; c < 10; c++)
+    {   for (uint32_t d = 1; d < c; d++)
+        {   for (uint32_t n = 1; n < d; n++)
+                if ((n * 10 + c) * d == (c * 10 + d) * n)
+                    np *= n, dp *= d;
         }
     }
-    return (uint32_t)d;
-}
-
-static string problem33()
-{   return twostring<uint32_t>(opdracht33());
+    return twostring<uint32_t>(dp / gcd(np, dp));
 }
 
 /*
@@ -3109,8 +3114,7 @@ https://www.mathblog.dk/project-euler-58-primes-diagonals-spiral/
 */
 
 static string problem58()
-{
-    uint32_t sl = 2, cnt = 3, c = 9;
+{   uint32_t sl = 2, cnt = 3, c = 9;
     while ((double)cnt / (2*sl+1) >= 0.10)
     {   sl += 2;
         for (uint8_t i = 0; i < 3; i++)
