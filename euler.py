@@ -2875,7 +2875,10 @@ def problem78():
 """
 #79: Passcode derivation
 
-A common security method used for online banking is to ask the user for three random characters from a passcode. For example, if the passcode was 531278, they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.
+A common security method used for online banking is to ask the user for
+three random characters from a passcode. For example, if the passcode
+was 531278, they may ask for the 2nd, 3rd, and 5th characters; the
+expected reply would be: 317.
 
 The text file, keylog.txt, contains fifty successful login attempts.
 
@@ -2916,6 +2919,56 @@ def problem79(fn = "euler79.txt"):
         if test(perm, attempts): return concat(perm)
     raise("Answer not found")
     return 0
+
+"""
+#80: Square root digital expansion
+
+It is well known that if the square root of a natural number is not an
+integer, then it is irrational. The decimal expansion of such square
+roots is infinite without any repeating pattern at all.
+
+The square root of two is 1.41421356237309504880..., and the
+digital sum of the first one hundred decimal digits is 475.
+
+For the first one hundred natural numbers, find the total of the digital sums
+of the first one hundred decimal digits for all the irrational square roots.
+
+"""
+
+def problem80():
+    return 0
+
+"""
+#81: Path sum: two ways
+
+In the 5 by 5 matrix below, the minimal path sum from the top left to the
+bottom right, by only moving to the right and down, is indicated in bold
+red and is equal to 2427.
+
+131  673  234  103  18
+201  96   342  965  150
+630  803  746  422  111
+537  699  497  121  956
+805  732  524  37   331
+
+Find the minimal path sum, in matrix.txt (right click and "Save Link/Target
+As..."), a 31K text file containing a 80 by 80 matrix, from the top left to
+the bottom right by only moving right and down.
+
+Antwoord: 427,337
+"""
+
+def problem81(fn = "euler81.txt"):
+    lst = [int(n) for n in open(fn).read().split()]
+    root = floorsqrt(len(lst))
+    for i in range(root - 1):
+        lst[i + 1] += lst[i]
+    for i in range(root - 1):
+        lst[(i + 1) * root] += lst[i * root]
+    for i in range(root - 1):
+        for j in range(root - 1):
+            lst[(i + 1) * root + (j + 1)] += min(lst[(i + 1) * root + j], lst[i * root + (j + 1)])
+    return lst[len(lst) - 1]
 
 """
 Einde opdrachten
@@ -3001,6 +3054,8 @@ def runn2(n = 1):
     if n == 77: return problem77()
     if n == 78: return problem78()
     if n == 79: return problem79()
+    if n == 80: return problem80()
+    if n == 81: return problem81()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3011,7 +3066,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71, 55374, 73162890]
+    381138582, 71, 55374, 73162890, 0, 427337]
 
 #answers[61 - 1] = 0
 
@@ -3025,13 +3080,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 79 + 1))):
+def runm(l = list(range(1, 81 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 79 + 1)):
+def runs(l = range(1, 81 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
