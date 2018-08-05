@@ -2935,8 +2935,16 @@ of the first one hundred decimal digits for all the irrational square roots.
 
 """
 
+import decimal
 def problem80():
-    return 0
+    decimal.getcontext().prec = 102
+    L, d, s = 100, 100, 0
+    p = pow(10, d-1)
+    for z in range(2, L):
+        if issquare(z): continue
+        q = decimal.Decimal(z).sqrt()
+        s += sum(int(c) for c in str(q * p)[:d])
+    return s
 
 """
 #81: Path sum: two ways
@@ -3066,7 +3074,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71, 55374, 73162890, 0, 427337]
+    381138582, 71, 55374, 73162890, 40886, 427337]
 
 #answers[61 - 1] = 0
 
