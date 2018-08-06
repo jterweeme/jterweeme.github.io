@@ -21,6 +21,7 @@ def isprime(n, presets = (3000, 300, 100, 8)):
             if n > preset * preset:
                 return n // preset
         return n
+    if n < 2: return False
     for i in range(2, reducer2(n, presets)):
         if n % i == 0: return False
     return True
@@ -189,29 +190,28 @@ def fibonacci(xmax, term1 = 1, term2 = 2):
         yield term1 + term2
         term1, term2 = term2, term1 + term2
 
-import random
+def miller_rabin_pass(a, s, d, n):
+    a_to_power = pow(a, d, n)
+    if a_to_power == 1:
+        return True
+    for i in range(s - 1):
+        if a_to_power == n - 1:
+            return True
+        a_to_power = (a_to_power * a_to_power) % n
+    return a_to_power == n - 1
 
-def miller_rabin(n, k = 3):
-    if n < 6:  # assuming n >= 0 in all cases... shortcut small cases here
-        return [False, False, True, True, False, True][n]
-    if n % 2 == 0:  # should be faster than n % 2
-        return False
-    s, d = 0, n - 1
+def miller_rabin(n):
+    if n < 2: return False
+    if n in {2, 7, 61}: return True
+    d = n - 1
+    s = 0
     while d % 2 == 0:
-        s, d = s + 1, d >> 1
-    for a in random.sample(range(2, n-2), k):
-        x = pow(a, d, n)
-        if x != 1 and x + 1 != n:
-            for r in range(1, s):
-                x = pow(x, 2, n)
-                if x == 1:
-                    return False  # composite for sure
-                elif x == n - 1:
-                    a = 0  # so we know loop didn't continue to end
-                    break  # could be strong liar, try another a
-            if a:
-                return False  # composite if we reached end of this loop
-    return True  # probably prime if reached end of outer loop
+        d >>= 1
+        s += 1
+    for a in {2,7,61}:
+        if not miller_rabin_pass(a, s, d, n):
+            return False
+    return True
 
 def permutations(pool):
     n = len(pool)
@@ -262,6 +262,24 @@ def ways(target, coins):
         for i in range(coin, target + 1):
             ways[i] += ways[i - coin]
     return ways[target]
+
+def concat2(lst):
+    ret = 0
+    for n in lst:
+        e = decimals(n) if n else 1
+        ret *= 10**e
+        ret += n
+    return ret
+
+def testSuite():
+    lprimes1 = list(sieve(500))
+    lprimes2 = list()
+    for n in range(500):
+        if m_r(n):
+            lprimes2.append(n)
+    return lprimes2
+    if lprimes1 != lprimes2:
+        raise("Error 1")
 
 """
 #1 Multiples of 3 and 5
@@ -1407,9 +1425,8 @@ Antwoord: 932,718,654
 """
 
 def opdracht38():
-    def concat(a, b): return b + a * 10**decimals(b)
     for i in range(9387, 9234, -1):
-        result = concat(i, 2 * i)
+        result = concat2([i, 2 * i])
         if isPandigital(result):
             return result
     raise Exception("Answer not found")
@@ -1569,15 +1586,10 @@ Antwoord: 16,695,334,890
 """
 
 def opdracht43():
-    def concat(lst):
-        ret = 0
-        for i, n in enumerate(reversed(lst)):
-            ret += n *10**i
-        return ret
     def perms(a):
         for p in permutations(a):
             p.insert(5,5)
-            yield concat(p);
+            yield concat2(p);
     def test(n):
         divs = [17,13,11,7,5,3,2];
         for i, div in enumerate(divs):
@@ -2896,11 +2908,6 @@ Antwoord: 73,162,890
 """
 
 def problem79(fn = "euler79.txt"):
-    def concat(lst):
-        ret = 0
-        for i, n in enumerate(reversed(lst)):
-            ret += n *10**i
-        return ret
     def test(perm, attempts):
         def login(passcode, attempt):
             arr = list()
@@ -2916,7 +2923,7 @@ def problem79(fn = "euler79.txt"):
         for dig in digits(attempt):
             digs.add(dig)
     for perm in permutations2(digs):
-        if test(perm, attempts): return concat(perm)
+        if test(perm, attempts): return concat2(perm)
     raise("Answer not found")
     return 0
 
@@ -2933,18 +2940,34 @@ digital sum of the first one hundred decimal digits is 475.
 For the first one hundred natural numbers, find the total of the digital sums
 of the first one hundred decimal digits for all the irrational square roots.
 
+Antwoord: 40,886
 """
 
-import decimal
+"""
+dsums = {2: 475, 3: 441, 5: 473, 6: 471, 7: 398, 8: 465, 10: 459, 11: 484, 12: 406,
+13: 418, 14: 485, 15: 500, 17: 450, 18: 401, 19: 472, 20: 488, 21: 484,
+22: 407, 23: 453, 24: 484, 26: 455, 27: 398, 28: 401, 29: 459, 30: 467,
+31: 473, 32: 471, 33: 472, 34: 459, 35: 440, 37: 457, 38: 462, 39: 465,
+40: 486, 41: 451, 42: 445, 43: 503, 44: 483, 45: 440, 46: 451, 47: 423,
+48: 398, 50: 470, 51: 468, 52: 432, 53: 477, 54: 461, 55: 432, 56: 467,
+57: 453, 58: 409, 59: 499, 60: 479, 61: 436, 62: 450, 63: 439, 65: 440,
+66: 464, 67: 498, 68: 451, 69: 438, 70: 464, 71: 417, 72: 424, 73: 427,
+74: 427, 75: 435, 76: 459, 77: 484, 78: 456, 79: 461, 80: 500, 82: 455,
+83: 474, 84: 456, 85: 426, 86: 459, 87: 459, 88: 409, 89: 408, 90: 477,
+91: 412, 92: 502, 93: 452, 94: 502, 95: 459, 96: 483, 97: 440, 98: 477, 99: 446}
+"""
+
+def squaredigits(square, digits = 100):
+    buf = [0] * 100
+    for digit in range(digits):
+        for n in range(10):
+            buf[digit] = 9 - n
+            if concat2(buf[:(digit + 1)])**2 < (square * 10**(digit*2)):
+                break
+    return sum(buf)
+
 def problem80():
-    decimal.getcontext().prec = 102
-    L, d, s = 100, 100, 0
-    p = pow(10, d-1)
-    for z in range(2, L):
-        if issquare(z): continue
-        q = decimal.Decimal(z).sqrt()
-        s += sum(int(c) for c in str(q * p)[:d])
-    return s
+    return sum(squaredigits(n, 100) for n in range(2, 100) if issquare(n) == False)
 
 """
 #81: Path sum: two ways

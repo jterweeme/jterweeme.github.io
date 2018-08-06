@@ -165,60 +165,35 @@ static uint64_t powmod(uint64_t base, unsigned long long exponent, unsigned long
 // good bases can be found at http://miller-rabin.appspot.com/
 
 static bool isPrime(uint64_t p)
-{
-    const uint32_t bitmaskPrimes2to31 = (1 <<  2) | (1 <<  3) | (1 <<  5) | (1 <<  7) |
+{   const uint32_t bitmaskPrimes2to31 = (1 <<  2) | (1 <<  3) | (1 <<  5) | (1 <<  7) |
                                         (1 << 11) | (1 << 13) | (1 << 17) | (1 << 19) |
                                         (1 << 23) | (1 << 29); // = 0x208A28Ac
-
-    if (p < 31)
-        return (bitmaskPrimes2to31 & (1 << p)) != 0;
-
+    if (p < 31) return (bitmaskPrimes2to31 & (1 << p)) != 0;
     if (p %  2 == 0 || p %  3 == 0 || p %  5 == 0 || p % 7 == 0 || 
         p % 11 == 0 || p % 13 == 0 || p % 17 == 0)
         return false;
-
-    if (p < 17*19)
-        return true;
-
-    const unsigned int STOP = 0;
-    const unsigned int TestAgainst1[] = { 377687, STOP };
-    const unsigned int TestAgainst2[] = { 31, 73, STOP };
-    const unsigned int TestAgainst3[] = { 2, 7, 61, STOP };
-    const unsigned int TestAgainst4[] = { 2, 13, 23, 1662803, STOP };
-    const unsigned int TestAgainst7[] = { 2, 325, 9375, 28178, 450775, 9780504, 1795265022, STOP };
-    const unsigned int* testAgainst = TestAgainst7;
-
-    if (p < 5329)
-           testAgainst = TestAgainst1;
-    else if (p < 9080191)
-           testAgainst = TestAgainst2;
-    else if (p < 4759123141ULL)
-           testAgainst = TestAgainst3;
-    else if (p < 1122004669633ULL)
-           testAgainst = TestAgainst4;
-
+    if (p < 17*19) return true;
+    const uint32_t TestAgainst1[] = { 377687, 0 };
+    const uint32_t TestAgainst2[] = { 31, 73, 0 };
+    const uint32_t TestAgainst3[] = { 2, 7, 61, 0 };
+    const uint32_t TestAgainst4[] = { 2, 13, 23, 1662803, 0 };
+    const uint32_t TestAgainst7[] = { 2, 325, 9375, 28178, 450775, 9780504, 1795265022, 0 };
+    const uint32_t *testAgainst = TestAgainst7;
+    if (p < 5329) testAgainst = TestAgainst1;
+    else if (p < 9080191) testAgainst = TestAgainst2;
+    else if (p < 4759123141ULL) testAgainst = TestAgainst3;
+    else if (p < 1122004669633ULL) testAgainst = TestAgainst4;
     auto d = p - 1;
     d >>= 1;
-    unsigned int shift = 0;
-    while ((d & 1) == 0)
-    {
-       shift++;
-       d >>= 1;
-    }
-
+    uint32_t shift = 0;
+    while ((d & 1) == 0) shift++, d >>= 1;
     do
-    {
-        auto x = powmod(*testAgainst++, d, p);
-        if (x == 1 || x == p - 1)
-            continue;
+    {   auto x = powmod(*testAgainst++, d, p);
+        if (x == 1 || x == p - 1) continue;
         bool maybePrime = false;
-
         for (unsigned int r = 0; r < shift; r++)
-        {
-            x = powmod(x, 2, p);
-            if (x == 1)
-                return false;
-
+        {   x = powmod(x, 2, p);
+            if (x == 1) return false;
             if (x == p - 1)
             {
                maybePrime = true;
@@ -227,7 +202,7 @@ static bool isPrime(uint64_t p)
         }
         if (!maybePrime)
             return false;
-    } while (*testAgainst != STOP);
+    } while (*testAgainst != 0);
     return true;
 }
 
