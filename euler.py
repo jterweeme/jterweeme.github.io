@@ -3030,6 +3030,93 @@ def problem82(fn = "euler82.txt"):
             sol[j - 1] = min(sol[j - 1], sol[j] + grid[j - 1][i - 1])
     return min(sol)
 
+def problem83():
+    return 0
+
+def problem84():
+    return 0
+
+def problem85():
+    return 0
+
+def problem86():
+    return 0
+
+"""
+#87: Prime power triples
+
+The smallest number expressible as the sum of a prime square, prime cube,
+and prime fourth power is 28. In fact, there are exactly four numbers
+below fifty that can be expressed in such a way:
+
+28 = 22 + 23 + 24
+33 = 32 + 23 + 24
+49 = 52 + 23 + 24
+47 = 22 + 33 + 24
+
+How many numbers below fifty million can be expressed as the
+sum of a prime square, prime cube, and prime fourth power?
+
+Antwoord: 1,097,343
+"""
+
+def problem87():
+    P = set()
+    for a in sieve(7072):
+        for b in sieve(369):
+            for c in sieve(85):
+                q  = a*a + b**3 + c**4
+                if q >= 50000000: break
+                P.add(q)
+    return len(P)
+
+"""
+#92: Square digit chains
+
+A number chain is created by continuously adding the square of the
+digits in a number to form a new number until it has been seen before.
+
+For example,
+
+44 → 32 → 13 → 10 → 1 → 1
+85 → 89 → 145 → 42 → 20 → 4 → 16 → 37 → 58 → 89
+
+Therefore any chain that arrives at 1 or 89 will become stuck in an endless
+loop. What is most amazing is that EVERY starting number will eventually
+arrive at 1 or 89.
+
+How many starting numbers below ten million will arrive at 89?
+
+Antwoord: 8,581,146
+"""
+
+def endchain(n):
+    while n != 89 and n != 1:
+        n = sum(d**2 for d in digits(n))
+    return n
+
+def problem92():
+    return sum(endchain(n) == 89 for n in range(1, 10**7))
+
+"""
+#97: Large non-Mersenne prime
+
+The first known prime found to exceed one million digits was discovered in
+1999, and is a Mersenne prime of the form 26972593−1; it contains exactly
+2,098,960 digits. Subsequently other Mersenne primes, of the form 2p−1,
+have been found which contain more digits.
+
+However, in 2004 there was found a massive non-Mersenne
+prime which contains 2,357,207 digits: 28433×27830457+1.
+
+Find the last ten digits of this prime number.
+
+Antwoord: 8,739,992,577
+"""
+
+def problem97():
+    return (28433*2**7830457+1)%10**10
+
 """
 Einde opdrachten
 """
@@ -3117,6 +3204,11 @@ def runn2(n = 1):
     if n == 80: return problem80()
     if n == 81: return problem81()
     if n == 82: return problem82()
+    if n == 83: return problem83()
+    if n == 84: return problem84()
+    if n == 85: return problem85()
+    if n == 86: return problem86()
+    if n == 87: return problem87()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3127,7 +3219,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71, 55374, 73162890, 40886, 427337, 260324]
+    381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 0, 0, 1097343]
 
 #answers[61 - 1] = 0
 
@@ -3141,13 +3233,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 82 + 1))):
+def runm(l = list(range(1, 87 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 82 + 1)):
+def runs(l = range(1, 87 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
