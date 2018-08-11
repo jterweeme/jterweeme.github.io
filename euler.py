@@ -2694,18 +2694,21 @@ It can be seen that there are 3 fractions between 1/3 and 1/2.
 
 How many fractions lie between 1/3 and 1/2 in the
 sorted set of reduced proper fractions for d ≤ 12,000?
+
+Antwoord: 7,295,372
 """
 
-def rpf(d):
-    for n in range(1,d):
-        if gcd(n, d) == 1: yield (n, d)
+"""
+https://blog.dreamshire.com/project-euler-73-solution/
+"""
 
-def problem73():
-    xcount = 0
-    for d in range(2, 12001):
-        for xrpf in rpf(d):
-            if xrpf[0] / xrpf[1] > 1/3 and xrpf[0] / xrpf[1] < 1/2: xcount += 1
-    return xcount
+def problem73(L = 12000, n1 = 1, d1 = 3, n2 = 1, d2 = 2):
+    ceildiv = lambda a, b: -(-a // b)
+    n = [0] * (L+1) 
+    for d in range(1, L+1):
+        n[d] += ceildiv(n2*d, d2) - ceildiv(n1*d, d1) - 1
+        n[2*d::d] = [k-n[d] for k in n[2*d::d]]
+    return sum(n)
 
 """
 #74: Digit factorial chains
@@ -3036,11 +3039,61 @@ def problem83():
 def problem84():
     return 0
 
-def problem85():
-    return 0
+"""
+#85: Counting rectangles
 
+Antwoord: 2,772
+"""
+
+def problem85():
+    def rects(x, y):
+        return ((x*x+x)*(y*y+y))//4
+    best_x = best_y = best_rects = 9**9
+    for x in range(1, 2001):
+        for y in range(1, 2001):
+            diff = abs(rects(x, y) - 2*10**6)
+            if diff < best_rects:
+                best_x, best_y, best_rects = x, y, diff
+    return best_x * best_y
+
+"""
+#86: Cuboid route
+
+A spider, S, sits in one corner of a cuboid room, measuring 6 by 5 by 3,
+and a fly, F, sits in the opposite corner. By travelling on the surfaces
+of the room the shortest "straight line" distance from S to F is 10 and
+the path is shown on the diagram.
+
+However, there are up to three "shortest" path candidates for any given
+cuboid and the shortest route doesn't always have integer length.
+
+It can be shown that there are exactly 2060 distinct cuboids, ignoring
+rotations, with integer dimensions, up to a maximum size of M by M by M,
+for which the shortest route has integer length when M = 100. This is the
+least value of M for which the number of solutions first exceeds two
+thousand; the number of solutions when M = 99 is 1975.
+
+Find the least value of M such that the number
+of solutions first exceeds one million.
+
+Antwoord: 1,818
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-86-solution/
+"""
+
+import math
 def problem86():
-    return 0
+    L, c, a = 10**6, 0, 2
+    while c < L:
+        a += 1
+        for bc in range(3, 2*a):
+            if bc * a % 12 == 0:
+                s = math.sqrt(bc*bc + a*a)
+                if not s % 1:
+                    c += min(bc, a + 1) - (bc + 1) // 2
+    return a
 
 """
 #87: Prime power triples
@@ -3069,6 +3122,61 @@ def problem87():
                 if q >= 50000000: break
                 P.add(q)
     return len(P)
+
+"""
+#88: Product-sum numbers
+
+A natural number, N, that can be written as the sum and product of a
+given set of at least two natural numbers, {a1, a2, ... , ak} is called
+a product-sum number: N = a1 + a2 + ... + ak = a1 × a2 × ... × ak.
+
+For example, 6 = 1 + 2 + 3 = 1 × 2 × 3.
+
+For a given set of size, k, we shall call the smallest N with this
+property a minimal product-sum number. The minimal product-sum numbers
+for sets of size, k = 2, 3, 4, 5, and 6 are as follows.
+
+k=2: 4 = 2 × 2 = 2 + 2
+k=3: 6 = 1 × 2 × 3 = 1 + 2 + 3
+k=4: 8 = 1 × 1 × 2 × 4 = 1 + 1 + 2 + 4
+k=5: 8 = 1 × 1 × 2 × 2 × 2 = 1 + 1 + 2 + 2 + 2
+k=6: 12 = 1 × 1 × 1 × 1 × 2 × 6 = 1 + 1 + 1 + 1 + 2 + 6
+
+Hence for 2≤k≤6, the sum of all the minimal product-sum numbers is
+4+6+8+12 = 30; note that 8 is only counted once in the sum.
+
+In fact, as the complete set of minimal product-sum numbers
+for 2≤k≤12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
+
+What is the sum of all the minimal product-sum numbers for 2≤k≤12000?
+
+Antwoord: 7,587,457
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-88-solution/
+"""
+
+def problem88(kmax = 12000):
+    def prodsum(p, s, c, start):
+        k = p - s + c     # product - sum + number of factors
+        if k < kmax:
+            if p < n[k]: n[k] = p
+            for i in range(start, kmax//p*2 + 1):
+                prodsum(p*i, s+i, c+1, i)
+    if kmax > 12: kmax+= 1
+    n = [2*kmax] * kmax
+    prodsum(1, 1, 1, 2)
+    return sum(set(n[2:]))
+
+def problem89():
+    return 0
+
+def problem90():
+    return 0
+
+def problem91():
+    return 0
 
 """
 #92: Square digit chains
@@ -3209,6 +3317,11 @@ def runn2(n = 1):
     if n == 85: return problem85()
     if n == 86: return problem86()
     if n == 87: return problem87()
+    if n == 88: return problem88()
+    if n == 89: return problem89()
+    if n == 90: return problem90()
+    if n == 91: return problem91()
+    if n == 92: return problem92()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3219,7 +3332,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 0, 0, 1097343]
+    381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 2772, 1818, 1097343,
+    7587457, 0, 0, 0, 8581146]
 
 #answers[61 - 1] = 0
 
@@ -3233,13 +3347,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 87 + 1))):
+def runm(l = list(range(1, 92 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 87 + 1)):
+def runs(l = range(1, 92 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
