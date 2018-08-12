@@ -252,6 +252,24 @@ def permutations2(iterable, r=None):
         else:
             return
 
+def combinations2(iterable, r):
+    pool = tuple(iterable)
+    n = len(pool)
+    if r > n:
+        return
+    indices = list(range(r))
+    yield tuple(pool[i] for i in indices)
+    while True:
+        for i in reversed(range(r)):
+            if indices[i] != i + n - r:
+                break
+        else:
+            return
+        indices[i] += 1
+        for j in range(i+1, r):
+            indices[j] = indices[j-1] + 1
+        yield tuple(pool[i] for i in indices)
+
 def gcd(a, b):
     while b: a, b = b, a % b
     return a
@@ -336,7 +354,7 @@ def opdracht3(n = 600851475143):
 #4 Largest palindrome product
 
 A palindromic number reads the same both ways. The largest palindrome
-made from the product of two 2-digit numbers is 9009 = 91 × 99.
+made from the product of two 2-digit numbers is 9009 = 91 x 99.
 
 Find the largest palindrome made from the product of two 3-digit numbers.
 
@@ -387,7 +405,7 @@ The square of the sum of the first ten natural numbers is,
 (1 + 2 + ... + 10)2 = 552 = 3025
 
 Hence the difference between the sum of the squares of the first ten
-natural numbers and the square of the sum is 3025 − 385 = 2640.
+natural numbers and the square of the sum is 3025 - 385 = 2640.
 
 Find the difference between the sum of the squares of the
 first one hundred natural numbers and the square of the sum.
@@ -439,7 +457,7 @@ def opdracht7(n = 10001):
 #8 Largest product in a series
 
 The four adjacent digits in the 1000-digit number that
-have the greatest product are 9 × 9 × 8 × 9 = 5832.
+have the greatest product are 9 x 9 x 8 x 9 = 5832.
 
 Find the thirteen adjacent digits in the 1000-digit number that
 have the greatest product. What is the value of this product?
@@ -511,13 +529,13 @@ def opdracht10(limit = 2*10**6):
 """
 #11 Largest product in a grid
 
-In the 20×20 grid below, four numbers along
+In the 20x20 grid below, four numbers along
 a diagonal line have been marked in red.
 
-The product of these numbers is 26 × 63 × 78 × 14 = 1788696.
+The product of these numbers is 26 x 63 x 78 x 14 = 1788696.
 
 What is the greatest product of four adjacent numbers in the same
-direction (up, down, left, right, or diagonally) in the 20×20 grid?
+direction (up, down, left, right, or diagonally) in the 20x20 grid?
 
 Antwoord: 70,600,674
 """
@@ -610,11 +628,11 @@ def opdracht13(fn = "euler13.txt"):
 
 The following iterative sequence is defined for the set of positive integers:
 
-n → n/2 (n is even)
-n → 3n + 1 (n is odd)
+n -> n/2 (n is even)
+n -> 3n + 1 (n is odd)
 
 Using the rule above and starting with 13, we generate the following sequence:
-13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+13 -> 40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
 
 It can be seen that this sequence (starting at 13 and finishing at 1)
 contains 10 terms. Although it has not been proved yet (Collatz Problem),
@@ -651,7 +669,7 @@ def opdracht14(limit = 10**6):
 Starting in the top left corner of a 2x2 grid, and only being able to move
 to the right and down, there are exactly 6 routes to the bottom right corner.
 
-How many such routes are there through a 20×20 grid?
+How many such routes are there through a 20x20 grid?
 
 Antwoord: 137,846,528,820
 """
@@ -797,9 +815,9 @@ def opdracht19():
 """
 #20 Factorial digit sum
 
-n! means n × (n − 1) × ... × 3 × 2 × 1
+n! means n x (n - 1) x ... x 3 x 2 x 1
 
-For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+For example, 10! = 10 x 9 x ... x 3 x 2 x 1 = 3628800,
 and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!
@@ -854,7 +872,7 @@ multiply this value by its alphabetical position in the list to obtain a name sc
 
 For example, when the list is sorted into alphabetical order, COLIN, which
 is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. So,
-COLIN would obtain a score of 938 × 53 = 49714.
+COLIN would obtain a score of 938 x 53 = 49714.
 
 What is the total of all the name scores in the file?
 
@@ -948,7 +966,7 @@ def opdracht24(pool = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
 
 The Fibonacci sequence is defined by the recurrence relation:
 
-    Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+    Fn = Fn-1 + Fn-2, where F1 = 1 and F2 = 1.
 
 Hence the first 12 terms will be:
 
@@ -1056,25 +1074,25 @@ Euler discovered the remarkable quadratic formula:
 n^2+n+41
 
 It turns out that the formula will produce 40 primes for the consecutive
-integer values 0≤n≤39. However, when n=40,402+40+41=40(40+1)+41 is
+integer values 0<=n<=39. However, when n=40,402+40+41=40(40+1)+41 is
 divisible by 41, and certainly when n=41,412+41+41
 
 is clearly divisible by 41.
 
-The incredible formula n2−79n+1601
-was discovered, which produces 80 primes for the consecutive values 0≤n≤79
+The incredible formula n2-79n+1601
+was discovered, which produces 80 primes for the consecutive values 0<=n<=79
 
-. The product of the coefficients, −79 and 1601, is −126479.
+. The product of the coefficients, -79 and 1601, is -126479.
 
 Considering quadratics of the form:
 
     n^2+an+b
 
-, where |a|<1000 and |b|≤1000
+, where |a|<1000 and |b|<=1000
 
 where |n|
 is the modulus/absolute value of n
-e.g. |11|=11 and |−4|=4
+e.g. |11|=11 and |-4|=4
 
 Find the product of the coefficients, a
 and b, for the quadratic expression that produces the maximum
@@ -1139,7 +1157,7 @@ def opdracht28(root = 1001):
 """
 #29: Distinct powers
 
-Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
+Consider all integer combinations of a^b for 2 <= a <= 5 and 2 <= b <= 5:
 
 2^2=4, 2^3=8, 2^4=16, 2^5=32
 3^2=9, 3^3=27, 3^4=81, 3^5=243
@@ -1152,7 +1170,7 @@ removed, we get the following sequence of 15 distinct terms:
 4, 8, 9, 16, 25, 27, 32, 64, 81, 125, 243, 256, 625, 1024, 3125
 
 How many distinct terms are in the sequence
-generated by ab for 2 ≤ a ≤ 100 and 2 ≤ b ≤ 100?
+generated by ab for 2 <= a <= 100 and 2 <= b <= 100?
 
 Antwoord: 9,183
 """
@@ -1200,11 +1218,11 @@ p, and there are eight coins in general circulation:
 
     1p, 2p, 5p, 10p, 20p, 50p, P1 (100p) and P2 (200p).
 
-It is possible to make £2 in the following way:
+It is possible to make P2 in the following way:
 
-    1×P1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
+    1xP1 + 1x50p + 2x20p + 1x5p + 1x2p + 3x1p
 
-How many different ways can £2 be made using any number of coins?
+How many different ways can P2 be made using any number of coins?
 
 Antwoord: 73,682
 """
@@ -1219,7 +1237,7 @@ We shall say that an n-digit number is pandigital if it makes use of all
 the digits 1 to n exactly once; for example, the 5-digit number, 15234,
 is 1 through 5 pandigital.
 
-The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing
+The product 7254 is unusual, as the identity, 39 x 186 = 7254, containing
 multiplicand, multiplier, and product is 1 through 9 pandigital.
 
 Find the sum of all products whose multiplicand/multiplier/product
@@ -1403,9 +1421,9 @@ def opdracht37():
 
 Take the number 192 and multiply it by each of 1, 2, and 3:
 
-192 × 1 = 192
-192 × 2 = 384
-192 × 3 = 576
+192 x 1 = 192
+192 x 2 = 384
+192 x 3 = 576
 
 By concatenating each product we get the 1 to 9 pandigital, 192384576. We
 will call 192384576 the concatenated product of 192 and (1,2,3)
@@ -1440,7 +1458,7 @@ sides, {a,b,c}, there are exactly three solutions for p = 120.
 
 {20,48,52}, {24,45,51}, {30,40,50}
 
-For which value of p ≤ 1000, is the number of solutions maximised?
+For which value of p <= 1000, is the number of solutions maximised?
 
 Antwoord: 840
 """
@@ -1489,7 +1507,7 @@ It can be seen that the 12th digit of the fractional part is 1.
 If dn represents the nth digit of the fractional
 part, find the value of the following expression.
 
-d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+d1 x d10 x d100 x d1000 x d10000 x d100000 x d1000000
 
 Antwoord: 210
 """
@@ -1608,15 +1626,15 @@ def opdracht43():
 #44: Pentagon numbers
 
 Pentagonal numbers are generated by the formula,
-Pn=n(3n−1)/2. The first ten pentagonal numbers are:
+Pn=n(3n-1)/2. The first ten pentagonal numbers are:
 
 1, 5, 12, 22, 35, 51, 70, 92, 117, 145, ...
 
 It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However,
-their difference, 70 − 22 = 48, is not pentagonal.
+their difference, 70 - 22 = 48, is not pentagonal.
 
 Find the pair of pentagonal numbers, Pj and Pk, for which
-their sum and difference are pentagonal and D = |Pk − Pj|
+their sum and difference are pentagonal and D = |Pk - Pj|
 is minimised; what is the value of D?
 
 Antwoord: 5,482,660
@@ -1639,8 +1657,8 @@ def opdracht44(window = 10**7):
 
 Triangle, pentagonal, and hexagonal numbers are generated by the following formulae:
 Triangle     Tn=n(n+1)/2     1, 3, 6, 10, 15, ...
-Pentagonal     Pn=n(3n−1)/2     1, 5, 12, 22, 35, ...
-Hexagonal     Hn=n(2n−1)     1, 6, 15, 28, 45, ...
+Pentagonal     Pn=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     Hn=n(2n-1)     1, 6, 15, 28, 45, ...
 
 It can be verified that T285 = P165 = H143 = 40755.
 
@@ -1673,12 +1691,12 @@ def opdracht45():
 It was proposed by Christian Goldbach that every odd composite
 number can be written as the sum of a prime and twice a square.
 
-9 = 7 + 2×1^2
-15 = 7 + 2×2^2
-21 = 3 + 2×3^2
-25 = 7 + 2×3^2
-27 = 19 + 2×2^2
-33 = 31 + 2×1^2
+9 = 7 + 2x1^2
+15 = 7 + 2x2^2
+21 = 3 + 2x3^2
+25 = 7 + 2x3^2
+27 = 19 + 2x2^2
+33 = 31 + 2x1^2
 
 It turns out that the conjecture was false.
 
@@ -1708,14 +1726,14 @@ def opdracht46():
 
 The first two consecutive numbers to have two distinct prime factors are:
 
-14 = 2 × 7
-15 = 3 × 5
+14 = 2 x 7
+15 = 3 x 5
 
 The first three consecutive numbers to have three distinct prime factors are:
 
-644 = 2^2 × 7 × 23
-645 = 3 × 5 × 43
-646 = 2 × 17 × 19.
+644 = 2^2 x 7 x 23
+645 = 3 x 5 x 43
+646 = 2 x 17 x 19.
 
 Find the first four consecutive integers to have four distinct
 prime factors each. What is the first of these numbers?
@@ -1891,13 +1909,13 @@ In combinatorics, we use the notation, 5C3 = 10.
 In general,
 nCr =  
 n!
-r!(n−r)!
- ,where r ≤ n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+r!(n-r)!
+ ,where r <= n, n! = nx(n-1)x...x3x2x1, and 0! = 1.
 
 It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
 
 How many, not necessarily distinct, values of  nCr,
-for 1 ≤ n ≤ 100, are greater than one-million?
+for 1 <= n <= 100, are greater than one-million?
 
 Antwoord: 4,075
 """
@@ -2083,7 +2101,7 @@ def opdracht56():
 It is possible to show that the square root of two
 can be expressed as an infinite continued fraction.
 
-√ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+sqrt 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
 
 By expanding this for the first four iterations, we get:
 
@@ -2133,7 +2151,7 @@ way, a square spiral with side length 7 is formed.
 
 It is interesting to note that the odd squares lie along the bottom right
 diagonal, but what is more interesting is that 8 out of the 13 numbers
-lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+lying along both diagonals are prime; that is, a ratio of 8/13 ? 62%.
 
 If one complete new layer is wrapped around the spiral above, a square
 spiral with side length 9 will be formed. If this process is continued,
@@ -2289,10 +2307,10 @@ Triangle, square, pentagonal, hexagonal, heptagonal, and octagonal numbers
 are all figurate (polygonal) numbers and are generated by the following formulae:
 Triangle     P3,n=n(n+1)/2     1, 3, 6, 10, 15, ...
 Square     P4,n=n2     1, 4, 9, 16, 25, ...
-Pentagonal     P5,n=n(3n−1)/2     1, 5, 12, 22, 35, ...
-Hexagonal     P6,n=n(2n−1)     1, 6, 15, 28, 45, ...
-Heptagonal     P7,n=n(5n−3)/2     1, 7, 18, 34, 55, ...
-Octagonal     P8,n=n(3n−2)     1, 8, 21, 40, 65, ...
+Pentagonal     P5,n=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     P6,n=n(2n-1)     1, 6, 15, 28, 45, ...
+Heptagonal     P7,n=n(5n-3)/2     1, 7, 18, 34, 55, ...
+Octagonal     P8,n=n(3n-2)     1, 8, 21, 40, 65, ...
 
 The ordered set of three 4-digit numbers: 8128, 2882, 8281, has three interesting properties.
 
@@ -2571,10 +2589,10 @@ def problem68():
 """
 #69: Totient maximum
 
-Euler's Totient function, φ(n) [sometimes called the phi function], is
+Euler's Totient function, phi(n) [sometimes called the phi function], is
 used to determine the number of numbers less than n which are relatively
 prime to n. For example, as 1, 2, 4, 5, 7, and 8, are all less than nine
-and relatively prime to nine, φ(9)=6.
+and relatively prime to nine, phi(9)=6.
 
 Antwoord: 510,510
 """
@@ -2595,16 +2613,16 @@ def problem69(L = 10**6):
 """
 #70: Totient permutation
 
-Euler's Totient function, φ(n) [sometimes called the phi function],
+Euler's Totient function, phi(n) [sometimes called the phi function],
 is used to determine the number of positive numbers less than or equal to
 n which are relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8,
-are all less than nine and relatively prime to nine, φ(9)=6.
-The number 1 is considered to be relatively prime to every positive number, so φ(1)=1.
+are all less than nine and relatively prime to nine, phi(9)=6.
+The number 1 is considered to be relatively prime to every positive number, so phi(1)=1.
 
-Interestingly, φ(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
+Interestingly, phi(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
 
-Find the value of n, 1 < n < 107, for which φ(n) is a
-permutation of n and the ratio n/φ(n) produces a minimum.
+Find the value of n, 1 < n < 107, for which phi(n) is a
+permutation of n and the ratio n/phi(n) produces a minimum.
 
 Answer: 8,319,823
 """
@@ -2635,14 +2653,14 @@ Consider the fraction, n/d, where n and d are positive integers.
 If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
 
 If we list the set of reduced proper fractions
-for d ≤ 8 in ascending order of size, we get:
+for d <= 8 in ascending order of size, we get:
 
 1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2,
 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
 
 It can be seen that 2/5 is the fraction immediately to the left of 3/7.
 
-By listing the set of reduced proper fractions for d ≤ 1,000,000 in
+By listing the set of reduced proper fractions for d <= 1,000,000 in
 ascending order of size, find the numerator of the fraction immediately
 to the left of 3/7.
 
@@ -2685,7 +2703,7 @@ Consider the fraction, n/d, where n and d are positive integers.
 If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
 
 If we list the set of reduced proper fractions
-for d ≤ 8 in ascending order of size, we get:
+for d <= 8 in ascending order of size, we get:
 
 1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7,
 1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
@@ -2693,7 +2711,7 @@ for d ≤ 8 in ascending order of size, we get:
 It can be seen that there are 3 fractions between 1/3 and 1/2.
 
 How many fractions lie between 1/3 and 1/2 in the
-sorted set of reduced proper fractions for d ≤ 12,000?
+sorted set of reduced proper fractions for d <= 12,000?
 
 Antwoord: 7,295,372
 """
@@ -2722,16 +2740,16 @@ Perhaps less well known is 169, in that it produces the longest chain of
 numbers that link back to 169; it turns out that there are only three such
 loops that exist:
 
-169 → 363601 → 1454 → 169
-871 → 45361 → 871
-872 → 45362 → 872
+169 -> 363601 -> 1454 -> 169
+871 -> 45361 -> 871
+872 -> 45362 -> 872
 
 It is not difficult to prove that EVERY starting number
 will eventually get stuck in a loop. For example,
 
-69 → 363600 → 1454 → 169 → 363601 (→ 1454)
-78 → 45360 → 871 → 45361 (→ 871)
-540 → 145 (→ 145)
+69 -> 363600 -> 1454 -> 169 -> 363601 (-> 1454)
+78 -> 45360 -> 871 -> 45361 (-> 871)
+540 -> 145 (-> 145)
 
 Starting with 69 produces a chain of five non-repeating terms, but the longest
 non-repeating chain with a starting number below one million is sixty terms.
@@ -2789,7 +2807,7 @@ exactly three different integer sided right angle triangles.
 120 cm: (30,40,50), (20,48,52), (24,45,51)
 
 Given that L is the length of the wire, for how many values of
-L ≤ 1,500,000 can exactly one integer sided right angle triangle be formed?
+L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
 
 Antwoord: 161,667
 """
@@ -3128,27 +3146,27 @@ def problem87():
 
 A natural number, N, that can be written as the sum and product of a
 given set of at least two natural numbers, {a1, a2, ... , ak} is called
-a product-sum number: N = a1 + a2 + ... + ak = a1 × a2 × ... × ak.
+a product-sum number: N = a1 + a2 + ... + ak = a1 x a2 x ... x ak.
 
-For example, 6 = 1 + 2 + 3 = 1 × 2 × 3.
+For example, 6 = 1 + 2 + 3 = 1 x 2 x 3.
 
 For a given set of size, k, we shall call the smallest N with this
 property a minimal product-sum number. The minimal product-sum numbers
 for sets of size, k = 2, 3, 4, 5, and 6 are as follows.
 
-k=2: 4 = 2 × 2 = 2 + 2
-k=3: 6 = 1 × 2 × 3 = 1 + 2 + 3
-k=4: 8 = 1 × 1 × 2 × 4 = 1 + 1 + 2 + 4
-k=5: 8 = 1 × 1 × 2 × 2 × 2 = 1 + 1 + 2 + 2 + 2
-k=6: 12 = 1 × 1 × 1 × 1 × 2 × 6 = 1 + 1 + 1 + 1 + 2 + 6
+k=2: 4 = 2 x 2 = 2 + 2
+k=3: 6 = 1 x 2 x 3 = 1 + 2 + 3
+k=4: 8 = 1 x 1 x 2 x 4 = 1 + 1 + 2 + 4
+k=5: 8 = 1 x 1 x 2 x 2 x 2 = 1 + 1 + 2 + 2 + 2
+k=6: 12 = 1 x 1 x 1 x 1 x 2 x 6 = 1 + 1 + 1 + 1 + 2 + 6
 
-Hence for 2≤k≤6, the sum of all the minimal product-sum numbers is
+Hence for 2<=k<=6, the sum of all the minimal product-sum numbers is
 4+6+8+12 = 30; note that 8 is only counted once in the sum.
 
 In fact, as the complete set of minimal product-sum numbers
-for 2≤k≤12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
+for 2<=k<=12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
 
-What is the sum of all the minimal product-sum numbers for 2≤k≤12000?
+What is the sum of all the minimal product-sum numbers for 2<=k<=12000?
 
 Antwoord: 7,587,457
 """
@@ -3169,14 +3187,72 @@ def problem88(kmax = 12000):
     prodsum(1, 1, 1, 2)
     return sum(set(n[2:]))
 
-def problem89():
-    return 0
+"""
+#89: Roman numerals
+
+For a number written in Roman numerals to be considered valid there are
+basic rules which must be followed. Even though the rules allow some
+numbers to be expressed in more than one way there is always a "best"
+way of writing a particular number.
+
+For example, it would appear that there are
+at least six ways of writing the number sixteen:
+
+IIIIIIIIIIIIIIII
+VIIIIIIIIIII
+VVIIIIII
+XIIIIII
+VVVI
+XVI
+
+However, according to the rules only XIIIIII and XVI are valid, and the
+last example is considered to be the most efficient, as it uses the least
+number of numerals.
+
+The 11K text file, roman.txt (right click and 'Save Link/Target As...'),
+contains one thousand numbers written in valid, but not necessarily
+minimal, Roman numerals; see About... Roman Numerals for the definitive
+rules for this problem.
+
+Find the number of characters saved by
+writing each of these in their minimal form.
+
+Note: You can assume that all the Roman numerals in the
+file contain no more than four consecutive identical units.
+
+Antwoord: 743
+"""
+
+import re
+def problem89(fn = "euler89.txt"):
+    rows = open(fn).read()
+    return len(rows) - len(re.sub("DCCCC|LXXXX|VIIII|CCCC|XXXX|IIII", '  ', rows))
+
+"""
+#90: Cube digit pairs
+
+Antwoord: 1,217
+"""
 
 def problem90():
-    return 0
+    squares = [(0,1), (0,4), (0,6), (1,6), (2,5), (3,6), (4,6), (8,1)]
+    cube = list(combinations2([0,1,2,3,4,5,6,7,8,6], 6))
+    valid = lambda c1, c2: all(x in c1 and y in c2 or x in c2 and y in c1 for x, y in squares)
+    return sum(1 for i,c1 in enumerate(cube) for c2 in cube[:i] if valid(c1, c2))
+
+"""
+#91: Right triangles with integer coordinates
+
+Antwoord: 14,234
+"""
 
 def problem91():
-    return 0
+    n, t = 50, 0
+    for x in range(1, n + 1):
+        for y in range(1, n):
+            m = gcd(x, y)
+            t += min(x * m // y, m * (n - y) // x)
+    return t * 2 + n * n * 3
 
 """
 #92: Square digit chains
@@ -3186,8 +3262,8 @@ digits in a number to form a new number until it has been seen before.
 
 For example,
 
-44 → 32 → 13 → 10 → 1 → 1
-85 → 89 → 145 → 42 → 20 → 4 → 16 → 37 → 58 → 89
+44 -> 32 -> 13 -> 10 -> 1 -> 1
+85 -> 89 -> 145 -> 42 -> 20 -> 4 -> 16 -> 37 -> 58 -> 89
 
 Therefore any chain that arrives at 1 or 89 will become stuck in an endless
 loop. What is most amazing is that EVERY starting number will eventually
@@ -3210,12 +3286,12 @@ def problem92():
 #97: Large non-Mersenne prime
 
 The first known prime found to exceed one million digits was discovered in
-1999, and is a Mersenne prime of the form 26972593−1; it contains exactly
-2,098,960 digits. Subsequently other Mersenne primes, of the form 2p−1,
+1999, and is a Mersenne prime of the form 26972593-1; it contains exactly
+2,098,960 digits. Subsequently other Mersenne primes, of the form 2p-1,
 have been found which contain more digits.
 
 However, in 2004 there was found a massive non-Mersenne
-prime which contains 2,357,207 digits: 28433×27830457+1.
+prime which contains 2,357,207 digits: 28433x27830457+1.
 
 Find the last ten digits of this prime number.
 
@@ -3333,7 +3409,7 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
     381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 2772, 1818, 1097343,
-    7587457, 0, 0, 0, 8581146]
+    7587457, 743, 1217, 14234, 8581146]
 
 #answers[61 - 1] = 0
 
