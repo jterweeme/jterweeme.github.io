@@ -1,4 +1,4 @@
-#define MULTITHREAD
+//#define MULTITHREAD
 
 #include <iostream>
 #include <iomanip>
@@ -293,8 +293,19 @@ static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
     return true;
 }
 
+static bool hasDigitsOnce64(uint64_t n, vector<uint8_t> &nset)
+{   while (n)
+    {
+        uint32_t pos = linSearch32<uint8_t>(nset, n % 10);
+        if (pos) nset.erase(nset.begin() + (pos - 1)); else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
 template <typename T> static string twostring(T n)
-{   char buf[50];
+{   if (n == 0) return string("0");
+    char buf[50];
     uint8_t len = decimals<T>(n), i = 0;
     for (i = 0; i < len; i++) buf[i] = digit<T>(n, len - (i + 1)) + '0';
     buf[i] = 0;
@@ -3030,11 +3041,113 @@ case characters. Using cipher.txt (right click and 'Save Link/Target As...'),
 a file containing the encrypted ASCII codes, and the knowledge that the
 plain text must contain common English words, decrypt the message and find
 the sum of the ASCII values in the original text.
+
+Antwoord: 107,359
 */
 
 static string problem59()
 {
+    vector<uint8_t> msg;
+    ifstream ifs;
+    ifs.open("euler59.txt");
+    char c;
+    uint8_t n = 0;
+    while (ifs.get(c))
+    {
+        if (isdigit(c) == false)
+        {
+            msg.push_back(n);
+            n = 0;
+            continue;
+        }
+        n = n * 10 + (c - 48);
+
+    }
+    ifs.close();
+#if 0
+    for (vector<uint8_t>::iterator it = msg.begin(); it != msg.end(); it++)
+        cout << (uint16_t)*it << "\r\n";
+#endif
+    for (uint8_t i = 97; i < 123; i++)
+    {
+        for (uint8_t j = 97; j < 123; j++)
+        {
+            for (uint8_t k = 97; k < 123; k++)
+            {
+                
+            }
+        }
+    }
     return twostring<uint32_t>(0);
+}
+
+/*
+#60: Prime pair sets
+
+The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
+primes and concatenating them in any order the result will always be
+prime. For example, taking 7 and 109, both 7109 and 1097 are prime. The
+sum of these four primes, 792, represents the lowest sum for a set of
+four primes with this property.
+
+Find the lowest sum for a set of five primes for which any two primes
+concatenate to produce another prime.
+
+Antwoord: 26,033
+*/
+
+/*
+13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
+*/
+
+static string problem60()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem61()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#62: Cubic permutations
+
+The cube, 41063625 (345^3), can be permuted to produce two other
+cubes: 56623104 (384^3) and 66430125 (405^3). In fact, 41063625 is
+the smallest cube which has exactly three permutations of its
+digits which are also cube.
+
+Find the smallest cube for which exactly
+five permutations of its digits are cube.
+
+Antwoord: 127,035,954,683
+*/
+
+static bool sameDigs64(uint64_t a, uint64_t b)
+{   vector<uint8_t> nset;
+    for (;a ;a = a / 10) nset.push_back(a % 10);
+    return hasDigitsOnce64(b, nset);
+}
+
+static string problem62()
+{
+    uint64_t lst[9000];
+    for (uint64_t n = 0; n < 9000; n++)
+        lst[n] = n * n * n;
+    for (uint32_t i = 0; i < 9000; i++)
+    {
+        uint32_t cnt = 0;
+        uint8_t ln = decimals<uint64_t>(lst[i]);
+        for (uint32_t b = i; b < 9000; b++)
+        {
+            if (decimals(lst[b]) > ln) break;
+            if (sameDigs64(lst[i], lst[b])) cnt++;
+        }
+        if (cnt == 5)
+            return twostring<uint64_t>(lst[i]);
+    }
+    return twostring<uint64_t>(0);
 }
 
 /*
@@ -3103,6 +3216,10 @@ static string run2(uint32_t p)
     case 56: return problem56();
     case 57: return problem57();
     case 58: return problem58();
+    case 59: return problem59();
+    case 60: return problem60();
+    case 61: return problem61();
+    case 62: return problem62();
     }
     return 0;
 }
@@ -3115,7 +3232,8 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
-    "121313", "142857", "4075", "376", "249", "972", "153", "26241"};
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241", "0", "0", "0",
+    "127035954683"};
 
 
 #ifdef MULTITHREAD
@@ -3230,9 +3348,9 @@ int main()
     time_t begin = time(0);
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
-    multithread(58);
+    multithread(59);
 #else
-    singlethread(58);
+    singlethread(62);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

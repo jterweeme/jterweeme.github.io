@@ -2203,6 +2203,8 @@ case characters. Using cipher.txt (right click and 'Save Link/Target As...'),
 a file containing the encrypted ASCII codes, and the knowledge that the plain
 text must contain common English words, decrypt the message and find the sum
 of the ASCII values in the original text.
+
+Antwoord: 107,359
 """
 
 """
@@ -3051,8 +3053,51 @@ def problem82(fn = "euler82.txt"):
             sol[j - 1] = min(sol[j - 1], sol[j] + grid[j - 1][i - 1])
     return min(sol)
 
-def problem83():
+"""
+#83: Path sum: four ways
+
+NOTE: This problem is a significantly more challenging version of Problem 81.
+
+In the 5 by 5 matrix below, the minimal path sum from the top left to the
+bottom right, by moving left, right, up, and down, is indicated in bold
+red and is equal to 2297.
+
+131  673  234  103  18
+201  96   342  965  150
+630  803  746  422  111
+537  699  497  121  956
+805  732  524  37   331
+
+Find the minimal path sum, in matrix.txt (right click and "Save
+Link/Target As..."), a 31K text file containing a 80 by 80 matrix,
+from the top left to the bottom right by moving left, right, up, and down.
+
+Antwoord: 425,185
+"""
+
+def astar(grid, minval):
+    gridSize = len(grid[0])
+    g = [[9*10**6 for i in range(gridSize)] for j in range(gridSize)]
+    h = [[0 for i in range(gridSize)] for j in range(gridSize)]
+    for i in range(gridSize):
+        for j in range(gridSize):
+            h[i, j] = minval * (2 * (gridSize - 1)) + 1 - i - j
+    g[0][0] = grid[0][0]
+    
     return 0
+
+def problem83(fn = "euler83.txt"):
+    return 0
+    grid = list()
+    lines = 0
+    minval = 9*10**6
+    values = [int(x) for x in open(fn).read().split()]
+    minval = min(values)
+    root = floorsqrt(len(values))
+    for i, n in enumerate(values):
+        grid[i // 80][i % 80] = n
+    print(root)
+    return astar(grid, minval)
 
 def problem84():
     return 0
