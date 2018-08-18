@@ -145,19 +145,13 @@ static uint64_t mulmod(uint64_t a, uint64_t b, uint64_t modulo)
 }
 
 static uint64_t powmod(uint64_t base, unsigned long long exponent, unsigned long long modulo)
-{
-    unsigned long long result = 1;
+{   uint64_t result = 1;
     while (exponent > 0)
-
-         {
-           if (exponent & 1)
-             result = mulmod(result, base, modulo);
-
-           base = mulmod(base, base, modulo);
-           exponent >>= 1;
-
-         }
-         return result;
+    {   if (exponent & 1) result = mulmod(result, base, modulo);
+        base = mulmod(base, base, modulo);
+        exponent >>= 1;
+    }
+    return result;
 }
 
 // some code from      https://ronzii.wordpress.com/2012/03/04/miller-rabin-primality-test/
@@ -284,7 +278,7 @@ template <typename T> uint32_t linSearch32(vector<T> &vec, T n)
     return 0;
 }
 
-static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
+template <typename T> bool hasDigitsOnce(T n, vector<uint8_t> &nset)
 {   while (n)
     {   uint32_t pos = linSearch32<uint8_t>(nset, n % 10);
         if (pos) nset.erase(nset.begin() + (pos - 1)); else return false;
@@ -293,14 +287,10 @@ static bool hasDigitsOnce32(uint32_t n, vector<uint8_t> &nset)
     return true;
 }
 
-static bool hasDigitsOnce64(uint64_t n, vector<uint8_t> &nset)
-{   while (n)
-    {
-        uint32_t pos = linSearch32<uint8_t>(nset, n % 10);
-        if (pos) nset.erase(nset.begin() + (pos - 1)); else return false;
-        n = n / 10;
-    }
-    return true;
+template <typename T> bool sameDigs(T a, T b)
+{   vector<uint8_t> nset;
+    for (;a ;a = a / 10) nset.push_back(a % 10);
+    return hasDigitsOnce<T>(b, nset);
 }
 
 template <typename T> static string twostring(T n)
@@ -608,8 +598,7 @@ Antwoord: 6,857
 */
 
 static string problem3(uint64_t n = 600851475143ULL)
-{
-    Sieve sieve(9999);
+{   Sieve sieve(9999);
     vector<uint32_t> lprimes;
     while (sieve.hasNext())
         lprimes.push_back(sieve.next());
@@ -714,27 +703,6 @@ static string problem7(uint32_t n = 10001)
 
 The four adjacent digits in the 1000-digit number that
 have the greatest product are 9 × 9 × 8 × 9 = 5832.
-
-73167176531330624919225119674426574742355349194934
-96983520312774506326239578318016984801869478851843
-85861560789112949495459501737958331952853208805511
-12540698747158523863050715693290963295227443043557
-66896648950445244523161731856403098711121722383113
-62229893423380308135336276614282806444486645238749
-30358907296290491560440772390713810515859307960866
-70172427121883998797908792274921901699720888093776
-65727333001053367881220235421809751254540594752243
-52584907711670556013604839586446706324415722155397
-53697817977846174064955149290862569321978468622482
-83972241375657056057490261407972968652414535100474
-82166370484403199890008895243450658541227588666881
-16427171479924442928230863465674813919123162824586
-17866458359124566529476545682848912883142607690042
-24219022671055626321111109370544217506941658960408
-07198403850962455444362981230987879927244284909188
-84580156166097919133875499200524063689912560717606
-05886116467109405077541002256983155200055935729725
-71636269561882670428252483600823257530420752963450
 
 Find the thirteen adjacent digits in the 1000-digit number that
 have the greatest product. What is the value of this product?
@@ -1754,9 +1722,9 @@ static void panProducts32(vector<uint32_t> &st)
         for (uint32_t j = start; j < 10000/i; j++)
         {   vector<uint8_t> nset;
             for (uint8_t n = 1; n <= 9; n++) nset.push_back(n);
-            if (hasDigitsOnce32(i, nset) == false) continue;
-            if (hasDigitsOnce32(j, nset) == false) continue;
-            if (hasDigitsOnce32(i * j, nset)  == false) continue;
+            if (hasDigitsOnce<uint32_t>(i, nset) == false) continue;
+            if (hasDigitsOnce<uint32_t>(j, nset) == false) continue;
+            if (hasDigitsOnce<uint32_t>(i * j, nset)  == false) continue;
             st.push_back(i*j);
         }
     }
@@ -1979,7 +1947,7 @@ Antwoord: 932,718,654
 static bool isPandigital(uint32_t n)
 {   vector<uint8_t> nset;
     for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
-    return hasDigitsOnce32(n, nset);
+    return hasDigitsOnce<uint32_t>(n, nset);
 }
 
 static uint32_t opdracht38()
@@ -2086,7 +2054,7 @@ Antwoord: 7,652,413
 static bool isPandigital41(uint32_t n)
 {   vector<uint8_t> nset;
     for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
-    return hasDigitsOnce32(n, nset);
+    return hasDigitsOnce<uint32_t>(n, nset);
 }
 
 static string opdracht41()
@@ -2410,16 +2378,10 @@ What 12-digit number do you form by concatenating the three terms in this sequen
 Antwoord: 296,962,999,629
 */
 
-static bool hasSameDigits(uint32_t a, uint32_t b)
-{   vector<uint8_t> nset;
-    for (;a ;a = a / 10) nset.push_back(a % 10);
-    return hasDigitsOnce32(b, nset);
-}
-
 static uint64_t check(vector<uint32_t> &v)
 {   for (vector<uint32_t>::iterator it = v.begin(); it != v.end(); it++)
     {   if (linSearch32<uint32_t>(v, *it + 3330) && linSearch32<uint32_t>(v, *it + 6660) &&
-            hasSameDigits(*it, *it + 3330) && hasSameDigits(*it, *it + 6660))
+            sameDigs<uint32_t>(*it, *it + 3330) && sameDigs<uint32_t>(*it, *it + 6660))
         {   return (*it + 6660) + (*it + 3330) * 10000 + (uint64_t)*it * 100000000;
         }
     }
@@ -2554,7 +2516,7 @@ static bool test52(uint32_t n)
     {   vector<uint8_t> nset2;
         for (vector<uint8_t>::iterator it = nset.begin(); it != nset.end(); it++)
             nset2.push_back(*it);
-        if (hasDigitsOnce32(n * m, nset2) == false) return false;
+        if (hasDigitsOnce<uint32_t>(n * m, nset2) == false) return false;
     }
     return true;
 }
@@ -3124,12 +3086,6 @@ five permutations of its digits are cube.
 Antwoord: 127,035,954,683
 */
 
-static bool sameDigs64(uint64_t a, uint64_t b)
-{   vector<uint8_t> nset;
-    for (;a ;a = a / 10) nset.push_back(a % 10);
-    return hasDigitsOnce64(b, nset);
-}
-
 static string problem62()
 {
     uint64_t lst[9000];
@@ -3142,7 +3098,7 @@ static string problem62()
         for (uint32_t b = i; b < 9000; b++)
         {
             if (decimals(lst[b]) > ln) break;
-            if (sameDigs64(lst[i], lst[b])) cnt++;
+            if (sameDigs<uint64_t>(lst[i], lst[b])) cnt++;
         }
         if (cnt == 5)
             return twostring<uint64_t>(lst[i]);

@@ -3146,15 +3146,20 @@ Antwoord: 1,818
 https://blog.dreamshire.com/project-euler-86-solution/
 """
 
-import math
+def issquare2(lprimes, n):
+    lpf = list(primefactors(lprimes, n))
+    for freq in frequencies(lpf):
+        if freq % 2 != 0: return False
+    return True
+
 def problem86():
     L, c, a = 10**6, 0, 2
+    lprimes = list(sieve(16511080))
     while c < L:
         a += 1
         for bc in range(3, 2*a):
             if bc * a % 12 == 0:
-                s = math.sqrt(bc*bc + a*a)
-                if not s % 1:
+                if issquare(bc*bc + a*a):
                     c += min(bc, a + 1) - (bc + 1) // 2
     return a
 
@@ -3319,13 +3324,199 @@ How many starting numbers below ten million will arrive at 89?
 Antwoord: 8,581,146
 """
 
+"""
+https://blog.dreamshire.com/project-euler-92-solution/
+"""
+
+def problem92():
+    def sos_digits(n):  # sum of squares of digits
+        s = 0
+        while n > 0:
+            s, n = s + (n % 10)**2, n // 10
+        return s
+    def unhappy(n):
+        while n > 1 and n != 89 and n != 4:
+            n = sos_digits(n)
+        return n>1
+    L = 7    #  Limit is expressed as 10^L
+    Lc = 9**2 * L + 1    #  maximum sum of digits square for L digits (plus 1)
+    t = [0] * Lc
+    solutions = [0] * Lc
+    for i in range(10):
+        solutions[i*i] = 1
+    for i in range(2, L+1):
+        for j in range(Lc):
+            t[j] = sum(solutions[j - k*k] for k in range(10) if k*k <= j)
+        solutions = list(t)
+    return sum(solutions[i] for i in range(1, Lc) if unhappy(i))
+
 def endchain(n):
     while n != 89 and n != 1:
         n = sum(d**2 for d in digits(n))
     return n
 
-def problem92():
+def problem92b():
     return sum(endchain(n) == 89 for n in range(1, 10**7))
+
+"""
+#93: Arithmetic expressions
+
+By using each of the digits from the set, {1, 2, 3, 4}, exactly once, and
+making use of the four arithmetic operations (+, −, *, /) and
+brackets/parentheses, it is possible to form different positive integer targets.
+
+For example,
+
+8 = (4 * (1 + 3)) / 2
+14 = 4 * (3 + 1 / 2)
+19 = 4 * (2 + 3) − 1
+36 = 3 * 4 * (2 + 1)
+
+Note that concatenations of the digits, like 12 + 34, are not allowed.
+
+Using the set, {1, 2, 3, 4}, it is possible to obtain thirty-one different
+target numbers of which 36 is the maximum, and each of the numbers 1 to 28
+can be obtained before encountering the first non-expressible number.
+
+Find the set of four distinct digits, a < b < c < d, for which the longest
+set of consecutive positive integers, 1 to n, can be obtained, giving your
+answer as a string: abcd.
+
+Antwoord: 1,258
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-93-solution/
+"""
+
+def product2(*args, repeat=1):
+    pools = [tuple(pool) for pool in args] * repeat
+    result = [[]]
+    for pool in pools:
+        result = [x+[y] for x in result for y in pool]
+    for prod in result:
+        yield tuple(prod)
+
+add = lambda a, b: a + b
+sub = lambda a, b: a - b
+mul = lambda a, b: a * b
+truediv = lambda a, b: a / b
+
+def problem93():
+    def seq_length(s, c=1):
+        while c in s: c+= 1
+        return c-1
+    maxt, maxs = 0, 0
+    for terms in combinations2(range(1, 10), 4):
+        s = set()
+        for n in permutations2(terms):
+            for op in product2([add, mul, sub, truediv], repeat=3):
+                x = op[0](op[1](n[0],n[1]),op[2](n[2],n[3]))    # (a.b).(c.d)
+                if x%1 == 0 and x > 0: s.add(int(x))
+                x = op[0](op[1](op[2](n[0],n[1]),n[2]),n[3])    # ((a.b).c).d
+                if x%1 == 0 and x > 0: s.add(int(x))
+                if seq_length(s) > maxs: maxs, maxt = seq_length(s), terms
+    return concat2(maxt)
+
+def problem94(): return 0
+
+def problem95(): return 0
+
+"""
+#96: Su Doku
+
+Su Doku (Japanese meaning number place) is the name given to a popular
+puzzle concept. Its origin is unclear, but credit must be attributed to
+Leonhard Euler who invented a similar, and much more difficult, puzzle
+idea called Latin Squares. The objective of Su Doku puzzles, however, is
+to replace the blanks (or zeros) in a 9 by 9 grid in such that each row,
+column, and 3 by 3 box contains each of the digits 1 to 9. Below is an
+example of a typical starting puzzle grid and its solution grid.
+
+003  020  600
+900  305  001
+001  806  400
+
+008  102  900
+700  000  008
+006  708  200
+
+002  609  500
+800  203  009
+005  010  300
+
+A well constructed Su Doku puzzle has a unique solution and can be solved
+by logic, although it may be necessary to employ "guess and test" methods
+in order to eliminate options (there is much contested opinion over this).
+The complexity of the search determines the difficulty of the puzzle; the
+example above is considered easy because it can be solved by straight
+forward direct deduction.
+
+The 6K text file, sudoku.txt (right click and 'Save Link/Target As...'),
+contains fifty different Su Doku puzzles ranging in difficulty, but all
+with unique solutions (the first puzzle in the file is the example above).
+
+By solving all fifty puzzles find the sum of the 3-digit numbers found in
+the top left corner of each solution grid; for example, 483 is the 3-digit
+number found in the top left corner of the solution grid above.
+
+Antwoord: 24,702
+"""
+
+def printBrd(brd):
+    for i, n in enumerate(brd):
+        if i % 9 == 0 and i > 0:
+            print()
+        print("{} ".format(n), end='')
+    print()
+
+def check(brd):
+    mask = list()
+    for j in range(3):
+        for i in range(3):
+            c = i * 3 + j * 27
+            mask += [c+0, c+1, c+2, c+9, c+10, c+11, c+18, c+19, c+20]
+    for i, n in enumerate(brd):
+        if n == 0: continue
+        row, col = i // 9, i % 9
+        block = (row // 3) * 3 + col // 3
+        if n in brd[i + 1:(row + 1) * 9]: return False
+        for j in range(i + 9, 81, 9):
+            if n == brd[j]: return False
+        cnt = 0
+        for j in range(block * 9, (block + 1) * 9):
+            if n == brd[mask[j]]: cnt += 1
+        if cnt > 1: return False
+    return True
+
+def solveSudoku(pzl):
+    new = list(pzl)
+    selector = 0
+    while selector < 81:
+        if pzl[selector] == 0:
+            while True:
+                new[selector] += 1
+                if new[selector] > 9:
+                    new[selector] = 0
+                    while True:
+                        selector -= 1
+                        if pzl[selector] == 0:
+                            break
+                    selector -= 1
+                    break
+                if check(new):
+                    break
+        selector += 1
+    return new
+
+def solveSudoku2(pzl):
+    return solveSudoku([int(n) for n in pzl])
+
+def problem96(fn = "euler96.txt"):
+    xsum = 0
+    for pzl in open(fn).read().split():
+        xsum += concat2(solveSudoku2(pzl)[:3])
+    return xsum
 
 """
 #97: Large non-Mersenne prime
@@ -3345,6 +3536,67 @@ Antwoord: 8,739,992,577
 
 def problem97():
     return (28433*2**7830457+1)%10**10
+
+def problem98():
+    return 0
+
+"""
+#99: Largest exponential
+
+Comparing two numbers written in index form like 211 and 37 is not
+difficult, as any calculator would confirm that 211 = 2048 < 37 = 2187.
+
+However, confirming that 632382518061 > 519432525806 would be much
+more difficult, as both numbers contain over three million digits.
+
+Using base_exp.txt (right click and 'Save Link/Target As...'), a 22K text
+file containing one thousand lines with a base/exponent pair on each line,
+determine which line number has the greatest numerical value.
+
+NOTE: The first two lines in the file represent the numbers in the example given above.
+
+Antwoord: 709
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-99-solution/
+"""
+
+from math import log
+def problem99():
+    pairs = open("euler99.txt").read().split('\n')
+    mv, ml = 0, 0 
+    for ln, line in enumerate(pairs, start=1):
+        b, e = line.split(',') 
+        v = int(e) * log(int(b)) 
+        if v > mv: mv, ml = v, ln 
+    return ml
+
+"""
+#100: Arranged probability
+
+If a box contains twenty-one coloured discs, composed of fifteen blue discs
+and six red discs, and two discs were taken at random, it can be seen that
+the probability of taking two blue discs, P(BB) = (15/21)×(14/20) = 1/2.
+
+The next such arrangement, for which there is exactly 50% chance of taking
+two blue discs at random, is a box containing eighty-five blue discs and
+thirty-five red discs.
+
+By finding the first arrangement to contain over 1012 = 1,000,000,000,000
+discs in total, determine the number of blue discs that the box would contain.
+
+Antwoord: 756,872,327,473
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-100-solution/
+"""
+
+def problem100():
+    b, n, L = 3, 4, 10**12
+    while n <= L: b, n = 3*b + 2*n - 2, 4*b + 3*n - 3
+    return b
 
 """
 Einde opdrachten
@@ -3443,6 +3695,14 @@ def runn2(n = 1):
     if n == 90: return problem90()
     if n == 91: return problem91()
     if n == 92: return problem92()
+    if n == 93: return problem93()
+    if n == 94: return problem94()
+    if n == 95: return problem95()
+    if n == 96: return problem96()
+    if n == 97: return problem97()
+    if n == 98: return problem98()
+    if n == 99: return problem99()
+    if n == 100: return problem100()
     return 0
 
 answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 23514624000,
@@ -3454,7 +3714,8 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
     381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 2772, 1818, 1097343,
-    7587457, 743, 1217, 14234, 8581146]
+    7587457, 743, 1217, 14234, 8581146, 1258, 0, 0, 24702, 8739992577, 0, 709,
+    756872327473]
 
 #answers[61 - 1] = 0
 
@@ -3468,13 +3729,13 @@ def runjob(n):
     assert ret == answers[n - 1]
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
-def runm(l = list(range(1, 92 + 1))):
+def runm(l = list(range(1, 100 + 1))):
     ts = time.time()
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 92 + 1)):
+def runs(l = range(1, 100 + 1)):
     ts = time.time()
     for job in l:
         runjob(job)
