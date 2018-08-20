@@ -3075,32 +3075,843 @@ from the top left to the bottom right by moving left, right, up, and down.
 Antwoord: 425,185
 """
 
-def astar(grid, minval):
-    gridSize = len(grid[0])
-    g = [[9*10**6 for i in range(gridSize)] for j in range(gridSize)]
-    h = [[0 for i in range(gridSize)] for j in range(gridSize)]
-    for i in range(gridSize):
-        for j in range(gridSize):
-            h[i, j] = minval * (2 * (gridSize - 1)) + 1 - i - j
-    g[0][0] = grid[0][0]
-    
-    return 0
+from heapq import heappush, heappop
+from itertools import count, tee
+from collections import Mapping
+
+def to_networkx_graph(data, create_using=None, multigraph_input=False):
+    if hasattr(data, "adj"):
+        try:
+            result = from_dict_of_dicts(data.adj,
+                                        create_using=create_using,
+                                        multigraph_input=data.is_multigraph())
+            if hasattr(data, 'graph'):  # data.graph should be dict-like
+                result.graph.update(data.graph)
+            if hasattr(data, 'nodes'):  # data.nodes should be dict-like
+                result._node.update((n, dd.copy()) for n, dd in data.nodes.items())
+            return result
+        except:
+            raise Exception("Input is not a correct NetworkX graph.")
+    if hasattr(data, "is_strict"):
+        try:
+            return nx.nx_agraph.from_agraph(data, create_using=create_using)
+        except:
+            raise Exception("Input is not a correct pygraphviz graph.")
+    if isinstance(data, dict):
+        try:
+            return from_dict_of_dicts(data, create_using=create_using,
+                                      multigraph_input=multigraph_input)
+        except:
+            try:
+                return from_dict_of_lists(data, create_using=create_using)
+            except:
+                raise TypeError("Input is not known type.")
+    if (isinstance(data, (list, tuple)) or
+            any(hasattr(data, attr) for attr in ['_adjdict', 'next', '__next__'])):
+        try:
+            return from_edgelist(data, create_using=create_using)
+        except:
+            raise Exception("Input is not a valid edge list")
+    try:
+        import pandas as pd
+        if isinstance(data, pd.DataFrame):
+            if data.shape[0] == data.shape[1]:
+                try:
+                    return nx.from_pandas_adjacency(data, create_using=create_using)
+                except:
+                    msg = "Input is not a correct Pandas DataFrame adjacency matrix."
+                    raise Exception(msg)
+            else:
+                try:
+                    return nx.from_pandas_edgelist(data, edge_attr=True, create_using=create_using)
+                except:
+                    msg = "Input is not a correct Pandas DataFrame edge-list."
+                    raise Exception(msg)
+    except ImportError:
+        msg = 'pandas not found, skipping conversion test.'
+        warnings.warn(msg, ImportWarning)
+    try:
+        import numpy
+        if isinstance(data, (numpy.matrix, numpy.ndarray)):
+            try:
+                return nx.from_numpy_matrix(data, create_using=create_using)
+            except:
+                raise Exception("Input is not a correct numpy matrix or array.")
+    except ImportError:
+        warnings.warn('numpy not found, skipping conversion test.', ImportWarning)
+    try:
+        import scipy
+        if hasattr(data, "format"):
+            try:
+                return nx.from_scipy_sparse_matrix(data, create_using=create_using)
+            except:
+                raise Exception("Input is not a correct scipy sparse matrix type.")
+    except ImportError:
+        warnings.warn('scipy not found, skipping conversion test.', ImportWarning)
+    raise Exception("Input is not a known data type for conversion.")
+
+class Graph(object):
+    node_dict_factory = dict
+    adjlist_outer_dict_factory = dict
+    adjlist_inner_dict_factory = dict
+    edge_attr_dict_factory = dict
+
+    def __getstate__(self):
+        attr = self.__dict__.copy()
+        if 'nodes' in attr:
+            del attr['nodes']
+        if 'edges' in attr:
+            del attr['edges']
+        if 'degree' in attr:
+            del attr['degree']
+        return attr
+
+    def __init__(self, incoming_graph_data=None, **attr):
+        self.node_dict_factory = ndf = self.node_dict_factory
+        self.adjlist_outer_dict_factory = self.adjlist_outer_dict_factory
+        self.adjlist_inner_dict_factory = self.adjlist_inner_dict_factory
+        self.edge_attr_dict_factory = self.edge_attr_dict_factory
+        self.root_graph = self
+        self.graph = {}   # dictionary for graph attributes
+        self._node = ndf()  # empty node attribute dict
+        self._adj = self.adjlist_outer_dict_factory()  # empty adjacency dict
+        if incoming_graph_data is not None:
+            to_networkx_graph(incoming_graph_data, create_using=self)
+        self.graph.update(attr)
+    @property
+    def name(self):
+        return self.graph.get('name', '')
+    @name.setter
+    def name(self, s):
+        self.graph['name'] = s
+
+    def __str__(self):
+        """Return the graph name.
+
+        Returns
+        -------
+        name : string
+            The name of the graph.
+
+        Examples
+        --------
+        >>> G = nx.Graph(name='foo')
+        >>> str(G)
+        'foo'
+        """
+        return self.name
+
+    def __iter__(self):
+        """Iterate over the nodes. Use: 'for n in G'.
+
+        Returns
+        -------
+        niter : iterator
+            An iterator over all nodes in the graph.
+
+        Examples
+        --------
+        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> [n for n in G]
+        [0, 1, 2, 3]
+        >>> list(G)
+        [0, 1, 2, 3]
+        """
+        return iter(self._node)
+
+    def __contains__(self, n):
+        """Return True if n is a node, False otherwise. Use: 'n in G'.
+
+        Examples
+        --------
+        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> 1 in G
+        True
+        """
+        try:
+            return n in self._node
+        except TypeError:
+            return False
+
+    def __len__(self):
+        return len(self._node)
+    def __getitem__(self, n):
+        return self.adj[n]
+    def add_node(self, node_for_adding, **attr):
+        if node_for_adding not in self._node:
+            self._adj[node_for_adding] = self.adjlist_inner_dict_factory()
+            self._node[node_for_adding] = attr
+        else:  # update attr even if node already exists
+            self._node[node_for_adding].update(attr)
+
+    def add_nodes_from(self, nodes_for_adding, **attr):
+        for n in nodes_for_adding:
+            # keep all this inside try/except because
+            # CPython throws TypeError on n not in self._node,
+            # while pre-2.7.5 ironpython throws on self._adj[n]
+            try:
+                if n not in self._node:
+                    self._adj[n] = self.adjlist_inner_dict_factory()
+                    self._node[n] = attr.copy()
+                else:
+                    self._node[n].update(attr)
+            except TypeError:
+                nn, ndict = n
+                if nn not in self._node:
+                    self._adj[nn] = self.adjlist_inner_dict_factory()
+                    newdict = attr.copy()
+                    newdict.update(ndict)
+                    self._node[nn] = newdict
+                else:
+                    olddict = self._node[nn]
+                    olddict.update(attr)
+                    olddict.update(ndict)
+    def remove_node(self, n):
+        adj = self._adj
+        try:
+            nbrs = list(adj[n])  # list handles self-loops (allows mutation)
+            del self._node[n]
+        except KeyError:
+            raise Exception("The node %s is not in the graph." % (n,))
+        for u in nbrs:
+            del adj[u][n]   # remove all edges n-u in graph
+        del adj[n]          # now remove node
+
+    def remove_nodes_from(self, nodes):
+        adj = self._adj
+        for n in nodes:
+            try:
+                del self._node[n]
+                for u in list(adj[n]):   # list handles self-loops
+                    del adj[u][n]  # (allows mutation of dict in loop)
+                del adj[n]
+            except KeyError:
+                pass
+    @property
+    def nodes(self):
+        nodes = NodeView(self)
+        self.__dict__['nodes'] = nodes
+        return nodes
+    node = nodes
+    def add_path(self, nodes, **attr):
+        msg = "add_path is deprecated. Use nx.add_path instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.add_path(self, nodes, **attr)
+    def add_cycle(self, nodes, **attr):
+        msg = "add_cycle is deprecated. Use nx.add_cycle instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.add_cycle(self, nodes, **attr)
+    def add_star(self, nodes, **attr):
+        msg = "add_star is deprecated. Use nx.add_star instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.add_star(self, nodes, **attr)
+    def nodes_with_selfloops(self):
+        msg = "nodes_with_selfloops is deprecated." \
+              "Use nx.nodes_with_selfloops instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.nodes_with_selfloops(self)
+    def number_of_selfloops(self):
+        msg = "number_of_selfloops is deprecated." \
+              "Use nx.number_of_selfloops instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.number_of_selfloops(self)
+    def selfloop_edges(self, data=False, keys=False, default=None):
+        msg = "selfloop_edges is deprecated. Use nx.selfloop_edges instead."
+        warnings.warn(msg, DeprecationWarning)
+        return nx.selfloop_edges(self, data=False, keys=False, default=None)
+    def number_of_nodes(self):
+        """Return the number of nodes in the graph.
+
+        Returns
+        -------
+        nnodes : int
+            The number of nodes in the graph.
+
+        See Also
+        --------
+        order, __len__  which are identical
+
+        Examples
+        --------
+        >>> G = nx.path_graph(3)  # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> len(G)
+        3
+        """
+        return len(self._node)
+
+    def order(self):
+        return len(self._node)
+    def has_node(self, n):
+        try:
+            return n in self._node
+        except TypeError:
+            return False
+    def add_edge(self, u_of_edge, v_of_edge, **attr):
+        u, v = u_of_edge, v_of_edge
+        if u not in self._node:
+            self._adj[u] = self.adjlist_inner_dict_factory()
+            self._node[u] = {}
+        if v not in self._node:
+            self._adj[v] = self.adjlist_inner_dict_factory()
+            self._node[v] = {}
+        datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
+        datadict.update(attr)
+        self._adj[u][v] = datadict
+        self._adj[v][u] = datadict
+    def add_edges_from(self, ebunch_to_add, **attr):
+        for e in ebunch_to_add:
+            ne = len(e)
+            if ne == 3:
+                u, v, dd = e
+            elif ne == 2:
+                u, v = e
+                dd = {}  # doesnt need edge_attr_dict_factory
+            else:
+                raise Exception("Edge tuple %s must be a 2-tuple or 3-tuple." % (e,))
+            if u not in self._node:
+                self._adj[u] = self.adjlist_inner_dict_factory()
+                self._node[u] = {}
+            if v not in self._node:
+                self._adj[v] = self.adjlist_inner_dict_factory()
+                self._node[v] = {}
+            datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
+            datadict.update(attr)
+            datadict.update(dd)
+            self._adj[u][v] = datadict
+            self._adj[v][u] = datadict
+
+    def add_weighted_edges_from(self, ebunch_to_add, weight='weight', **attr):
+        """Add weighted edges in `ebunch_to_add` with specified weight attr
+
+        Parameters
+        ----------
+        ebunch_to_add : container of edges
+            Each edge given in the list or container will be added
+            to the graph. The edges must be given as 3-tuples (u, v, w)
+            where w is a number.
+        weight : string, optional (default= 'weight')
+            The attribute name for the edge weights to be added.
+        attr : keyword arguments, optional (default= no attributes)
+            Edge attributes to add/update for all edges.
+
+        See Also
+        --------
+        add_edge : add a single edge
+        add_edges_from : add multiple edges
+
+        Notes
+        -----
+        Adding the same edge twice for Graph/DiGraph simply updates
+        the edge data. For MultiGraph/MultiDiGraph, duplicate edges
+        are stored.
+
+        Examples
+        --------
+        >>> G = nx.Graph()   # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> G.add_weighted_edges_from([(0, 1, 3.0), (1, 2, 7.5)])
+        """
+        self.add_edges_from(((u, v, {weight: d}) for u, v, d in ebunch_to_add),
+                            **attr)
+
+    def remove_edge(self, u, v):
+        try:
+            del self._adj[u][v]
+            if u != v:  # self-loop needs only one entry removed
+                del self._adj[v][u]
+        except KeyError:
+            raise Exception("The edge %s-%s is not in the graph" % (u, v))
+
+    def remove_edges_from(self, ebunch):
+        adj = self._adj
+        for e in ebunch:
+            u, v = e[:2]  # ignore edge data if present
+            if u in adj and v in adj[u]:
+                del adj[u][v]
+                if u != v:  # self loop needs only one entry removed
+                    del adj[v][u]
+
+    def has_edge(self, u, v):
+        """Return True if the edge (u, v) is in the graph.
+
+        This is the same as `v in G[u]` without KeyError exceptions.
+
+        Parameters
+        ----------
+        u, v : nodes
+            Nodes can be, for example, strings or numbers.
+            Nodes must be hashable (and not None) Python objects.
+
+        Returns
+        -------
+        edge_ind : bool
+            True if edge is in the graph, False otherwise.
+
+        Examples
+        --------
+        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> G.has_edge(0, 1)  # using two nodes
+        True
+        >>> e = (0, 1)
+        >>> G.has_edge(*e)  #  e is a 2-tuple (u, v)
+        True
+        >>> e = (0, 1, {'weight':7})
+        >>> G.has_edge(*e[:2])  # e is a 3-tuple (u, v, data_dictionary)
+        True
+
+        The following syntax are equivalent:
+
+        >>> G.has_edge(0, 1)
+        True
+        >>> 1 in G[0]  # though this gives KeyError if 0 not in G
+        True
+
+        """
+        try:
+            return v in self._adj[u]
+        except KeyError:
+            return False
+    def neighbors(self, n):
+        try:
+            return iter(self._adj[n])
+        except KeyError:
+            raise Exception("The node %s is not in the graph." % (n,))
+    def get_edge_data(self, u, v, default=None):
+        try:
+            return self._adj[u][v]
+        except KeyError:
+            return default
+
+    def adjacency(self):
+        """Return an iterator over (node, adjacency dict) tuples for all nodes.
+
+        For directed graphs, only outgoing neighbors/adjacencies are included.
+
+        Returns
+        -------
+        adj_iter : iterator
+           An iterator over (node, adjacency dictionary) for all nodes in
+           the graph.
+
+        Examples
+        --------
+        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> [(n, nbrdict) for n, nbrdict in G.adjacency()]
+        [(0, {1: {}}), (1, {0: {}, 2: {}}), (2, {1: {}, 3: {}}), (3, {2: {}})]
+
+        """
+        return iter(self._adj.items())
+    def clear(self):
+        self._adj.clear()
+        self._node.clear()
+        self.graph.clear()
+    def is_multigraph(self):
+        return False
+    def is_directed(self):
+        """Return True if graph is directed, False otherwise."""
+        return False
+
+    def fresh_copy(self):
+        """Return a fresh copy graph with the same data structure.
+
+        A fresh copy has no nodes, edges or graph attributes. It is
+        the same data structure as the current graph. This method is
+        typically used to create an empty version of the graph.
+
+        Notes
+        -----
+        If you subclass the base class you should overwrite this method
+        to return your class of graph.
+        """
+        return Graph()
+    def to_directed(self, as_view=False):
+        if as_view is True:
+            return nx.graphviews.DiGraphView(self)
+        # deepcopy when not a view
+        from networkx import DiGraph
+        G = DiGraph()
+        G.graph.update(deepcopy(self.graph))
+        G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
+        G.add_edges_from((u, v, deepcopy(data))
+                         for u, nbrs in self._adj.items()
+                         for v, data in nbrs.items())
+        return G
+    def to_undirected(self, as_view=False):
+        if as_view is True:
+            return nx.graphviews.GraphView(self)
+        G = Graph()
+        G.graph.update(deepcopy(self.graph))
+        G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
+        G.add_edges_from((u, v, deepcopy(d))
+                         for u, nbrs in self._adj.items()
+                         for v, d in nbrs.items())
+        return G
+    def subgraph(self, nodes):
+        induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
+        SubGraph = nx.graphviews.SubGraph
+        if hasattr(self, '_NODE_OK'):
+            return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
+        return SubGraph(self, induced_nodes)
+    def edge_subgraph(self, edges):
+        return nx.edge_subgraph(self, edges)
+    def size(self, weight=None):
+        s = sum(d for v, d in self.degree(weight=weight))
+        return s // 2 if weight is None else s / 2
+    def number_of_edges(self, u=None, v=None):
+        if u is None:
+            return int(self.size())
+        if v in self._adj[u]:
+            return 1
+        return 0
+    def nbunch_iter(self, nbunch=None):
+        if nbunch is None:   # include all nodes via iterator
+            bunch = iter(self._adj)
+        elif nbunch in self:  # if nbunch is a single node
+            bunch = iter([nbunch])
+        else:                # if nbunch is a sequence of nodes
+            def bunch_iter(nlist, adj):
+                try:
+                    for n in nlist:
+                        if n in adj:
+                            yield n
+                except TypeError as e:
+                    message = e.args[0]
+                    # capture error for non-sequence/iterator nbunch.
+                    if 'iter' in message:
+                        msg = "nbunch is not a node or a sequence of nodes."
+                        raise Exception(msg)
+                    # capture error for unhashable node.
+                    elif 'hashable' in message:
+                        msg = "Node {} in sequence nbunch is not a valid node."
+                        raise Exception(msg.format(n))
+                    else:
+                        raise
+            bunch = bunch_iter(nbunch, self._adj)
+        return bunch
+
+class DiGraph(Graph):
+    def __getstate__(self):
+        attr = self.__dict__.copy()
+        if 'nodes' in attr:
+            del attr['nodes']
+        if 'edges' in attr:
+            del attr['edges']
+        if 'out_edges' in attr:
+            del attr['out_edges']
+        if 'in_edges' in attr:
+            del attr['in_edges']
+        if 'degree' in attr:
+            del attr['degree']
+        if 'in_degree' in attr:
+            del attr['in_degree']
+        if 'out_degree' in attr:
+            del attr['out_degree']
+        return attr
+    def __init__(self, incoming_graph_data=None, **attr):
+        self.node_dict_factory = ndf = self.node_dict_factory
+        self.adjlist_outer_dict_factory = self.adjlist_outer_dict_factory
+        self.adjlist_inner_dict_factory = self.adjlist_inner_dict_factory
+        self.edge_attr_dict_factory = self.edge_attr_dict_factory
+        self.root_graph = self
+        self.graph = {}  # dictionary for graph attributes
+        self._node = ndf()  # dictionary for node attributes
+        self._adj = ndf()  # empty adjacency dictionary
+        self._pred = ndf()  # predecessor
+        self._succ = self._adj  # successor
+        if incoming_graph_data is not None:
+            to_networkx_graph(incoming_graph_data, create_using=self)
+        self.graph.update(attr)
+    def add_node(self, node_for_adding, **attr):
+        if node_for_adding not in self._succ:
+            self._succ[node_for_adding] = self.adjlist_inner_dict_factory()
+            self._pred[node_for_adding] = self.adjlist_inner_dict_factory()
+            self._node[node_for_adding] = attr
+        else:  # update attr even if node already exists
+            self._node[node_for_adding].update(attr)
+    def add_edge(self, u_of_edge, v_of_edge, **attr):
+        u, v = u_of_edge, v_of_edge
+        # add nodes
+        if u not in self._succ:
+            self._succ[u] = self.adjlist_inner_dict_factory()
+            self._pred[u] = self.adjlist_inner_dict_factory()
+            self._node[u] = {}
+        if v not in self._succ:
+            self._succ[v] = self.adjlist_inner_dict_factory()
+            self._pred[v] = self.adjlist_inner_dict_factory()
+            self._node[v] = {}
+        # add the edge
+        datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
+        datadict.update(attr)
+        self._succ[u][v] = datadict
+        self._pred[v][u] = datadict
+    def has_successor(self, u, v):
+        return (u in self._succ and v in self._succ[u])
+    def has_predecessor(self, u, v):
+        return (u in self._pred and v in self._pred[u])
+    def successors(self, n):
+        try:
+            return iter(self._succ[n])
+        except KeyError:
+            raise Exception("The node %s is not in the digraph." % (n,))
+    neighbors = successors
+    def predecessors(self, n):
+        try:
+            return iter(self._pred[n])
+        except KeyError:
+            raise Exception("The node %s is not in the digraph." % (n,))
+    def clear(self):
+        self._succ.clear()
+        self._pred.clear()
+        self._node.clear()
+        self.graph.clear()
+    def is_multigraph(self):
+        return False
+    def is_directed(self):
+        return True
+    def fresh_copy(self):
+        return DiGraph()
+    def subgraph(self, nodes):
+        induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
+        SubGraph = nx.graphviews.SubDiGraph
+        if hasattr(self, '_NODE_OK'):
+            return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
+        return SubGraph(self, induced_nodes)
+
+def _dijkstra_multisource(G, sources, weight, pred=None, paths=None, cutoff=None, target=None):
+    G_succ = G._succ if G.is_directed() else G._adj
+    push = heappush
+    pop = heappop
+    dist = {}  # dictionary of final distances
+    seen = {}
+    # fringe is heapq with 3-tuples (distance,c,node)
+    # use the count c to avoid comparing nodes (may not be able to)
+    c = count()
+    fringe = []
+    for source in sources:
+        seen[source] = 0
+        push(fringe, (0, next(c), source))
+    while fringe:
+        (d, _, v) = pop(fringe)
+        if v in dist:
+            continue  # already searched this node.
+        dist[v] = d
+        if v == target:
+            break
+        for u, e in G_succ[v].items():
+            cost = weight(v, u, e)
+            if cost is None:
+                continue
+            vu_dist = dist[v] + cost
+            if cutoff is not None:
+                if vu_dist > cutoff:
+                    continue
+            if u in dist:
+                if vu_dist < dist[u]:
+                    raise ValueError('Contradictory paths found:', 'negative weights?')
+            elif u not in seen or vu_dist < seen[u]:
+                seen[u] = vu_dist
+                push(fringe, (vu_dist, next(c), u))
+                if paths is not None:
+                    paths[u] = paths[v] + [u]
+                if pred is not None:
+                    pred[u] = [v]
+            elif vu_dist == seen[u]:
+                if pred is not None:
+                    pred[u].append(v)
+    return dist
+
+def _dijkstra(G, source, weight, pred=None, paths=None, cutoff=None,
+              target=None):
+    return _dijkstra_multisource(G, [source], weight, pred=pred, paths=paths,
+                                 cutoff=cutoff, target=target)
+
+def _weight_function(G, weight):
+    if callable(weight):
+        return weight
+    if G.is_multigraph():
+        return lambda u, v, d: min(attr.get(weight, 1) for attr in d.values())
+    return lambda u, v, data: data.get(weight, 1)
+
+def dijkstra_path_length(G, source, target, weight='weight'):
+    if source == target:
+        return 0
+    weight = _weight_function(G, weight)
+    length = _dijkstra(G, source, weight, target=target)
+    try:
+        return length[target]
+    except KeyError:
+        raise nx.NetworkXNoPath(
+            "Node %s not reachable from %s" % (target, source))
 
 def problem83(fn = "euler83.txt"):
-    return 0
-    grid = list()
-    lines = 0
-    minval = 9*10**6
-    values = [int(x) for x in open(fn).read().split()]
-    minval = min(values)
-    root = floorsqrt(len(values))
-    for i, n in enumerate(values):
-        grid[i // 80][i % 80] = n
-    print(root)
-    return astar(grid, minval)
+    matrix2 = [int(row) for row in open(fn).read().split()]
+    matrix = [[0 for i in range(80)] for j in range(80)]
+    for i, n in enumerate(matrix2): matrix[i // 80][i % 80] = n
+    n, m = 80, 80
+    G = DiGraph()
+    for i in range(n):
+        for j in range(m):
+            neighbors = [(i+x, j+y) for x, y in ((-1,0), (0,-1), (1,0), (0,1))
+                if 0 <= i+x < n and 0 <= j+y < m]
+            for ix, jy in neighbors:
+                G.add_edge((i, j), (ix, jy), weight = matrix[ix][jy])
+    path_length = dijkstra_path_length(G, source=(0,0), target=(n-1,m-1))
+    return path_length + matrix[0][0]
+
+"""
+#84: Monopoly odds
+
+In the game, Monopoly, the standard board is set up in the following way:
+
+A player starts on the GO square and adds the scores on two 6-sided dice
+to determine the number of squares they advance in a clockwise direction.
+Without any further rules we would expect to visit each square with equal
+probability: 2.5%. However, landing on G2J (Go To Jail), CC (community
+chest), and CH (chance) changes this distribution.
+
+In addition to G2J, and one card from each of CC and CH, that orders the
+player to go directly to jail, if a player rolls three consecutive
+doubles, they do not advance the result of their 3rd roll. Instead they
+proceed directly to jail.
+
+At the beginning of the game, the CC and CH cards are shuffled. When a
+player lands on CC or CH they take a card from the top of the respective
+pile and, after following the instructions, it is returned to the bottom
+of the pile. There are sixteen cards in each pile, but for the purpose of
+this problem we are only concerned with cards that order a movement; any
+instruction not concerned with movement will be ignored and the player
+will remain on the CC/CH square.
+
+    Community Chest (2/16 cards):
+        Advance to GO
+        Go to JAIL
+    Chance (10/16 cards):
+        Advance to GO
+        Go to JAIL
+        Go to C1
+        Go to E3
+        Go to H2
+        Go to R1
+        Go to next R (railway company)
+        Go to next R
+        Go to next U (utility company)
+        Go back 3 squares.
+
+The heart of this problem concerns the likelihood of visiting a particular square. That is, the probability of finishing at that square after a roll. For this reason it should be clear that, with the exception of G2J for which the probability of finishing on it is zero, the CH squares will have the lowest probabilities, as 5/8 request a movement to another square, and it is the final square that the player finishes at on each roll that we are interested in. We shall make no distinction between "Just Visiting" and being sent to JAIL, and we shall also ignore the rule about requiring a double to "get out of jail", assuming that they pay to get out on their next turn.
+
+By starting at GO and numbering the squares sequentially from 00 to 39 we can concatenate these two-digit numbers to produce strings that correspond with sets of squares.
+
+Statistically it can be shown that the three most popular squares, in order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and GO (3.09%) = Square 00. So these three most popular squares can be listed with the six-digit modal string: 102400.
+
+If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-digit modal string.
+
+Antwoord: 101,524
+"""
+
+board = ["GO", "A1", "CC1", "A2", "T1", "R1", "B1", "CH1", "B2", "B3", "JAIL",
+    "C1", "U1", "C2", "C3", "R2", "D1", "CC2", "D2", "D3", "FP", "E1", "CH2",
+    "E2", "E3", "R3", "F1", "F2", "U2", "F3", "G2J", "G1", "G2", "CC3", "G3",
+    "R4", "CH3", "H1", "T2", "H2"]
+
+ccCards = ["GO", "JAIL", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12",
+    "C13", "C14", "C15", "C16"]
+
+chCards = ["GO", "JAIL", "C1", "E3", "H2", "R1", "NR1", "NR2", "U", "BACK3",
+    "C11", "C12", "C13", "C14", "C15", "C16"]
+
+import random
+class Monopoly:
+    _pos = 0
+    _doubles = 0
+    _hits = dict()
+    for i in range(40): _hits[i] = 0
+    def cc():
+        i = 0
+        while True:
+            yield ccCards[i]
+            i = (i + 1) % 16
+    def ch():
+        i = 0
+        while True:
+            yield chCards[i]
+            i = (i + 1) % 16
+    ccgen = cc()
+    chgen = ch()
+    def roll(self):
+        dice1 = random.randint(1,4)
+        dice2 = random.randint(1,4)
+        dice = dice1 + dice2
+        self._pos = (self._pos + dice) % 40
+        if dice1 == dice2:
+            self._doubles += 1
+        else:
+            self._doubles = 0
+        if self._doubles == 3:
+            self._doubles = 0
+            self._pos = board.index("JAIL")
+        if board[self._pos] in ["CH1", "CH2", "CH3"]:
+            card = next(self.chgen)
+            if card in ["GO", "JAIL", "C1", "E3", "H2", "R1"]:
+                self._pos = board.index(card)
+            if card in ["NR1", "NR2"]:
+                if self._pos == 7: self._pos = 15
+                if self._pos == 22: self._pos = 25
+                if self._pos == 36: self._pos = 5
+            if card == "U":
+                if self._pos < board.index("U1"): self._pos = board.index("U1")
+                if self._pos < board.index("U2"): self._pos = board.index("U2")
+            if card == "BACK3":
+                self._pos -= 3
+        if board[self._pos] in ["CC1", "CC2", "CC3"]:
+            card = next(self.ccgen)
+            if card in ["GO", "JAIL"]:
+                self._pos = board.index(card)
+        self._hits[self._pos] += 1
+
+def problem84a():
+    game = Monopoly()
+    for i in range(10**7):
+        game.roll()
+    return game._hits
 
 def problem84():
-    return 0
+    cPos = ccPos = chancePos = 0
+    def cc():
+        cc = [0, 10]
+        nonlocal ccPos
+        ccPos = (ccPos + 1) % 16
+        if ccPos < 2: cPos = cc[ccPos]
+    def chance():
+        chance = [0,10,11,24,39,5]
+        nonlocal chancePos, cPos
+        chancePos = (chancePos + 1) % 16
+        if chancePos < 6: cPos = chance[chancePos]
+        if chancePos == 6 or chancePos == 7:
+            if cPos == 7: cPos = 15
+            if cPos == 22: cPos = 25
+            if cPos == 36: cPos = 5
+        if chancePos == 8: cPos = 28 if cPos == 28 else 12
+        if chancePos == 9: cPos -= 3
+    board = [0] * 40
+    doubles = 0
+    for i in range(10**6):
+        dice1 = random.randint(1,4)
+        dice2 = random.randint(1,4)
+        doubles = doubles + 1 if dice1 == dice2 else 0
+        if doubles > 2:
+            cPos = 10
+            doubles = 0
+        else:
+            cPos = (cPos + dice1 + dice2) % 40
+            if cPos in [7, 22, 36]: chance()
+            if cPos in [2, 17, 33]: cc()
+            if cPos == 30: cPos = 10
+        board[cPos] += 1
+    srted = sorted(board, reverse=True)
+    ret = list()
+    ret.append(board.index(srted[0]))
+    ret.append(board.index(srted[1]))
+    ret.append(board.index(srted[2]))
+    return concat2(ret)
 
 """
 #85: Counting rectangles
@@ -3273,6 +4084,10 @@ file contain no more than four consecutive identical units.
 Antwoord: 743
 """
 
+"""
+https://blog.dreamshire.com/project-euler-89-solution/
+"""
+
 import re
 def problem89(fn = "euler89.txt"):
     rows = open(fn).read()
@@ -3282,6 +4097,10 @@ def problem89(fn = "euler89.txt"):
 #90: Cube digit pairs
 
 Antwoord: 1,217
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-90-solution/
 """
 
 def problem90():
@@ -3418,9 +4237,79 @@ def problem93():
                 if seq_length(s) > maxs: maxs, maxt = seq_length(s), terms
     return concat2(maxt)
 
-def problem94(): return 0
+"""
+#94: Almost equilateral triangles
 
-def problem95(): return 0
+It is easily proved that no equilateral triangle exists with integral
+length sides and integral area. However, the almost equilateral triangle
+5-5-6 has an area of 12 square units.
+
+We shall define an almost equilateral triangle to be a triangle for which
+two sides are equal and the third differs by no more than one unit.
+
+Find the sum of the perimeters of all almost equilateral triangles with
+integral side lengths and area and whose perimeters do not exceed one
+billion (1,000,000,000).
+
+Antwoord: 518,408,346
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-94-solution/
+"""
+
+def problem94():
+    side0, side, s, p, m = 1, 1, 0, 0, 1
+    L = 10**9
+    while p <= L:
+    	side0, side, m = side, 4*side - side0 + 2*m, -m
+    	s += p
+    	p = 3*side - m
+    return s
+
+"""
+#95: Amicable chains
+
+The proper divisors of a number are all the divisors excluding the number
+itself. For example, the proper divisors of 28 are 1, 2, 4, 7, and 14. As
+the sum of these divisors is equal to 28, we call it a perfect number.
+
+Interestingly the sum of the proper divisors of 220 is 284 and the sum of
+the proper divisors of 284 is 220, forming a chain of two numbers. For
+this reason, 220 and 284 are called an amicable pair.
+
+Perhaps less well known are longer chains. For example,
+starting with 12496, we form a chain of five numbers:
+
+12496 → 14288 → 15472 → 14536 → 14264 (→ 12496 → ...)
+
+Since this chain returns to its starting point, it is called an amicable chain.
+
+Find the smallest member of the longest amicable chain with no element exceeding one million.
+
+Antwoord: 14,316
+"""
+
+"""
+https://projecteuler.net/problem=95
+"""
+
+def problem95(L = 1000000):
+    d = [1] * L
+    for i in range(2, L//2):
+        for j in range(2*i, L, i):
+            d[j] += i
+    max_cl = 0
+    for i in range(2, L):
+        n, chain = i, []
+        while d[n] < L:
+            d[n], n = L+1, d[n]
+            try: k = chain.index(n)
+            except ValueError: chain.append(n)
+            else: 
+                if len(chain[k:]) > max_cl:
+                    max_cl, min_link = len(chain[k:]), min(chain[k:])
+    return min_link
 
 """
 #96: Su Doku
@@ -3537,8 +4426,45 @@ Antwoord: 8,739,992,577
 def problem97():
     return (28433*2**7830457+1)%10**10
 
-def problem98():
-    return 0
+"""
+#98: Anagramic squares
+
+By replacing each of the letters in the word CARE with 1, 2, 9, and 6
+respectively, we form a square number: 1296 = 362. What is remarkable
+is that, by using the same digital substitutions, the anagram, RACE,
+also forms a square number: 9216 = 962. We shall call CARE (and RACE)
+a square anagram word pair and specify further that leading zeroes are
+not permitted, neither may a different letter have the same digital
+value as another letter.
+
+Using words.txt (right click and 'Save Link/Target As...'), a 16K text file containing nearly two-thousand common English words, find all the square anagram word pairs (a palindromic word is NOT considered to be an anagram of itself).
+
+What is the largest square number formed by any member of such a pair?
+
+NOTE: All anagrams formed must be contained in the given text file.
+
+Antwoord: 18,769
+"""
+
+"""
+https://blog.dreamshire.com/project-euler-98-solution/
+"""
+
+def problem98(fn = "euler98.txt"):
+    def sq(n):
+        x = int(''.join(y[letter_set[i]] for i in n))
+        return x if int(x**0.5)**2 == x else False
+    words = [(w[1:-1], sorted(w[1:-1]))  for w in open(fn).read().split(',') if len(w)>6]
+    word_pairs = []
+    while words:
+        w = words.pop()
+        word_pairs+= ((w[0], a[0]) for a in words if w[1] == a[1])
+    max_sq = 0
+    for w, a in word_pairs:
+        letter_set = {x:y for y, x in enumerate(set(w))}
+        for y in permutations2('123456789', len(letter_set)):
+            if sq(w) and sq(a): max_sq = max(sq(w), sq(a), max_sq)
+    return max_sq
 
 """
 #99: Largest exponential
@@ -3713,9 +4639,9 @@ answers = [233168, 4613732, 6857, 906609, 232792560, 25164150, 104743, 235146240
     134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
     153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
     6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
-    381138582, 71, 55374, 73162890, 40886, 427337, 260324, 0, 0, 2772, 1818, 1097343,
-    7587457, 743, 1217, 14234, 8581146, 1258, 0, 0, 24702, 8739992577, 0, 709,
-    756872327473]
+    381138582, 71, 55374, 73162890, 40886, 427337, 260324, 425185, 101524, 2772, 1818,
+    1097343, 7587457, 743, 1217, 14234, 8581146, 1258, 518408346, 14316, 24702,
+    8739992577, 18769, 709, 756872327473]
 
 #answers[61 - 1] = 0
 
