@@ -3646,17 +3646,6 @@ dice are used, find the six-digit modal string.
 Antwoord: 101,524
 """
 
-board = ["GO", "A1", "CC1", "A2", "T1", "R1", "B1", "CH1", "B2", "B3", "JAIL",
-    "C1", "U1", "C2", "C3", "R2", "D1", "CC2", "D2", "D3", "FP", "E1", "CH2",
-    "E2", "E3", "R3", "F1", "F2", "U2", "F3", "G2J", "G1", "G2", "CC3", "G3",
-    "R4", "CH3", "H1", "T2", "H2"]
-
-ccCards = ["GO", "JAIL", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12",
-    "C13", "C14", "C15", "C16"]
-
-chCards = ["GO", "JAIL", "C1", "E3", "H2", "R1", "NR1", "NR2", "U", "BACK3",
-    "C11", "C12", "C13", "C14", "C15", "C16"]
-
 class mersenne_rng(object):
     def __init__(self, seed = 5489):
         self.state = [0]*624
@@ -3695,11 +3684,22 @@ class mersenne_rng(object):
     def int_32(self, number):
         return int(0xFFFFFFFF & number)
 
+board = ("GO", "A1", "CC1", "A2", "T1", "R1", "B1", "CH1", "B2", "B3", "JAIL",
+    "C1", "U1", "C2", "C3", "R2", "D1", "CC2", "D2", "D3", "FP", "E1", "CH2",
+    "E2", "E3", "R3", "F1", "F2", "U2", "F3", "G2J", "G1", "G2", "CC3", "G3",
+    "R4", "CH3", "H1", "T2", "H2")
+
+ccCards = ("GO", "JAIL", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12",
+    "C13", "C14", "C15", "C16")
+
+chCards = ("GO", "JAIL", "C1", "E3", "H2", "R1", "NR1", "NR2", "U", "BACK3",
+    "C11", "C12", "C13", "C14", "C15", "C16")
+
 class Monopoly:
     _pos = 0
     _doubles = 0
-    _hits = dict()
-    for i in range(40): _hits[i] = 0
+    _hits = [0] * 40
+    _rng = mersenne_rng(1131464071)
     def cc():
         i = 0
         while True:
@@ -3713,8 +3713,8 @@ class Monopoly:
     ccgen = cc()
     chgen = ch()
     def roll(self):
-        dice1 = random.randint(1,4)
-        dice2 = random.randint(1,4)
+        dice1 = self._rng.get_random_number() % 4 + 1 #random.randint(1,4)
+        dice2 = self._rng.get_random_number() % 4 + 1 #random.randint(1,4)
         dice = dice1 + dice2
         self._pos = (self._pos + dice) % 40
         if dice1 == dice2:
@@ -3728,13 +3728,15 @@ class Monopoly:
             card = next(self.chgen)
             if card in ["GO", "JAIL", "C1", "E3", "H2", "R1"]:
                 self._pos = board.index(card)
-            if card in ["NR1", "NR2"]:
-                if self._pos == 7: self._pos = 15
-                if self._pos == 22: self._pos = 25
-                if self._pos == 36: self._pos = 5
-            if card == "U":
-                if self._pos < board.index("U1"): self._pos = board.index("U1")
-                if self._pos < board.index("U2"): self._pos = board.index("U2")
+            if card in ["NR1", "NR2"]:  # next railroad
+                if self._pos == board.index("CH1"): self._pos = board.index("R2")
+                if self._pos == board.index("CH2"): self._pos = board.index("R3")
+                if self._pos == board.index("CH3"): self._pos = board.index("R1")
+            if card == "U":     # go to Utility
+                if self._pos < board.index("U1") or self._pos > board.index("U2"):
+                    self._pos = board.index("U1")
+                if self._pos < board.index("U2") or self._pos > board.index("U1"):
+                    self._pos = board.index("U2")
             if card == "BACK3":
                 self._pos -= 3
         if board[self._pos] in ["CC1", "CC2", "CC3"]:
@@ -3745,9 +3747,15 @@ class Monopoly:
 
 def problem84a():
     game = Monopoly()
-    for i in range(10**7):
+    for i in range(10**6):
         game.roll()
-    return game._hits
+    hits = game._hits
+    srted = sorted(hits, reverse=True)
+    ret = list()
+    ret.append(hits.index(srted[0]))
+    ret.append(hits.index(srted[1]))
+    ret.append(hits.index(srted[2]))
+    return concat2(ret)
 
 def problem84():
     cPos = ccPos = chancePos = 0
