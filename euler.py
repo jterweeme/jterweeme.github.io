@@ -270,6 +270,27 @@ def combinations2(iterable, r):
             indices[j] = indices[j-1] + 1
         yield tuple(pool[i] for i in indices)
 
+def count2(start=0, step=1):
+    n = start
+    while True:
+        yield n
+        n += step
+
+def tee2(iterable, n=2):
+    it = iter(iterable)
+    deques = [collections.deque() for i in range(n)]
+    def gen(mydeque):
+        while True:
+            if not mydeque:             # when the local deque is empty
+                try:
+                    newval = next(it)   # fetch a new value and
+                except StopIteration:
+                    return
+                for d in deques:        # load it to all the deques
+                    d.append(newval)
+            yield mydeque.popleft()
+    return tuple(gen(d) for d in deques)
+
 def gcd(a, b):
     while b: a, b = b, a % b
     return a
@@ -1363,11 +1384,14 @@ def opdracht35(xmax = 10**6-1):
 """
 #36: Double-base palindromes
 
-The decimal number, 585 = 1001001001_2 (binary), is palindromic in both bases.
+The decimal number, 585 = 1001001001_2 (binary),
+is palindromic in both bases.
 
-Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+Find the sum of all numbers, less than one million,
+which are palindromic in base 10 and base 2.
 
-(Please note that the palindromic number, in either base, may not include leading zeros.)
+(Please note that the palindromic number, in
+either base, may not include leading zeros.)
 
 Antwoord: 872,187
 """
@@ -2619,9 +2643,11 @@ Euler's Totient function, phi(n) [sometimes called the phi function],
 is used to determine the number of positive numbers less than or equal to
 n which are relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8,
 are all less than nine and relatively prime to nine, phi(9)=6.
-The number 1 is considered to be relatively prime to every positive number, so phi(1)=1.
+The number 1 is considered to be relatively prime to every positive
+number, so phi(1)=1.
 
-Interestingly, phi(87109)=79180, and it can be seen that 87109 is a permutation of 79180.
+Interestingly, phi(87109)=79180, and it can be
+seen that 87109 is a permutation of 79180.
 
 Find the value of n, 1 < n < 107, for which phi(n) is a
 permutation of n and the ratio n/phi(n) produces a minimum.
@@ -3026,7 +3052,7 @@ def problem81(fn = "euler81.txt"):
         lst[(i + 1) * root] += lst[i * root]
     for i in range(root - 1):
         for j in range(root - 1):
-            lst[(i + 1) * root + (j + 1)] += min(lst[(i + 1) * root + j], lst[i * root + (j + 1)])
+            lst[(i + 1) * root + (j + 1)] += min(lst[(i + 1)*root+j], lst[i*root + (j+1)])
     return lst[len(lst) - 1]
 
 """
@@ -3075,87 +3101,52 @@ from the top left to the bottom right by moving left, right, up, and down.
 Antwoord: 425,185
 """
 
-from heapq import heappush, heappop
-from itertools import count, tee
-from collections import Mapping
+def _siftup(heap, pos):
+    endpos = len(heap)
+    startpos = pos
+    newitem = heap[pos]
+    childpos = 2*pos + 1    # leftmost child position
+    while childpos < endpos:
+        rightpos = childpos + 1
+        if rightpos < endpos and not heap[childpos] < heap[rightpos]:
+            childpos = rightpos
+        heap[pos] = heap[childpos]
+        pos = childpos
+        childpos = 2*pos + 1
+    heap[pos] = newitem
+    _siftdown(heap, startpos, pos)
 
-def to_networkx_graph(data, create_using=None, multigraph_input=False):
-    if hasattr(data, "adj"):
-        try:
-            result = from_dict_of_dicts(data.adj,
-                                        create_using=create_using,
-                                        multigraph_input=data.is_multigraph())
-            if hasattr(data, 'graph'):  # data.graph should be dict-like
-                result.graph.update(data.graph)
-            if hasattr(data, 'nodes'):  # data.nodes should be dict-like
-                result._node.update((n, dd.copy()) for n, dd in data.nodes.items())
-            return result
-        except:
-            raise Exception("Input is not a correct NetworkX graph.")
-    if hasattr(data, "is_strict"):
-        try:
-            return nx.nx_agraph.from_agraph(data, create_using=create_using)
-        except:
-            raise Exception("Input is not a correct pygraphviz graph.")
-    if isinstance(data, dict):
-        try:
-            return from_dict_of_dicts(data, create_using=create_using,
-                                      multigraph_input=multigraph_input)
-        except:
-            try:
-                return from_dict_of_lists(data, create_using=create_using)
-            except:
-                raise TypeError("Input is not known type.")
-    if (isinstance(data, (list, tuple)) or
-            any(hasattr(data, attr) for attr in ['_adjdict', 'next', '__next__'])):
-        try:
-            return from_edgelist(data, create_using=create_using)
-        except:
-            raise Exception("Input is not a valid edge list")
-    try:
-        import pandas as pd
-        if isinstance(data, pd.DataFrame):
-            if data.shape[0] == data.shape[1]:
-                try:
-                    return nx.from_pandas_adjacency(data, create_using=create_using)
-                except:
-                    msg = "Input is not a correct Pandas DataFrame adjacency matrix."
-                    raise Exception(msg)
-            else:
-                try:
-                    return nx.from_pandas_edgelist(data, edge_attr=True, create_using=create_using)
-                except:
-                    msg = "Input is not a correct Pandas DataFrame edge-list."
-                    raise Exception(msg)
-    except ImportError:
-        msg = 'pandas not found, skipping conversion test.'
-        warnings.warn(msg, ImportWarning)
-    try:
-        import numpy
-        if isinstance(data, (numpy.matrix, numpy.ndarray)):
-            try:
-                return nx.from_numpy_matrix(data, create_using=create_using)
-            except:
-                raise Exception("Input is not a correct numpy matrix or array.")
-    except ImportError:
-        warnings.warn('numpy not found, skipping conversion test.', ImportWarning)
-    try:
-        import scipy
-        if hasattr(data, "format"):
-            try:
-                return nx.from_scipy_sparse_matrix(data, create_using=create_using)
-            except:
-                raise Exception("Input is not a correct scipy sparse matrix type.")
-    except ImportError:
-        warnings.warn('scipy not found, skipping conversion test.', ImportWarning)
-    raise Exception("Input is not a known data type for conversion.")
+def _siftdown(heap, startpos, pos):
+    newitem = heap[pos]
+    while pos > startpos:
+        parentpos = (pos - 1) >> 1
+        parent = heap[parentpos]
+        if newitem < parent:
+            heap[pos] = parent
+            pos = parentpos
+            continue
+        break
+    heap[pos] = newitem
+
+def heappush(heap, item):
+    heap.append(item)
+    _siftdown(heap, 0, len(heap)-1)
+
+def heappop(heap):
+    lastelt = heap.pop()    # raises appropriate IndexError if heap is empty
+    if heap:
+        returnitem = heap[0]
+        heap[0] = lastelt
+        _siftup(heap, 0)
+    else:
+        returnitem = lastelt
+    return returnitem
 
 class Graph(object):
     node_dict_factory = dict
     adjlist_outer_dict_factory = dict
     adjlist_inner_dict_factory = dict
     edge_attr_dict_factory = dict
-
     def __getstate__(self):
         attr = self.__dict__.copy()
         if 'nodes' in attr:
@@ -3165,7 +3156,6 @@ class Graph(object):
         if 'degree' in attr:
             del attr['degree']
         return attr
-
     def __init__(self, incoming_graph_data=None, **attr):
         self.node_dict_factory = ndf = self.node_dict_factory
         self.adjlist_outer_dict_factory = self.adjlist_outer_dict_factory
@@ -3184,55 +3174,15 @@ class Graph(object):
     @name.setter
     def name(self, s):
         self.graph['name'] = s
-
     def __str__(self):
-        """Return the graph name.
-
-        Returns
-        -------
-        name : string
-            The name of the graph.
-
-        Examples
-        --------
-        >>> G = nx.Graph(name='foo')
-        >>> str(G)
-        'foo'
-        """
         return self.name
-
     def __iter__(self):
-        """Iterate over the nodes. Use: 'for n in G'.
-
-        Returns
-        -------
-        niter : iterator
-            An iterator over all nodes in the graph.
-
-        Examples
-        --------
-        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> [n for n in G]
-        [0, 1, 2, 3]
-        >>> list(G)
-        [0, 1, 2, 3]
-        """
         return iter(self._node)
-
     def __contains__(self, n):
-        """Return True if n is a node, False otherwise. Use: 'n in G'.
-
-        Examples
-        --------
-        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> 1 in G
-        True
-        """
         try:
             return n in self._node
         except TypeError:
             return False
-
     def __len__(self):
         return len(self._node)
     def __getitem__(self, n):
@@ -3243,12 +3193,8 @@ class Graph(object):
             self._node[node_for_adding] = attr
         else:  # update attr even if node already exists
             self._node[node_for_adding].update(attr)
-
     def add_nodes_from(self, nodes_for_adding, **attr):
         for n in nodes_for_adding:
-            # keep all this inside try/except because
-            # CPython throws TypeError on n not in self._node,
-            # while pre-2.7.5 ironpython throws on self._adj[n]
             try:
                 if n not in self._node:
                     self._adj[n] = self.adjlist_inner_dict_factory()
@@ -3276,7 +3222,6 @@ class Graph(object):
         for u in nbrs:
             del adj[u][n]   # remove all edges n-u in graph
         del adj[n]          # now remove node
-
     def remove_nodes_from(self, nodes):
         adj = self._adj
         for n in nodes:
@@ -3320,25 +3265,7 @@ class Graph(object):
         warnings.warn(msg, DeprecationWarning)
         return nx.selfloop_edges(self, data=False, keys=False, default=None)
     def number_of_nodes(self):
-        """Return the number of nodes in the graph.
-
-        Returns
-        -------
-        nnodes : int
-            The number of nodes in the graph.
-
-        See Also
-        --------
-        order, __len__  which are identical
-
-        Examples
-        --------
-        >>> G = nx.path_graph(3)  # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> len(G)
-        3
-        """
         return len(self._node)
-
     def order(self):
         return len(self._node)
     def has_node(self, n):
@@ -3379,40 +3306,8 @@ class Graph(object):
             datadict.update(dd)
             self._adj[u][v] = datadict
             self._adj[v][u] = datadict
-
     def add_weighted_edges_from(self, ebunch_to_add, weight='weight', **attr):
-        """Add weighted edges in `ebunch_to_add` with specified weight attr
-
-        Parameters
-        ----------
-        ebunch_to_add : container of edges
-            Each edge given in the list or container will be added
-            to the graph. The edges must be given as 3-tuples (u, v, w)
-            where w is a number.
-        weight : string, optional (default= 'weight')
-            The attribute name for the edge weights to be added.
-        attr : keyword arguments, optional (default= no attributes)
-            Edge attributes to add/update for all edges.
-
-        See Also
-        --------
-        add_edge : add a single edge
-        add_edges_from : add multiple edges
-
-        Notes
-        -----
-        Adding the same edge twice for Graph/DiGraph simply updates
-        the edge data. For MultiGraph/MultiDiGraph, duplicate edges
-        are stored.
-
-        Examples
-        --------
-        >>> G = nx.Graph()   # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> G.add_weighted_edges_from([(0, 1, 3.0), (1, 2, 7.5)])
-        """
-        self.add_edges_from(((u, v, {weight: d}) for u, v, d in ebunch_to_add),
-                            **attr)
-
+        self.add_edges_from(((u, v, {weight: d}) for u, v, d in ebunch_to_add), **attr)
     def remove_edge(self, u, v):
         try:
             del self._adj[u][v]
@@ -3429,43 +3324,7 @@ class Graph(object):
                 del adj[u][v]
                 if u != v:  # self loop needs only one entry removed
                     del adj[v][u]
-
     def has_edge(self, u, v):
-        """Return True if the edge (u, v) is in the graph.
-
-        This is the same as `v in G[u]` without KeyError exceptions.
-
-        Parameters
-        ----------
-        u, v : nodes
-            Nodes can be, for example, strings or numbers.
-            Nodes must be hashable (and not None) Python objects.
-
-        Returns
-        -------
-        edge_ind : bool
-            True if edge is in the graph, False otherwise.
-
-        Examples
-        --------
-        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> G.has_edge(0, 1)  # using two nodes
-        True
-        >>> e = (0, 1)
-        >>> G.has_edge(*e)  #  e is a 2-tuple (u, v)
-        True
-        >>> e = (0, 1, {'weight':7})
-        >>> G.has_edge(*e[:2])  # e is a 3-tuple (u, v, data_dictionary)
-        True
-
-        The following syntax are equivalent:
-
-        >>> G.has_edge(0, 1)
-        True
-        >>> 1 in G[0]  # though this gives KeyError if 0 not in G
-        True
-
-        """
         try:
             return v in self._adj[u]
         except KeyError:
@@ -3480,25 +3339,7 @@ class Graph(object):
             return self._adj[u][v]
         except KeyError:
             return default
-
     def adjacency(self):
-        """Return an iterator over (node, adjacency dict) tuples for all nodes.
-
-        For directed graphs, only outgoing neighbors/adjacencies are included.
-
-        Returns
-        -------
-        adj_iter : iterator
-           An iterator over (node, adjacency dictionary) for all nodes in
-           the graph.
-
-        Examples
-        --------
-        >>> G = nx.path_graph(4)  # or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> [(n, nbrdict) for n, nbrdict in G.adjacency()]
-        [(0, {1: {}}), (1, {0: {}, 2: {}}), (2, {1: {}, 3: {}}), (3, {2: {}})]
-
-        """
         return iter(self._adj.items())
     def clear(self):
         self._adj.clear()
@@ -3507,27 +3348,12 @@ class Graph(object):
     def is_multigraph(self):
         return False
     def is_directed(self):
-        """Return True if graph is directed, False otherwise."""
         return False
-
     def fresh_copy(self):
-        """Return a fresh copy graph with the same data structure.
-
-        A fresh copy has no nodes, edges or graph attributes. It is
-        the same data structure as the current graph. This method is
-        typically used to create an empty version of the graph.
-
-        Notes
-        -----
-        If you subclass the base class you should overwrite this method
-        to return your class of graph.
-        """
         return Graph()
     def to_directed(self, as_view=False):
         if as_view is True:
             return nx.graphviews.DiGraphView(self)
-        # deepcopy when not a view
-        from networkx import DiGraph
         G = DiGraph()
         G.graph.update(deepcopy(self.graph))
         G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
@@ -3682,9 +3508,7 @@ def _dijkstra_multisource(G, sources, weight, pred=None, paths=None, cutoff=None
     pop = heappop
     dist = {}  # dictionary of final distances
     seen = {}
-    # fringe is heapq with 3-tuples (distance,c,node)
-    # use the count c to avoid comparing nodes (may not be able to)
-    c = count()
+    c = count2()
     fringe = []
     for source in sources:
         seen[source] = 0
@@ -3796,13 +3620,28 @@ will remain on the CC/CH square.
         Go to next U (utility company)
         Go back 3 squares.
 
-The heart of this problem concerns the likelihood of visiting a particular square. That is, the probability of finishing at that square after a roll. For this reason it should be clear that, with the exception of G2J for which the probability of finishing on it is zero, the CH squares will have the lowest probabilities, as 5/8 request a movement to another square, and it is the final square that the player finishes at on each roll that we are interested in. We shall make no distinction between "Just Visiting" and being sent to JAIL, and we shall also ignore the rule about requiring a double to "get out of jail", assuming that they pay to get out on their next turn.
+The heart of this problem concerns the likelihood of visiting a particular
+square. That is, the probability of finishing at that square after a roll.
+For this reason it should be clear that, with the exception of G2J for
+which the probability of finishing on it is zero, the CH squares will have
+the lowest probabilities, as 5/8 request a movement to another square, and
+it is the final square that the player finishes at on each roll that we are
+interested in. We shall make no distinction between "Just Visiting" and
+being sent to JAIL, and we shall also ignore the rule about requiring a
+double to "get out of jail", assuming that they pay to get out on their
+next turn.
 
-By starting at GO and numbering the squares sequentially from 00 to 39 we can concatenate these two-digit numbers to produce strings that correspond with sets of squares.
+By starting at GO and numbering the squares sequentially from 00 to 39 we
+can concatenate these two-digit numbers to produce strings that correspond
+with sets of squares.
 
-Statistically it can be shown that the three most popular squares, in order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and GO (3.09%) = Square 00. So these three most popular squares can be listed with the six-digit modal string: 102400.
+Statistically it can be shown that the three most popular squares, in
+order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and
+GO (3.09%) = Square 00. So these three most popular squares can be listed
+with the six-digit modal string: 102400.
 
-If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-digit modal string.
+If, instead of using two 6-sided dice, two 4-sided
+dice are used, find the six-digit modal string.
 
 Antwoord: 101,524
 """
@@ -3818,7 +3657,44 @@ ccCards = ["GO", "JAIL", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11",
 chCards = ["GO", "JAIL", "C1", "E3", "H2", "R1", "NR1", "NR2", "U", "BACK3",
     "C11", "C12", "C13", "C14", "C15", "C16"]
 
-import random
+class mersenne_rng(object):
+    def __init__(self, seed = 5489):
+        self.state = [0]*624
+        self.f = 1812433253
+        self.m = 397
+        self.u = 11
+        self.s = 7
+        self.b = 0x9D2C5680
+        self.t = 15
+        self.c = 0xEFC60000
+        self.l = 18
+        self.index = 624
+        self.lower_mask = (1<<31)-1
+        self.upper_mask = 1<<31
+        self.state[0] = seed
+        for i in range(1,624):
+            self.state[i] = self.int_32(self.f*(self.state[i-1]^(self.state[i-1]>>30)) + i)
+    def twist(self):
+        for i in range(624):
+            temp = self.int_32((self.state[i]&self.upper_mask)+(self.state[(i+1)%624]&self.lower_mask))
+            temp_shift = temp>>1
+            if temp%2 != 0:
+                temp_shift = temp_shift^0x9908b0df
+            self.state[i] = self.state[(i+self.m)%624]^temp_shift
+        self.index = 0
+    def get_random_number(self):
+        if self.index >= 624:
+            self.twist()
+        y = self.state[self.index]
+        y = y^(y>>self.u)
+        y = y^((y<<self.s)&self.b)
+        y = y^((y<<self.t)&self.c)
+        y = y^(y>>self.l)
+        self.index+=1
+        return self.int_32(y)
+    def int_32(self, number):
+        return int(0xFFFFFFFF & number)
+
 class Monopoly:
     _pos = 0
     _doubles = 0
@@ -3893,9 +3769,10 @@ def problem84():
         if chancePos == 9: cPos -= 3
     board = [0] * 40
     doubles = 0
+    rng = mersenne_rng(1131464071)
     for i in range(10**6):
-        dice1 = random.randint(1,4)
-        dice2 = random.randint(1,4)
+        dice1 = rng.get_random_number() % 4 + 1 #random.randint(1,4)
+        dice2 = rng.get_random_number() % 4 + 1 #random.randint(1,4)
         doubles = doubles + 1 if dice1 == dice2 else 0
         if doubles > 2:
             cPos = 10
@@ -4088,10 +3965,21 @@ Antwoord: 743
 https://blog.dreamshire.com/project-euler-89-solution/
 """
 
-import re
-def problem89(fn = "euler89.txt"):
+"""
+def problem89a(fn = "euler89.txt"):
     rows = open(fn).read()
     return len(rows) - len(re.sub("DCCCC|LXXXX|VIIII|CCCC|XXXX|IIII", '  ', rows))
+"""
+
+def problem89(fn = "euler89.txt"):
+    txt1 = open(fn).read()
+    txt2 = txt1.replace("DCCCC", "  ")
+    txt3 = txt2.replace("LXXXX", "  ")
+    txt4 = txt3.replace("VIIII", "  ")
+    txt5 = txt4.replace("CCCC", "  ")
+    txt6 = txt5.replace("XXXX", "  ")
+    txt7 = txt6.replace("IIII", "  ")
+    return len(txt1) - len(txt7)
 
 """
 #90: Cube digit pairs
@@ -4283,9 +4171,11 @@ starting with 12496, we form a chain of five numbers:
 
 12496 → 14288 → 15472 → 14536 → 14264 (→ 12496 → ...)
 
-Since this chain returns to its starting point, it is called an amicable chain.
+Since this chain returns to its starting
+point, it is called an amicable chain.
 
-Find the smallest member of the longest amicable chain with no element exceeding one million.
+Find the smallest member of the longest amicable
+chain with no element exceeding one million.
 
 Antwoord: 14,316
 """
@@ -4437,7 +4327,10 @@ a square anagram word pair and specify further that leading zeroes are
 not permitted, neither may a different letter have the same digital
 value as another letter.
 
-Using words.txt (right click and 'Save Link/Target As...'), a 16K text file containing nearly two-thousand common English words, find all the square anagram word pairs (a palindromic word is NOT considered to be an anagram of itself).
+Using words.txt (right click and 'Save Link/Target As...'), a 16K text
+file containing nearly two-thousand common English words, find all the
+square anagram word pairs (a palindromic word is NOT considered to be
+an anagram of itself).
 
 What is the largest square number formed by any member of such a pair?
 
@@ -4488,13 +4381,16 @@ Antwoord: 709
 https://blog.dreamshire.com/project-euler-99-solution/
 """
 
-from math import log
+def ln2(x):
+    n = 99000.0
+    return n * ((x ** (1/n)) - 1)
+
 def problem99():
     pairs = open("euler99.txt").read().split('\n')
     mv, ml = 0, 0 
     for ln, line in enumerate(pairs, start=1):
         b, e = line.split(',') 
-        v = int(e) * log(int(b)) 
+        v = int(e) * ln2(int(b)) 
         if v > mv: mv, ml = v, ln 
     return ml
 
