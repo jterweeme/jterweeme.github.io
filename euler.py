@@ -3698,7 +3698,7 @@ chCards = ("GO", "JAIL", "C1", "E3", "H2", "R1", "NR1", "NR2", "U", "BACK3",
 class Monopoly:
     _pos = 0
     _doubles = 0
-    _hits = [0] * 40
+    hits = [0] * 40
     _rng = mersenne_rng(1131464071)
     def cc():
         i = 0
@@ -3713,14 +3713,11 @@ class Monopoly:
     ccgen = cc()
     chgen = ch()
     def roll(self):
-        dice1 = self._rng.get_random_number() % 4 + 1 #random.randint(1,4)
-        dice2 = self._rng.get_random_number() % 4 + 1 #random.randint(1,4)
+        dice1 = self._rng.get_random_number() % 4 + 1
+        dice2 = self._rng.get_random_number() % 4 + 1
         dice = dice1 + dice2
         self._pos = (self._pos + dice) % 40
-        if dice1 == dice2:
-            self._doubles += 1
-        else:
-            self._doubles = 0
+        self._doubles = self._doubles + 1 if dice1 == dice2 else 0
         if self._doubles == 3:
             self._doubles = 0
             self._pos = board.index("JAIL")
@@ -3737,65 +3734,24 @@ class Monopoly:
                     self._pos = board.index("U1")
                 if self._pos < board.index("U2") or self._pos > board.index("U1"):
                     self._pos = board.index("U2")
-            if card == "BACK3":
-                self._pos -= 3
+            if card == "BACK3": self._pos -= 3
         if board[self._pos] in ["CC1", "CC2", "CC3"]:
             card = next(self.ccgen)
             if card in ["GO", "JAIL"]:
                 self._pos = board.index(card)
-        self._hits[self._pos] += 1
+        if board[self._pos] == "G2J": self._pos = board.index("JAIL")
+        self.hits[self._pos] += 1
 
-def problem84a():
+def problem84():
     game = Monopoly()
     for i in range(10**6):
         game.roll()
-    hits = game._hits
+    hits = game.hits
     srted = sorted(hits, reverse=True)
     ret = list()
     ret.append(hits.index(srted[0]))
     ret.append(hits.index(srted[1]))
     ret.append(hits.index(srted[2]))
-    return concat2(ret)
-
-def problem84():
-    cPos = ccPos = chancePos = 0
-    def cc():
-        cc = [0, 10]
-        nonlocal ccPos
-        ccPos = (ccPos + 1) % 16
-        if ccPos < 2: cPos = cc[ccPos]
-    def chance():
-        chance = [0,10,11,24,39,5]
-        nonlocal chancePos, cPos
-        chancePos = (chancePos + 1) % 16
-        if chancePos < 6: cPos = chance[chancePos]
-        if chancePos == 6 or chancePos == 7:
-            if cPos == 7: cPos = 15
-            if cPos == 22: cPos = 25
-            if cPos == 36: cPos = 5
-        if chancePos == 8: cPos = 28 if cPos == 28 else 12
-        if chancePos == 9: cPos -= 3
-    board = [0] * 40
-    doubles = 0
-    rng = mersenne_rng(1131464071)
-    for i in range(10**6):
-        dice1 = rng.get_random_number() % 4 + 1 #random.randint(1,4)
-        dice2 = rng.get_random_number() % 4 + 1 #random.randint(1,4)
-        doubles = doubles + 1 if dice1 == dice2 else 0
-        if doubles > 2:
-            cPos = 10
-            doubles = 0
-        else:
-            cPos = (cPos + dice1 + dice2) % 40
-            if cPos in [7, 22, 36]: chance()
-            if cPos in [2, 17, 33]: cc()
-            if cPos == 30: cPos = 10
-        board[cPos] += 1
-    srted = sorted(board, reverse=True)
-    ret = list()
-    ret.append(board.index(srted[0]))
-    ret.append(board.index(srted[1]))
-    ret.append(board.index(srted[2]))
     return concat2(ret)
 
 """
