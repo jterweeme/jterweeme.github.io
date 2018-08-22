@@ -4206,60 +4206,61 @@ number found in the top left corner of the solution grid above.
 Antwoord: 24,702
 """
 
-def printBrd(brd):
-    for i, n in enumerate(brd):
-        if i % 9 == 0 and i > 0:
-            print()
-        print("{} ".format(n), end='')
-    print()
-
-def check(brd):
-    mask = list()
-    for j in range(3):
-        for i in range(3):
-            c = i * 3 + j * 27
-            mask += [c+0, c+1, c+2, c+9, c+10, c+11, c+18, c+19, c+20]
-    for i, n in enumerate(brd):
-        if n == 0: continue
-        row, col = i // 9, i % 9
-        block = (row // 3) * 3 + col // 3
-        if n in brd[i + 1:(row + 1) * 9]: return False
-        for j in range(i + 9, 81, 9):
-            if n == brd[j]: return False
-        cnt = 0
-        for j in range(block * 9, (block + 1) * 9):
-            if n == brd[mask[j]]: cnt += 1
-        if cnt > 1: return False
-    return True
-
-def solveSudoku(pzl):
-    new = list(pzl)
-    selector = 0
-    while selector < 81:
-        if pzl[selector] == 0:
-            while True:
-                new[selector] += 1
-                if new[selector] > 9:
-                    new[selector] = 0
-                    while True:
-                        selector -= 1
-                        if pzl[selector] == 0:
-                            break
-                    selector -= 1
-                    break
-                if check(new):
-                    break
-        selector += 1
-    return new
-
-def solveSudoku2(pzl):
-    return solveSudoku([int(n) for n in pzl])
-
 def problem96(fn = "euler96.txt"):
-    xsum = 0
-    for pzl in open(fn).read().split():
-        xsum += concat2(solveSudoku2(pzl)[:3])
-    return xsum
+    cross = lambda A, B: [a+b for a in A for b in B]
+    digits2, rows = '123456789', 'ABCDEFGHI'
+    cols = digits2
+    squares = cross(rows, cols)
+    unitlist = ([cross(rows, c) for c in cols] +
+                [cross(r, cols) for r in rows] +
+                [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')])
+    units = dict((s, [u for u in unitlist if s in u]) for s in squares)
+    peers = dict((s, set(sum(units[s],[]))-set([s])) for s in squares)
+    def eliminate(values, s, d):
+        if d not in values[s]: return values
+        values[s] = values[s].replace(d,'')
+        if len(values[s]) == 0: return False
+        elif len(values[s]) == 1:
+            d2 = values[s]
+            if not all(eliminate(values, s2, d2) for s2 in peers[s]):
+                return False
+        for u in units[s]:
+            dplaces = [s for s in u if d in values[s]]
+            if len(dplaces) == 0: return False
+            elif len(dplaces) == 1:
+                if not assign(values, dplaces[0], d): return False
+        return values
+    def assign(values, s, d):
+        other_values = values[s].replace(d, '')
+        return values if all(eliminate(values, s, d2) for d2 in other_values) else False
+    def solve_all(grids):
+        def search(values):
+            def some(seq):
+                for e in seq:
+                    if e: return e
+                return False
+            if values is False: return False
+            if all(len(values[s]) == 1 for s in squares): return values
+            n,s = min((len(values[s]), s) for s in squares if len(values[s]) > 1)
+            return some(search(assign(values.copy(), s, d)) for d in values[s])
+        def parse_grid(grid):
+            def grid_values(grid):
+                chars = [c for c in grid if c in digits2 or c in '0.']
+                assert len(chars) == 81
+                return dict(zip(squares, chars))
+            values = dict((s, digits2) for s in squares)
+            for s,d in grid_values(grid).items():
+                if d in digits2 and not assign(values, s, d):
+                    return False
+            return values
+        ret = 0
+        for grid in grids:
+            values = search(parse_grid(grid))
+            values2 = [int(n) for n in values.values()]
+            ret += concat2(values2[:3])
+        return ret
+    puzzles = open(fn).read().strip().split()
+    return solve_all(puzzles)
 
 """
 #97: Large non-Mersenne prime
