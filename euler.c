@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #define true 1
+#define false 0
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -12,6 +15,41 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 */
 
+static uint8_t decimals32(uint32_t n)
+{
+    uint8_t i = 0;
+    while (n) n = n / 10, i++;
+    return i;
+}
+
+static uint8_t decimals64(uint64_t n)
+{   uint8_t i = 0;
+    while (n) n = n / 10, i++;
+    return i;
+}
+
+static void xstring32(char *s, uint32_t n)
+{
+    uint8_t decs = decimals32(n);
+    s[decs] = 0;
+    while (n)
+    {
+        s[--decs] = n % 10 + '0';
+        n = n / 10;
+    }
+}
+
+static void xstring64(char *s, uint64_t n)
+{
+    uint8_t decs = decimals64(n);
+    s[decs] = 0;
+    while (n)
+    {
+        s[--decs] = n % 10 + '0';
+        n = n / 10;
+    }
+}
+
 static const uint32_t summation1(uint32_t n, uint32_t xmax)
 {   uint32_t xlen = xmax / n;
     return ((xlen * (xlen + 1)) >> 1) * n;
@@ -21,9 +59,11 @@ static uint32_t multiples1(uint32_t limit)
 {   return summation1(3, limit - 1) + summation1(5, limit - 1) - summation1(15, limit - 1);
 }
 
-static void problem1()
+static char *problem1()
 {
-    printf("#1: %u\r\n", multiples1(1000));
+    char *ret = malloc(50);
+    xstring32(ret, multiples1(1000));
+    return ret;
 }
 
 /*
@@ -50,9 +90,115 @@ static uint32_t fibonacci(uint32_t xmax)
     return xsum;
 }
 
-static void problem2()
+static char *problem2()
 {
-    printf("#2: %u\r\n", fibonacci(4000000));
+    char *ret = malloc(50);
+    xstring32(ret, fibonacci(4000000));
+    return ret;
+}
+
+/*
+#3 The prime factors of 13195 are 5, 7, 13 and 29.
+What is the largest prime factor of the number 600,851,475,143?
+
+Antwoord: 6,857
+*/
+
+/*
+71 * 839 * 1471 * 6857 = 600851475143
+*/
+
+static int isPrime(uint32_t n)
+{
+    uint32_t i;
+    for (i = 2; i < n; i++)
+        if (n % i == 0) return 0;
+    return 1;
+}
+
+static char *problem3()
+{
+    uint64_t n = 600851475143ULL;
+    uint32_t best = 0;
+    while (n > 1)
+    {
+        uint32_t i;
+        uint32_t factor = 0;
+        for (i = 2; i < 999999; i++)
+        {
+            if (isPrime(i) == 0) continue;
+            if (n % i == 0)
+            {   factor = i;
+                break;
+            }
+        }
+        if (factor > best) best = factor;
+        n = n / factor;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, best);
+    return ret;
+}
+
+/*
+#4 A palindromic number reads the same both ways. The largest palindrome
+made from the product of two 2-digit numbers is 9009 = 91 × 99.
+
+Find the largest palindrome made from the product of two 3-digit numbers.
+
+Antwoord: 906,609
+*/
+
+static uint32_t reverse32(uint32_t n, uint8_t base)
+{   uint32_t rev = 0, temp = 0;
+    for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
+    return rev;
+}
+
+static int ispalindrome32(uint32_t n, uint8_t base)
+{   return n == reverse32(n, base);
+}
+
+static char *problem4()
+{   uint32_t best = 0;
+    uint32_t a, b, c;
+    for (a = 0; a < 1000; a++)
+    {   for (b = 0; b < 1000; b++)
+        {   c = a * b;
+            if (ispalindrome32(c, 10) && c > best)
+                best = c;
+        }
+    }
+    char *ret = malloc(50);
+    xstring32(ret, best);
+    return ret;
+}
+
+/*
+#5 2520 is the smallest number that can be divided by
+each of the numbers from 1 to 10 without any remainder.
+
+What is the smallest positive number that is evenly
+divisible by all of the numbers from 1 to 20?
+
+Antwoord: 232,792,560
+*/
+
+static int isdivisible(uint32_t n, uint32_t lower, uint32_t max)
+{
+    uint32_t i;
+    for (i = lower; i <= max; i++) if (n % i > 0) return false;
+    return true;
+}
+
+static char *problem5()
+{
+    uint32_t lower = 11, max = 20;
+    uint32_t start = 2520, number = start;
+    while (isdivisible(number, lower, max) == false) number += start;
+    char *ret = malloc(50);
+    xstring32(ret, number);
+    return ret;
 }
 
 /*
@@ -71,7 +217,7 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-static void problem6()
+static char *problem6()
 {
     uint32_t min = 1, max = 100;
     uint32_t sumsquare = 0, squaresum = 0;
@@ -79,7 +225,9 @@ static void problem6()
     for (i = min; i <= max; i++) sumsquare += i * i;
     for (i = min; i <= max; i++) squaresum += i;
     squaresum = squaresum * squaresum;
-    printf("#6: %u\r\n", squaresum - sumsquare);
+    char *ret = malloc(50);
+    xstring32(ret, squaresum - sumsquare);
+    return ret;
 }
 
 /*
@@ -98,7 +246,7 @@ static uint32_t reducer7(uint32_t n)
     return n;
 }
 
-static void problem7()
+static char *problem7()
 {
     uint32_t n = 10001;
     uint32_t p = 3, sqp = reducer7(p), ret = 0;
@@ -108,7 +256,9 @@ static void problem7()
             if (p % i == 0) sqp = reducer7(++p), i = 1;
         ret = p, p += 2, sqp = reducer7(p);
     }
-    printf("#7: %u\r\n", ret);
+    char *ret2 = malloc(50);
+    xstring32(ret2, ret);
+    return ret2;
 }
 
 /*
@@ -144,7 +294,7 @@ static char series1[] = "73167176531330624919225119674426574742355349194934"
         "05886116467109405077541002256983155200055935729725"
         "71636269561882670428252483600823257530420752963450";
 
-static void problem8()
+static char *problem8()
 {
     char *s = series1;
     uint64_t cur = 0, best = 0;
@@ -154,7 +304,9 @@ static void problem8()
         while (peel) product *= peel % 10, peel = peel / 10;
         if (product > best) best = product;
     }
-    printf("#8: %lu\r\n", best);
+    char *ret = malloc(50);
+    xstring64(ret, best);
+    return ret;
 }
 
 /*
@@ -185,9 +337,43 @@ static uint32_t problem9x()
     return 0;
 }
 
-static void problem9()
+static char *problem9()
 {
-    printf("#9: %u\r\n", problem9x());
+    char *ret = malloc(50);
+    xstring32(ret, problem9x());
+    return ret;
+}
+
+/*
+#10 Summation of primes
+
+The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+
+Find the sum of all the primes below two million.
+
+Antwoord: 142,913,828,922
+*/
+
+#define LIMIT10 2000000
+
+static char *problem10()
+{
+    uint8_t *v = malloc(LIMIT10 + 1);
+    uint32_t i, j;
+    for (i = 0; i < LIMIT10; i++)
+        v[i] = 1;
+    v[0] = v[1] = 0;
+    for (i = 2; i * i < LIMIT10; i++)
+        if (v[i] == 1)
+            for (j = i * 2; j <= LIMIT10; j += i)
+                v[j] = 0;
+    uint64_t sum = 0;
+    for (i = 0; i < LIMIT10; i++)
+        sum += v[i] == 1 ? i : 0;
+    free(v);
+    char *ret = malloc(50);
+    xstring64(ret, sum);
+    return ret;
 }
 
 /*
@@ -246,7 +432,7 @@ uint8_t t11[20][20] = {{ 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91
             {20,73,35,29,78,31,90, 1,74,31,49,71,48,86,81,16,23,57, 5,54},
             { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}};
 
-static void problem11()
+static char *problem11()
 {   uint32_t best = 0;
     uint8_t i, j;
     for (i = 0; i < 20; i++)
@@ -269,7 +455,9 @@ static void problem11()
             if (prod > best) best = prod;
         }
     }
-    printf("#11: %u\r\n", best);
+    char *ret = malloc(50);
+    xstring32(ret, best);
+    return ret;
 }
 
 /*
@@ -319,10 +507,52 @@ static uint32_t find_triangular_index(uint16_t factor_limit)
     return n;
 }
 
-static void problem12()
+static char *problem12()
 {   uint32_t i = find_triangular_index(500);
     uint32_t ret = ((i * (i + 1)) >> 1);
-    printf("#12: %u\r\n", ret);
+    char *ret2 = malloc(50);
+    xstring32(ret2, ret);
+    return ret2;
+}
+
+/*
+#13 Large sum
+
+Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+
+Antwoord: 5,537,376,230
+*/
+
+static char *problem13()
+{
+    uint8_t numbers[5000];
+    FILE *fp = fopen("euler13.txt", "r");
+    uint16_t i = 0, j;
+    while (i < 5000)
+    {
+        int c = fgetc(fp);
+        if (isdigit(c))
+            numbers[i++] = c - '0';
+    }
+    fclose(fp);
+    uint8_t totalSum[100];
+    uint64_t sum = 0;
+    uint8_t end = 0;
+    for (i = 50; i > 0; i--)
+    {
+        for (j = 0; j < 100; j++)
+            sum += numbers[j * 50 + (i - 1)];
+        totalSum[end++] = sum % 10;
+        sum /= 10;
+    }
+    for (;sum > 0; sum /= 10)
+        totalSum[end++] = sum % 10;
+    end--;
+    char *ret = malloc(50);
+    for (i = 0; i < 10; i++)
+        ret[i] = (char)(totalSum[end--] + 48);
+    ret[i] = 0;
+    return ret;
 }
 
 /*
@@ -330,11 +560,11 @@ static void problem12()
 
 The following iterative sequence is defined for the set of positive integers:
 
-n → n/2 (n is even)
-n → 3n + 1 (n is odd)
+n -> n/2 (n is even)
+n -> 3n + 1 (n is odd)
 
 Using the rule above and starting with 13, we generate the following sequence:
-13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+13 -> 40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
 
 It can be seen that this sequence (starting at 13 and finishing at 1)
 contains 10 terms. Although it has not been proved yet (Collatz Problem),
@@ -353,7 +583,7 @@ static uint32_t collatz(uint32_t n)
     return count;
 }
 
-static void problem14()
+static char *problem14()
 {
     uint32_t lower = 1, upper = 1000000;
     uint32_t best_start = 0, best_length = 0;
@@ -363,7 +593,9 @@ static void problem14()
         if (length > best_length)
             best_start = i, best_length = length;
     }
-    printf("#14: %u\r\n", best_start);
+    char *ret = malloc(50);
+    xstring32(ret, best_start);
+    return ret;
 }
 
 /*
@@ -377,14 +609,16 @@ How many such routes are there through a 20×20 grid?
 Antwoord: 137,846,528,820
 */
 
-static void problem15()
+static char *problem15()
 {
     uint8_t size = 20;
     uint64_t paths = 1;
     uint8_t i;
     for (i = 0; i < size; i++)
         paths = (paths * (2 * size - i)) / (i + 1);
-    printf("#15: %lu\r\n", paths);
+    char *ret = malloc(50);
+    xstring64(ret, paths);
+    return ret;
 }
 
 /*
@@ -397,7 +631,7 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1,366
 */
 
-static void problem16()
+static char *problem16()
 {
     uint16_t e = 1000;
     uint8_t largeNum[400];
@@ -416,12 +650,9 @@ static void problem16()
     }
     for (i = 0; i < sizeof(largeNum); i++)
         sum += largeNum[i];
-    printf("#16: %u\r\n", sum);
-}
-
-static size_t len(const char *s)
-{
-    return strlen(s);
+    char *ret = malloc(50);
+    xstring32(ret, sum);
+    return ret;
 }
 
 /*
@@ -441,7 +672,12 @@ with British usage.
 Antwoord: 21,124
 */
 
-static void problem17()
+static size_t len(const char *s)
+{
+    return strlen(s);
+}
+
+static char *problem17()
 {   char arr1[][15] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
         "seventeen", "eighteen", "nineteen",
@@ -468,7 +704,9 @@ static void problem17()
         }
     }
     xsum += len("onethousand");
-    printf("#17: %u\r\n", xsum);
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
 }
 
 /*
@@ -543,7 +781,7 @@ static uint8_t triangle[][15] = {
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
 #endif
 
-static void problem18()
+static char *problem18()
 {   uint32_t possibilities = myPow64(2, sizeof(triangle[0]) - 1);
     uint32_t best = 0;
     uint32_t i, j;
@@ -557,24 +795,62 @@ static void problem18()
         }
         if (sum > best) best = sum;
     }
-    printf("#18: %u\r\n", best);
+    char *ret = malloc(50);
+    xstring32(ret, best);
+    return ret;
+}
+
+static char answers2[][50] = {"233168", "4613732", "6857",
+    "906609", "232792560", "25164150", "104743", "23514624000",
+    "31875000", "142913828922", "70600674", "76576500", "5537376230", "837799", "137846528820",
+    "1366", "21124", "1074", "171", "648", "31626", "871198282",
+    "4179871", "2783915460", "4782", "983", "-59231",
+    "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
+    "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
+    "134043", "9110846700", "296962999629", "997651",
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241", "0", "0", "0",
+    "127035954683"};
+
+static char *run(uint32_t p)
+{
+    switch (p)
+    {
+    case 1: return problem1();
+    case 2: return problem2();
+    case 3: return problem3();
+    case 4: return problem4();
+    case 5: return problem5();
+    case 6: return problem6();
+    case 7: return problem7();
+    case 8: return problem8();
+    case 9: return problem9();
+    case 10: return problem10();
+    case 11: return problem11();
+    case 12: return problem12();
+    case 13: return problem13();
+    case 14: return problem14();
+    case 15: return problem15();
+    case 16: return problem16();
+    case 17: return problem17();
+    case 18: return problem18();
+    }
+    return 0;
+}
+
+static void runjob(uint32_t p)
+{
+    char *answer = run(p);
+    if (strcmp(answer, answers2[p - 1]) != 0)
+        printf("error!");
+    printf("#%u: %s\r\n", p, answer);
+    free(answer);
 }
 
 int main()
 {
-    problem1();
-    problem2();
-    problem6();
-    problem7();
-    problem8();
-    problem9();
-    problem11();
-    problem12();
-    problem14();
-    problem15();
-    problem16();
-    problem17();
-    problem18();
+    uint8_t i;
+    for (i = 1; i <= 18; i++)
+        runjob(i);
     return 0;
 }
 

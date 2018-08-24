@@ -930,25 +930,30 @@ Antwoord: 5,537,376,230
 static string problem13()
 {   ifstream ifs;
     ifs.open("euler13.txt");
-    vector<string> numbers;
-    string tmp;
-    while (getline(ifs, tmp))
-        if (tmp.size() > 0)
-            numbers.push_back(tmp);
+    uint8_t numbers2[5000];
+    uint16_t i = 0;
+    while (i < 5000)
+    {   int x = ifs.get();
+        if (isdigit(x))
+            numbers2[i++] = x - '0';
+    }
     ifs.close();
-    vector<uint8_t> totalSum;
+    uint8_t totalSum[100];
     uint64_t sum = 0;
+    uint8_t end = 0;
     for (uint8_t i = 50; i > 0; i--)
     {   for (uint8_t j = 0; j < 100; j++)
-            sum += numbers[j][i - 1] - 48;
-        totalSum.push_back(sum % 10);
+            sum += numbers2[j * 50 + (i - 1)];
+        totalSum[end++] = sum % 10;
         sum /= 10;
     }
-    for (;sum > 0; sum /= 10) totalSum.push_back(sum % 10);
-    uint8_t end = totalSum.size() - 1;
+    for (;sum > 0; sum /= 10)
+        totalSum[end++] = sum % 10;
+    end--;
+    cout << (uint16_t)end << "\r\n";
     string ret;
     for (uint8_t i = 0; i < 10; i++)
-        ret.push_back((char)(totalSum.at(end--) + 48));
+        ret.push_back((char)(totalSum[end--] + 48));
     return ret;
 }
 
@@ -957,11 +962,11 @@ static string problem13()
 
 The following iterative sequence is defined for the set of positive integers:
 
-n → n/2 (n is even)
-n → 3n + 1 (n is odd)
+n -> n/2 (n is even)
+n -> 3n + 1 (n is odd)
 
 Using the rule above and starting with 13, we generate the following sequence:
-13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+13 -> 40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
 
 It can be seen that this sequence (starting at 13 and finishing at 1)
 contains 10 terms. Although it has not been proved yet (Collatz Problem),
