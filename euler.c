@@ -3,21 +3,57 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
+
+#define bool int
 #define true 1
 #define false 0
 
-/*
-#1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
-we get 3, 5, 6 and 9. The sum of these multiples is 23.
+void xmemcpy(void *dest, void *src, size_t n)
+{   char *csrc = (char *)src;
+    char *cdest = (char *)dest;
+    size_t i;
+    for (i = 0; i<n; i++) cdest[i] = csrc[i];
+}
 
-Find the sum of all the multiples of 3 or 5 below 1000.
+static uint32_t primeHelper(uint32_t n)
+{   uint16_t presets[] = {3000,300,100,8};
+    uint8_t i;
+    for (i = 0; i < 4; i++)
+        if (n > presets[i] * presets[i]) return n / presets[i];
+    return n;
+}
 
-Antwoord: 233,168
-*/
+static bool isprime32(uint32_t n)
+{   if (n == 0 || n == 1) return false;
+    uint32_t limit = primeHelper(n), i;
+    for (i = 2; i < limit; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+
+static uint32_t myPow32(uint32_t base, uint32_t e)
+{   if (e == 0) return 1;
+    uint32_t ret = base;
+    while (--e) ret *= base;
+    return ret;
+}
+
+static uint64_t myPow64(uint64_t base, uint64_t e)
+{   if (e == 0) return 1;
+    uint64_t ret = base;
+    while (--e) ret *= base;
+    return ret;
+}
+
+static uint32_t fac32(uint32_t n)
+{   uint32_t product = 1;
+    while (n > 1) product *= n--;
+    return product;
+}
 
 static uint8_t decimals32(uint32_t n)
-{
-    uint8_t i = 0;
+{   uint8_t i = 0;
     while (n) n = n / 10, i++;
     return i;
 }
@@ -28,27 +64,66 @@ static uint8_t decimals64(uint64_t n)
     return i;
 }
 
+static uint32_t sumProperDivs1(uint32_t n)
+{   uint32_t sum = 0, i;
+    for (i = 1; i <= n / 2; i++)
+        sum += n % i == 0 ? i : 0;
+    return sum;
+}
+
+static uint32_t *sieve32(uint32_t *nr, uint32_t n)
+{   uint8_t *v = malloc(n + 1);
+    uint32_t i, j;
+    for (i = 0; i < n; i++) v[i] = 1;
+    v[0] = v[1] = 0;
+    for (i = 2; i * i < n; i++)
+        if (v[i] == 1)
+            for (j = i * 2; j <= n; j += i)
+                v[j] = 0;
+    uint32_t size = 32;
+    uint32_t *primes = malloc(size * 4);
+    j = 0;
+    for (i = 0; i < n; i++)
+    {   if (v[i] == 1)
+        {   primes[j++] = i;
+            if (j >= size)
+            {   size *= 2;
+                primes = realloc(primes, size * 4);
+            }
+        }
+    }
+    free(v);
+    *nr = j;
+    return primes;
+}
+
 static void xstring32(char *s, uint32_t n)
-{
+{   if (n == 0)
+    {   s[0] = '0';
+        s[1] = 0;
+        return;
+    }
     uint8_t decs = decimals32(n);
     s[decs] = 0;
     while (n)
-    {
-        s[--decs] = n % 10 + '0';
-        n = n / 10;
-    }
+        s[--decs] = n % 10 + '0', n = n / 10;
 }
 
 static void xstring64(char *s, uint64_t n)
-{
-    uint8_t decs = decimals64(n);
+{   uint8_t decs = decimals64(n);
     s[decs] = 0;
     while (n)
-    {
-        s[--decs] = n % 10 + '0';
-        n = n / 10;
-    }
+        s[--decs] = n % 10 + '0', n = n / 10;
 }
+
+/*
+#1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
+we get 3, 5, 6 and 9. The sum of these multiples is 23.
+
+Find the sum of all the multiples of 3 or 5 below 1000.
+
+Antwoord: 233,168
+*/
 
 static const uint32_t summation1(uint32_t n, uint32_t xmax)
 {   uint32_t xlen = xmax / n;
@@ -60,8 +135,7 @@ static uint32_t multiples1(uint32_t limit)
 }
 
 static char *problem1()
-{
-    char *ret = malloc(50);
+{   char *ret = malloc(50);
     xstring32(ret, multiples1(1000));
     return ret;
 }
@@ -79,8 +153,7 @@ Antwoord: 4,613,732
 */
 
 static uint32_t fibonacci(uint32_t xmax)
-{
-    uint32_t term1 = 1, term2 = 2, temp = 0, xsum = 2;
+{   uint32_t term1 = 1, term2 = 2, temp = 0, xsum = 2;
     while (true)
     {   temp = term1 + term2;
         if (temp > xmax) break;
@@ -91,8 +164,7 @@ static uint32_t fibonacci(uint32_t xmax)
 }
 
 static char *problem2()
-{
-    char *ret = malloc(50);
+{   char *ret = malloc(50);
     xstring32(ret, fibonacci(4000000));
     return ret;
 }
@@ -108,6 +180,7 @@ Antwoord: 6,857
 71 * 839 * 1471 * 6857 = 600851475143
 */
 
+#if 0
 static int isPrime(uint32_t n)
 {
     uint32_t i;
@@ -115,6 +188,7 @@ static int isPrime(uint32_t n)
         if (n % i == 0) return 0;
     return 1;
 }
+#endif
 
 static char *problem3()
 {
@@ -126,7 +200,7 @@ static char *problem3()
         uint32_t factor = 0;
         for (i = 2; i < 999999; i++)
         {
-            if (isPrime(i) == 0) continue;
+            if (isprime32(i) == 0) continue;
             if (n % i == 0)
             {   factor = i;
                 break;
@@ -358,19 +432,12 @@ Antwoord: 142,913,828,922
 
 static char *problem10()
 {
-    uint8_t *v = malloc(LIMIT10 + 1);
-    uint32_t i, j;
-    for (i = 0; i < LIMIT10; i++)
-        v[i] = 1;
-    v[0] = v[1] = 0;
-    for (i = 2; i * i < LIMIT10; i++)
-        if (v[i] == 1)
-            for (j = i * 2; j <= LIMIT10; j += i)
-                v[j] = 0;
+    uint32_t n, i;
+    uint32_t *primes = sieve32(&n, 2000000);
     uint64_t sum = 0;
-    for (i = 0; i < LIMIT10; i++)
-        sum += v[i] == 1 ? i : 0;
-    free(v);
+    for (i = 0; i < n; i++)
+        sum += primes[i];
+    free(primes);
     char *ret = malloc(50);
     xstring64(ret, sum);
     return ret;
@@ -610,8 +677,7 @@ Antwoord: 137,846,528,820
 */
 
 static char *problem15()
-{
-    uint8_t size = 20;
+{   uint8_t size = 20;
     uint64_t paths = 1;
     uint8_t i;
     for (i = 0; i < size; i++)
@@ -632,8 +698,7 @@ Antwoord: 1,366
 */
 
 static char *problem16()
-{
-    uint16_t e = 1000;
+{   uint16_t e = 1000;
     uint8_t largeNum[400];
     memset(largeNum, 0, 400);
     largeNum[0] = 2;
@@ -748,21 +813,6 @@ solved by brute force, and requires a clever method! ;o)
 Antwoord: 1,074
 */
 
-static uint64_t myPow64(uint64_t base, uint64_t e)
-{
-    if (e == 0) return 1;
-    uint64_t ret = base;
-    while (--e) ret *= base;
-    return ret;
-}
-
-#if 0
-static uint8_t triangle[][4] = {
-    {3,0,0,0},
-    {7,4,0,0},
-    {2,4,6,0},
-    {8,5,9,3}};
-#else
 static uint8_t triangle[][15] = {
     {75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -779,7 +829,6 @@ static uint8_t triangle[][15] = {
     {91,71,52,38,17,14,91,43,58,50,27,29,48, 0, 0}, 
     {63,66, 4,68,89,53,67,30,73,16,69,87,40,31, 0},
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
-#endif
 
 static char *problem18()
 {   uint32_t possibilities = myPow64(2, sizeof(triangle[0]) - 1);
@@ -799,6 +848,623 @@ static char *problem18()
     xstring32(ret, best);
     return ret;
 }
+
+/*
+#19 Counting Sundays
+
+You are given the following information, but you may prefer to do some research for yourself.
+
+    * 1 Jan 1900 was a Monday.
+    * Thirty days has September,
+      April, June and November.
+      All the rest have thirty-one,
+      Saving February alone,
+      Which has twenty-eight, rain or shine.
+      And on leap years, twenty-nine.
+    * A leap year occurs on any year evenly divisible by 4, but not on a
+      century unless it is divisible by 400.
+
+How many Sundays fell on the first of the month during
+the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+Antwoord: 171
+*/
+
+static bool isLeap(uint16_t year)
+{   if (year % 4 > 0) return false;
+    if (year % 100 > 0) return true;
+    return false;
+}
+
+#define SUNDAY 5
+
+static char *problem19()
+{   uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    uint32_t day = 0;
+    uint32_t sunday_count = 0;
+    uint32_t year;
+    for (year = 1901; year <= 2000; year++)
+    {   bool leap = isLeap(year);
+        uint8_t m;
+        for (m = 0; m < 12; m++)
+        {   if (day % 7 == SUNDAY)
+                sunday_count++;
+            day += months[m];
+            if (leap == true && months[m] == 28)
+                day++;
+        }
+    }
+    char *ret = malloc(50);
+    xstring32(ret, sunday_count);
+    return ret;
+}
+
+/*
+#20 Factorial digit sum
+
+n! means n × (n − 1) × ... × 3 × 2 × 1
+
+For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
+
+Find the sum of the digits in the number 100!
+
+Antwoord: 648
+*/
+
+static char *problem20()
+{
+    uint8_t f = 100;
+    uint16_t buf[200];
+    memset(buf, 0, 400);
+    buf[0] = f;
+    uint8_t i, j;
+    for (i = f - 1; i > 0; i--)
+    {   uint16_t carry = 0;
+        for (j = 0; j < 200; j++)
+        {   buf[j] *= i;
+            buf[j] += carry;
+            carry = buf[j] / 10;
+            buf[j] = buf[j] % 10;
+        }
+    }
+    uint32_t sum = 0;
+    for (i = 0; i < 200; i++) sum += buf[i];
+    char *ret = malloc(50);
+    xstring32(ret, sum);
+    return ret;
+}
+
+/*
+#21 Amicable numbers
+
+Let d(n) be defined as the sum of proper divisors of
+n (numbers less than n which divide evenly into n).
+If d(a) = b and d(b) = a, where a ≠ b, then a and b are an
+amicable pair and each of a and b are called amicable numbers.
+
+For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22,
+44, 55 and 110; therefore d(220) = 284. The proper divisors
+of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
+
+Evaluate the sum of all the amicable numbers under 10000.
+
+Antwoord: 31,626
+*/
+
+/*
+220 & 284
+1184 & 1210
+2620 & 2924
+5020 & 5564
+6232 & 6368
+*/
+
+static char *problem21()
+{
+    uint32_t low = 1, high = 10000;
+    uint32_t l[high - low];
+    memset(l, 0, (high - low) * 4);
+    uint32_t i;
+    for (i = low; i <= high; i++)
+        l[i - low] = sumProperDivs1(i);
+    uint32_t sum = 0;
+    for (i = 0; i <= (high - low); i++)
+    {   uint32_t ind = l[i];
+        if (i + low < ind && low <= ind && ind <= high && l[ind - low] == i + low)
+            sum += (i + low) + ind;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, sum);
+    return ret;
+}
+
+/*
+#22 Names scores
+
+Using names.txt (right click and 'Save Link/Target As...'), a 46K text
+file containing over five-thousand first names, begin by sorting it into
+alphabetical order. Then working out the alphabetical value for each name,
+multiply this value by its alphabetical position in the list to obtain a name score.
+
+For example, when the list is sorted into alphabetical order, COLIN, which
+is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. So,
+COLIN would obtain a score of 938 × 53 = 49714.
+
+What is the total of all the name scores in the file?
+
+Antwoord: 871,198,282
+*/
+
+static uint8_t letterwaarde(uint8_t c)
+{   return c > 64 ? c - 64 : c;
+}
+
+static void swap22(char *a, char *b)
+{   char tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+static char *problem22()
+{   FILE *fp;
+    fp = fopen("euler22.txt", "r");
+    char *names = malloc(30*6000);
+    memset(names, 0, 30*6000);
+    int c;
+    uint16_t a = 0, b = 0;
+    while ((c = fgetc(fp)) != EOF)
+    {   if (c == 0x0a)
+        {   a++, b = 0;
+            continue;
+        }
+        names[a * 30 + b++] = c;
+    }
+    fclose(fp);
+    uint8_t i;
+    for (a = 0; a < 5162; a++)
+        for (b = 0; b < 5162; b++)
+            if (strcmp(names + b * 30, names + (b + 1) * 30) > 0)
+                for (i = 0; i < 30; i++)
+                    swap22(names + b * 30 + i, names + (b + 1) * 30 + i);
+    uint32_t total = 0;
+    for (a = 0; a < 5163; a++)
+    {   uint32_t score = 0;
+        for (i = 0; i < 30; i++) score += letterwaarde(names[a * 30 + i]);
+        score = score * (a + 1);
+        total += score;
+    }
+    free(names);
+    char *ret = malloc(50);
+    xstring32(ret, total);
+    return ret;
+}
+
+/*
+#23 Non-abundant sums
+
+A perfect number is a number for which the sum of its proper divisors is
+exactly equal to the number. For example, the sum of the proper divisors
+of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect number.
+
+A number n is called deficient if the sum of its proper divisors
+is less than n and it is called abundant if this sum exceeds n.
+
+As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest
+number that can be written as the sum of two abundant numbers is 24. By
+mathematical analysis, it can be shown that all integers greater than 28123
+can be written as the sum of two abundant numbers. However, this upper limit
+cannot be reduced any further by analysis even though it is known that the
+greatest number that cannot be expressed as the sum of two abundant numbers
+is less than this limit.
+
+Find the sum of all the positive integers which
+cannot be written as the sum of two abundant numbers.
+
+Antwoord: 4,179,871
+*/
+
+#if 1
+static bool find23(uint16_t *begin, uint16_t *end, uint16_t n)
+{   while (begin != end)
+        if (*begin++ == n) return true;
+    return false;
+}
+#else
+static bool find23(uint16_t *begin, uint16_t *end, uint16_t n)
+{
+    uint16_t *mid = (end - begin) / 2 + begin;
+    if 
+}
+#endif
+
+static char *problem23()
+{
+    uint16_t xmax = 28123;
+    uint16_t abundants[28123];
+    uint16_t i, j = 0;
+    for (i = 1; i <= xmax; i++)
+        if (sumProperDivs1(i) > i)
+            abundants[j++] = i;
+    j--;
+    uint32_t xsum = 1;
+    for (i = 2; i <= xmax; i++)
+    {   bool boo = true;
+        uint16_t *it;
+        for (it = abundants; it != abundants + j; it++)
+        {   if (*it < i)
+            {   if (find23(abundants, abundants + j, i - *it))
+                {   boo = false;
+                    break;
+                }
+            } else break;
+        }
+        if (boo == true) xsum += i;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
+}
+
+/*
+#24: Lexicographic permutations
+
+A permutation is an ordered arrangement of objects. For example, 3124 is
+one possible permutation of the digits 1, 2, 3 and 4. If all of the
+permutations are listed numerically or alphabetically, we call it
+lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
+
+012   021   102   120   201   210
+
+What is the millionth lexicographic permutation
+of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
+
+Antwoord: 2,783,915,460
+*/
+
+static char *problem24()
+{   uint8_t a[] = {0,1,2,3,4,5,6,7,8,9}, r = 0, j;
+    char *ret = malloc(50);
+    uint32_t perm = 999999;
+    for (j = 0; j < 10; j++)
+    {   uint8_t i = perm / fac32(9 - j);
+        perm = perm % fac32(9 - j);
+        ret[r++] = a[i] + '0';
+        xmemcpy(a + i, a + i + 1, 9 - i);
+    }
+    ret[10] = 0;
+    return ret;
+}
+
+/*
+#25: 1000-digit Fibonacci number
+
+The Fibonacci sequence is defined by the recurrence relation:
+
+    Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+
+Hence the first 12 terms will be:
+
+    F1 = 1
+    F2 = 1
+    F3 = 2
+    F4 = 3
+    F5 = 5
+    F6 = 8
+    F7 = 13
+    F8 = 21
+    F9 = 34
+    F10 = 55
+    F11 = 89
+    F12 = 144
+
+The 12th term, F12, is the first term to contain three digits.
+
+What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+
+Antwoord: 4,782
+*/
+
+#if 0
+static void xprint(uint8_t *x)
+{
+    printf("%u%u%u\r\n", x[0], x[1], x[2]);
+}
+#endif
+
+static char *problem25()
+{   uint16_t cnt = 3, i;
+    uint8_t fib1[1000], fib2[1000], fib3[1000], carry = 0;
+    memset(fib1, 0, 1000);
+    memset(fib2, 0, 1000);
+    memset(fib3, 0, 1000);
+    fib1[0] = 1, fib2[0] = 1, fib3[0] = 2;
+    while (fib3[999] == 0)
+    {   xmemcpy(fib1, fib2, 1000);
+        xmemcpy(fib2, fib3, 1000);
+        for (i = 0; i < 1000; i++)
+        {   fib3[i] = fib1[i] + fib2[i] + carry;
+            carry = fib3[i] / 10;
+            fib3[i] = fib3[i] % 10;
+        }
+        cnt++;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, cnt);
+    return ret;
+}
+
+/*
+#26: Reciprocal cycles
+
+A unit fraction contains 1 in the numerator. The decimal representation
+of the unit fractions with denominators 2 to 10 are given:
+
+    1/2 =  0.5
+    1/3 =  0.(3)
+    1/4 =  0.25
+    1/5 =  0.2
+    1/6 =  0.1(6)
+    1/7 =  0.(142857)
+    1/8 =  0.125
+    1/9 =  0.(1)
+    1/10 =  0.1 
+
+Where 0.1(6) means 0.166666..., and has a 1-digit recurring
+cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
+
+Find the value of d < 1000 for which 1/d contains the
+longest recurring cycle in its decimal fraction part.
+
+Antwoord: 983
+*/
+
+static uint32_t cycleLength(uint32_t n)
+{   uint32_t a = 1, t = 0;
+    while (t < n)
+    {   a = a * 10 % n, t++;
+        if (a == 0) return 0;
+        if (a == 1) return t;
+    }
+    return 0;
+}
+
+static char *problem26()
+{   uint32_t best_n = 0, best_length = 0, i;
+    for (i = 999; i > 1; i--)
+    {   uint32_t clength = cycleLength(i);
+        if (clength > best_length)
+        {   best_n = i, best_length = clength;
+            if (best_length == i - 1) break;
+        }
+    }
+    char *ret = malloc(50);
+    xstring32(ret, best_n);
+    return ret;
+}
+
+/*
+#27: Quadratic primes
+
+Euler discovered the remarkable quadratic formula:
+
+n^2+n+41
+
+It turns out that the formula will produce 40 primes for the consecutive
+integer values 0≤n≤39. However, when n=40,402+40+41=40(40+1)+41 is
+divisible by 41, and certainly when n=41,412+41+41
+
+is clearly divisible by 41.
+
+The incredible formula n2−79n+1601
+was discovered, which produces 80 primes for the consecutive values 0≤n≤79
+
+. The product of the coefficients, −79 and 1601, is −126479.
+
+Considering quadratics of the form:
+
+    n^2+an+b
+
+, where |a|<1000 and |b|≤1000
+
+where |n|
+is the modulus/absolute value of n
+e.g. |11|=11 and |−4|=4
+
+Find the product of the coefficients, a
+and b, for the quadratic expression that produces the maximum
+number of primes for consecutive values of n, starting with n=0.
+
+Antwoord: -59231
+*/
+
+static char *problem27()
+{   int32_t best_a = 0, best_b = 0, best_n = 0, a, b;
+    for (a = -999; a < 1000; a++)
+    {   for (b = -1000; b <= 1000; b++)
+        {   int32_t n = 0;
+            while (isprime32(abs(n * n + a * n + b))) n++;
+            if (n > best_n) best_a = a, best_b = b, best_n = n;
+        }
+    }
+    char *ret = malloc(50);
+    snprintf(ret, 50, "%d", best_a * best_b);
+    return ret;
+}
+
+/*
+#28 Number spiral diagonals
+
+Starting with the number 1 and moving to the right in a
+clockwise direction a 5 by 5 spiral is formed as follows:
+
+21 22 23 24 25
+20  7  8  9 10
+19  6  1  2 11
+18  5  4  3 12
+17 16 15 14 13
+
+It can be verified that the sum of the numbers on the diagonals is 101.
+
+What is the sum of the numbers on the diagonals
+in a 1001 by 1001 spiral formed in the same way?
+
+Antwoord: 669,171,001
+*/
+
+static char *problem28()
+{   uint32_t root = 1001;
+    uint32_t xsum = 1, step, foo;
+    uint8_t i;
+    for (step = 2, foo = 1; foo < root * root; step += 2)
+        for (i = 0; i < 4; i++) foo += step, xsum += foo;
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
+}
+
+/*
+#29: Distinct powers
+
+Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
+
+22=4, 23=8, 24=16, 25=32
+32=9, 33=27, 34=81, 35=243
+42=16, 43=64, 44=256, 45=1024
+52=25, 53=125, 54=625, 55=3125
+
+If they are then placed in numerical order, with any repeats
+removed, we get the following sequence of 15 distinct terms:
+
+4, 8, 9, 16, 25, 27, 32, 64, 81, 125, 243, 256, 625, 1024, 3125
+
+How many distinct terms are in the sequence
+generated by ab for 2 <= a <= 100 and 2 <= b <= 100?
+
+Antwoord: 9,183
+*/
+
+static uint32_t myRoot(uint32_t n)
+{   uint8_t a;
+    uint32_t e, b;
+    for (a = 2; a <= 10; a++)
+        for (e = 1, b = 0; (b = myPow32(a, e)) <= 100; e++)
+            if (b == (n & 0xffff0000) >> 16) return a << 16 | e;
+    return n;
+}
+
+static uint32_t eqpow(uint32_t n)
+{   uint32_t root = myRoot(n);
+    return (root & 0xffff0000) | (n & 0xffff) * (root & 0xffff);
+}
+
+static void swap29(uint32_t *a, uint32_t *b)
+{   uint32_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void sort29(uint32_t *begin, uint32_t *end)
+{   uint32_t *a, *b;
+    for (a = begin; a < end - 1; a++)
+        for (b = begin; b < end - 1; b++)
+            if (b[0] > b[1])
+                swap29(b, b + 1);
+}
+
+static uint32_t ndistinct(uint32_t *begin, uint32_t *end)
+{   uint32_t ret = 1;
+    uint32_t previous = *begin++;
+    while (begin != end)
+    {   uint32_t cur = *begin++;
+        if (cur != previous) ret++;
+        previous = cur;
+    }
+    return ret;
+}
+
+static char *problem29()
+{   uint32_t buf[99*99];
+    uint16_t a, b;
+    for (a = 2; a <= 100; a++)
+        for (b = 2; b <= 100; b++)
+            buf[(a-2)*99+(b-2)] = eqpow(a << 16 | b);
+    sort29(buf, buf + 99*99);
+    char *ret = malloc(50);
+    xstring32(ret, ndistinct(buf, buf + 99*99));
+    return ret;
+}
+
+/*
+#30: Digit fifth powers
+
+Surprisingly there are only three numbers that can
+be written as the sum of fourth powers of their digits:
+
+1634 = 1^4 + 6^4 + 3^4 + 4^4
+8208 = 8^4 + 2^4 + 0^4 + 8^4
+9474 = 9^4 + 4^4 + 7^4 + 4^4
+
+As 1 = 14 is not a sum it is not included.
+
+The sum of these numbers is 1634 + 8208 + 9474 = 19316.
+
+Find the sum of all the numbers that can be written
+as the sum of fifth powers of their digits.
+
+Antwoord: 443,839
+*/
+
+/*
+4,150 + 4,151 + 54,748 + 92,727 + 93,084 + 194,979 = 443,83
+*/
+
+static bool test30(uint32_t n, uint8_t p)
+{   uint32_t xsum = 0, tmp = n;
+    while (tmp > 0) xsum += myPow32(tmp % 10, p), tmp = tmp / 10;
+    return xsum == n;
+}
+
+static char *problem30()
+{   uint8_t p = 5;
+    uint32_t xsum = 0, i;
+    for (i = 2; i < 1000000; i++) xsum += test30(i, p) ? i : 0;
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
+}
+
+/*
+#31 Coin sums
+
+In England the currency is made up of pound, P, and pence,
+p, and there are eight coins in general circulation:
+
+    1p, 2p, 5p, 10p, 20p, 50p, P1 (100p) and P2 (200p).
+
+It is possible to make £2 in the following way:
+
+    1×P1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
+
+How many different ways can P2 be made using any number of coins?
+
+Antwoord: 73,682
+*/
+
+static char *problem31()
+{   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
+    uint32_t ways[target + 1];
+    memset(ways, 0, (target + 1) * 4);
+    ways[0] = 1;
+    uint8_t i, j;
+    for (i = 0; i < sizeof(coins); i++)
+        for (j = coins[i]; j <= target; j++)
+            ways[j] += ways[j - coins[i]];
+    char *ret = malloc(50);
+    xstring32(ret, ways[target]);
+    return ret;
+}
+
 
 static char answers2[][50] = {"233168", "4613732", "6857",
     "906609", "232792560", "25164150", "104743", "23514624000",
@@ -833,24 +1499,42 @@ static char *run(uint32_t p)
     case 16: return problem16();
     case 17: return problem17();
     case 18: return problem18();
+    case 19: return problem19();
+    case 20: return problem20();
+    case 21: return problem21();
+    case 22: return problem22();
+    case 23: return problem23();
+    case 24: return problem24();
+    case 25: return problem25();
+    case 26: return problem26();
+    case 27: return problem27();
+    case 28: return problem28();
+    case 29: return problem29();
+    case 30: return problem30();
+    case 31: return problem31();
     }
     return 0;
 }
 
 static void runjob(uint32_t p)
 {
+    time_t begin = time(0);
     char *answer = run(p);
+    time_t end = time(0);
     if (strcmp(answer, answers2[p - 1]) != 0)
         printf("error!");
-    printf("#%u: %s\r\n", p, answer);
+    printf("#%u: %s %lus\r\n", p, answer, end - begin);
     free(answer);
 }
 
 int main()
 {
+    time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 18; i++)
+    for (i = 1; i <= 31; i++)
         runjob(i);
+    time_t end = time(0);
+    printf("Total: %lus\r\n", end - begin);
     return 0;
 }
 

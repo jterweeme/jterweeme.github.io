@@ -1984,7 +1984,7 @@ for 1 <= n <= 100, are greater than one-million?
 Antwoord: 4,075
 """
 
-def opdracht53(nlimit = 101, limit = 10**6):
+def problem53(nlimit = 101, limit = 10**6):
     tree = []
     for i in range(nlimit):
         tree.append([0] * nlimit)
@@ -2073,7 +2073,7 @@ Antwoord: 376
 https://blog.dreamshire.com/project-euler-54-solution/
 """
 
-def opdracht54():
+def problem54():
     hands = (line.split() for line in open("euler54.txt"))
     values = {r:i for i,r in enumerate('23456789TJQKA', 2)}
     straights = [(v, v-1, v-2, v-3, v-4) for v in range(14, 5, -1)] + [(14, 5, 4, 3, 2)]
@@ -2136,7 +2136,7 @@ def islychrel(n, it = 50):
         if ispalindrome(n): return False
     return True
 
-def opdracht55(r = range(10000)):
+def problem55(r = range(10000)):
     return sum(islychrel(n) for n in r)
 
 """
@@ -2152,7 +2152,7 @@ where a, b < 100, what is the maximum digital sum?
 Antwoord: 972
 """
 
-def opdracht56():
+def problem56():
     best = 0
     for a in range(100):
         for b in range(100):
@@ -4579,10 +4579,10 @@ def runn2(n = 1):
     if n == 50: return problem50()
     if n == 51: return problem51()
     if n == 52: return problem52()
-    if n == 53: return opdracht53()
-    if n == 54: return opdracht54()
-    if n == 55: return opdracht55()
-    if n == 56: return opdracht56()
+    if n == 53: return problem53()
+    if n == 54: return problem54()
+    if n == 55: return problem55()
+    if n == 56: return problem56()
     if n == 57: return problem57()
     if n == 58: return problem58()
     if n == 59: return problem59()

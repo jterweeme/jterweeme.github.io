@@ -1,3 +1,68 @@
+function reverse(n, base = 10)
+{   var rev = 0;
+    for (var temp = n; temp != 0; temp = Math.floor(temp/base))
+        rev = rev * base + temp % base;
+    return rev
+}
+
+function ispalindrome(n, base = 10)
+{   return n == reverse(n, base);
+}
+
+function factorial(n)
+{   var xsum = 1;
+    while (n > 1) xsum *= n--;
+    return xsum;
+}
+
+function decimals(n)
+{   var i = 0;
+    while (n >= 10**i) i++;
+    return i;
+}
+
+function digits(n)
+{
+    ret = [];
+    while (n)
+    {
+        ret.push(n % 10);
+        n = Math.floor(n / 10);
+    }
+    return ret;
+}
+
+function linearSearch(a, n)
+{   for (var i = 0; i < a.length; i++)
+        if (a[i] === n) return i + 1;   // leave 0 for not found
+    return 0;
+}
+
+function hasDigitsOnce(n, nset)
+{   for (var i = 0; i < n.length; i++)
+    {   var nseti = linearSearch(nset, n[i]);
+        if (nseti) nset.splice(nseti - 1, 1); else return false;
+    }
+    return true;
+}
+
+function sameDigs(a, b)
+{
+    return hasDigitsOnce(b, digits(a));
+}
+
+function isPandigital(n)
+{   var nset = [];
+    for (var i = 1; i <= n.length; i++) nset.push(i);
+    return hasDigitsOnce(n, nset);
+}
+
+function triangler(n) { return n * (n + 1) >> 1; }
+
+function triangle(n) { return Math.floor(n * (n + 1) / 2); }
+function pentagon(n) { return Math.floor(n * (3 * n - 1) / 2); }
+function hexagon(n) { return n * (2 * n - 1); }
+
 /*
 #1 Multiples of 3 and 5
 
@@ -89,13 +154,7 @@ Antwoord: 906,609
 */
 
 function opdracht4()
-{   function ispalindrome(n)
-    {   var temp = n, rev = 0;
-        while (temp != 0)
-            rev = rev * 10 + temp % 10, temp = Math.floor(temp / 10);
-        return n == rev;
-    }
-    var best = 0;
+{   var best = 0;
     for (var a = 100; a < 1000; a++)
     {   for (var b = 100; b < 1000; b++)
         {   var c = a * b;
@@ -330,7 +389,7 @@ Antwoord: 76,576,500
 */
 
 function opdracht12(divisors = 500)
-{   function triangler(n) { return n * (n + 1) >> 1; }
+{
     function n_divs(n)
     {   if (n % 2 == 0) n = n >> 1;
         var divisors = 1, count = 0;
@@ -717,13 +776,13 @@ Find the sum of the digits in the number 100!
 Antwoord: 648
 */
 
-function opdracht20(f = 100) {
-    var buf = Array(200).fill(0);
+function opdracht20(f = 100)
+{   var buf = Array(200).fill(0);
     buf[0] = f;
-    for (var i = f - 1; i > 0; i--) {
-        var carry = 0;
-        for (var j = 0; j < 200; j++) {
-            buf[j] *= i;
+    for (var i = f - 1; i > 0; i--)
+    {   var carry = 0;
+        for (var j = 0; j < 200; j++)
+        {   buf[j] *= i;
             buf[j] += carry;
             carry = Math.floor(buf[j] / 10);
             buf[j] = buf[j] % 10;
@@ -748,7 +807,7 @@ For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44,
 
 Evaluate the sum of all the amicable numbers under 10000.
 
-Antwoord: 31626
+Antwoord: 31,626
 */
 
 /*
@@ -794,32 +853,34 @@ What is the total of all the name scores in the file?
 Antwoord: 871,198,282
 */
 
-names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER","MARIA","SUSAN",
-"MARGARET","DOROTHY","LISA","NANCY","KAREN","BETTY","HELEN","SANDRA","DONNA",
-"CAROL","RUTH","SHARON","MICHELLE","LAURA","SARAH","KIMBERLY","DEBORAH",
-"JESSICA","SHIRLEY","CYNTHIA","ANGELA","MELISSA","BRENDA","AMY","ANNA",
-"REBECCA","VIRGINIA","KATHLEEN","PAMELA","MARTHA","DEBRA","AMANDA",
-"STEPHANIE","CAROLYN","CHRISTINE","MARIE","JANET","CATHERINE","FRANCES",
-"ANN","JOYCE","DIANE","ALICE","JULIE","HEATHER","TERESA","DORIS","GLORIA",
-"EVELYN","JEAN","CHERYL","MILDRED","KATHERINE","JOAN","ASHLEY","JUDITH",
-"ROSE","JANICE","KELLY","NICOLE","JUDY","CHRISTINA","KATHY","THERESA",
-"BEVERLY","DENISE","TAMMY","IRENE","JANE","LORI","RACHEL","MARILYN","ANDREA",
-"KATHRYN","LOUISE","SARA","ANNE","JACQUELINE","WANDA","BONNIE","JULIA","RUBY",
-"LOIS","TINA","PHYLLIS","NORMA","PAULA","DIANA","ANNIE","LILLIAN","EMILY",
-"ROBIN","PEGGY","CRYSTAL","GLADYS","RITA","DAWN","CONNIE","FLORENCE","TRACY",
-"EDNA","TIFFANY","CARMEN","ROSA","CINDY","GRACE","WENDY","VICTORIA","EDITH",
-"KIM","SHERRY","SYLVIA","JOSEPHINE","THELMA","SHANNON","SHEILA","ETHEL",
-"ELLEN","ELAINE","MARJORIE","CARRIE","CHARLOTTE","MONICA","ESTHER","PAULINE",
-"EMMA","JUANITA","ANITA","RHONDA","HAZEL","AMBER","EVA","DEBBIE","APRIL",
-"LESLIE","CLARA","LUCILLE","JAMIE","JOANNE","ELEANOR","VALERIE","DANIELLE",
-"MEGAN","ALICIA","SUZANNE","MICHELE","GAIL","BERTHA","DARLENE","VERONICA",
-"JILL","ERIN","GERALDINE","LAUREN","CATHY","JOANN","LORRAINE","LYNN","SALLY",
-"REGINA","ERICA","BEATRICE","DOLORES","BERNICE","AUDREY","YVONNE","ANNETTE",
-"JUNE","SAMANTHA","MARION","DANA","STACY","ANA","RENEE","IDA","VIVIAN",
-"ROBERTA","HOLLY","BRITTANY","MELANIE","LORETTA","YOLANDA","JEANETTE",
-"LAURIE","KATIE","KRISTEN","VANESSA","ALMA","SUE","ELSIE","BETH","JEANNE",
-"VICKI","CARLA","TARA","ROSEMARY","EILEEN","TERRI","GERTRUDE","LUCY","TONYA",
-"ELLA","STACEY","WILMA","GINA","KRISTIN","JESSIE","NATALIE","AGNES","VERA",
+names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER",
+"MARIA","SUSAN","MARGARET","DOROTHY","LISA","NANCY","KAREN","BETTY",
+"HELEN","SANDRA","DONNA","CAROL","RUTH","SHARON","MICHELLE","LAURA",
+"SARAH","KIMBERLY","DEBORAH","JESSICA","SHIRLEY","CYNTHIA","ANGELA",
+"MELISSA","BRENDA","AMY","ANNA","REBECCA","VIRGINIA","KATHLEEN","PAMELA",
+"MARTHA","DEBRA","AMANDA","STEPHANIE","CAROLYN","CHRISTINE","MARIE",
+"JANET","CATHERINE","FRANCES","ANN","JOYCE","DIANE","ALICE","JULIE",
+"HEATHER","TERESA","DORIS","GLORIA","EVELYN","JEAN","CHERYL","MILDRED",
+"KATHERINE","JOAN","ASHLEY","JUDITH","ROSE","JANICE","KELLY","NICOLE",
+"JUDY","CHRISTINA","KATHY","THERESA","BEVERLY","DENISE","TAMMY","IRENE",
+"JANE","LORI","RACHEL","MARILYN","ANDREA","KATHRYN","LOUISE","SARA",
+"ANNE","JACQUELINE","WANDA","BONNIE","JULIA","RUBY","LOIS","TINA",
+"PHYLLIS","NORMA","PAULA","DIANA","ANNIE","LILLIAN","EMILY","ROBIN",
+"PEGGY","CRYSTAL","GLADYS","RITA","DAWN","CONNIE","FLORENCE","TRACY",
+"EDNA","TIFFANY","CARMEN","ROSA","CINDY","GRACE","WENDY","VICTORIA",
+"EDITH","KIM","SHERRY","SYLVIA","JOSEPHINE","THELMA","SHANNON","SHEILA",
+"ETHEL","ELLEN","ELAINE","MARJORIE","CARRIE","CHARLOTTE","MONICA",
+"ESTHER","PAULINE","EMMA","JUANITA","ANITA","RHONDA","HAZEL","AMBER",
+"EVA","DEBBIE","APRIL","LESLIE","CLARA","LUCILLE","JAMIE","JOANNE",
+"ELEANOR","VALERIE","DANIELLE","MEGAN","ALICIA","SUZANNE","MICHELE",
+"GAIL","BERTHA","DARLENE","VERONICA","JILL","ERIN","GERALDINE","LAUREN",
+"CATHY","JOANN","LORRAINE","LYNN","SALLY","REGINA","ERICA","BEATRICE",
+"DOLORES","BERNICE","AUDREY","YVONNE","ANNETTE","JUNE","SAMANTHA",
+"MARION","DANA","STACY","ANA","RENEE","IDA","VIVIAN","ROBERTA","HOLLY",
+"BRITTANY","MELANIE","LORETTA","YOLANDA","JEANETTE","LAURIE","KATIE",
+"KRISTEN","VANESSA","ALMA","SUE","ELSIE","BETH","JEANNE","VICKI","CARLA",
+"TARA","ROSEMARY","EILEEN","TERRI","GERTRUDE","LUCY","TONYA","ELLA",
+"STACEY","WILMA","GINA","KRISTIN","JESSIE","NATALIE","AGNES","VERA",
 "WILLIE","CHARLENE","BESSIE","DELORES","MELINDA","PEARL","ARLENE","MAUREEN","COLLEEN",
 "ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE","LILLIE","CLAUDIA",
 "JACKIE","MARCIA","TANYA","NELLIE",
@@ -1619,7 +1680,6 @@ function opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 10**6 - 1)
         return ret;
     }
     var b = a, permx = perm, lst = [];
-    function factorial(n) { var xsum = 1; while (n > 1) xsum *= n--; return xsum; }
     for (var j = 0; j < 10; j++)
     {   var fact = factorial(b.length - 1);
         var i = Math.floor(permx / fact);
@@ -1630,9 +1690,63 @@ function opdracht24(a = [0,1,2,3,4,5,6,7,8,9], perm = 10**6 - 1)
     return concat(lst);
 }
 
-function opdracht25() {
-    return Math.floor((Math.log(10) * 999 + Math.log(5) / 2)/Math.log(1.6180));
+/*
+#25: 1000-digit Fibonacci number
+
+The Fibonacci sequence is defined by the recurrence relation:
+
+    Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+
+Hence the first 12 terms will be:
+
+    F1 = 1
+    F2 = 1
+    F3 = 2
+    F4 = 3
+    F5 = 5
+    F6 = 8
+    F7 = 13
+    F8 = 21
+    F9 = 34
+    F10 = 55
+    F11 = 89
+    F12 = 144
+
+The 12th term, F12, is the first term to contain three digits.
+
+What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+
+Antwoord: 4,782
+*/
+
+function opdracht25()
+{   return Math.floor((Math.log(10) * 999 + Math.log(5) / 2)/Math.log(1.6180));
 }
+
+/*
+#26: Reciprocal cycles
+
+A unit fraction contains 1 in the numerator. The decimal representation
+of the unit fractions with denominators 2 to 10 are given:
+
+    1/2 =  0.5
+    1/3 =  0.(3)
+    1/4 =  0.25
+    1/5 =  0.2
+    1/6 =  0.1(6)
+    1/7 =  0.(142857)
+    1/8 =  0.125
+    1/9 =  0.(1)
+    1/10 =  0.1 
+
+Where 0.1(6) means 0.166666..., and has a 1-digit recurring
+cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
+
+Find the value of d < 1000 for which 1/d contains the
+longest recurring cycle in its decimal fraction part.
+
+Antwoord: 983
+*/
 
 function opdracht26()
 {   var sieve = Array(1000).fill(true);
@@ -1767,23 +1881,7 @@ Antwoord: 45,228
 */
 
 function opdracht32()
-{   function linearSearch(a, n)
-    {   for (var i = 0; i < a.length; i++)
-            if (a[i] === n) return i + 1;   // leave 0 for not found
-        return 0;
-    }
-    function hasDigitsOnce(n, nset)
-    {   for (var i = 0; i < n.length; i++)
-        {   var nseti = linearSearch(nset, n[i]);
-            if (nseti) nset.splice(nseti - 1, 1); else return false;
-        }
-        return true;
-    }
-    function isPandigital(n)
-    {   var nset = [];
-        for (var i = 1; i <= n.length; i++) nset.push(i);
-        return hasDigitsOnce(n, nset);
-    }
+{
     function arrize(n)
     {   var arr = [];
         for (; n; n = Math.floor(n / 10)) arr.push(n % 10);
@@ -1886,7 +1984,7 @@ function opdracht35(limit = 10**6-1)
     }
     function isCircular(n, lst)
     {   function rotations(n)
-        {   function decimals(n) { var i = 0; while (n > 10**i) i++; return i; }
+        {
             function rotate(n)
             {   var length = decimals(n), digit = n % 10,n = Math.floor(n / 10);
                 n += digit * 10**(length - 1);
@@ -1930,12 +2028,7 @@ Antwoord: 872,187
 */
 
 function opdracht36(limit = 10**6)
-{   function ispalindrome(n, base = 10)
-    {   var rev = 0;
-        for (var temp = n; temp != 0; temp = Math.floor(temp/base))
-            rev = rev * base + temp % base;
-        return n == rev;
-    }
+{   
     var xsum = 0;
     for (var i = 1; i < limit; i++)
         if (ispalindrome(i, 10) && ispalindrome(i, 2))
@@ -1978,7 +2071,7 @@ function opdracht37()
         return true;
     }
     function islefttruncatable(primes, n)
-    {   function decimals(n) { var i = 0; while (n > 10**i) i++; return i; }
+    {
         function truncateLeft(n) { var exp = decimals(n) - 1; return n % 10**exp; }
         var length = decimals(n);
         for (var i = 0; i < length; i++)
@@ -2025,7 +2118,7 @@ Antwoord: 932,718,654
 */
 
 function opdracht38()
-{   function decimals(n) { var i = 0; while (n >= 10**i) i++; return i; }
+{
     function concat(a, b) { return b + a * 10**decimals(b); }
     function linearSearch(d, n)
     { for (var i = 0; i < d.length; i++) if (d[i] == n) return i + 1; return 0; }
@@ -2162,7 +2255,6 @@ function opdracht41()
         }
         return true;
     }
-    function decimals(n) { var i = 0; while (n >= 10**i) i++; return i; }
     function isPandigital(n)
     {   var nset = [], d = decimals(n);
         for (var i = 1; i <= d; i++) nset.push(i);
@@ -2426,7 +2518,7 @@ var words42 = ["A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACAD
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH"];
 
 function opdracht42(words = words42)
-{   function triangler(n) { return n * (n + 1) >> 1; }
+{
     var triangles = [];
     for (var i = 0; i < 20; i++) triangles[i] = triangler(i);
     function wordcount(word)
@@ -2479,6 +2571,23 @@ function opdracht43()
     return xsum;
 }
 
+/*
+#44: Pentagon numbers
+
+Pentagonal numbers are generated by the formula,
+Pn=n(3n−1)/2. The first ten pentagonal numbers are:
+
+1, 5, 12, 22, 35, 51, 70, 92, 117, 145, ...
+
+It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However,
+their difference, 70 − 22 = 48, is not pentagonal.
+
+Find the pair of pentagonal numbers, Pj and Pk, for which
+their sum and difference are pentagonal and D = |Pk − Pj|
+is minimised; what is the value of D?
+
+Antwoord: 5,482,660
+*/
 
 function opdracht44(window = 10**4)
 {   function binSearch(d, n)
@@ -2492,7 +2601,6 @@ function opdracht44(window = 10**4)
         }
         return false;
     }
-    function pentagon(n) { return n * (3 * n - 1) / 2 |0; }
     var lpgs = [];
     for (var i = 1; i < window; i++) lpgs.push(pentagon(i));
     for (var a = 0; a < lpgs.length; a++)
@@ -2529,9 +2637,6 @@ function opdracht45()
         }
         return false;
     }
-    function triangle(n) { return Math.floor(n * (n + 1) / 2); }
-    function pentagon(n) { return Math.floor(n * (3 * n - 1) / 2); }
-    function hexagon(n) { return n * (2 * n - 1); }
     var ltriangle = [], lpentagon = [], lhexagon = [];
     for (var i = 286; i < 10**5; i++) ltriangle.push(triangle(i));
     for (var i = 166; i < 10**5; i++) lpentagon.push(pentagon(i));
@@ -2614,6 +2719,10 @@ function opdracht47(distinct = 4)
     return 0;
 }
 
+/*
+#48: Self powers
+*/
+
 function opdracht48()
 {   var result = 0, modulo = 10**10;
     for (var i = 1; i <= 1000; i++)
@@ -2624,6 +2733,22 @@ function opdracht48()
     return result;
 }
 
+/*
+#49: Prime permutations
+
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+
+What 12-digit number do you form by concatenating the three terms in this sequence?
+
+Antwoord: 296,962,999,629
+*/
+
 function opdracht49()
 {   function linearSearch(d, n)
     { for (var i = 0; i < d.length; i++) if (d[i] == n) return i + 1; return 0; }
@@ -2632,8 +2757,6 @@ function opdracht49()
         while (n > 0) ret.push(n % 10), n = Math.floor(n / 10);
         return ret;
     }
-    function decimals(n) { var i = 0; while (n >= 10**i) i++; return i; }
-    function factorial(n) { var xsum = 1; while (n > 1) xsum *= n--; return xsum; }
     function perms(n)
     {   var a = digits(n);
         a.reverse();
@@ -2798,14 +2921,32 @@ function opdracht52()
     return 0;
 }
 
+/*
+#53: Combinatoric selections
+
+There are exactly ten ways of selecting three from five, 12345:
+
+123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+
+In combinatorics, we use the notation, 5C3 = 10.
+
+In general,
+nCr =  
+n!
+r!(n−r)!
+ ,where r <= n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+
+It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
+
+How many, not necessarily distinct, values of  nCr,
+for 1 <= n <= 100, are greater than one-million?
+
+Antwoord: 4,075
+*/
+
 function opdracht53()
 {   function combinations(n, r)
-    {   function factorial(n)
-        {   var xsum = 1;
-            for (var a = 2; a <= n; a++) xsum *= a;
-            return xsum;
-        }
-        return Math.floor(factorial(n) / (factorial(r) * factorial(n - r)));
+    {   return Math.floor(factorial(n) / (factorial(r) * factorial(n - r)));
     }
     var xcount = 0;
     for (var n = 23; n <= 100; n++)
@@ -2817,6 +2958,288 @@ function opdracht53()
         }
     }
     return xcount;
+}
+
+/*
+#54 Poker hands
+
+In the card game poker, a hand consists of five cards and
+are ranked, from lowest to highest, in the following way:
+
+High Card: Highest value card.
+One Pair: Two cards of the same value.
+Two Pairs: Two different pairs.
+Three of a Kind: Three cards of the same value.
+Straight: All cards are consecutive values.
+Flush: All cards of the same suit.
+Full House: Three of a kind and a pair.
+Four of a Kind: Four cards of the same value.
+Straight Flush: All cards are consecutive values of same suit.
+Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
+
+The cards are valued in the order:
+2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
+
+If two players have the same ranked hands then the rank made up of the
+highest value wins; for example, a pair of eights beats a pair of fives
+(see example 1 below). But if two ranks tie, for example, both players
+have a pair of queens, then highest cards in each hand are compared (see
+example 4 below); if the highest cards tie then the next highest cards
+are compared, and so on.
+
+Consider the following five hands dealt to two players:
+
+Hand    Player 1            Player 2          Winner
+
+ 1    5H 5C 6S 7S KD     2C 3S 8S 8D TD      Player 2
+      Pair of Fives      Pair of Eights
+
+ 2   5D 8C 9S JS AC      2C 5C 7D 8S QH      Player 1
+    Highest card Ace   Highest card Queen
+
+ 3   2D 9C AS AH AC      3D 6D 7D TD QD      Player 2
+       Three Aces     Flush with Diamonds
+
+ 4   4D 6S 9H QH QC      3D 6D 7H QD QS      Player 1
+     Pair of Queens      Pair of Queens
+    Highest card Nine  Highest card Seven
+   
+ 5   2H 2D 4C 4D 4S     3C 3D 3S 9S 9D       Player 1
+       Full House         Full House
+   With Three Fours   with Three Threes
+
+The file, poker.txt, contains one-thousand random hands dealt to two
+players. Each line of the file contains ten cards (separated by a single
+space): the first five are Player 1's cards and the last five are Player 2's
+cards. You can assume that all hands are valid (no invalid characters or
+repeated cards), each player's hand is in no specific order, and in each
+hand there is a clear winner.
+
+How many hands does Player 1 win?
+
+Antwoord: 376
+*/
+
+function problem54()
+{
+    return 0;
+}
+
+/*
+#55: Lychrel numbers
+
+If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+
+Not all numbers produce palindromes so quickly. For example,
+
+349 + 943 = 1292,
+1292 + 2921 = 4213
+4213 + 3124 = 7337
+
+That is, 349 took three iterations to arrive at a palindrome.
+
+Although no one has proved it yet, it is thought that some numbers, like
+196, never produce a palindrome. A number that never forms a palindrome
+through the reverse and add process is called a Lychrel number. Due to the
+theoretical nature of these numbers, and for the purpose of this problem,
+we shall assume that a number is Lychrel until proven otherwise. In
+addition you are given that for every number below ten-thousand, it will
+either (i) become a palindrome in less than fifty iterations, or, (ii) no
+one, with all the computing power that exists, has managed so far to map it
+to a palindrome. In fact, 10677 is the first number to be shown to require
+over fifty iterations before producing a palindrome:
+4668731596684224866951378664 (53 iterations, 28-digits).
+
+Surprisingly, there are palindromic numbers that are
+themselves Lychrel numbers; the first example is 4994.
+
+How many Lychrel numbers are there below ten-thousand?
+
+NOTE: Wording was modified slightly on 24 April 2007 to
+emphasise the theoretical nature of Lychrel numbers.
+
+Antwoord: 249
+*/
+
+function islychrel(n, it = 50)
+{
+    for (var i = 0; i < it; i++)
+    {   n += reverse(n);
+        if (ispalindrome(n)) return false;
+    }
+    return true;
+}
+
+function problem55()
+{
+    var xsum = 0;
+    for (var i = 0; i < 10000; i++)
+        if (islychrel(i)) xsum++;
+    return xsum;
+}
+
+/*
+#56: Powerful digit sum
+
+A googol (10^100) is a massive number: one followed by one-hundred zeros;
+100^100 is almost unimaginably large: one followed by two-hundred zeros.
+Despite their size, the sum of the digits in each number is only 1.
+
+Considering natural numbers of the form, ab,
+where a, b < 100, what is the maximum digital sum?
+
+Antwoord: 972
+*/
+
+function problem56()
+{
+    return 0;
+}
+
+/*
+#57: Square root convergents
+
+It is possible to show that the square root of two
+can be expressed as an infinite continued fraction.
+
+sqrt 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+
+By expanding this for the first four iterations, we get:
+
+1 + 1/2 = 3/2 = 1.5
+1 + 1/(2 + 1/2) = 7/5 = 1.4
+1 + 1/(2 + 1/(2 + 1/2)) = 17/12 = 1.41666...
+1 + 1/(2 + 1/(2 + 1/(2 + 1/2))) = 41/29 = 1.41379...
+
+The next three expansions are 99/70, 239/169, and 577/408, but the eighth
+expansion, 1393/985, is the first example where the number of digits
+in the numerator exceeds the number of digits in the denominator.
+
+In the first one-thousand expansions, how many fractions
+contain a numerator with more digits than denominator?
+
+Antwoord: 153
+*/
+
+function problem57(N = 1000)
+{
+    var c = 0, n = 1, d = 1, np = 10, dp = 10;
+    for (var k = 0; k < N; k++)
+    {
+        var tmp_n = n, tmp_d = d;
+        n = 2 * tmp_d + tmp_n, d = tmp_d + tmp_n;
+        if (n >= np) np *= 10;
+        if (d >= dp) dp *= 10;
+        if (np > dp) c++;
+    }
+    return c;
+}
+
+/*
+#58: Spiral primes
+
+Starting with 1 and spiralling anticlockwise in the following
+way, a square spiral with side length 7 is formed.
+
+37 36 35 34 33 32 31
+38 17 16 15 14 13 30
+39 18  5  4  3 12 29
+40 19  6  1  2 11 28
+41 20  7  8  9 10 27
+42 21 22 23 24 25 26
+43 44 45 46 47 48 49
+
+It is interesting to note that the odd squares lie along the bottom right
+diagonal, but what is more interesting is that 8 out of the 13 numbers
+lying along both diagonals are prime; that is, a ratio of 8/13 ? 62%.
+
+If one complete new layer is wrapped around the spiral above, a square
+spiral with side length 9 will be formed. If this process is continued,
+what is the side length of the square spiral for which the ratio of primes
+along both diagonals first falls below 10%?
+
+Antwoord: 26,241
+*/
+
+function problem58()
+{
+    return 0;
+}
+
+/*
+#59: XOR decryption
+
+Each character on a computer is assigned a unique code and the preferred
+standard is ASCII (American Standard Code for Information Interchange).
+For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
+
+A modern encryption method is to take a text file, convert the bytes to
+ASCII, then XOR each byte with a given value, taken from a secret key. The
+advantage with the XOR function is that using the same encryption key on
+the cipher text, restores the plain text; for example, 65 XOR 42 = 107,
+then 107 XOR 42 = 65.
+
+For unbreakable encryption, the key is the same length as the plain text
+message, and the key is made up of random bytes. The user would keep the
+encrypted message and the encryption key in different locations, and
+without both "halves", it is impossible to decrypt the message.
+
+Unfortunately, this method is impractical for most users, so the modified
+method is to use a password as a key. If the password is shorter than the
+message, which is likely, the key is repeated cyclically throughout the
+message. The balance for this method is using a sufficiently long password
+key for security, but short enough to be memorable.
+
+Your task has been made easy, as the encryption key consists of three lower
+case characters. Using cipher.txt (right click and 'Save Link/Target As...'),
+a file containing the encrypted ASCII codes, and the knowledge that the plain
+text must contain common English words, decrypt the message and find the sum
+of the ASCII values in the original text.
+
+Antwoord: 107,359
+*/
+
+function problem59()
+{
+    return 0;
+}
+
+function problem60()
+{
+    return 0;
+}
+
+function problem61()
+{
+    return 0;
+}
+
+function problem62()
+{
+    lst = [];
+    for (var n = 0; n < 9000; n++)
+        lst.push(n**3);
+    for (var i = 0; i < 9000; i++)
+    {   var cnt = 0;
+        var ln = decimals(lst[i]);
+        for (var b = i; b < 9000; b++)
+        {   if (decimals(lst[b]) > ln) break;
+            if (sameDigs(lst[i], lst[b])) cnt++;
+        }
+        if (cnt == 5)
+            return lst[i];
+    }
+    return 0;
+}
+
+function problem63()
+{
+    return 0;
+}
+
+function problem64()
+{
+    return 0;
 }
 
 function run(p)
@@ -2876,6 +3299,17 @@ function run(p)
     case 51: return opdracht51();
     case 52: return opdracht52();
     case 53: return opdracht53();
+    case 54: return problem54();
+    case 55: return problem55();
+    case 56: return problem56();
+    case 57: return problem57();
+    case 58: return problem58();
+    case 59: return problem59();
+    case 60: return problem60();
+    case 61: return problem61();
+    case 62: return problem62();
+    case 63: return problem63();
+    case 64: return problem64();
     }
 }
 
@@ -2885,7 +3319,9 @@ answers = [233168, 4613732, 6857, 906609, 232792560,
         871198282, 4179871, 2783915460, 4782, 983, -59231, 669171001, 9183,
         443839, 73682, 45228, 100, 40730, 55, 872187, 748317, 932718654, 840,
         210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
-        134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972];
+        134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
+        153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
+        6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667];
 
 function runjob(p)
 {
@@ -2899,7 +3335,7 @@ function runjob(p)
 
 function main()
 {
-    for (var i = 1; i <= 53; i++)
+    for (var i = 1; i <= 62; i++)
         runjob(i);
 }
 
