@@ -1064,19 +1064,15 @@ cannot be written as the sum of two abundant numbers.
 Antwoord: 4,179,871
 */
 
-#if 1
 static bool find23(uint16_t *begin, uint16_t *end, uint16_t n)
-{   while (begin != end)
-        if (*begin++ == n) return true;
+{   while (begin <= end)
+    {   uint16_t *mid = (end - begin) / 2 + begin;
+        if (*mid < n) begin = mid + 1;
+        else if (*mid == n) return true;
+        else end = mid - 1;
+    }
     return false;
 }
-#else
-static bool find23(uint16_t *begin, uint16_t *end, uint16_t n)
-{
-    uint16_t *mid = (end - begin) / 2 + begin;
-    if 
-}
-#endif
 
 static char *problem23()
 {
