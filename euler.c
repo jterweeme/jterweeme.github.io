@@ -97,6 +97,91 @@ static uint32_t *sieve32(uint32_t *nr, uint32_t n)
     return primes;
 }
 
+#if 0
+static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
+#endif
+static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
+static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
+
+static uint32_t reverse32(uint32_t n, uint8_t base)
+{   uint32_t rev = 0, temp = 0;
+    for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
+    return rev;
+}
+
+static int ispalindrome32(uint32_t n, uint8_t base)
+{   return n == reverse32(n, base);
+}
+
+static uint32_t gcd(uint32_t a, uint32_t b)
+{   while (b)
+    {   uint32_t c = b;
+        b = a % b;
+        a = c;
+    }
+    return a;
+}
+
+static int32_t linSearch32(uint8_t *beg, uint8_t *end, uint8_t n)
+{
+    int32_t i = 0;
+    while (beg != end)
+    {
+        if (*beg++ == n) return i;
+        i++;
+    }
+    return -1;
+}
+
+static int32_t linSearch3232(uint32_t *beg, uint32_t *end, uint32_t n)
+{
+    int32_t i = 0;
+    while (beg != end)
+    {
+        if (*beg++ == n) return i;
+        i++;
+    }
+    return -1;
+}
+
+static bool binSearch(uint32_t *first, uint32_t *last, uint32_t n)
+{
+    uint32_t *middle = (last - first) / 2 + first;
+    while (first <= last)
+    {   if (*middle < n) first = middle + 1;
+        else if (*middle == n) return true;
+        else last = middle - 1;
+        middle = (last - first) / 2 + first;
+    }
+    return false;
+}
+
+static void swap29(uint32_t *a, uint32_t *b)
+{   uint32_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void sort29(uint32_t *begin, uint32_t *end)
+{   uint32_t *a, *b;
+    for (a = begin; a < end - 1; a++)
+        for (b = begin; b < end - 1; b++)
+            if (b[0] > b[1])
+                swap29(b, b + 1);
+}
+
+static bool hasDigitsOnce32(uint32_t n, uint8_t *beg, uint8_t *end)
+{
+    while (n)
+    {
+        int32_t pos = linSearch32(beg, end, n % 10);
+        if (pos >= 0) beg[pos] = 99;
+        else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
 static void xstring32(char *s, uint32_t n)
 {   if (n == 0)
     {   s[0] = '0';
@@ -180,27 +265,13 @@ Antwoord: 6,857
 71 * 839 * 1471 * 6857 = 600851475143
 */
 
-#if 0
-static int isPrime(uint32_t n)
-{
-    uint32_t i;
-    for (i = 2; i < n; i++)
-        if (n % i == 0) return 0;
-    return 1;
-}
-#endif
-
 static char *problem3()
-{
-    uint64_t n = 600851475143ULL;
+{   uint64_t n = 600851475143ULL;
     uint32_t best = 0;
     while (n > 1)
-    {
-        uint32_t i;
-        uint32_t factor = 0;
+    {   uint32_t factor = 0, i;
         for (i = 2; i < 999999; i++)
-        {
-            if (isprime32(i) == 0) continue;
+        {   if (isprime32(i) == 0) continue;
             if (n % i == 0)
             {   factor = i;
                 break;
@@ -222,16 +293,6 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 
 Antwoord: 906,609
 */
-
-static uint32_t reverse32(uint32_t n, uint8_t base)
-{   uint32_t rev = 0, temp = 0;
-    for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
-    return rev;
-}
-
-static int ispalindrome32(uint32_t n, uint8_t base)
-{   return n == reverse32(n, base);
-}
 
 static char *problem4()
 {   uint32_t best = 0;
@@ -259,16 +320,13 @@ Antwoord: 232,792,560
 */
 
 static int isdivisible(uint32_t n, uint32_t lower, uint32_t max)
-{
-    uint32_t i;
+{   uint32_t i;
     for (i = lower; i <= max; i++) if (n % i > 0) return false;
     return true;
 }
 
 static char *problem5()
-{
-    uint32_t lower = 11, max = 20;
-    uint32_t start = 2520, number = start;
+{   uint32_t lower = 11, max = 20, start = 2520, number = start;
     while (isdivisible(number, lower, max) == false) number += start;
     char *ret = malloc(50);
     xstring32(ret, number);
@@ -292,10 +350,7 @@ Antwoord: 25,164,150
 */
 
 static char *problem6()
-{
-    uint32_t min = 1, max = 100;
-    uint32_t sumsquare = 0, squaresum = 0;
-    uint32_t i;
+{   uint32_t min = 1, max = 100, sumsquare = 0, squaresum = 0, i;
     for (i = min; i <= max; i++) sumsquare += i * i;
     for (i = min; i <= max; i++) squaresum += i;
     squaresum = squaresum * squaresum;
@@ -321,8 +376,7 @@ static uint32_t reducer7(uint32_t n)
 }
 
 static char *problem7()
-{
-    uint32_t n = 10001;
+{   uint32_t n = 10001;
     uint32_t p = 3, sqp = reducer7(p), ret = 0;
     uint32_t i, j;
     for (j = 0; j < n - 1; j++)
@@ -369,8 +423,7 @@ static char series1[] = "73167176531330624919225119674426574742355349194934"
         "71636269561882670428252483600823257530420752963450";
 
 static char *problem8()
-{
-    char *s = series1;
+{   char *s = series1;
     uint64_t cur = 0, best = 0;
     while (*s)
     {   cur = (cur % 1000000000000ULL) * 10 + (*s++ - '0');
@@ -398,8 +451,7 @@ Antwoord: 31,875,000
 */
 
 static uint32_t problem9x()
-{
-    uint32_t search = 1000;
+{   uint32_t search = 1000;
     uint32_t a, b;
     for (a = 1; a <= search - 2; a++)
     {   for (b = 1; b <= search - 2; b++)
@@ -431,8 +483,7 @@ Antwoord: 142,913,828,922
 #define LIMIT10 2000000
 
 static char *problem10()
-{
-    uint32_t n, i;
+{   uint32_t n, i;
     uint32_t *primes = sieve32(&n, 2000000);
     uint64_t sum = 0;
     for (i = 0; i < n; i++)
@@ -913,8 +964,7 @@ Antwoord: 648
 */
 
 static char *problem20()
-{
-    uint8_t f = 100;
+{   uint8_t f = 100;
     uint16_t buf[200];
     memset(buf, 0, 400);
     buf[0] = f;
@@ -1354,20 +1404,6 @@ static uint32_t eqpow(uint32_t n)
     return (root & 0xffff0000) | (n & 0xffff) * (root & 0xffff);
 }
 
-static void swap29(uint32_t *a, uint32_t *b)
-{   uint32_t temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-static void sort29(uint32_t *begin, uint32_t *end)
-{   uint32_t *a, *b;
-    for (a = begin; a < end - 1; a++)
-        for (b = begin; b < end - 1; b++)
-            if (b[0] > b[1])
-                swap29(b, b + 1);
-}
-
 static uint32_t ndistinct(uint32_t *begin, uint32_t *end)
 {   uint32_t ret = 1;
     uint32_t previous = *begin++;
@@ -1461,6 +1497,629 @@ static char *problem31()
     return ret;
 }
 
+/*
+#32: Pandigital products
+
+We shall say that an n-digit number is pandigital if it makes use of all
+the digits 1 to n exactly once; for example, the 5-digit number, 15234,
+is 1 through 5 pandigital.
+
+The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing
+multiplicand, multiplier, and product is 1 through 9 pandigital.
+
+Find the sum of all products whose multiplicand/multiplier/product identity
+can be written as a 1 through 9 pandigital.
+HINT: Some products can be obtained in more than one way so be sure to only
+include it once in your sum.
+
+Antwoord: 45,228
+*/
+
+static char *problem32()
+{
+#if 0
+    uint8_t a[] = {0,1,2,3,4};
+    printf("%u\r\n", hasDigitsOnce32(12, a, a + 5));
+#else
+    uint32_t *st = malloc(500000);
+    uint32_t i, j, k = 0, start;
+    for (i = 2; i < 60; i++)
+    {
+        start = i < 10 ? 1234 : 123;
+        for (j = start; j < 10000/i; j++)
+        {
+            uint8_t nset[9], n;
+            for (n = 1; n <= 9; n++) nset[n - 1] = n;
+            if (hasDigitsOnce32(i, nset, nset + 9) == false) continue;
+            if (hasDigitsOnce32(j, nset, nset + 9) == false) continue;
+            if (hasDigitsOnce32(i * j, nset, nset + 9) == false) continue;
+            st[k++] = i * j;
+        }
+    }
+#endif
+    k--;
+    sort29(st, st + k);
+    uint32_t previous = 0, xsum = 0, *it;
+    for (it = st; it != st + k; it++)
+    {
+        if (*it != previous)
+            xsum += *it;
+        previous = *it;
+    }
+    
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    free(st);
+    return ret;
+}
+
+/*
+#33: Digit cancelling fractions
+
+The fraction 49/98 is a curious fraction, as an inexperienced
+mathematician in attempting to simplify it may incorrectly believe
+that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+
+We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+
+There are exactly four non-trivial examples of this type of fraction, less
+than one in value, and containing two digits in the numerator and denominator.
+
+If the product of these four fractions is given in its
+lowest common terms, find the value of the denominator.
+
+Antwoord: 100
+*/
+
+static char *problem33()
+{   uint32_t dp = 1, np = 1, c, d, n;
+    for (c = 1; c < 10; c++)
+    {   for (d = 1; d < c; d++)
+        {   for (n = 1; n < d; n++)
+                if ((n * 10 + c) * d == (c * 10 + d) * n)
+                    np *= n, dp *= d;
+        }
+    }
+    char *ret = malloc(50);
+    xstring32(ret, dp / gcd(np, dp));
+    return ret;
+}
+
+/*
+#34: Digit factorials
+
+145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
+
+Find the sum of all numbers which are equal to the sum of the factorial of their digits.
+
+Note: as 1! = 1 and 2! = 2 are not sums they are not included.
+
+Antwoord: 40,730
+*/
+
+static uint32_t factorials34[] = { 1,1,2,6,24,120,720,5040,40320,362880};
+
+static uint32_t facsumdig34(uint32_t n)
+{   uint32_t sum = 0;
+    while (n > 0) sum += factorials34[n % 10], n = n / 10;
+    return sum;
+}
+
+static char *problem34()
+{   uint32_t totalSum = 0, k;
+    for (k = 10; k < factorials34[9] * 7; k++)
+        if (facsumdig34(k) == k) totalSum += k;
+    char *ret = malloc(50);
+    xstring32(ret, totalSum);
+    return ret;
+}
+
+/*
+#35: Circular primes
+
+The number, 197, is called a circular prime because all rotations
+of the digits: 197, 971, and 719, are themselves prime.
+
+There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+
+How many circular primes are there below one million?
+
+Antwoord: 55
+*/
+
+/*
+2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, 97, 113, 131, 197, 199, 311,
+337, 373, 719, 733, 919, 971, 991, 1193, 1931, 3119, 3779, 7793, 7937, 9311,
+9377, 11939, 19391, 19937, 37199, 39119, 71993, 91193, 93719, 93911, 99371,
+193939, 199933, 319993, 331999, 391939, 393919, 919393, 933199, 939193,
+939391, 993319, 999331
+*/
+
+static uint32_t rotate(uint32_t n)
+{   uint32_t length = decimals32(n);
+    uint32_t digit = n % 10;
+    return n / 10 + digit * myPow32(10, length - 1);
+}
+
+static bool iscircular(uint32_t n, uint32_t *begin, uint32_t *end)
+{   uint8_t decs = decimals32(n), i = 0;
+    for (i = 0; i < decs; i++)
+    {   n = rotate(n);
+        if (linSearch3232(begin, end, n) == false) return false;
+    }
+    return true;
+}
+
+static char *problem35()
+{
+    uint32_t n, i, ncount = 0;
+    uint32_t *primes = sieve32(&n, 999999);
+    for (i = 0; i < n; i++)
+        if (iscircular(primes[i], primes, primes + n)) ncount++;
+    char *ret = malloc(50);
+    xstring32(ret, ncount);
+    free(primes);
+    return ret;
+}
+
+/*
+#36: Double-base palindromes
+
+The decimal number, 585 = 1001001001_2 (binary), is palindromic in both bases.
+
+Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+
+(Please note that the palindromic number, in either base, may not include leading zeros.)
+
+Antwoord: 872,187
+*/
+
+static char *problem36()
+{   uint32_t min = 1, limit = 1000000, xsum = 0, i;
+    for (i = min; i < limit; i++)
+        if (ispalindrome32(i, 10) && ispalindrome32(i, 2)) xsum += i;
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
+}
+
+/*
+#37: Truncatable primes
+
+The number 3797 has an interesting property. Being prime itself, it is possible
+to continuously remove digits from left to right, and remain prime at each
+stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+
+Find the sum of the only eleven primes that are both
+truncatable from left to right and right to left.
+
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+
+Antwoord: 748,317
+*/
+
+/*
+23 + 37 + 53 + 73 + 313 + 317 + 373 + 797 + 3,137 + 3,797 + 739,397 = 748,317
+*/
+
+static char *problem37()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#38: Pandigital multiples
+
+Take the number 192 and multiply it by each of 1, 2, and 3:
+
+    192 × 1 = 192
+    192 × 2 = 384
+    192 × 3 = 576
+
+By concatenating each product we get the 1 to 9 pandigital, 192384576. We
+will call 192384576 the concatenated product of 192 and (1,2,3)
+
+The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4,
+and 5, giving the pandigital, 918273645, which is the concatenated product
+of 9 and (1,2,3,4,5).
+
+What is the largest 1 to 9 pandigital 9-digit number that can be formed as
+the concatenated product of an integer with (1,2, ... , n) where n > 1?
+
+Antwoord: 932,718,654
+*/
+
+static bool isPandigital(uint32_t n)
+{
+    uint8_t nset[9], i;
+    for (i = 1; i <= 9; i++) nset[i - 1] = i;
+    return hasDigitsOnce32(n, nset, nset + 9);
+}
+
+static uint32_t opdracht38()
+{
+    uint32_t i;
+    for (i = 9387; i > 9234; i--)
+    {
+        uint32_t result = 2 * i + i * 100000;
+        if (isPandigital(result)) return result;
+    }
+    return 0;
+}
+
+static char *problem38()
+{
+    char *ret = malloc(50);
+    xstring32(ret, opdracht38());
+    return ret;
+}
+
+/*
+#39: Integer right triangles
+
+If p is the perimeter of a right angle triangle with integral length
+sides, {a,b,c}, there are exactly three solutions for p = 120.
+
+{20,48,52}, {24,45,51}, {30,40,50}
+
+For which value of p ≤ 1000, is the number of solutions maximised?
+
+Antwoord: 840
+*/
+
+/*
+(40, 399, 401),
+(56, 390, 394),
+(105, 360, 375),
+(120, 350, 370),
+(140, 336, 364),
+(168, 315, 357),
+(210, 280, 350),
+(240, 252, 348),
+(252, 240, 348),
+(280, 210, 350),
+(315, 168, 357),
+(336, 140, 364),
+(350, 120, 370),
+(360, 105, 375),
+(390, 56, 394),
+(399, 40, 401)
+*/
+
+static char *problem39()
+{   uint32_t best_p = 0, best_solutions = 0, p, a;
+    for (p = 100; p <= 1000; p += 2)
+    {   uint32_t solutions = 0;
+        for (a = 2; a < p / 3; a++)
+            solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? 1 : 0;
+        if (solutions > best_solutions) best_solutions = solutions, best_p = p;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, best_p);
+    return ret;
+}
+
+/*
+#40: Champernowne's constant
+
+An irrational decimal fraction is created by concatenating the positive integers:
+
+0.123456789101112131415161718192021...
+
+It can be seen that the 12th digit of the fractional part is 1.
+
+If dn represents the nth digit of the fractional
+part, find the value of the following expression.
+
+d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+
+Antwoord: 210
+*/
+
+// 1*1*5*3*7*2*1=210
+
+static uint32_t getDigit40(uint32_t i)
+{   uint32_t offset = 0, decimals = 1, setLow = 1, setLength = 9, limit, x;
+    for (limit = 9; i >= limit; limit += setLength * decimals)
+        offset = limit, decimals++, setLow *= 10, setLength *= 10;
+    uint32_t n = (i - offset) / decimals + setLow, ind = (i - offset) % decimals;
+    for (x = 0; x < decimals - (ind + 1); x++) n /= 10;
+    return n % 10;
+}
+
+static char *problem40()
+{   uint32_t product = 1, i;
+    for (i = 1; i <= 1000000; i *= 10) product *= getDigit40(i - 1);
+    char *ret = malloc(50);
+    xstring32(ret, product);
+    return ret;
+}
+
+/*
+#41: Pandigital prime
+
+We shall say that an n-digit number is pandigital if it makes use of all
+the digits 1 to n exactly once. For example, 2143 is a 4-digit pandigital
+and is also prime.
+
+What is the largest n-digit pandigital prime that exists?
+
+Antwoord: 7,652,413
+*/
+
+static char *problem41()
+{   char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#42: Coded triangle numbers
+
+The nth term of the sequence of triangle numbers is given by,
+tn = 1/2n(n+1); so the first ten triangle numbers are:
+
+1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...
+
+By converting each letter in a word to a number corresponding to its
+alphabetical position and adding these values we form a word value. For
+example, the word value for SKY is 19 + 11 + 25 = 55 = t10. If the word
+value is a triangle number then we shall call the word a triangle word.
+
+Using words.txt (right click and 'Save Link/Target As...'), a 16K text
+file containing nearly two-thousand common English words, how many are
+triangle words?
+
+Antwoord: 162
+*/
+
+static char *problem42()
+{   char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#43: Sub-string divisibility
+
+The number, 1406357289, is a 0 to 9 pandigital number because it is made
+up of each of the digits 0 to 9 in some order, but it also has a rather
+interesting sub-string divisibility property.
+
+Let d1 be the 1st digit, d2 be the 2nd digit, and
+so on. In this way, we note the following:
+
+d2d3d4=406 is divisible by 2
+d3d4d5=063 is divisible by 3
+d4d5d6=635 is divisible by 5
+d5d6d7=357 is divisible by 7
+d6d7d8=572 is divisible by 11
+d7d8d9=728 is divisible by 13
+d8d9d10=289 is divisible by 17
+
+Find the sum of all 0 to 9 pandigital numbers with this property.
+
+Antwoord: 16,695,334,890
+*/
+
+static char *problem43()
+{   char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#44: Pentagon numbers
+
+Pentagonal numbers are generated by the formula,
+Pn=n(3n−1)/2. The first ten pentagonal numbers are:
+
+1, 5, 12, 22, 35, 51, 70, 92, 117, 145, ...
+
+It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However,
+their difference, 70 − 22 = 48, is not pentagonal.
+
+Find the pair of pentagonal numbers, Pj and Pk, for which
+their sum and difference are pentagonal and D = |Pk − Pj|
+is minimised; what is the value of D?
+
+Antwoord: 5,482,660
+*/
+
+static uint32_t opdracht44()
+{
+    uint32_t lpgs[9998];
+    for (uint32_t i = 1; i <= 9998; i++) lpgs[i - 1] = pentagon32(i);
+    for (uint32_t i = 0; i < 9998; i++)
+        for (uint32_t j = i; j < 9998; j++)
+            if (binSearch(lpgs + j, lpgs + 9998, lpgs[i] + lpgs[j]) &&
+                binSearch(lpgs, lpgs + 9998, lpgs[j] - lpgs[i]))
+                return lpgs[j] - lpgs[i];
+    return 0;
+}
+
+static char *problem44()
+{
+    char *ret = malloc(50);
+    xstring32(ret, opdracht44());
+    return ret;
+}
+
+/*
+#45: Triangular, pentagonal, and hexagonal
+
+Triangle, pentagonal, and hexagonal numbers are generated by the following formulae:
+Triangle     Tn=n(n+1)/2     1, 3, 6, 10, 15, ...
+Pentagonal     Pn=n(3n−1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     Hn=n(2n−1)     1, 6, 15, 28, 45, ...
+
+It can be verified that T285 = P165 = H143 = 40755.
+
+Find the next triangle number that is also pentagonal and hexagonal.
+
+Antwoord: 1,533,776,805
+*/
+
+/*
+T55,385 = P31,977 = H27,693 = 1,533,776,805
+*/
+
+static uint32_t opdracht45()
+{   uint32_t vp[31834], vh[45856], i, *it;
+    for (i = 166; i < 32000; i++) vp[i - 166] = pentagon32(i);
+    for (i = 144; i < 46000; i++) vh[i - 144] = hexagon32(i);
+    for (it = vh; it != vh + 45856; it++)
+        if (linSearch3232(vp, vp + 31834, *it) > -1) return *it;
+    return 0;
+}
+
+static char *problem45()
+{
+    char *ret = malloc(50);
+    xstring32(ret, opdracht45());
+    return ret;
+}
+
+/*
+#46: Goldbach's other conjecture
+
+It was proposed by Christian Goldbach that every odd composite
+number can be written as the sum of a prime and twice a square.
+
+9 = 7 + 2×1^2
+15 = 7 + 2×2^2
+21 = 3 + 2×3^2
+25 = 7 + 2×3^2
+27 = 19 + 2×2^2
+33 = 31 + 2×1^2
+
+It turns out that the conjecture was false.
+
+What is the smallest odd composite that cannot be
+written as the sum of a prime and twice a square?
+
+Antwoord: 5,777
+*/
+
+static char *problem46()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#47: Distinct primes factors
+
+The first two consecutive numbers to have two distinct prime factors are:
+
+14 = 2 × 7
+15 = 3 × 5
+
+The first three consecutive numbers to have three distinct prime factors are:
+
+644 = 2^2 × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+
+Find the first four consecutive integers to have four distinct
+prime factors each. What is the first of these numbers?
+
+Antwoord: 134,043
+*/
+
+/*
+interpreted from https://blog.dreamshire.com/project-euler-47/
+*/
+
+static uint32_t opdracht47()
+{
+    uint32_t L = 300000, nf = 4, ns = 4;
+    uint32_t f[L], c = 0, n, i;
+    memset(f, 0, 4*L);
+    for (n = 2; n < L - ns; n++)
+    {   if (f[n] == nf) { if (++c == ns) return n - ns + 1; }
+        else { c = 0; if (f[n] == 0) for (i = n; i < L; i += n) f[i]++; }
+    }
+    return 0;
+}
+
+static char *problem47()
+{
+    char *ret = malloc(50);
+    xstring32(ret, opdracht47());
+    return ret;
+}
+
+/*
+#48: Self powers
+*/
+
+static char *problem48()
+{   uint64_t result = 0, modulo = 10000000000ULL;
+    uint16_t i, j;
+    for (i = 1; i <= 1000; i++)
+    {   uint64_t temp = i;
+        for (j = 1; j < i; j++) temp *= i, temp %= modulo;
+        result += temp, result %= modulo;
+    }
+    char *ret = malloc(50);
+    xstring64(ret, result);
+    return ret;
+}
+
+/*
+#49: Prime permutations
+
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+
+What 12-digit number do you form by concatenating the three terms in this sequence?
+
+Antwoord: 296,962,999,629
+*/
+
+static bool sameDigs32(uint32_t a, uint32_t b)
+{
+    uint32_t n = decimals32(a), i = 0;
+    if (decimals32(b) != n) return false;
+    uint8_t *digits = malloc(n);
+    for (;a ; a = a / 10) digits[i++] = a % 10;
+    bool ret = hasDigitsOnce32(b, digits, digits + n);
+    free(digits);
+    return ret;
+}
+
+static uint64_t check(uint32_t *begin, uint32_t *end)
+{   uint32_t *it;
+    for (it = begin; it != end; it++)
+    {   if (linSearch3232(begin, end, *it + 3330) && linSearch3232(begin, end, *it + 6660) &&
+            sameDigs32(*it, *it + 3330) && sameDigs32(*it, *it + 6660))
+        {
+            return (*it + 6660) + (*it + 3330) * 10000 + (uint64_t)*it * 100000000;
+        }
+    }
+    return 0;
+}
+
+static char *problem49()
+{
+    //printf("%u\r\n", sameDigs32(12391, 11329));
+    uint32_t end, begin = 0;
+    uint32_t *primes = sieve32(&end, 9999);
+    while (primes[begin++] < 1487);
+    char *ret = malloc(50);
+    xstring64(ret, check(primes + begin, primes + (end - 1)));
+    free(primes);
+    return ret;
+}
 
 static char answers2[][50] = {"233168", "4613732", "6857",
     "906609", "232792560", "25164150", "104743", "23514624000",
@@ -1508,6 +2167,24 @@ static char *run(uint32_t p)
     case 29: return problem29();
     case 30: return problem30();
     case 31: return problem31();
+    case 32: return problem32();
+    case 33: return problem33();
+    case 34: return problem34();
+    case 35: return problem35();
+    case 36: return problem36();
+    case 37: return problem37();
+    case 38: return problem38();
+    case 39: return problem39();
+    case 40: return problem40();
+    case 41: return problem41();
+    case 42: return problem42();
+    case 43: return problem43();
+    case 44: return problem44();
+    case 45: return problem45();
+    case 46: return problem46();
+    case 47: return problem47();
+    case 48: return problem48();
+    case 49: return problem49();
     }
     return 0;
 }
@@ -1527,7 +2204,7 @@ int main()
 {
     time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 31; i++)
+    for (i = 1; i <= 49; i++)
         runjob(i);
     time_t end = time(0);
     printf("Total: %lus\r\n", end - begin);

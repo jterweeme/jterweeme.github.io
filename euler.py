@@ -29,6 +29,11 @@ def isprime(n, presets = (3000, 300, 100, 8)):
 def digits(n):
     while n: yield n % 10; n = n // 10;
 
+def decimals(n):
+    i = 0
+    while n: n = n // 10; i += 1
+    return i
+
 def digitalroot(n):
     while decimals(n) > 1:
         n = sum(digits(n))
@@ -97,11 +102,6 @@ def binSearch(d, n):
         else: last = middle - 1
         middle = (first + last) >> 1
     return False
-
-def decimals(n):
-    i = 0
-    while n: n = n // 10; i += 1
-    return i
 
 def digit(n, i):
     return n // 10**i % 10
@@ -1402,6 +1402,8 @@ Antwoord: 55
 193939, 199933, 319993, 331999, 391939, 393919, 919393, 933199, 939193,
 939391, 993319, 999331
 """
+
+""" number of rotations is equal to the number of digits """
 
 def problem35(xmax = 10**6-1):
     def iscircular(n, lst):
