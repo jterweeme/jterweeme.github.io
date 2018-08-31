@@ -2280,23 +2280,25 @@ written as the sum of a prime and twice a square?
 Antwoord: 5,777
 */
 
-static uint64_t pair46(vector<uint32_t> &primes, vector<uint32_t> &squares, uint32_t n)
-{   for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
+static uint64_t
+pair46(uint32_t *primbeg, uint32_t *primend, uint32_t *sqbeg, uint32_t *sqend, uint32_t n)
+{   for (uint32_t *it = primbeg; it != primend; it++)
     {   if (*it > n) break;
-        if (binSearch(squares.begin(), squares.end(), n - *it))
+        if (binSearch(sqbeg, sqend, n - *it))
             return (uint64_t)*it << 32 | (n - *it);
     }
     return 0;
 }
 
 static uint32_t opdracht46()
-{   vector<uint32_t> primes, squares;
+{   uint32_t squares[100], *primes = new uint32_t[80000], end = 0;
     Sieve sieve(999999);
-    while (sieve.hasNext()) primes.push_back(sieve.next());
-    for (uint32_t i = 0; i < 100; i++) squares.push_back(2*i*i);
+    while (sieve.hasNext()) primes[end++] = sieve.next();
+    end--;
+    for (uint32_t i = 0; i < 100; i++) squares[i] = 2*i*i;
     for (uint32_t i = 3; i < 987654321; i += 2)
-    {   if (binSearch(primes.begin(), primes.end(), i)) continue;
-        uint64_t pr = pair46(primes, squares, i);
+    {   if (binSearch(primes, primes + end, i)) continue;
+        uint64_t pr = pair46(primes, primes + end, squares, squares + 100, i);
         if (pr == 0) return i;
     }
     return 0;

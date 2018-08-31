@@ -2059,7 +2059,7 @@ static uint32_t opdracht45()
     for (i = 166; i < 32000; i++) vp[i - 166] = pentagon32(i);
     for (i = 144; i < 46000; i++) vh[i - 144] = hexagon32(i);
     for (it = vh; it != vh + 45856; it++)
-        if (linSearch32(vp, vp + 31834, *it) > -1) return *it;
+        if (binSearch(vp, vp + 31834, *it)) return *it;
     return 0;
 }
 
@@ -2091,11 +2091,33 @@ written as the sum of a prime and twice a square?
 Antwoord: 5,777
 */
 
+static uint64_t
+pair46(uint32_t *primbeg, uint32_t *primend, uint32_t *sqbeg, uint32_t *sqend, uint32_t n)
+{   uint32_t *it;
+    for (it = primbeg; it != primend; it++)
+    {   if (*it > n) break;
+        if (binSearch(sqbeg, sqend, n - *it))
+            return (uint64_t)*it << 32 | (n - *it);
+    }
+    return 0;
+}
+
 static char *problem46()
-{
-    char *ret = malloc(50);
-    xstring32(ret, 0);
-    return ret;
+{   uint32_t squares[100], *primes = malloc(80000*4), ret = 0;
+    uint32_t end = sieve232(primes, 999999), i;
+    for (i = 0; i < 100; i++) squares[i] = 2*i*i;
+    for (i = 3; i < 987654321; i += 2)
+    {   if (binSearch(primes, primes + end, i)) continue;
+        uint64_t pr = pair46(primes, primes + end, squares, squares + 100, i);
+        if (pr == 0)
+        {   ret = i;
+            break;
+        }
+    }
+    free(primes);
+    char *ret2 = malloc(50);
+    xstring32(ret2, ret);
+    return ret2;
 }
 
 /*
