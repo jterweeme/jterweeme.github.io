@@ -113,9 +113,7 @@ static uint32_t sieve232(uint32_t *primes, uint32_t n)
     return j - 1;
 }
 
-#if 0
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
-#endif
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
 
@@ -1782,9 +1780,12 @@ Antwoord: 932,718,654
 
 static bool isPandigital(uint32_t n)
 {
-    uint8_t nset[9], i;
-    for (i = 1; i <= 9; i++) nset[i - 1] = i;
-    return hasDigitsOnce32(n, nset, nset + 9);
+    uint8_t len = decimals32(n), i;
+    uint8_t *nset = malloc(len);
+    for (i = 1; i <= len; i++) nset[i - 1] = i;
+    bool ret = hasDigitsOnce32(n, nset, nset + len);
+    free(nset);
+    return ret;
 }
 
 static uint32_t opdracht38()
@@ -1930,9 +1931,41 @@ triangle words?
 Antwoord: 162
 */
 
+static uint32_t wordcount(char *w)
+{   uint32_t count = 0;
+    while (*w) count += *w++ - 64;
+    return count;
+}
+
 static char *problem42()
-{   char *ret = malloc(50);
-    xstring32(ret, 0);
+{
+    FILE *fp = fopen("euler42.txt", "r");
+    char *words = malloc(2000*40);
+    memset(words, 0, 2000*40);
+    uint32_t triangles[20], i = 0, j = 0;
+    int c;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        if (c == 0x0a)
+        {
+            if (i == 0) continue;
+            j++;
+            words[j * 40 + i] = 0;
+            i = 0;
+            continue;
+        }
+        words[j * 40 + i] = c;
+        i++;
+    }
+    fclose(fp);
+    uint32_t cnt = 0;
+    for (i = 0; i < 20; i++) triangles[i] = triangle32(i);
+    for (i = 0; i < j; i++)
+        if (linSearch32(triangles, triangles + 20, wordcount(words + i * 40)) >= 0)
+            cnt++;
+    char *ret = malloc(50);
+    xstring32(ret, cnt);
+    free(words);
     return ret;
 }
 

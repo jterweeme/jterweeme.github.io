@@ -2100,11 +2100,10 @@ static string problem42()
         if (tmp.size() > 0)
             words.push_back(tmp);
     ifs.close();
-    vector<uint32_t> triangles;
-    for (uint32_t i = 0; i < 20; i++) triangles.push_back(triangle32(i));
-    uint32_t ret = 0;
+    uint32_t triangles[20], ret = 0;
+    for (uint32_t i = 0; i < 20; i++) triangles[i] = triangle32(i);
     for (vector<string>::iterator it = words.begin(); it != words.end(); it++)
-        if (linSearch(triangles.begin(), triangles.end(), wordcount42(it->c_str())))
+        if (linSearch(triangles, triangles + 20, wordcount42(it->c_str())))
             ret++;
     return twostring<uint32_t>(ret);
 }
