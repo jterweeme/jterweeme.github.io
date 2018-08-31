@@ -97,6 +97,22 @@ static uint32_t *sieve32(uint32_t *nr, uint32_t n)
     return primes;
 }
 
+static uint32_t sieve232(uint32_t *primes, uint32_t n)
+{   uint8_t *v = malloc(n + 1);
+    uint32_t i, j;
+    for (i = 0; i < n; i++) v[i] = 1;
+    v[0] = v[1] = 0;
+    for (i = 2; i * i < n; i++)
+        if (v[i] == 1)
+            for (j = i * 2; j <= n; j += i)
+                v[j] = 0;
+    for (i = 0, j = 0; i < n; i++)
+        if (v[i] == 1)
+            primes[j++] = i;
+    free(v);
+    return j - 1;
+}
+
 #if 0
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 #endif
@@ -122,7 +138,7 @@ static uint32_t gcd(uint32_t a, uint32_t b)
     return a;
 }
 
-static int32_t linSearch32(uint8_t *beg, uint8_t *end, uint8_t n)
+static int32_t linSearch8(uint8_t *beg, uint8_t *end, uint8_t n)
 {
     int32_t i = 0;
     while (beg != end)
@@ -133,7 +149,7 @@ static int32_t linSearch32(uint8_t *beg, uint8_t *end, uint8_t n)
     return -1;
 }
 
-static int32_t linSearch3232(uint32_t *beg, uint32_t *end, uint32_t n)
+static int32_t linSearch32(uint32_t *beg, uint32_t *end, uint32_t n)
 {
     int32_t i = 0;
     while (beg != end)
@@ -174,7 +190,7 @@ static bool hasDigitsOnce32(uint32_t n, uint8_t *beg, uint8_t *end)
 {
     while (n)
     {
-        int32_t pos = linSearch32(beg, end, n % 10);
+        int32_t pos = linSearch8(beg, end, n % 10);
         if (pos >= 0) beg[pos] = 99;
         else return false;
         n = n / 10;
@@ -483,10 +499,10 @@ Antwoord: 142,913,828,922
 #define LIMIT10 2000000
 
 static char *problem10()
-{   uint32_t n, i;
-    uint32_t *primes = sieve32(&n, 2000000);
+{   uint32_t *primes = malloc(150000*4);
+    uint32_t n = sieve232(primes, 2000000), i;
     uint64_t sum = 0;
-    for (i = 0; i < n; i++)
+    for (i = 0; i <= n; i++)
         sum += primes[i];
     free(primes);
     char *ret = malloc(50);
@@ -1515,12 +1531,14 @@ include it once in your sum.
 Antwoord: 45,228
 */
 
+/*
+4*1738 + 4*1963 + 12*483 + 18*297 + 0*27*198 + 28*157 + 39*186 + 0*42*138 + 48*159 =
+6952 + 7852 + 5796 + 5346 + 0*5346 + 4396 + 7254 + 0*5796 + 7632 =
+45,228
+*/
+
 static char *problem32()
 {
-#if 0
-    uint8_t a[] = {0,1,2,3,4};
-    printf("%u\r\n", hasDigitsOnce32(12, a, a + 5));
-#else
     uint32_t *st = malloc(500000);
     uint32_t i, j, k = 0, start;
     for (i = 2; i < 60; i++)
@@ -1536,8 +1554,6 @@ static char *problem32()
             st[k++] = i * j;
         }
     }
-#endif
-    k--;
     sort29(st, st + k);
     uint32_t previous = 0, xsum = 0, *it;
     for (it = st; it != st + k; it++)
@@ -1645,17 +1661,16 @@ static bool iscircular(uint32_t n, uint32_t *begin, uint32_t *end)
 {   uint8_t decs = decimals32(n), i = 0;
     for (i = 0; i < decs; i++)
     {   n = rotate(n);
-        if (linSearch3232(begin, end, n) == false) return false;
+        if (binSearch(begin, end, n) == false) return false;
     }
     return true;
 }
 
 static char *problem35()
-{
-    uint32_t n, i, ncount = 0;
-    uint32_t *primes = sieve32(&n, 999999);
+{   uint32_t i, ncount = 0, *primes = malloc(80000*4);
+    uint32_t n = sieve232(primes, 999999);
     for (i = 0; i < n; i++)
-        if (iscircular(primes[i], primes, primes + n)) ncount++;
+        if (iscircular(primes[i], primes, primes + n )) ncount++;
     char *ret = malloc(50);
     xstring32(ret, ncount);
     free(primes);
@@ -1702,10 +1717,44 @@ Antwoord: 748,317
 23 + 37 + 53 + 73 + 313 + 317 + 373 + 797 + 3,137 + 3,797 + 739,397 = 748,317
 */
 
+static bool isrighttruncatable(uint32_t prime, uint32_t *begin, uint32_t *end)
+{   while (prime > 10)
+    {   prime = prime / 10;
+        if (binSearch(begin, end, prime) == false) return false;
+    }
+    return true;
+}
+
+static uint32_t truncate_left(uint32_t n)
+{   uint8_t exp = decimals32(n) - 1;
+    return n % myPow32(10, exp);
+}
+
+static bool islefttruncatable(uint32_t prime, uint32_t *begin, uint32_t *end)
+{   uint8_t length = decimals32(prime), i;
+    for (i = 0; i < length; i++)
+    {   if (binSearch(begin, end, prime) == false) return false;
+        prime = truncate_left(prime);
+    }
+    return true;
+}
+
 static char *problem37()
 {
+    uint32_t *primes = malloc(80000*4), end = 0, xsum = 0, *it;
+    end = sieve232(primes, 999999);
+    for (it = primes; it != primes + end; it++)
+    {   if (*it == 2 || *it == 3 || *it == 5 || *it == 7)
+            continue;
+        if (islefttruncatable(*it, primes, primes + end) &&
+                isrighttruncatable(*it, primes, primes + end))
+        {
+            xsum += *it;
+        }
+    }
+    free(primes);
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, xsum);
     return ret;
 }
 
@@ -1850,8 +1899,14 @@ Antwoord: 7,652,413
 */
 
 static char *problem41()
-{   char *ret = malloc(50);
-    xstring32(ret, 0);
+{
+    uint32_t *primes = malloc(600000*4), end = 0, best = 0, *it;
+    end = sieve232(primes, 7654321);
+    for (it = primes; it != primes + end; it++)
+        if (isPandigital(*it) && *it > best) best = *it;
+    free(primes);
+    char *ret = malloc(50);
+    xstring32(ret, best);
     return ret;
 }
 
@@ -1930,12 +1985,12 @@ Antwoord: 5,482,660
 
 static uint32_t opdracht44()
 {
-    uint32_t lpgs[9998];
-    for (uint32_t i = 1; i <= 9998; i++) lpgs[i - 1] = pentagon32(i);
-    for (uint32_t i = 0; i < 9998; i++)
-        for (uint32_t j = i; j < 9998; j++)
-            if (binSearch(lpgs + j, lpgs + 9998, lpgs[i] + lpgs[j]) &&
-                binSearch(lpgs, lpgs + 9998, lpgs[j] - lpgs[i]))
+    uint32_t lpgs[9998], i, j;
+    for (i = 1; i <= 9998; i++) lpgs[i - 1] = pentagon32(i);
+    for (i = 0; i < 9998; i++)
+        for (j = i; j < 9998; j++)
+            if (binSearch(lpgs + j, lpgs + 9997, lpgs[i] + lpgs[j]) &&
+                binSearch(lpgs, lpgs + 9997, lpgs[j] - lpgs[i]))
                 return lpgs[j] - lpgs[i];
     return 0;
 }
@@ -1971,7 +2026,7 @@ static uint32_t opdracht45()
     for (i = 166; i < 32000; i++) vp[i - 166] = pentagon32(i);
     for (i = 144; i < 46000; i++) vh[i - 144] = hexagon32(i);
     for (it = vh; it != vh + 45856; it++)
-        if (linSearch3232(vp, vp + 31834, *it) > -1) return *it;
+        if (linSearch32(vp, vp + 31834, *it) > -1) return *it;
     return 0;
 }
 
@@ -2100,7 +2155,7 @@ static bool sameDigs32(uint32_t a, uint32_t b)
 static uint64_t check(uint32_t *begin, uint32_t *end)
 {   uint32_t *it;
     for (it = begin; it != end; it++)
-    {   if (linSearch3232(begin, end, *it + 3330) && linSearch3232(begin, end, *it + 6660) &&
+    {   if (linSearch32(begin, end, *it + 3330) && linSearch32(begin, end, *it + 6660) &&
             sameDigs32(*it, *it + 3330) && sameDigs32(*it, *it + 6660))
         {
             return (*it + 6660) + (*it + 3330) * 10000 + (uint64_t)*it * 100000000;
@@ -2118,6 +2173,44 @@ static char *problem49()
     char *ret = malloc(50);
     xstring64(ret, check(primes + begin, primes + (end - 1)));
     free(primes);
+    return ret;
+}
+
+/*
+#50: Consecutive prime sum
+
+The prime 41, can be written as the sum of six consecutive primes:
+41 = 2 + 3 + 5 + 7 + 11 + 13
+
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand
+that adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+
+Antwoord: 997,651
+*/
+
+static char *problem50()
+{
+    uint32_t limit = 1000000;
+    uint32_t *primes = malloc(80000*4), end = 0;
+    end = sieve232(primes, limit);
+    uint32_t best_prime = 0, best_sum = 0, i, j, k;
+    for (i = 0; i < end; i++)
+    {   for (j = i + best_sum; j < end; j++)
+        {   uint32_t xsum = 0;
+            for (k = i; k <= j; k++) xsum += primes[k];
+            if (xsum >= limit) break;
+            uint32_t sublen = (j + 1) - i;
+            if (binSearch(primes, primes + end, xsum) && sublen > best_sum)
+                best_sum = sublen, best_prime = xsum;
+        }
+    }
+    free(primes);
+    char *ret = malloc(50);
+    xstring32(ret, best_prime);
     return ret;
 }
 
@@ -2185,6 +2278,7 @@ static char *run(uint32_t p)
     case 47: return problem47();
     case 48: return problem48();
     case 49: return problem49();
+    case 50: return problem50();
     }
     return 0;
 }
@@ -2204,7 +2298,7 @@ int main()
 {
     time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 49; i++)
+    for (i = 1; i <= 50; i++)
         runjob(i);
     time_t end = time(0);
     printf("Total: %lus\r\n", end - begin);

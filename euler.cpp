@@ -1415,7 +1415,7 @@ Antwoord: 2,783,915,460
 
 static string problem24()
 {   uint8_t a[] = {0,1,2,3,4,5,6,7,8,9}, r = 0, j;
-    char ret[10];
+    char ret[11];
     uint32_t perm = 999999;
     for (j = 0; j < 10; j++)
     {   uint8_t i = perm / fac32(9 - j);
@@ -2054,12 +2054,14 @@ Antwoord: 7,652,413
 */
 
 static string problem41()
-{   vector<uint32_t> primes;
+{
+    uint32_t *primes = new uint32_t[600000], end = 0, best = 0;
     Sieve sieve(7654321);
-    while (sieve.hasNext()) primes.push_back(sieve.next());
-    uint32_t best = 0;
-    for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
+    while (sieve.hasNext()) primes[end++] = sieve.next();
+    end--;
+    for (uint32_t *it = primes; it != primes + end; it++)
         if (isPandigital41(*it) && *it > best) best = *it;
+    delete[] primes;
     return twostring(best);
 }
 
@@ -2182,7 +2184,7 @@ static bool test43(uint64_t n)
 
 static string problem43()
 {   Permutations perms(9);
-    vector<uint64_t> ps;
+    //vector<uint64_t> ps;
     uint64_t xsum = 0;
     while (perms.hasNext())
     {   uint64_t p = perms.next();
