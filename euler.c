@@ -2188,7 +2188,7 @@ static bool sameDigs32(uint32_t a, uint32_t b)
 static uint64_t check(uint32_t *begin, uint32_t *end)
 {   uint32_t *it;
     for (it = begin; it != end; it++)
-    {   if (linSearch32(begin, end, *it + 3330) && linSearch32(begin, end, *it + 6660) &&
+    {   if (binSearch(begin, end, *it + 3330) && binSearch(begin, end, *it + 6660) &&
             sameDigs32(*it, *it + 3330) && sameDigs32(*it, *it + 6660))
         {
             return (*it + 6660) + (*it + 3330) * 10000 + (uint64_t)*it * 100000000;
