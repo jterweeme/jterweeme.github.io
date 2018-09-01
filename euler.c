@@ -1992,9 +1992,38 @@ Find the sum of all 0 to 9 pandigital numbers with this property.
 Antwoord: 16,695,334,890
 */
 
+static uint64_t concat43(uint8_t *beg)
+{   uint64_t ret = 0;
+    uint32_t i;
+    for (i = 0; i <= 9; i++)
+        ret += beg[9 - i] * myPow64(10, i);
+    return ret;
+}
+
+static bool test43(uint64_t n)
+{   uint8_t divs[] = {17,13,11,7,5,3,2}, i;
+    for (i = 0; i < 7; i++)
+        if ((n / myPow32(10, i) % 1000) % divs[i] != 0)
+            return false;
+    return true;
+}
+
 static char *problem43()
-{   char *ret = malloc(50);
-    xstring32(ret, 0);
+{   uint32_t i = 0, size = 10, tmp = 0;
+    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[10] = {0};
+    uint64_t xsum = 0;
+    while (i < size)
+    {   if (c[i] < i)
+        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
+            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
+            c[i]++, i = 0;
+            uint64_t ccat = concat43(pool);
+            xsum += test43(ccat) ? ccat : 0;
+        }
+        else c[i++] = 0;
+    }
+    char *ret = malloc(50);
+    xstring64(ret, xsum);
     return ret;
 }
 

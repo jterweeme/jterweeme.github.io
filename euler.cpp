@@ -4,7 +4,6 @@
 #include <fstream>
 #include <map>
 #include <ctime>
-#include <algorithm>
 #include <vector>
 #ifdef MULTITHREAD
 #include <queue>
@@ -13,10 +12,17 @@
 #endif
 using namespace std;
 
-size_t strlen(const char *s)
+size_t xstrlen(const char *s)
 {   size_t i;
     for (i = 0; s[i] != '\0'; i++);
     return i;
+}
+
+int xstrcmp(const char* s1, const char* s2)
+{
+    while(*s1 && (*s1==*s2))
+        s1++,s2++;
+    return *(const unsigned char*)s1-*(const unsigned char*)s2;
 }
 
 void xmemcpy(void *dest, void *src, size_t n)
@@ -32,9 +38,9 @@ void *memset(void *s, int c, size_t n)
     return s;
 }
 
-template <typename T> void xswap(T *a, T *b)
+template <typename T> void xswap(T &a, T &b)
 {
-    T c = *a; *a=*b; *b=c;
+    T c = a; a=b; b=c;
 }
 
 template <typename T> static T myPow(T base, T e)
@@ -254,7 +260,7 @@ template <typename T> void bubbleSort(T begin, T end)
 {   for (T a = begin; a < end - 1; a++)
         for (T b = begin; b < end - 1; b++)
             if (b[0] > b[1])
-                xswap(b, b + 1);
+                xswap(b[0], b[1]);
 }
 
 template <typename T> bool hasDigitsOnce(T n, vector<uint8_t> &nset)
@@ -1071,7 +1077,7 @@ Antwoord: 21,124
 static size_t len(const char *s)
 {
     //cout << s << " ";
-    return strlen(s);
+    return xstrlen(s);
 }
 
 static string problem17()
@@ -1316,6 +1322,7 @@ What is the total of all the name scores in the file?
 Antwoord: 871,198,282
 */
 
+#if 0
 static const uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
@@ -1341,6 +1348,49 @@ static string problem22()
     }
     return twostring(total);
 }
+#else
+static uint8_t letterwaarde(uint8_t c)
+{   return c > 64 ? c - 64 : c;
+}
+
+static void swap22(char *a, char *b)
+{   char tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+static string problem22()
+{   FILE *fp;
+    fp = fopen("euler22.txt", "r");
+    char *names = new char[30*6000]; //malloc(30*6000);
+    memset(names, 0, 30*6000);
+    int c;
+    uint16_t a = 0, b = 0;
+    while ((c = fgetc(fp)) != EOF)
+    {   if (c == 0x0a)
+        {   a++, b = 0;
+            continue;
+        }
+        names[a * 30 + b++] = c;
+    }
+    fclose(fp);
+    uint8_t i;
+    for (a = 0; a < 5162; a++)
+        for (b = 0; b < 5162; b++)
+            if (xstrcmp(names + b * 30, names + (b + 1) * 30) > 0)
+                for (i = 0; i < 30; i++)
+                    swap22(names + b * 30 + i, names + (b + 1) * 30 + i);
+    uint32_t total = 0;
+    for (a = 0; a < 5163; a++)
+    {   uint32_t score = 0;
+        for (i = 0; i < 30; i++) score += letterwaarde(names[a * 30 + i]);
+        score = score * (a + 1);
+        total += score;
+    }
+    delete[] names;
+    return twostring(total);
+}
+#endif
 
 /*
 #23 Non-abundant sums
@@ -1632,14 +1682,24 @@ static uint32_t eqpow(uint32_t n)
     return (root & 0xffff0000) | (n & 0xffff) * (root & 0xffff);
 }
 
+static uint32_t ndistinct(uint32_t *begin, uint32_t *end)
+{   uint32_t ret = 1;
+    uint32_t previous = *begin++;
+    while (begin != end)
+    {   uint32_t cur = *begin++;
+        if (cur != previous) ret++;
+        previous = cur;
+    }
+    return ret;
+}
+
 static string problem29()
 {   uint32_t buf[99*99];
     for (uint16_t a = 2; a <= 100; a++)
         for (uint16_t b = 2; b <= 100; b++)
             buf[(a-2)*99+(b-2)] = eqpow(a << 16 | b);
     bubbleSort(buf, buf + 99*99);
-    uint32_t *foo = unique(buf, buf + 99*99);
-    return twostring(foo - buf);
+    return twostring(ndistinct(buf, buf + 99*99));
 }
 
 /*
@@ -1741,10 +1801,13 @@ static void panProducts32(vector<uint32_t> &st)
 static string problem32()
 {   vector<uint32_t> st;
     panProducts32(st);
-    sort(st.begin(), st.end());
-    vector<uint32_t>::iterator foo = unique(st.begin(), st.end());
-    uint32_t xsum = 0;
-    for (vector<uint32_t>::const_iterator it = st.begin(); it != foo; it++) xsum += *it;
+    bubbleSort(st.begin(), st.end());
+    uint32_t xsum = 0, previous = 0;
+    for (vector<uint32_t>::const_iterator it = st.begin(); it != st.end(); it++)
+    {   if (*it != previous)
+            xsum += *it;
+        previous = *it;
+    }
     return twostring<uint32_t>(xsum);
 }
 
@@ -2131,46 +2194,11 @@ Find the sum of all 0 to 9 pandigital numbers with this property.
 Antwoord: 16,695,334,890
 */
 
-class Permutations
-{
-private:
-    vector<uint8_t> _pool;
-    uint32_t _size;
-    uint32_t _i;
-    uint8_t *_c;
-public:
-    Permutations(uint8_t max);
-    ~Permutations() { delete[] _c; }
-    bool hasNext() { return _i < _size; }
-    uint64_t next();
-};
-
-Permutations::Permutations(uint8_t max)
-{   for (uint8_t i = 0; i <= max; i++)
-        _pool.push_back(i);
-    _size = max + 1;
-    _i = 0;
-    _c = new uint8_t[_size];
-    memset(_c, 0, _size);
-}
-
-static uint64_t concat43(vector<uint8_t> &v)
+static uint64_t concat43(uint8_t *beg)
 {   uint64_t ret = 0;
-    for (uint32_t i = 0; i < v.size(); i++)
-        ret += v.at(v.size() - 1 - i) * myPow<uint64_t>(10, i);
+    for (uint32_t i = 0; i <= 9; i++)
+        ret += beg[9 - i] * myPow<uint64_t>(10, i);
     return ret;
-}
-
-uint64_t Permutations::next()
-{   uint32_t tmp = 0;
-    while (hasNext())
-        if (_c[_i] < _i)
-        {   if (_i % 2 == 0) tmp = _pool[0], _pool[0] = _pool[_i], _pool[_i] = tmp;
-            else tmp = _pool[_c[_i]], _pool[_c[_i]] = _pool[_i], _pool[_i] = tmp;
-            _c[_i]++, _i = 0;
-            return concat43(_pool);
-        } else _c[_i++] = 0;
-    return 0;   // moet eigenlijk origineel teruggeven
 }
 
 static bool test43(uint64_t n)
@@ -2182,12 +2210,18 @@ static bool test43(uint64_t n)
 }
 
 static string problem43()
-{   Permutations perms(9);
-    //vector<uint64_t> ps;
+{   uint32_t i = 0, size = 10, tmp = 0;
+    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[10] = {0};
     uint64_t xsum = 0;
-    while (perms.hasNext())
-    {   uint64_t p = perms.next();
-        xsum += test43(p) ? p : 0;
+    while (i < size)
+    {   if (c[i] < i)
+        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
+            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
+            c[i]++, i = 0;
+            uint64_t ccat = concat43(pool);
+            xsum += test43(ccat) ? ccat : 0;
+        }
+        else c[i++] = 0;
     }
     return twostring(xsum);
 }
