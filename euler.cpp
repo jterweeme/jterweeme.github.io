@@ -3416,6 +3416,63 @@ static string problem69()
 }
 
 /*
+#70: Totient permutation
+
+Euler's Totient function, phi(n) [sometimes called the phi function],
+is used to determine the number of positive numbers less than or equal to
+n which are relatively prime to n. For example, as 1, 2, 4, 5, 7, and 8,
+are all less than nine and relatively prime to nine, phi(9)=6.
+The number 1 is considered to be relatively prime to every positive
+number, so phi(1)=1.
+
+Interestingly, phi(87109)=79180, and it can be
+seen that 87109 is a permutation of 79180.
+
+Find the value of n, 1 < n < 107, for which phi(n) is a
+permutation of n and the ratio n/phi(n) produces a minimum.
+
+Answer: 8,319,823
+*/
+
+static string problem70(uint32_t L = 10000000)
+{
+    return twostring(0);
+}
+
+/*
+#71: Ordered fractions
+
+Consider the fraction, n/d, where n and d are positive integers.
+If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions
+for d <= 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2,
+4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that 2/5 is the fraction immediately to the left of 3/7.
+
+By listing the set of reduced proper fractions for d <= 1,000,000 in
+ascending order of size, find the numerator of the fraction immediately
+to the left of 3/7.
+
+Antwoord: 428,570
+*/
+
+static string problem71(uint64_t limit = 1000000)
+{
+    uint64_t a = 3, b = 7, r = 0, s = 1, q = limit;
+    while (q > 2)
+    {   uint64_t p = (a * q - 1) / b;
+        if (p * s > r * q)
+            s = q, r = p;
+        q--;
+    }
+    return twostring(r);
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3492,6 +3549,8 @@ static string run2(uint32_t p)
     case 67: return problem67();
     case 68: return problem68();
     case 69: return problem69();
+    case 70: return problem70();
+    case 71: return problem71();
     }
     return 0;
 }
@@ -3626,7 +3685,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(69);
+    singlethread(71);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
