@@ -2469,7 +2469,7 @@ Antwoord: 49
 
 def problem63():
     xsum = 0
-    for e in range(1,999999):
+    for e in range(1,99):
         subsum = 0
         for base in range(1,10):
             subsum += decimals(base**e) == e
@@ -2514,7 +2514,7 @@ def problem65():
     n0, n1, L = 1, 2, 100
     for i in range(2, L+1): 
         n0, n1 = n1, n0 + n1 * (1 if i%3 else 2 * i//3)
-    return sum(map(int, str(n1)))
+    return sum(digits(n1))
 
 """
 #66: Diophantine equation
@@ -2580,6 +2580,7 @@ Antwoord: 7,273
 """ adapted from opdracht18 """
 def problem67(fn = "euler67.txt", root = 100):
     triangle2 = [int(n) for n in open(fn).read().split()]
+    print(sum(triangle2))
     while root > 1:
         for i in range(root - 1):
             j = triangle(root - 2) + i

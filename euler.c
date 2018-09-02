@@ -196,6 +196,17 @@ static bool hasDigitsOnce32(uint32_t n, uint8_t *beg, uint8_t *end)
     return true;
 }
 
+static uint64_t floorsqrt(uint64_t n)
+{
+    uint64_t i = 0, step = 1, sum = 0;
+    while (sum < n)
+    {   sum += step;
+        step += 2;
+        i++;
+    }
+    return i - 1;
+}
+
 static void xstring32(char *s, uint32_t n)
 {   if (n == 0)
     {   s[0] = '0';
@@ -2298,6 +2309,128 @@ static char *problem50()
     return ret;
 }
 
+static char *problem51()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem52()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem53()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem54()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem55()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem56()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem57()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem58()
+{
+    uint32_t sl = 2, cnt = 3, c = 9;
+    while ((double)cnt / (2*sl+1) >= 0.10)
+    {   sl += 2;
+        uint8_t i;
+        for (i = 0; i < 3; i++)
+        {   c += sl;
+            if (isprime32(c)) cnt++;
+        }
+        c += sl;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, sl + 1);
+    return ret;
+}
+
+static char *problem59()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem60()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem61()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem62()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem63()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem64()
+{
+    uint32_t L = 10000, odd_period = 0, N;
+    for (N = 2; N <= L; N++)
+    {
+        uint32_t r = floorsqrt(N);
+        uint32_t limit = floorsqrt(N);
+        if (limit * limit == N) continue;
+        uint32_t k = 1, period = 0;
+        while (k != 1 || period == 0)
+        {   k = (N - r * r) / k;
+            r = (limit + r) / k * k - r;
+            period++;
+        }
+        if (period % 2 == 1) odd_period++;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, odd_period);
+    return ret;
+}
+
 static char answers2[][50] = {"233168", "4613732", "6857",
     "906609", "232792560", "25164150", "104743", "23514624000",
     "31875000", "142913828922", "70600674", "76576500", "5537376230", "837799", "137846528820",
@@ -2306,8 +2439,11 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
-    "121313", "142857", "4075", "376", "249", "972", "153", "26241", "0", "0", "0",
-    "127035954683"};
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241",
+    "107359", "26033", "28684",
+    "127035954683", "49", "1322", "272", "661", "7273",
+    "6531031914842725", "510510", "8319823", "428570", "303963552391", "7295372", "402", "161667",
+    "381138582", "71", "55374", "73162890", "40886", "427337", "260324", "425185"};
 
 static char *run(uint32_t p)
 {
@@ -2363,6 +2499,20 @@ static char *run(uint32_t p)
     case 48: return problem48();
     case 49: return problem49();
     case 50: return problem50();
+    case 51: return problem51();
+    case 52: return problem52();
+    case 53: return problem53();
+    case 54: return problem54();
+    case 55: return problem55();
+    case 56: return problem56();
+    case 57: return problem57();
+    case 58: return problem58();
+    case 59: return problem59();
+    case 60: return problem60();
+    case 61: return problem61();
+    case 62: return problem62();
+    case 63: return problem63();
+    case 64: return problem64();
     }
     return 0;
 }
@@ -2382,7 +2532,7 @@ int main()
 {
     time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 50; i++)
+    for (i = 1; i <= 64; i++)
         runjob(i);
     time_t end = time(0);
     printf("Total: %lus\r\n", end - begin);

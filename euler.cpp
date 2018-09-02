@@ -229,6 +229,7 @@ static void testPrimes()
     }
 }
 
+template <typename T> static T triangle(T n) { return n * (n + 1) >> 1; }
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
@@ -559,6 +560,17 @@ static uint32_t gcd(uint32_t a, uint32_t b)
         a = c;
     }
     return a;
+}
+
+static uint64_t floorsqrt(uint64_t n)
+{
+    uint64_t i = 0, step = 1, sum = 0;
+    while (sum < n)
+    {   sum += step;
+        step += 2;
+        i++;
+    }
+    return i - 1;
 }
 
 /*
@@ -1154,7 +1166,7 @@ static uint8_t triangle[][4] = {
     {2,4,6,0},
     {8,5,9,3}};
 #else
-static uint8_t triangle[][15] = {
+static uint8_t triangle18[][15] = {
     {75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {17,47,82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -1173,14 +1185,14 @@ static uint8_t triangle[][15] = {
 #endif
 
 static string problem18()
-{   uint32_t possibilities = myPow<uint64_t>(2, sizeof(triangle[0]) - 1);
+{   uint32_t possibilities = myPow<uint64_t>(2, sizeof(triangle18[0]) - 1);
     uint32_t best = 0;
     for (uint32_t i = 0; i <= possibilities; i++)
     {   uint32_t index = 0;
-        uint32_t sum = triangle[0][0];
-        for (uint32_t j = 0; j < sizeof(triangle[0]) - 1; j++)
+        uint32_t sum = triangle18[0][0];
+        for (uint32_t j = 0; j < sizeof(triangle18[0]) - 1; j++)
         {   index = index + (i >> j & 1);
-            uint8_t value = triangle[j + 1][index];
+            uint8_t value = triangle18[j + 1][index];
             sum += value;
         }
         if (sum > best) best = sum;
@@ -2194,6 +2206,11 @@ Find the sum of all 0 to 9 pandigital numbers with this property.
 Antwoord: 16,695,334,890
 */
 
+/*
+1,460,357,289 + 4,130,952,867 + 4,106,357,289 + 1,430,952,867 +
+1,406,357,289 + 4,160,357,289 = 16,695,334,890
+*/
+
 static uint64_t concat43(uint8_t *beg)
 {   uint64_t ret = 0;
     for (uint32_t i = 0; i <= 9; i++)
@@ -2495,8 +2512,8 @@ static void binarize51(vector<uint32_t> &out, uint32_t n)
     }
 }
 
-static void
-family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n, uint32_t mask)
+template <typename T> static void
+family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
 {   uint32_t xlen = decimals<uint32_t>(n);
     vector<uint32_t> bmask;
     binarize51(bmask, mask);
@@ -2506,22 +2523,21 @@ family51(vector<uint32_t> &out, vector<uint32_t> &primes, uint32_t n, uint32_t m
     {   uint32_t tmp = n;
         for (vector<uint32_t>::iterator it = bmask.begin(); it != bmask.end(); it++)
             tmp += *it * i;
-        if (decimals<uint32_t>(tmp) == xlen && binSearch(primes.begin(), primes.end(), tmp))
+        if (decimals<uint32_t>(tmp) == xlen && binSearch(beg, end, tmp))
             out.push_back(tmp);
     }
 }
 
 static uint32_t opdracht51()
-{   vector<bool> v(1000000, true);
-    v[0] = v[1] = false;
-    for (uint32_t p = 2; p * p < v.size(); p++)
-        if (v[p]) for (uint32_t i = p * 2; i < v.size(); i += p) v[i] = false;
-    vector<uint32_t> primes;
-    for (uint32_t i = 0; i < v.size(); i++) if (v[i]) primes.push_back(i);
-    for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
+{
+    uint32_t primes[80000*4], end = 0;
+    Sieve sieve(1000000);
+    while (sieve.hasNext()) primes[end++] = sieve.next();
+    end--;
+    for (uint32_t *it = primes; it != primes + end; it++)
     {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals<uint32_t>(*it)); mask++)
         {   vector<uint32_t> fam;
-            family51(fam, primes, *it, mask);
+            family51(fam, primes, primes + end, *it, mask);
             if (fam.size() == 8) return fam.at(0);
         }
     }
@@ -2545,7 +2561,8 @@ Antwoord: 142,857
 */
 
 static bool test52(uint32_t n)
-{   vector<uint8_t> nset;
+{
+    vector<uint8_t> nset;
     for (uint32_t x = n; x; x = x / 10) nset.push_back(x % 10);
     for (uint32_t m = 2; m <= 6; m++)
     {   vector<uint8_t> nset2;
@@ -3142,6 +3159,194 @@ static string problem62()
 }
 
 /*
+#63: Powerful digit counts
+
+The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
+the 9-digit number, 134217728=8^9, is a ninth power.
+
+How many n-digit positive integers exist which are also an nth power?
+
+Antwoord: 49
+*/
+
+/*
+1^1 ~ 9^1, 4^2 ~ 9^2, 5^3 ~ 9^3, 6^4 ~ 9^4, 7^5 ~ 9^5, 7^6 ~ 9^6,
+8^7, 9^7, 8^8, 9^8, 8^9, 9^9, 8^10, 9^10, 9^11, 9^12, 9^13, 9^14,
+9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
+*/
+
+static string problem63()
+{
+    uint64_t xsum = 0;
+    for (uint64_t e = 1; e < 99; e++)
+    {   uint64_t subsum = 0;
+        for (uint64_t base = 1; base < 10; base++)
+            subsum += decimals<uint64_t>(myPow<uint64_t>(base, e)) == e;
+        xsum += subsum;
+        if (subsum == 0) break;
+    }
+    return twostring<uint64_t>(xsum);
+}
+
+/*
+#64: Odd period square roots
+
+Antwoord: 1,322
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-64-solution/
+*/
+
+static string problem64()
+{
+    uint32_t L = 10000, odd_period = 0;
+    for (uint32_t N = 2; N <= L; N++)
+    {
+        uint32_t r = floorsqrt(N);
+        uint32_t limit = floorsqrt(N);
+        if (limit * limit == N) continue;
+        uint32_t k = 1, period = 0;
+        while (k != 1 || period == 0)
+        {   k = (N - r * r) / k;
+            r = (limit + r) / k * k - r;
+            period++;
+        }
+        if (period % 2 == 1) odd_period++;
+    }
+    return twostring<uint32_t>(odd_period);
+}
+
+/*
+#65: Convergents of e
+
+Antwoord: 272
+*/
+
+static string problem65()
+{   uint64_t n0 = 1, n1 = 2, L = 100;
+    for (uint64_t i = 2; i <= L; i++)
+    {   uint64_t tmp = n1;
+        n1 = i % 3 ? n0 + n1 : n0 + n1 * 2 * i/3;
+        n0 = tmp;
+    }
+    return twostring<uint32_t>(0);
+}
+
+/*
+#66: Diophantine equation
+
+Antwoord: 661
+*/
+
+static string problem66()
+{
+    uint64_t best_x = 0, best_d = 0;
+    for (uint64_t d = 2; d <= 1000; d++)
+    {
+        uint64_t root = floorsqrt(d);
+        if (root * root == d) continue;
+        uint64_t a = root, numerator = 0, denominator = 1;
+        uint64_t x[] = {0, 1, root};
+        uint64_t y[] = {0, 0, 1};
+        while (true)
+        {
+            numerator = denominator * a - numerator;
+            denominator = (d - numerator * numerator) / denominator;
+            a = (root + numerator) / denominator;
+            x[0] = x[1];
+            x[1] = x[2];
+            x[2] = x[1] * a + x[0];
+            y[0] = y[1];
+            y[1] = y[2];
+            y[2] = y[1] * a + y[0];
+            if (x[2] * x[2] == y[2] * y[2] * d + 1)
+                break;
+        }
+        if (best_x < x[2])
+        {   best_x = x[2];
+            best_d = d;
+        }
+    }
+    return twostring<uint64_t>(best_d);
+}
+
+/*
+#67: Maximum path sum II
+
+By starting at the top of the triangle below and moving to adjacent
+numbers on the row below, the maximum total from top to bottom is 23.
+
+3
+7 4
+2 4 6
+8 5 9 3
+
+That is, 3 + 7 + 4 + 9 = 23.
+
+Find the maximum total from top to bottom in triangle.txt (right click
+and 'Save Link/Target As...'), a 15K text file containing a triangle with
+one-hundred rows.
+
+NOTE: This is a much more difficult version of Problem 18. It is not
+possible to try every route to solve this problem, as there are 299
+altogether! If you could check one trillion (1012) routes every second
+it would take over twenty billion years to check them all. There is an
+efficient algorithm to solve it. ;o)
+
+Antwoord: 7,273
+*/
+
+static string problem67()
+{
+    ifstream ifs;
+    ifs.open("euler67.txt");
+    vector<uint8_t> vec;
+    char c;
+    uint8_t x = 0;
+    uint64_t root = 100;
+    while ((ifs.get(c)))
+    {
+        if (isdigit(c))
+        {
+            x *= 10;
+            x += c - '0';
+        }
+        else if (x > 0)
+        {
+            vec.push_back(x);
+            x = 0;
+        }
+    }
+    ifs.close();
+#if 0
+    for (vector<uint8_t>::iterator it = vec.begin(); it != vec.end(); it++)
+    {
+        cout << (uint16_t)*it << "\r\n";
+    }
+#endif
+#if 0
+    uint32_t xsum = 0;
+    for (vector<uint8_t>::iterator it = vec.begin(); it != vec.end(); it++)
+    {
+        xsum += *it;
+    }
+    cout << xsum << "\r\n";
+#endif
+    while (root > 1)
+    {
+        for (uint64_t i = 0; i < root - 1; i++)
+        {
+            uint64_t j = triangle<uint64_t>(root - 2) + i;
+            uint64_t k = triangle<uint64_t>(root - 1) + i;
+            vec[j] += max(vec[k], vec[k + 1]);
+        }
+        root--;
+    }
+    return twostring<uint64_t>((uint64_t)vec.at(0));
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3211,6 +3416,11 @@ static string run2(uint32_t p)
     case 60: return problem60();
     case 61: return problem61();
     case 62: return problem62();
+    case 63: return problem63();
+    case 64: return problem64();
+    case 65: return problem65();
+    case 66: return problem66();
+    case 67: return problem67();
     }
     return 0;
 }
@@ -3223,8 +3433,12 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "669171001", "9183", "443839", "73682", "45228", "100", "40730", "55", "872187", "748317",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
-    "121313", "142857", "4075", "376", "249", "972", "153", "26241", "0", "0", "0",
-    "127035954683"};
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241",
+    "107359", "26033", "28684",
+    "127035954683", "49", "1322", "272", "661", "7273",
+    "6531031914842725", "510510", "8319823", "428570", "303963552391", "7295372", "402", "161667",
+    "381138582", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
+    "101524", "2772", "1818"};
 
 
 #ifdef MULTITHREAD
@@ -3311,7 +3525,7 @@ static void runjob2(uint32_t n)
     string answer = run2(n);
 
     if (answer.compare(answers2[n - 1]) != 0)
-        throw "error";
+        cout << "ERROR: ";
 
     time_t end = time(0);
     cout << "#" << (uint16_t)n << ": " << answer << " " << end - begin << "s\r\n";
@@ -3341,7 +3555,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(62);
+    singlethread(67);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
