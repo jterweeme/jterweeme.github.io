@@ -3347,6 +3347,75 @@ static string problem67()
 }
 
 /*
+#68: Magic 5-gon ring
+
+Consider the following "magic" 3-gon ring, filled
+with the numbers 1 to 6, and each line adding to nine.
+
+Working clockwise, and starting from the group of three with the
+numerically lowest external node (4,3,2 in this example), each
+solution can be described uniquely. For example, the above solution
+can be described by the set: 4,3,2; 6,2,1; 5,1,3.
+
+It is possible to complete the ring with four different
+totals: 9, 10, 11, and 12. There are eight solutions in total.
+
+Total    Solution Set
+  9   4,2,3; 5,3,1; 6,1,2
+  9   4,3,2; 6,2,1; 5,1,3
+  10  2,3,5; 4,5,1; 6,1,3
+  10  2,5,3; 6,3,1; 4,1,5
+  11  1,4,6; 3,6,2; 5,2,4
+  11  1,6,4; 5,4,2; 3,2,6
+  12  1,5,6; 2,6,4; 3,4,5
+  12  1,6,5; 3,5,4; 2,4,6
+
+By concatenating each group it is possible to form 9-digit
+strings; the maximum string for a 3-gon ring is 432621513.
+
+Using the numbers 1 to 10, and depending on arrangements, it is
+possible to form 16- and 17-digit strings. What is the maximum
+16-digit string for a "magic" 5-gon ring?
+
+Antwoord: 6,531,031,914,842,725
+*/
+
+static string problem68()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#69: Totient maximum
+
+Euler's Totient function, phi(n) [sometimes called the phi function], is
+used to determine the number of numbers less than n which are relatively
+prime to n. For example, as 1, 2, 4, 5, 7, and 8, are all less than nine
+and relatively prime to nine, phi(9)=6.
+
+Antwoord: 510,510
+*/
+
+static uint32_t opdracht69()
+{
+    uint32_t lprimes[100], end = 0;
+    Sieve sieve(100);
+    while (sieve.hasNext()) lprimes[end++] = sieve.next();
+    uint32_t maxn = 1, L = 1000000;
+    for (uint32_t i = 0; i < end; i++)
+    {
+        if (maxn * lprimes[i] > L) return maxn;
+        maxn *= lprimes[i];
+    }
+    return 0;
+}
+
+static string problem69()
+{
+    return twostring(opdracht69());
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3421,6 +3490,8 @@ static string run2(uint32_t p)
     case 65: return problem65();
     case 66: return problem66();
     case 67: return problem67();
+    case 68: return problem68();
+    case 69: return problem69();
     }
     return 0;
 }
@@ -3555,7 +3626,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(67);
+    singlethread(69);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
