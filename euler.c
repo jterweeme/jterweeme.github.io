@@ -2610,8 +2610,7 @@ Antwoord: 107,359
 */
 
 static void decipher(uint8_t *inbeg, uint8_t *inend, char *outbeg, uint32_t key2)
-{
-    uint8_t key[3];
+{   uint8_t key[3];
     key[0] = (key2 & 0xff000000) >> 24;
     key[1] = (key2 & 0xff0000) >> 16;
     key[2] = (key2 & 0xff00) >> 8;
@@ -2641,57 +2640,48 @@ static uint32_t analysis(char *beg, char *end, uint32_t *letters)
 }
 
 static char *problem59()
-{
-    uint8_t msg[1400];
+{   uint8_t msg[1400];
     FILE *fp;
     fp = fopen("euler59.txt", "r");
     int c;
     uint8_t n = 0;
     uint32_t end = 0;
     while ((c = fgetc(fp)) != EOF)
-    {
-        if (isdigit(c) == false)
-        {
-            msg[end++] = n;
+    {   if (isdigit(c) == false)
+        {   msg[end++] = n;
             n = 0;
             continue;
         }
         n = n * 10 + (c - 48);
     }
     fclose(fp);
+
+    // generate keys
     uint32_t *keys = malloc(26*26*26*4);
-    for (uint16_t i = 0; i < 26*26*26; i++)
-        keys[i] = 0;
-    for (uint8_t i = 6; i <= 6; i++)
-        for (uint8_t j = 14; j <= 14; j++)
-            for (uint8_t k = 3; k <= 3; k++)
+    for (uint8_t i = 0; i < 26; i++)
+        for (uint8_t j = 0; j < 26; j++)
+            for (uint8_t k = 0; k < 26; k++)
                 keys[i * 26 * 26 + j * 26 + k] = (i + 97) << 24 | (j + 97) << 16 | (k + 97) << 8;
-    for (uint16_t i = 0; i < 26*26*26; i++)
-    {
-        if (keys[i] == 0) continue;
-        printf("%u\r\n", keys[i]);
-    }
     char output[1400];
     double best_sumdif = 999999.9;
     uint32_t best_key = 0;
     for (uint32_t *it = keys; it != keys + 26 * 26 * 26; it++)
-    {
-        decipher(msg, msg + end, output, *it);
+    {   decipher(msg, msg + end, output, *it);
         uint32_t letters[26];
         uint32_t total = analysis(output, output + end, letters);
         double sumdif = 0;
         for (uint8_t i = 0; i < 26; i++)
         {   double relative = (double)letters[i] / (double)total;
-            sumdif += abs(relative - english[i]);
+            double diff = relative - english[i];
+            if (diff < 0) diff *= -1;
+            sumdif += diff;
         }
         if (sumdif < best_sumdif)
             best_sumdif = sumdif, best_key = *it;
     }
     uint32_t xsum = 0;
-    //best_key = 1735353344;  // correcte key, kan nog niet door code gevonden worden
     decipher(msg, msg + end, output, best_key);
-    printf("%s\r\n", output);
-    for (char *it = output; *it != 0; it++) xsum += *it;
+    for (char *it = output; it != output + end; it++) xsum += *it;
     char *ret = malloc(50);
     xstring32(ret, xsum);
     free(keys);

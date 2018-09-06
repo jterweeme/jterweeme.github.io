@@ -3106,7 +3106,6 @@ static string problem59()
 
     // generate keys
     uint32_t *keys = new uint32_t[26*26*26];
-    for (uint16_t i = 0; i < 26*26*26; i++) keys[i] = 0;
     for (uint8_t i = 0; i < 26; i++)
         for (uint8_t j = 0; j < 26; j++)
             for (uint8_t k = 0; k < 26; k++)
