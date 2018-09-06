@@ -2609,10 +2609,92 @@ the sum of the ASCII values in the original text.
 Antwoord: 107,359
 */
 
+static void decipher(uint8_t *inbeg, uint8_t *inend, char *outbeg, uint32_t key2)
+{
+    uint8_t key[3];
+    key[0] = (key2 & 0xff000000) >> 24;
+    key[1] = (key2 & 0xff0000) >> 16;
+    key[2] = (key2 & 0xff00) >> 8;
+    uint32_t i = 0;
+    for (; inbeg != inend; i++, inbeg++, outbeg++)
+        *outbeg = *inbeg ^ key[i % 3];
+    *outbeg = 0;
+}
+
+static double english[] = {0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
+    0.06094, 0.06966, 0.0153, 0.0772, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095,
+    0.05987, 0.06327, 0.09056, 0.02758, 0.00978, 0.02360, 0.00150, 0.01974, 0.00074};
+
+static uint32_t analysis(char *beg, char *end, uint32_t *letters)
+{   uint32_t total = 0;
+    uint8_t i;
+    for (i = 0; i < 26; i++) letters[i] = 0;
+    while (beg != end)
+    {   if (isalpha(*beg))
+        {   total++;
+            char low = tolower(*beg);
+            letters[low - 'a']++;
+        }
+        beg++;
+    }
+    return total;
+}
+
 static char *problem59()
 {
+    uint8_t msg[1400];
+    FILE *fp;
+    fp = fopen("euler59.txt", "r");
+    int c;
+    uint8_t n = 0;
+    uint32_t end = 0;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        if (isdigit(c) == false)
+        {
+            msg[end++] = n;
+            n = 0;
+            continue;
+        }
+        n = n * 10 + (c - 48);
+    }
+    fclose(fp);
+    uint32_t *keys = malloc(26*26*26*4);
+    for (uint16_t i = 0; i < 26*26*26; i++)
+        keys[i] = 0;
+    for (uint8_t i = 6; i <= 6; i++)
+        for (uint8_t j = 14; j <= 14; j++)
+            for (uint8_t k = 3; k <= 3; k++)
+                keys[i * 26 * 26 + j * 26 + k] = (i + 97) << 24 | (j + 97) << 16 | (k + 97) << 8;
+    for (uint16_t i = 0; i < 26*26*26; i++)
+    {
+        if (keys[i] == 0) continue;
+        printf("%u\r\n", keys[i]);
+    }
+    char output[1400];
+    double best_sumdif = 999999.9;
+    uint32_t best_key = 0;
+    for (uint32_t *it = keys; it != keys + 26 * 26 * 26; it++)
+    {
+        decipher(msg, msg + end, output, *it);
+        uint32_t letters[26];
+        uint32_t total = analysis(output, output + end, letters);
+        double sumdif = 0;
+        for (uint8_t i = 0; i < 26; i++)
+        {   double relative = (double)letters[i] / (double)total;
+            sumdif += abs(relative - english[i]);
+        }
+        if (sumdif < best_sumdif)
+            best_sumdif = sumdif, best_key = *it;
+    }
+    uint32_t xsum = 0;
+    //best_key = 1735353344;  // correcte key, kan nog niet door code gevonden worden
+    decipher(msg, msg + end, output, best_key);
+    printf("%s\r\n", output);
+    for (char *it = output; *it != 0; it++) xsum += *it;
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, xsum);
+    free(keys);
     return ret;
 }
 

@@ -19,10 +19,9 @@ size_t xstrlen(const char *s)
 }
 
 int xstrcmp(const char* s1, const char* s2)
-{
-    while(*s1 && (*s1==*s2))
+{   while(*s1 && (*s1==*s2))
         s1++,s2++;
-    return *(const unsigned char*)s1-*(const unsigned char*)s2;
+    return *(const uint8_t*)s1-*(const uint8_t*)s2;
 }
 
 void xmemcpy(void *dest, void *src, size_t n)
@@ -563,8 +562,7 @@ static uint32_t gcd(uint32_t a, uint32_t b)
 }
 
 static uint64_t floorsqrt(uint64_t n)
-{
-    uint64_t i = 0, step = 1, sum = 0;
+{   uint64_t i = 0, step = 1, sum = 0;
     while (sum < n)
     {   sum += step;
         step += 2;
@@ -1428,11 +1426,6 @@ cannot be written as the sum of two abundant numbers.
 Antwoord: 4,179,871
 */
 
-static bool find23(vector<uint16_t> &d, uint16_t n)
-{
-    return binSearch(d.begin(), d.end(), n);
-}
-
 static string problem23()
 {   uint16_t xmax = 28123;
     vector<uint32_t> lprimes;
@@ -1448,7 +1441,8 @@ static string problem23()
     {   bool boo = true;
         for (vector<uint16_t>::const_iterator it = abundants.begin(); it != abundants.end(); it++)
         {   if (*it < i)
-            {   if (find23(abundants, i - *it))
+            {
+                if (binSearch(abundants.begin(), abundants.end(), i - *it))
                 {   boo = false;
                     break;
                 }
@@ -2266,8 +2260,8 @@ static uint32_t opdracht44()
     for (uint32_t i = 1; i <= 9998; i++) lpgs[i - 1] = pentagon32(i);
     for (uint32_t i = 0; i < 9998; i++)
         for (uint32_t j = i; j < 9998; j++)
-            if (binSearch(lpgs + j, lpgs + 9998, lpgs[i] + lpgs[j]) &&
-                binSearch(lpgs, lpgs + 9998, lpgs[j] - lpgs[i]))
+            if (binSearch(lpgs + j, lpgs + 9997, lpgs[i] + lpgs[j]) &&
+                binSearch(lpgs, lpgs + 9997, lpgs[j] - lpgs[i]))
                 return lpgs[j] - lpgs[i];
     return 0;
 }
@@ -2346,13 +2340,15 @@ static uint32_t opdracht46()
     Sieve sieve(999999);
     while (sieve.hasNext()) primes[end++] = sieve.next();
     end--;
-    for (uint32_t i = 0; i < 100; i++) squares[i] = 2*i*i;
-    for (uint32_t i = 3; i < 987654321; i += 2)
+    uint32_t i;
+    for (i = 0; i < 100; i++) squares[i] = 2*i*i;
+    for (i = 3; i < 987654321; i += 2)
     {   if (binSearch(primes, primes + end, i)) continue;
         uint64_t pr = pair46(primes, primes + end, squares, squares + 100, i);
-        if (pr == 0) return i;
+        if (pr == 0) break;
     }
-    return 0;
+    delete[] primes;
+    return i;
 }
 
 static string problem46()
@@ -2480,6 +2476,7 @@ static string problem50(uint32_t limit = 1000000)
                 best_sum = sublen, best_prime = xsum;
         }
     }
+    delete[] primes;
     return twostring(best_prime);
 }
 
@@ -3076,6 +3073,7 @@ static double english[] = {0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228,
 
 static uint32_t analysis(char *beg, char *end, uint32_t *letters)
 {   uint32_t total = 0;
+    for (uint8_t i = 0; i < 26; i++) letters[i] = 0;
     while (beg != end)
     {   if (isalpha(*beg))
         {   total++;
@@ -3090,14 +3088,15 @@ static uint32_t analysis(char *beg, char *end, uint32_t *letters)
 static string problem59()
 {
     // read message from file
-    vector<uint8_t> msg;
+    uint8_t msg[1400];
     ifstream ifs;
     ifs.open("euler59.txt");
     char c;
     uint8_t n = 0;
+    uint32_t end = 0;
     while (ifs.get(c))
     {   if (isdigit(c) == false)
-        {   msg.push_back(n);
+        {   msg[end++] = n;
             n = 0;
             continue;
         }
@@ -3106,19 +3105,20 @@ static string problem59()
     ifs.close();
 
     // generate keys
-    vector<uint32_t> key;
-    for (uint8_t i = 97; i <= 122; i++)
-        for (uint8_t j = 97; j <= 122; j++)
-            for (uint8_t k = 97; k <= 122; k++)
-                key.push_back(i << 24 | j << 16 | k << 8);
+    uint32_t *keys = new uint32_t[26*26*26];
+    for (uint16_t i = 0; i < 26*26*26; i++) keys[i] = 0;
+    for (uint8_t i = 0; i < 26; i++)
+        for (uint8_t j = 0; j < 26; j++)
+            for (uint8_t k = 0; k < 26; k++)
+                keys[i * 26 * 26 + j * 26 + k] = (i + 97) << 24 | (j + 97) << 16 | (k + 97) << 8;
 
     char output[1400];
     double best_sumdif = 999999.9;
     uint32_t best_key = 0;
-    for (vector<uint32_t>::iterator it = key.begin(); it != key.end(); it++)
-    {   decipher(msg.begin(), msg.end(), output, *it);
-        uint32_t letters[26] = {0};
-        uint32_t total = analysis(output, output + 1201, letters);
+    for (uint32_t *it = keys; it != keys + 26 * 26 * 26; it++)
+    {   decipher(msg, msg + end, output, *it);
+        uint32_t letters[26];
+        uint32_t total = analysis(output, output + end, letters);
         double sumdif = 0;
         for (uint8_t i = 0; i < 26; i++)
         {   double relative = (double)letters[i] / (double)total;
@@ -3127,9 +3127,10 @@ static string problem59()
         if (sumdif < best_sumdif)
             best_sumdif = sumdif, best_key = *it;
     }
+    delete[] keys;
     uint32_t xsum = 0;
-    decipher(msg.begin(), msg.end(), output, best_key);
-    for (char *it = output; *it != 0; it++) xsum += *it;
+    decipher(msg, msg + end, output, best_key);
+    for (char *it = output; it != output + end; it++) xsum += *it;
     return twostring<uint32_t>(xsum);
 }
 
