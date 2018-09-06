@@ -123,8 +123,18 @@ static uint32_t reverse32(uint32_t n, uint8_t base)
     return rev;
 }
 
+static uint64_t reverse64(uint64_t n, uint8_t base)
+{   uint64_t rev = 0, temp = 0;
+    for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
+    return rev;
+}
+
 static int ispalindrome32(uint32_t n, uint8_t base)
 {   return n == reverse32(n, base);
+}
+
+static int ispalindrome64(uint32_t n, uint8_t base)
+{   return n == reverse64(n, base);
 }
 
 static uint32_t gcd(uint32_t a, uint32_t b)
@@ -312,7 +322,7 @@ static char *problem3()
 
 /*
 #4 A palindromic number reads the same both ways. The largest palindrome
-made from the product of two 2-digit numbers is 9009 = 91 × 99.
+made from the product of two 2-digit numbers is 9009 = 91 x 99.
 
 Find the largest palindrome made from the product of two 3-digit numbers.
 
@@ -366,7 +376,7 @@ The square of the sum of the first ten natural numbers is,
 (1 + 2 + ... + 10)2 = 552 = 3025
 
 Hence the difference between the sum of the squares of the first ten
-natural numbers and the square of the sum is 3025 − 385 = 2640.
+natural numbers and the square of the sum is 3025 - 385 = 2640.
 
 Find the difference between the sum of the squares of the
 first one hundred natural numbers and the square of the sum.
@@ -418,7 +428,7 @@ static char *problem7()
 #8 Largest product in a series
 
 The four adjacent digits in the 1000-digit number that
-have the greatest product are 9 × 9 × 8 × 9 = 5832.
+have the greatest product are 9 x 9 x 8 x 9 = 5832.
 
 Find the thirteen adjacent digits in the 1000-digit number that
 have the greatest product. What is the value of this product?
@@ -546,10 +556,10 @@ a diagonal line have been marked in red.
 20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48
 
-The product of these numbers is 26 × 63 × 78 × 14 = 1788696.
+The product of these numbers is 26 x 63 x 78 x 14 = 1788696.
 
 What is the greatest product of four adjacent numbers in the same
-direction (up, down, left, right, or diagonally) in the 20×20 grid?
+direction (up, down, left, right, or diagonally) in the 20x20 grid?
 
 Antwoord: 70,600,674
 */
@@ -747,7 +757,7 @@ static char *problem14()
 Starting in the top left corner of a 2x2 grid, and only being able to move
 to the right and down, there are exactly 6 routes to the bottom right corner.
 
-How many such routes are there through a 20×20 grid?
+How many such routes are there through a 20x20 grid?
 
 Antwoord: 137,846,528,820
 */
@@ -978,9 +988,9 @@ static char *problem19()
 /*
 #20 Factorial digit sum
 
-n! means n × (n − 1) × ... × 3 × 2 × 1
+n! means n x (n − 1) x ... x 3 x 2 x 1
 
-For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+For example, 10! = 10 x 9 x ... x 3 x 2 x 1 = 3628800,
 and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!
@@ -1015,7 +1025,7 @@ static char *problem20()
 
 Let d(n) be defined as the sum of proper divisors of
 n (numbers less than n which divide evenly into n).
-If d(a) = b and d(b) = a, where a ≠ b, then a and b are an
+If d(a) = b and d(b) = a, where a != b, then a and b are an
 amicable pair and each of a and b are called amicable numbers.
 
 For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22,
@@ -1064,7 +1074,7 @@ multiply this value by its alphabetical position in the list to obtain a name sc
 
 For example, when the list is sorted into alphabetical order, COLIN, which
 is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. So,
-COLIN would obtain a score of 938 × 53 = 49714.
+COLIN would obtain a score of 938 x 53 = 49714.
 
 What is the total of all the name scores in the file?
 
@@ -1212,7 +1222,7 @@ static char *problem24()
 
 The Fibonacci sequence is defined by the recurrence relation:
 
-    Fn = Fn−1 + Fn−2, where F1 = 1 and F2 = 1.
+    Fn = Fn-1 + Fn-2, where F1 = 1 and F2 = 1.
 
 Hence the first 12 terms will be:
 
@@ -1322,24 +1332,18 @@ Euler discovered the remarkable quadratic formula:
 n^2+n+41
 
 It turns out that the formula will produce 40 primes for the consecutive
-integer values 0≤n≤39. However, when n=40,402+40+41=40(40+1)+41 is
-divisible by 41, and certainly when n=41,412+41+41
+integer values 0<=n<=39. However, when n=40,402+40+41=40(40+1)+41 is
+divisible by 41, and certainly when n=41,41^2+41+41 is clearly divisible by 41.
 
-is clearly divisible by 41.
-
-The incredible formula n2−79n+1601
-was discovered, which produces 80 primes for the consecutive values 0≤n≤79
-
-. The product of the coefficients, −79 and 1601, is −126479.
+The incredible formula n2-79n+1601 was discovered, which produces 80 primes
+for the consecutive values 0≤n≤79. The product of the coefficients, −79 and
+1601, is −126479.
 
 Considering quadratics of the form:
 
-    n^2+an+b
+    n^2+an+b, where |a|<1000 and |b|≤1000
 
-, where |a|<1000 and |b|≤1000
-
-where |n|
-is the modulus/absolute value of n
+where |n| is the modulus/absolute value of n
 e.g. |11|=11 and |−4|=4
 
 Find the product of the coefficients, a
@@ -1501,7 +1505,7 @@ p, and there are eight coins in general circulation:
 
 It is possible to make £2 in the following way:
 
-    1×P1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
+    1xP1 + 1x50p + 2x20p + 1x5p + 1x2p + 3x1p
 
 How many different ways can P2 be made using any number of coins?
 
@@ -1529,7 +1533,7 @@ We shall say that an n-digit number is pandigital if it makes use of all
 the digits 1 to n exactly once; for example, the 5-digit number, 15234,
 is 1 through 5 pandigital.
 
-The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing
+The product 7254 is unusual, as the identity, 39 x 186 = 7254, containing
 multiplicand, multiplier, and product is 1 through 9 pandigital.
 
 Find the sum of all products whose multiplicand/multiplier/product identity
@@ -1772,9 +1776,9 @@ static char *problem37()
 
 Take the number 192 and multiply it by each of 1, 2, and 3:
 
-    192 × 1 = 192
-    192 × 2 = 384
-    192 × 3 = 576
+    192 x 1 = 192
+    192 x 2 = 384
+    192 x 3 = 576
 
 By concatenating each product we get the 1 to 9 pandigital, 192384576. We
 will call 192384576 the concatenated product of 192 and (1,2,3)
@@ -1874,7 +1878,7 @@ It can be seen that the 12th digit of the fractional part is 1.
 If dn represents the nth digit of the fractional
 part, find the value of the following expression.
 
-d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+d1 x d10 x d100 x d1000 x d10000 x d100000 x d1000000
 
 Antwoord: 210
 */
@@ -2047,10 +2051,10 @@ Pn=n(3n−1)/2. The first ten pentagonal numbers are:
 1, 5, 12, 22, 35, 51, 70, 92, 117, 145, ...
 
 It can be seen that P4 + P7 = 22 + 70 = 92 = P8. However,
-their difference, 70 − 22 = 48, is not pentagonal.
+their difference, 70 - 22 = 48, is not pentagonal.
 
 Find the pair of pentagonal numbers, Pj and Pk, for which
-their sum and difference are pentagonal and D = |Pk − Pj|
+their sum and difference are pentagonal and D = |Pk - Pj|
 is minimised; what is the value of D?
 
 Antwoord: 5,482,660
@@ -2080,8 +2084,8 @@ static char *problem44()
 
 Triangle, pentagonal, and hexagonal numbers are generated by the following formulae:
 Triangle     Tn=n(n+1)/2     1, 3, 6, 10, 15, ...
-Pentagonal     Pn=n(3n−1)/2     1, 5, 12, 22, 35, ...
-Hexagonal     Hn=n(2n−1)     1, 6, 15, 28, 45, ...
+Pentagonal     Pn=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     Hn=n(2n-1)     1, 6, 15, 28, 45, ...
 
 It can be verified that T285 = P165 = H143 = 40755.
 
@@ -2116,12 +2120,12 @@ static char *problem45()
 It was proposed by Christian Goldbach that every odd composite
 number can be written as the sum of a prime and twice a square.
 
-9 = 7 + 2×1^2
-15 = 7 + 2×2^2
-21 = 3 + 2×3^2
-25 = 7 + 2×3^2
-27 = 19 + 2×2^2
-33 = 31 + 2×1^2
+9 = 7 + 2x1^2
+15 = 7 + 2x2^2
+21 = 3 + 2x3^2
+25 = 7 + 2x3^2
+27 = 19 + 2x2^2
+33 = 31 + 2x1^2
 
 It turns out that the conjecture was false.
 
@@ -2165,14 +2169,14 @@ static char *problem46()
 
 The first two consecutive numbers to have two distinct prime factors are:
 
-14 = 2 × 7
-15 = 3 × 5
+14 = 2 x 7
+15 = 3 x 5
 
 The first three consecutive numbers to have three distinct prime factors are:
 
-644 = 2^2 × 7 × 23
-645 = 3 × 5 × 43
-646 = 2 × 17 × 19.
+644 = 2^2 x 7 x 23
+645 = 3 x 5 x 43
+646 = 2 x 17 x 19.
 
 Find the first four consecutive integers to have four distinct
 prime factors each. What is the first of these numbers?
@@ -2309,12 +2313,43 @@ static char *problem50()
     return ret;
 }
 
+/*
+#51: Prime digit replacements
+
+By replacing the 1st digit of the 2-digit number *3, it turns out that six
+of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+
+By replacing the 3rd and 4th digits of 56**3 with the same digit, this
+5-digit number is the first example having seven primes among the ten
+generated numbers, yielding the family: 56003, 56113, 56333, 56443,
+56663, 56773, and 56993. Consequently 56003, being the first member of
+this family, is the smallest prime with this property.
+
+Find the smallest prime which, by replacing part of the number (not
+necessarily adjacent digits) with the same digit, is part of an eight
+prime value family.
+
+Antwoord: 121,313
+*/
+
 static char *problem51()
 {
     char *ret = malloc(50);
     xstring32(ret, 0);
     return ret;
 }
+
+/*
+#52: Pandigital multiples
+    
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+
+Find the smallest positive integer, x, such that
+2x, 3x, 4x, 5x, and 6x, contain the same digits.
+
+Antwoord: 142,857
+*/
 
 static char *problem52()
 {
@@ -2323,10 +2358,52 @@ static char *problem52()
     return ret;
 }
 
+/*
+#53: Combinatoric selections
+
+There are exactly ten ways of selecting three from five, 12345:
+
+123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+
+In combinatorics, we use the notation, 5C3 = 10.
+
+In general,
+nCr =  
+n!
+r!(n−r)!
+ ,where r ≤ n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+
+It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
+
+How many, not necessarily distinct, values of  nCr,
+for 1 <= n <= 100, are greater than one-million?
+
+Antwoord: 4,075
+*/
+
 static char *problem53()
-{
+{   uint8_t nlimit = 101, i, j;
+    uint32_t limit = 1000000;
+    uint32_t tree[nlimit][nlimit];
+    for (i = 0; i < nlimit; i++)
+        for (j = 0; j < nlimit; j++)
+            tree[i][j] = 0;
+    tree[0][0] = 1;
+    for (i = 0; i < nlimit - 1; i++)
+    {   tree[i + 1][0] = 1;
+        for (j = 0; j <= i; j++)
+        {
+            tree[i + 1][j + 1] = tree[i][j] + tree[i][j + 1];
+            if (tree[i + 1][j + 1] > 1000001)
+                tree[i + 1][j + 1] = 1000001;
+        }
+    }
+    uint32_t ncount = 0;
+    for (i = 0; i < nlimit; i++)
+        for (j = 0; j < nlimit; j++)
+            if (tree[i][j] > limit) ncount++;
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, ncount);
     return ret;
 }
 
@@ -2337,12 +2414,77 @@ static char *problem54()
     return ret;
 }
 
+/*
+#55: Lychrel numbers
+
+If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+
+Not all numbers produce palindromes so quickly. For example,
+
+349 + 943 = 1292,
+1292 + 2921 = 4213
+4213 + 3124 = 7337
+
+That is, 349 took three iterations to arrive at a palindrome.
+
+Although no one has proved it yet, it is thought that some numbers, like
+196, never produce a palindrome. A number that never forms a palindrome
+through the reverse and add process is called a Lychrel number. Due to the
+theoretical nature of these numbers, and for the purpose of this problem,
+we shall assume that a number is Lychrel until proven otherwise. In
+addition you are given that for every number below ten-thousand, it will
+either (i) become a palindrome in less than fifty iterations, or, (ii) no
+one, with all the computing power that exists, has managed so far to map it
+to a palindrome. In fact, 10677 is the first number to be shown to require
+over fifty iterations before producing a palindrome:
+4668731596684224866951378664 (53 iterations, 28-digits).
+
+Surprisingly, there are palindromic numbers that are
+themselves Lychrel numbers; the first example is 4994.
+
+How many Lychrel numbers are there below ten-thousand?
+
+NOTE: Wording was modified slightly on 24 April 2007 to
+emphasise the theoretical nature of Lychrel numbers.
+
+Antwoord: 249
+*/
+
+static bool islychrel(uint64_t n, uint64_t it)
+{
+    for (uint64_t i = 0; i < it; i++)
+    {   n += reverse64(n, 10);
+        if (ispalindrome64(n, 10)) return false;
+    }
+    return true;
+}
+
 static char *problem55()
 {
+    uint64_t xsum = 0;
+    for (uint16_t i = 0; i < 10000; i++)
+        if (islychrel(i, 50)) xsum++;
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring64(ret, xsum);
     return ret;
 }
+
+/*
+#56: Powerful digit sum
+
+A googol (10^100) is a massive number: one followed by one-hundred zeros;
+100^100 is almost unimaginably large: one followed by two-hundred zeros.
+Despite their size, the sum of the digits in each number is only 1.
+
+Considering natural numbers of the form, ab,
+where a, b < 100, what is the maximum digital sum?
+
+Antwoord: 972
+*/
+
+/*
+http://euler.stephan-brumme.com/56/
+*/
 
 static char *problem56()
 {
@@ -2351,12 +2493,71 @@ static char *problem56()
     return ret;
 }
 
+/*
+#57: Square root convergents
+
+It is possible to show that the square root of two
+can be expressed as an infinite continued fraction.
+
+√ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+
+By expanding this for the first four iterations, we get:
+
+1 + 1/2 = 3/2 = 1.5
+1 + 1/(2 + 1/2) = 7/5 = 1.4
+1 + 1/(2 + 1/(2 + 1/2)) = 17/12 = 1.41666...
+1 + 1/(2 + 1/(2 + 1/(2 + 1/2))) = 41/29 = 1.41379...
+
+The next three expansions are 99/70, 239/169, and 577/408, but the eighth
+expansion, 1393/985, is the first example where the number of digits
+in the numerator exceeds the number of digits in the denominator.
+
+In the first one-thousand expansions, how many fractions
+contain a numerator with more digits than denominator?
+
+Antwoord: 153
+*/
+
+/*
+http://euler.stephan-brumme.com/57/
+*/
+
 static char *problem57()
 {
     char *ret = malloc(50);
     xstring32(ret, 0);
     return ret;
 }
+
+/*
+#58: Spiral primes
+
+Starting with 1 and spiralling anticlockwise in the following
+way, a square spiral with side length 7 is formed.
+
+37 36 35 34 33 32 31
+38 17 16 15 14 13 30
+39 18  5  4  3 12 29
+40 19  6  1  2 11 28
+41 20  7  8  9 10 27
+42 21 22 23 24 25 26
+43 44 45 46 47 48 49
+
+It is interesting to note that the odd squares lie along the bottom right
+diagonal, but what is more interesting is that 8 out of the 13 numbers
+lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+
+If one complete new layer is wrapped around the spiral above, a square
+spiral with side length 9 will be formed. If this process is continued,
+what is the side length of the square spiral for which the ratio of primes
+along both diagonals first falls below 10%?
+
+Antwoord: 26,241
+*/
+
+/*
+https://www.mathblog.dk/project-euler-58-primes-diagonals-spiral/
+*/
 
 static char *problem58()
 {
@@ -2375,12 +2576,64 @@ static char *problem58()
     return ret;
 }
 
+/*
+#59: XOR decryption
+
+Each character on a computer is assigned a unique code and the preferred
+standard is ASCII (American Standard Code for Information Interchange). For
+example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
+
+A modern encryption method is to take a text file, convert the bytes to
+ASCII, then XOR each byte with a given value, taken from a secret key. The
+advantage with the XOR function is that using the same encryption key on
+the cipher text, restores the plain text; for example, 65 XOR 42 = 107,
+then 107 XOR 42 = 65.
+
+For unbreakable encryption, the key is the same length as the plain text
+message, and the key is made up of random bytes. The user would keep the
+encrypted message and the encryption key in different locations, and
+without both "halves", it is impossible to decrypt the message.
+
+Unfortunately, this method is impractical for most users, so the modified
+method is to use a password as a key. If the password is shorter than the
+message, which is likely, the key is repeated cyclically throughout the
+message. The balance for this method is using a sufficiently long
+password key for security, but short enough to be memorable.
+
+Your task has been made easy, as the encryption key consists of three lower
+case characters. Using cipher.txt (right click and 'Save Link/Target As...'),
+a file containing the encrypted ASCII codes, and the knowledge that the
+plain text must contain common English words, decrypt the message and find
+the sum of the ASCII values in the original text.
+
+Antwoord: 107,359
+*/
+
 static char *problem59()
 {
     char *ret = malloc(50);
     xstring32(ret, 0);
     return ret;
 }
+
+/*
+#60: Prime pair sets
+
+The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
+primes and concatenating them in any order the result will always be
+prime. For example, taking 7 and 109, both 7109 and 1097 are prime. The
+sum of these four primes, 792, represents the lowest sum for a set of
+four primes with this property.
+
+Find the lowest sum for a set of five primes for which any two primes
+concatenate to produce another prime.
+
+Antwoord: 26,033
+*/
+
+/*
+13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
+*/
 
 static char *problem60()
 {
@@ -2395,6 +2648,20 @@ static char *problem61()
     xstring32(ret, 0);
     return ret;
 }
+
+/*
+#62: Cubic permutations
+
+The cube, 41063625 (345^3), can be permuted to produce two other
+cubes: 56623104 (384^3) and 66430125 (405^3). In fact, 41063625 is
+the smallest cube which has exactly three permutations of its
+digits which are also cube.
+
+Find the smallest cube for which exactly
+five permutations of its digits are cube.
+
+Antwoord: 127,035,954,683
+*/
 
 static char *problem62()
 {
@@ -2428,6 +2695,63 @@ static char *problem64()
     }
     char *ret = malloc(50);
     xstring32(ret, odd_period);
+    return ret;
+}
+
+static char *problem65()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem66()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem67()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem68()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem69()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem70()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem71()
+{
+    uint64_t limit = 1000000;
+    uint64_t a = 3, b = 7, r = 0, s = 1, q = limit;
+    while (q > 2)
+    {   uint64_t p = (a * q - 1) / b;
+        if (p * s > r * q)
+            s = q, r = p;
+        q--;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, r);
     return ret;
 }
 
@@ -2513,6 +2837,13 @@ static char *run(uint32_t p)
     case 62: return problem62();
     case 63: return problem63();
     case 64: return problem64();
+    case 65: return problem65();
+    case 66: return problem66();
+    case 67: return problem67();
+    case 68: return problem68();
+    case 69: return problem69();
+    case 70: return problem70();
+    case 71: return problem71();
     }
     return 0;
 }
@@ -2532,7 +2863,7 @@ int main()
 {
     time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 64; i++)
+    for (i = 1; i <= 71; i++)
         runjob(i);
     time_t end = time(0);
     printf("Total: %lus\r\n", end - begin);

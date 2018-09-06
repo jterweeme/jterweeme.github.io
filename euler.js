@@ -32,6 +32,10 @@ function digits(n)
     return ret;
 }
 
+function digit(n, i)
+{   return Math.floor(n / 10**i) % 10;
+}
+
 function linearSearch(a, n)
 {   for (var i = 0; i < a.length; i++)
         if (a[i] === n) return i + 1;   // leave 0 for not found
@@ -881,25 +885,23 @@ names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER",
 "KRISTEN","VANESSA","ALMA","SUE","ELSIE","BETH","JEANNE","VICKI","CARLA",
 "TARA","ROSEMARY","EILEEN","TERRI","GERTRUDE","LUCY","TONYA","ELLA",
 "STACEY","WILMA","GINA","KRISTIN","JESSIE","NATALIE","AGNES","VERA",
-"WILLIE","CHARLENE","BESSIE","DELORES","MELINDA","PEARL","ARLENE","MAUREEN","COLLEEN",
-"ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE","LILLIE","CLAUDIA",
-"JACKIE","MARCIA","TANYA","NELLIE",
-"MINNIE","MARLENE","HEIDI","GLENDA","LYDIA","VIOLA","COURTNEY","MARIAN","STELLA",
-"CAROLINE","DORA","JO","VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL",
-"MARSHA","MYRTLE","LENA","CHRISTY",
-"DEANNA","PATSY","HILDA","GWENDOLYN","JENNIE","NORA","MARGIE","NINA","CASSANDRA",
-"LEAH","PENNY","KAY","PRISCILLA","NAOMI","CAROLE","BRANDY","OLGA",
-"BILLIE","DIANNE","TRACEY","LEONA","JENNY",
-"FELICIA","SONIA","MIRIAM","VELMA","BECKY","BOBBIE","VIOLET","KRISTINA","TONI","MISTY",
-"MAE","SHELLY","DAISY","RAMONA","SHERRI","ERIKA","KATRINA",
-"CLAIRE","LINDSEY","LINDSAY","GENEVA",
-"GUADALUPE","BELINDA","MARGARITA","SHERYL","CORA","FAYE","ADA","NATASHA","SABRINA",
-"ISABEL","MARGUERITE","HATTIE","HARRIET","MOLLY","CECILIA","KRISTI","BRANDI","BLANCHE",
-"SANDY","ROSIE","JOANNA","IRIS","EUNICE","ANGIE","INEZ","LYNDA",
-"MADELINE","AMELIA","ALBERTA","GENEVIEVE",
-"MONIQUE","JODI","JANIE","MAGGIE","KAYLA","SONYA",
-"JAN","LEE","KRISTINE","CANDACE","FANNIE",
-"MARYANN","OPAL","ALISON","YVETTE","MELODY","LUZ",
+"WILLIE","CHARLENE","BESSIE","DELORES","MELINDA","PEARL","ARLENE",
+"MAUREEN","COLLEEN","ALLISON","TAMARA","JOY","GEORGIA","CONSTANCE",
+"LILLIE","CLAUDIA","JACKIE","MARCIA","TANYA","NELLIE","MINNIE","MARLENE",
+"HEIDI","GLENDA","LYDIA","VIOLA","COURTNEY","MARIAN","STELLA","CAROLINE",
+"DORA","JO","VICKIE","MATTIE","TERRY","MAXINE","IRMA","MABEL","MARSHA",
+"MYRTLE","LENA","CHRISTY","DEANNA","PATSY","HILDA","GWENDOLYN","JENNIE",
+"NORA","MARGIE","NINA","CASSANDRA","LEAH","PENNY","KAY","PRISCILLA",
+"NAOMI","CAROLE","BRANDY","OLGA","BILLIE","DIANNE","TRACEY","LEONA",
+"JENNY","FELICIA","SONIA","MIRIAM","VELMA","BECKY","BOBBIE","VIOLET",
+"KRISTINA","TONI","MISTY","MAE","SHELLY","DAISY","RAMONA","SHERRI",
+"ERIKA","KATRINA","CLAIRE","LINDSEY","LINDSAY","GENEVA","GUADALUPE",
+"BELINDA","MARGARITA","SHERYL","CORA","FAYE","ADA","NATASHA","SABRINA",
+"ISABEL","MARGUERITE","HATTIE","HARRIET","MOLLY","CECILIA","KRISTI",
+"BRANDI","BLANCHE","SANDY","ROSIE","JOANNA","IRIS","EUNICE","ANGIE",
+"INEZ","LYNDA","MADELINE","AMELIA","ALBERTA","GENEVIEVE","MONIQUE",
+"JODI","JANIE","MAGGIE","KAYLA","SONYA","JAN","LEE","KRISTINE","CANDACE",
+"FANNIE","MARYANN","OPAL","ALISON","YVETTE","MELODY","LUZ",
 "SUSIE","OLIVIA","FLORA","SHELLEY","KRISTY",
 "MAMIE","LULA","LOLA","VERNA","BEULAH","ANTOINETTE","CANDICE","JUANA","JEANNETTE","PAM",
 "KELLI","HANNAH","WHITNEY","BRIDGET","KARLA","CELIA","LATOYA","PATTY","SHELIA","GAYLE",
@@ -2750,14 +2752,7 @@ Antwoord: 296,962,999,629
 */
 
 function opdracht49()
-{   function linearSearch(d, n)
-    { for (var i = 0; i < d.length; i++) if (d[i] == n) return i + 1; return 0; }
-    function digits(n)
-    {   var ret = [];
-        while (n > 0) ret.push(n % 10), n = Math.floor(n / 10);
-        return ret;
-    }
-    function perms(n)
+{   function perms(n)
     {   var a = digits(n);
         a.reverse();
         var ret = [];
@@ -2841,6 +2836,24 @@ function opdracht50(max = 10**6-1)
     return best_prime;
 }
 
+/*
+#51: Prime digit replacements
+
+By replacing the 1st digit of the 2-digit number *3, it turns out that six
+of the nine possible values: 13, 23, 43, 53, 73, and 83, are all prime.
+
+By replacing the 3rd and 4th digits of 56**3 with the same digit, this
+5-digit number is the first example having seven primes among the ten
+generated numbers, yielding the family: 56003, 56113, 56333, 56443,
+56663, 56773, and 56993. Consequently 56003, being the first member of
+this family, is the smallest prime with this property.
+
+Find the smallest prime which, by replacing part of the number (not
+necessarily adjacent digits) with the same digit, is part of an eight
+prime value family.
+
+Antwoord: 121,313
+*/
 
 function opdracht51()
 {   function binarize(n)
@@ -2863,8 +2876,6 @@ function opdracht51()
         }
         return false;
     }
-    function digit(n, i) { return Math.floor(n / 10**i) % 10; }
-    function decimals(n) { var i = 0; while (n >= 10**i) i++; return i; }
     var sieve = Array(8**7).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i < sieve.length; i++)
@@ -2892,21 +2903,24 @@ function opdracht51()
     return 0;
 }
 
+/*
+#52: Pandigital multiples
+    
+It can be seen that the number, 125874, and its double, 251748,
+contain exactly the same digits, but in a different order.
+
+Find the smallest positive integer, x, such that
+2x, 3x, 4x, 5x, and 6x, contain the same digits.
+
+Antwoord: 142,857
+*/
+
 function opdracht52()
-{   function linSearch(lst, n)
-    {   for (var i = 0; i < lst.length; i++) if (lst[i] == n) return i + 1;
-        return 0;
-    }
-    function test(n)
-    {   function digits(n)
-        {   ret = [];
-            while (n) ret.push(n % 10), n = Math.floor(n / 10);
-            return ret;
-        }
-        function hasDigitsOnce(n, nset)
+{   function test(n)
+    {   function hasDigitsOnce(n, nset)
         {   var digs = digits(n);
             for (var i = 0; i < digs.length; i++)
-            {   var nseti = linSearch(nset, digs[i]);
+            {   var nseti = linearSearch(nset, digs[i]);
                 if (nseti) nset.splice(nseti - 1, 1); else return false;
             }
             return true;

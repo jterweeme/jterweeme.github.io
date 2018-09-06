@@ -3059,40 +3059,78 @@ the sum of the ASCII values in the original text.
 Antwoord: 107,359
 */
 
+template <typename T, typename U> static void decipher(T inbeg, T inend, U outbeg, uint32_t key2)
+{   uint8_t key[3];
+    key[0] = (key2 & 0xff000000) >> 24;
+    key[1] = (key2 & 0xff0000) >> 16;
+    key[2] = (key2 & 0xff00) >> 8;
+    uint32_t i = 0;
+    for (; inbeg != inend; i++, inbeg++, outbeg++)
+        *outbeg = *inbeg ^ key[i % 3];
+    outbeg[i] = 0;
+}
+
+static double english[] = {0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
+    0.06094, 0.06966, 0.0153, 0.0772, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095,
+    0.05987, 0.06327, 0.09056, 0.02758, 0.00978, 0.02360, 0.00150, 0.01974, 0.00074};
+
+static uint32_t analysis(char *beg, char *end, uint32_t *letters)
+{   uint32_t total = 0;
+    while (beg != end)
+    {   if (isalpha(*beg))
+        {   total++;
+            char low = tolower(*beg);
+            letters[low - 'a']++;
+        }
+        beg++;
+    }
+    return total;
+}
+
 static string problem59()
 {
+    // read message from file
     vector<uint8_t> msg;
     ifstream ifs;
     ifs.open("euler59.txt");
     char c;
     uint8_t n = 0;
     while (ifs.get(c))
-    {
-        if (isdigit(c) == false)
-        {
-            msg.push_back(n);
+    {   if (isdigit(c) == false)
+        {   msg.push_back(n);
             n = 0;
             continue;
         }
         n = n * 10 + (c - 48);
-
     }
     ifs.close();
-#if 0
-    for (vector<uint8_t>::iterator it = msg.begin(); it != msg.end(); it++)
-        cout << (uint16_t)*it << "\r\n";
-#endif
-    for (uint8_t i = 97; i < 123; i++)
-    {
-        for (uint8_t j = 97; j < 123; j++)
-        {
-            for (uint8_t k = 97; k < 123; k++)
-            {
-                
-            }
+
+    // generate keys
+    vector<uint32_t> key;
+    for (uint8_t i = 97; i <= 122; i++)
+        for (uint8_t j = 97; j <= 122; j++)
+            for (uint8_t k = 97; k <= 122; k++)
+                key.push_back(i << 24 | j << 16 | k << 8);
+
+    char output[1400];
+    double best_sumdif = 999999.9;
+    uint32_t best_key = 0;
+    for (vector<uint32_t>::iterator it = key.begin(); it != key.end(); it++)
+    {   decipher(msg.begin(), msg.end(), output, *it);
+        uint32_t letters[26] = {0};
+        uint32_t total = analysis(output, output + 1201, letters);
+        double sumdif = 0;
+        for (uint8_t i = 0; i < 26; i++)
+        {   double relative = (double)letters[i] / (double)total;
+            sumdif += abs(relative - english[i]);
         }
+        if (sumdif < best_sumdif)
+            best_sumdif = sumdif, best_key = *it;
     }
-    return twostring<uint32_t>(0);
+    uint32_t xsum = 0;
+    decipher(msg.begin(), msg.end(), output, best_key);
+    for (char *it = output; *it != 0; it++) xsum += *it;
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -3473,6 +3511,32 @@ static string problem71(uint64_t limit = 1000000)
 }
 
 /*
+#72: Counting fractions
+
+Antwoord: 303,963,552,391
+*/
+
+static string problem72(uint64_t L = 1000000)
+{   //uint32_t *phi = new uint32_t[1000001];
+    return twostring(0);
+}
+
+static string problem73()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem74()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem75()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3551,6 +3615,10 @@ static string run2(uint32_t p)
     case 69: return problem69();
     case 70: return problem70();
     case 71: return problem71();
+    case 72: return problem72();
+    case 73: return problem73();
+    case 74: return problem74();
+    case 75: return problem75();
     }
     return 0;
 }
@@ -3685,7 +3753,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(71);
+    singlethread(75);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

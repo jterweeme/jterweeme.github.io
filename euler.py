@@ -2278,6 +2278,7 @@ Antwoord: 107,359
 key = "god"
 """
 
+"""
 def decipher(msg, key):
     for i, c in enumerate(msg):
         yield chr(c ^ key[i % 3])
@@ -2305,8 +2306,7 @@ def analysis(s):
                 absolute[low] += 1
             else:
                 absolute[low] = 1
-    relative = {key : value / letters for key, value in absolute.items()}
-    return letters, absolute, relative
+    return letters, absolute
 
 def compare(a, b):
     sumdifference = 0
@@ -2320,8 +2320,53 @@ def problem59(fn = "euler59.txt"):
     best_key = (0, 0, 0)
     for key in keygen(97, 123):
         s = "".join(decipher(msg, key))
-        letters, absolute, relative = analysis(s)
+        letters, absolute = analysis(s)
+        relative = {key : value / letters for key, value in absolute.items()}
         sumdif = compare(relative, english)
+        if sumdif < best_sumdif:
+            best_sumdif = sumdif
+            best_key = key
+    s = "".join(decipher(msg, best_key))
+    return sum(ord(c) for c in s)
+"""
+
+def decipher(msg, key):
+    for i, c in enumerate(msg):
+        yield chr(c ^ key[i % 3])
+
+def keygen(xmin, xmax):
+    for i in range(xmin,xmax):
+        for j in range(xmin,xmax):
+            for k in range(xmin, xmax):
+                yield (i, j, k)
+
+english = (0.08167, 0.01492, 0.02782, 0.04253, 0.12702,
+    0.02228, 0.02015, 0.06094, 0.06966, 0.0153, 0.0772,
+    0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095,
+    0.05987, 0.06327, 0.09056, 0.02758, 0.00978, 0.02360,
+    0.00150, 0.01974, 0.00074)
+
+def analysis(s):
+    absolute = [0] * 26
+    total = 0
+    for c in s:
+        if c.isalpha():
+            total += 1
+            low = c.lower()
+            absolute[ord(low) - 97] += 1
+    return total, absolute
+
+def problem59(fn = "euler59.txt"):
+    msg = [int(n) for n in open(fn).read().split()]
+    best_sumdif = 999999.9
+    best_key = (0, 0, 0)
+    for key in keygen(97, 123):
+        s = "".join(decipher(msg, key))
+        letters, absolute = analysis(s)
+        sumdif = 0
+        for i in range(26):
+            relative = absolute[i] / letters
+            sumdif += abs(relative - english[i])
         if sumdif < best_sumdif:
             best_sumdif = sumdif
             best_key = key
@@ -2580,7 +2625,6 @@ Antwoord: 7,273
 """ adapted from opdracht18 """
 def problem67(fn = "euler67.txt", root = 100):
     triangle2 = [int(n) for n in open(fn).read().split()]
-    print(sum(triangle2))
     while root > 1:
         for i in range(root - 1):
             j = triangle(root - 2) + i
@@ -4656,7 +4700,9 @@ import concurrent.futures
 def runjob(n):
     ts = time.time()
     ret = runn2(n)
-    assert ret == answers[n - 1]
+    #assert ret == answers[n - 1]
+    if ret != answers[n - 1]:
+        print("error")
     print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
 
 def runm(l = list(range(1, 102 + 1))):

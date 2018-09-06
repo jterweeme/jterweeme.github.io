@@ -74,14 +74,15 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 
 Antwoord: 233,168
 */
-    static UInt32 summation(UInt32 n, UInt32 max)
-    {   UInt32 len = max / n;
-        return ((len * (len + 1)) >> 1) * n;
-    }
 
-    static UInt32 problem1()
-    {   return summation(3, 999) + summation(5, 999) - summation(15, 999);
-    }
+static UInt32 summation(UInt32 n, UInt32 max)
+{   UInt32 len = max / n;
+    return ((len * (len + 1)) >> 1) * n;
+}
+
+static UInt32 problem1()
+{   return summation(3, 999) + summation(5, 999) - summation(15, 999);
+}
 
 /*
 #2 Even Fibonacci numbers
@@ -97,18 +98,18 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 */
 
-    static UInt32 problem2(UInt32 max = 4000000)
-    {   UInt32 term1 = 1, term2 = 2, temp = 0, sum = 2;
-        while (true)
-        {
-            temp = term1 + term2;
-            if (temp > max) break;
-            if (temp % 2 == 0) sum += temp;
-            term1 = term2;
-            term2 = temp;
-        }
-        return sum;
+static UInt32 problem2(UInt32 max = 4000000)
+{   UInt32 term1 = 1, term2 = 2, temp = 0, sum = 2;
+    while (true)
+    {
+        temp = term1 + term2;
+        if (temp > max) break;
+        if (temp % 2 == 0) sum += temp;
+        term1 = term2;
+        term2 = temp;
     }
+    return sum;
+}
 
 /*
 #3 Largest prime factor
@@ -119,17 +120,17 @@ What is the largest prime factor of the number 600,851,475,143?
 Antwoord: 6,857
 */
 
-    static UInt64 problem3(UInt64 n = 600851475143)
-    {   Sieve sieve = new Sieve(9999);
-        List<UInt32> lprimes = new List<UInt32>();
-        while (sieve.hasNext())
-            lprimes.Add(sieve.next());
-        PrimeFactors pf = new PrimeFactors(lprimes, n);
-        UInt64 xmax = 0;
-        while (pf.hasNext())
-            xmax = Math.Max(xmax, pf.next());
-        return xmax;
-    }
+static UInt64 problem3(UInt64 n = 600851475143)
+{   Sieve sieve = new Sieve(9999);
+    List<UInt32> lprimes = new List<UInt32>();
+    while (sieve.hasNext())
+        lprimes.Add(sieve.next());
+    PrimeFactors pf = new PrimeFactors(lprimes, n);
+    UInt64 xmax = 0;
+    while (pf.hasNext())
+        xmax = Math.Max(xmax, pf.next());
+    return xmax;
+}
 
 /*
 #4 Largest palindrome product
@@ -178,17 +179,17 @@ divisible by all of the numbers from 1 to 20?
 Antwoord: 232,792,560
 */
 
-    static bool isdivisible(UInt32 n, UInt32 lower, UInt32 max)
-    {   for (UInt32 i = lower; i <= max; i++) if (n % i > 0) return false;
-        return true;
-    }
+static bool isdivisible(UInt32 n, UInt32 lower, UInt32 max)
+{   for (UInt32 i = lower; i <= max; i++) if (n % i > 0) return false;
+    return true;
+}
 
-    static UInt32 problem5(UInt32 lower = 11, UInt32 max = 20)
-    {   UInt32 start = 2520, number = start;
-        while (isdivisible(number, lower, max) == false)
-            number += start;
-        return number;
-    }
+static UInt32 problem5(UInt32 lower = 11, UInt32 max = 20)
+{   UInt32 start = 2520, number = start;
+    while (isdivisible(number, lower, max) == false)
+        number += start;
+    return number;
+}
 
 /*
 #6 Sum square difference
@@ -225,14 +226,14 @@ What is the 10 001st prime number?
 Antwoord: 104,743
 */
 
-    static UInt32 problem7(UInt32 n = 10001)
-    {
-        Sieve sieve = new Sieve(999999);
-        UInt32 ret = 0;
-        for (UInt32 i = 0; i < n; i++)
-            ret = sieve.next();
-        return ret;
-    }
+static UInt32 problem7(UInt32 n = 10001)
+{
+    Sieve sieve = new Sieve(999999);
+    UInt32 ret = 0;
+    for (UInt32 i = 0; i < n; i++)
+        ret = sieve.next();
+    return ret;
+}
 
 /*
 #8 Largest product in a series
@@ -246,48 +247,49 @@ have the greatest product. What is the value of this product?
 Antwoord: 23,514,624,000
 */
 
-    const string series8 = "73167176531330624919225119674426574742355349194934" +
-        "96983520312774506326239578318016984801869478851843" +
-        "85861560789112949495459501737958331952853208805511" +
-        "12540698747158523863050715693290963295227443043557" +
-        "66896648950445244523161731856403098711121722383113" +
-        "62229893423380308135336276614282806444486645238749" +
-        "30358907296290491560440772390713810515859307960866" +
-        "70172427121883998797908792274921901699720888093776" +
-        "65727333001053367881220235421809751254540594752243" +
-        "52584907711670556013604839586446706324415722155397" +
-        "53697817977846174064955149290862569321978468622482" +
-        "83972241375657056057490261407972968652414535100474" +
-        "82166370484403199890008895243450658541227588666881" +
-        "16427171479924442928230863465674813919123162824586" +
-        "17866458359124566529476545682848912883142607690042" +
-        "24219022671055626321111109370544217506941658960408" +
-        "07198403850962455444362981230987879927244284909188" +
-        "84580156166097919133875499200524063689912560717606" +
-        "05886116467109405077541002256983155200055935729725" +
-        "71636269561882670428252483600823257530420752963450";
+const string series8 = "73167176531330624919225119674426574742355349194934" +
+    "96983520312774506326239578318016984801869478851843" +
+    "85861560789112949495459501737958331952853208805511" +
+    "12540698747158523863050715693290963295227443043557" +
+    "66896648950445244523161731856403098711121722383113" +
+    "62229893423380308135336276614282806444486645238749" +
+    "30358907296290491560440772390713810515859307960866" +
+    "70172427121883998797908792274921901699720888093776" +
+    "65727333001053367881220235421809751254540594752243" +
+    "52584907711670556013604839586446706324415722155397" +
+    "53697817977846174064955149290862569321978468622482" +
+    "83972241375657056057490261407972968652414535100474" +
+    "82166370484403199890008895243450658541227588666881" +
+    "16427171479924442928230863465674813919123162824586" +
+    "17866458359124566529476545682848912883142607690042" +
+    "24219022671055626321111109370544217506941658960408" +
+    "07198403850962455444362981230987879927244284909188" +
+    "84580156166097919133875499200524063689912560717606" +
+    "05886116467109405077541002256983155200055935729725" +
+    "71636269561882670428252483600823257530420752963450";
 
-    static UInt64 problem8(string s = series8)
-    {
-        return 0;
+static UInt64 problem8(string s = series8)
+{
 #if false
-        UInt64 cur = 0, best = 0;
-        
-        foreach (char c in s)
+    return 0;
+#else
+    UInt64 cur = 0, best = 0;
+    
+    foreach (char c in s)
+    {
+        cur = (cur % 1000000000000) * 10 + Convert.ToUInt64(c);
+        UInt64 peel = cur;
+        UInt64 product = 1;
+        while (peel > 0)
         {
-            cur = (cur % 1000000000000) * 10 + Convert.ToUInt64(c);
-            UInt64 peel = cur;
-            UInt64 product = 1;
-            while (peel > 0)
-            {
-                product *= peel % 10;
-                peel = peel / 10;
-            }
-            if (product > best) best = product;
+            product *= peel % 10;
+            peel = peel / 10;
         }
-        return best;
-#endif
+        if (product > best) best = product;
     }
+    return best;
+#endif
+}
 
 /*
 #9 Special Pythagorean triplet
@@ -303,16 +305,16 @@ Find the product abc.
 Antwoord: 31,875,000
 */
 
-    static UInt32 problem9(UInt32 search = 1000)
-    {   for (UInt32 a = 1; a <= search - 2; a++)
-        {   for (UInt32 b = 1; b <= search - 2; b++)
-            {   UInt32 c = search - a - b;
-                if (a * a + b * b == c * c)
-                    return a * b * c;
-            }
+static UInt32 problem9(UInt32 search = 1000)
+{   for (UInt32 a = 1; a <= search - 2; a++)
+    {   for (UInt32 b = 1; b <= search - 2; b++)
+        {   UInt32 c = search - a - b;
+            if (a * a + b * b == c * c)
+                return a * b * c;
         }
-        return 0;
     }
+    return 0;
+}
 
 /*
 #10 Summation of primes
@@ -324,13 +326,13 @@ Find the sum of all the primes below two million.
 Antwoord: 142,913,828,922
 */
 
-    static UInt64 problem10(int limit = 2000000)
-    {   Sieve sieve = new Sieve(limit);
-        UInt64 sum = 0;
-        while (sieve.hasNext())
-            sum += sieve.next();
-        return sum;
-    }
+static UInt64 problem10(int limit = 2000000)
+{   Sieve sieve = new Sieve(limit);
+    UInt64 sum = 0;
+    while (sieve.hasNext())
+        sum += sieve.next();
+    return sum;
+}
 
 /*
 #11 Largest product in a grid
@@ -424,6 +426,48 @@ What is the value of the first triangle number to have over five hundred divisor
 Antwoord: 76,576,500
 */
 
+static UInt32 num_divisors(UInt32 n)
+{
+    if (n % 2 == 0) n = n >> 1;
+    UInt32 divisors = 1, count = 0;
+    while (n % 2 == 0)
+    {
+        count++;
+        n = n >> 1;
+    }
+    divisors = divisors * (count + 1);
+    UInt32 p = 3;
+    while (n != 1)
+    {
+        count = 0;
+        while (n % p == 0)
+        {   count++;
+            n = n / p;
+        }
+        divisors = divisors * (count + 1);
+        p += 2;
+    }
+    return divisors;
+}
+
+static UInt32 find_triangular_index(UInt16 factor_limit)
+{   UInt32 n = 1;
+    UInt32 lnum = num_divisors(n);
+    UInt32 rnum = num_divisors(n + 1);
+    while (lnum * rnum < factor_limit)
+    {   lnum = rnum;
+        rnum = num_divisors(++n + 1);
+    }
+    return n;
+}
+
+static UInt32 problem12()
+{
+    UInt32 i = find_triangular_index(500);
+    UInt32 ret = ((i * (i + 1)) >> 1);
+    return ret;
+}
+
 /*
 #13 Large sum
 
@@ -431,6 +475,56 @@ Work out the first ten digits of the sum of the following one-hundred 50-digit n
 
 Antwoord: 5,537,376,230
 */
+
+static UInt32 problem13()
+{
+    return 0;
+}
+
+/*
+#14 Longest Collatz sequence
+
+The following iterative sequence is defined for the set of positive integers:
+
+n -> n/2 (n is even)
+n -> 3n + 1 (n is odd)
+
+Using the rule above and starting with 13, we generate the following sequence:
+13 -> 40 -> 20 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
+
+It can be seen that this sequence (starting at 13 and finishing at 1)
+contains 10 terms. Although it has not been proved yet (Collatz Problem),
+it is thought that all starting numbers finish at 1.
+
+Which starting number, under one million, produces the longest chain?
+
+NOTE: Once the chain starts the terms are allowed to go above one million.
+
+Antwoord: 837,799
+*/
+
+static UInt32 collatz(UInt32 n)
+{   UInt32 count = 1;
+    while (n > 1)
+    {   n = n % 2 == 0 ? n >> 1 : n * 3 + 1;
+        count++;
+    }
+    return count;
+}
+
+static UInt32 problem14()
+{
+    UInt32 lower = 1, upper = 1000000;
+    UInt32 best_start = 0, best_length = 0;
+    for (UInt32 i = lower; i < upper; i++)
+    {   UInt32 length = collatz(i);
+        if (length > best_length)
+        {   best_start = i;
+            best_length = length;
+        }
+    }
+    return best_start;
+}
 
 /*
 #15 Lattice paths
@@ -442,6 +536,70 @@ How many such routes are there through a 20x20 grid?
 
 Antwoord: 137,846,528,820
 */
+
+static UInt64 problem15()
+{
+    UInt64 size = 20;
+    UInt64 paths = 1;
+    for (UInt64 i = 0; i < size; i++)
+        paths = (paths * (2 * size - i)) / (i + 1);
+    return paths;
+}
+
+/*
+#16 Power digit sum
+
+2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+
+What is the sum of the digits of the number 2^1000?
+
+Antwoord: 1,366
+*/
+
+static UInt32 problem16()
+{
+    return 0;
+}
+
+static UInt32 problem17()
+{
+    return 0;
+}
+
+static UInt32 problem18()
+{
+    return 0;
+}
+
+static UInt32 problem19()
+{
+    return 0;
+}
+
+static UInt32 problem20()
+{
+    return 0;
+}
+
+static UInt32 problem21()
+{
+    return 0;
+}
+
+static UInt32 problem22()
+{
+    return 0;
+}
+
+static UInt32 problem23()
+{
+    return 0;
+}
+
+static UInt32 problem24()
+{
+    return 0;
+}
 
 /*
 #25: 1000-digit Fibonacci number
@@ -472,26 +630,27 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 Antwoord: 4,782
 */  
 
-    static UInt64 problem25()
-    {
-        return 0;
-#if false
-        int i = 0;
-        int cnt = 2;
-        BigInteger limit = BigInteger.Pow(10, 999);
-        BigInteger[] fib = new BigInteger[3];
-         
-        fib[0] = 1;
-        fib[2] = 1;
-         
-        while (fib[i] <= limit) {
-            i = (i + 1) % 3;
-            cnt++;
-            fib[i] = fib[(i + 1) % 3] + fib[(i + 2) % 3];
-        }
-        return i;
-#endif
+static UInt64 problem25()
+{
+#if true
+    return 0;
+#else
+    int i = 0;
+    int cnt = 2;
+    BigInteger limit = BigInteger.Pow(10, 999);
+    BigInteger[] fib = new BigInteger[3];
+     
+    fib[0] = 1;
+    fib[2] = 1;
+     
+    while (fib[i] <= limit) {
+        i = (i + 1) % 3;
+        cnt++;
+        fib[i] = fib[(i + 1) % 3] + fib[(i + 2) % 3];
     }
+    return i;
+#endif
+}
 
 /*
 #39: Integer right triangles
@@ -525,19 +684,19 @@ Antwoord: 840
 (399, 40, 401)
 */
 
-    static UInt32 problem39()
-    {   UInt32 best_p = 0, best_solutions = 0;
-        for (UInt32 p = 100; p <= 1000; p += 2)
-        {   UInt32 solutions = 0;
-            for (UInt32 a = 2; a < p / 3; a++)
-                solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? (UInt32)1 : (UInt32)0;
-            if (solutions > best_solutions)
-            {   best_solutions = solutions;
-                best_p = p;
-            }
+static UInt32 problem39()
+{   UInt32 best_p = 0, best_solutions = 0;
+    for (UInt32 p = 100; p <= 1000; p += 2)
+    {   UInt32 solutions = 0;
+        for (UInt32 a = 2; a < p / 3; a++)
+            solutions += (p * (p - 2 * a) % (2 * (p - a)) == 0) ? (UInt32)1 : (UInt32)0;
+        if (solutions > best_solutions)
+        {   best_solutions = solutions;
+            best_p = p;
         }
-        return best_p;
     }
+    return best_p;
+}
 
 /*
 #62: Cubic permutations
@@ -553,50 +712,50 @@ five permutations of its digits are cube.
 Antwoord: 127,035,954,683
 */
 
-    class Cube
-    {
-        public long N { get; set; }
-        public int Perms { get; set; }
+class Cube
+{
+    public long N { get; set; }
+    public int Perms { get; set; }
+}
+
+public static long makeSmallestPerm(long n)
+{
+    long k = n;
+    int[] digits = new int[10];
+    long retVal = 0;
+
+    while (k > 0) {
+        digits[k % 10]++;
+        k /= 10;
     }
 
-    public static long makeSmallestPerm(long n)
-    {
-        long k = n;
-        int[] digits = new int[10];
-        long retVal = 0;
+    for (int i = 9; i >= 0; i--)
+        for (int j = 0; j < digits[i]; j++)
+            retVal = retVal * 10 + i;
+    return retVal;
+}
 
-        while (k > 0) {
-            digits[k % 10]++;
-            k /= 10;
+public static long problem62() {
+    Cube result = null;
+    long n = 345;
+    bool found = false;
+    SortedList<long, Cube> cubes = new SortedList<long, Cube>();
+
+    while (!found)
+    {
+        n++;
+        long smallestPerm = makeSmallestPerm(n*n*n);
+        if (!cubes.ContainsKey(smallestPerm)) {
+            cubes.Add(smallestPerm, new Cube {N=n, Perms = 0});
         }
 
-        for (int i = 9; i >= 0; i--)
-            for (int j = 0; j < digits[i]; j++)
-                retVal = retVal * 10 + i;
-        return retVal;
-    }
-
-    public static long problem62() {
-        Cube result = null;
-        long n = 345;
-        bool found = false;
-        SortedList<long, Cube> cubes = new SortedList<long, Cube>();
-
-        while (!found)
-        {
-            n++;
-            long smallestPerm = makeSmallestPerm(n*n*n);
-            if (!cubes.ContainsKey(smallestPerm)) {
-                cubes.Add(smallestPerm, new Cube {N=n, Perms = 0});
-            }
-
-            if (++cubes[smallestPerm].Perms == 5) {
-                found = true;
-                result = cubes[smallestPerm];
-            }
+        if (++cubes[smallestPerm].Perms == 5) {
+            found = true;
+            result = cubes[smallestPerm];
         }
-        return result.N*result.N*result.N;
     }
+    return result.N*result.N*result.N;
+}
 
 
 /*
@@ -621,105 +780,105 @@ from the top left to the bottom right by moving left, right, up, and down.
 Antwoord: 425,185
 */
 
-    static public int Astar(int[,] grid, int minval)
-    {
-        int root = grid.GetLength(0);
-        int[,] g = new int[root, root];
-        int[,] h = new int[root, root];
-        int[,] searched = new int[root, root];
+static public int Astar(int[,] grid, int minval)
+{
+    int root = grid.GetLength(0);
+    int[,] g = new int[root, root];
+    int[,] h = new int[root, root];
+    int[,] searched = new int[root, root];
 
-        SortedList<Tuple<int,int>, Tuple<int, int>> openList;
-        openList = new SortedList<Tuple<int,int>, Tuple<int, int>>();
+    SortedList<Tuple<int,int>, Tuple<int, int>> openList;
+    openList = new SortedList<Tuple<int,int>, Tuple<int, int>>();
 
-        for (int i = 0; i < root; i++)
-        {   for (int j = 0; j < root; j++) {
-                h[i, j] = minval*(2*(root - 1)+1-i-j);
-                g[i, j] = int.MaxValue;
-            }
+    for (int i = 0; i < root; i++)
+    {   for (int j = 0; j < root; j++) {
+            h[i, j] = minval*(2*(root - 1)+1-i-j);
+            g[i, j] = int.MaxValue;
         }
+    }
 
-        //Add the start square
-        g[0,0] = grid[0,0];
-        openList.Add(new Tuple<int,int>(g[0, 0] + h[0, 0],0), new Tuple<int, int>(0, 0));
+    //Add the start square
+    g[0,0] = grid[0,0];
+    openList.Add(new Tuple<int,int>(g[0, 0] + h[0, 0],0), new Tuple<int, int>(0, 0));
 
-        while (searched[root-1, root-1] < 2)
-        {
-            Tuple<int, int> current = openList.ElementAt(0).Value;
-            openList.RemoveAt(0);
-            int ci = current.Item1;
-            int cj = current.Item2;
-            searched[current.Item1, current.Item2] = 2;
+    while (searched[root-1, root-1] < 2)
+    {
+        Tuple<int, int> current = openList.ElementAt(0).Value;
+        openList.RemoveAt(0);
+        int ci = current.Item1;
+        int cj = current.Item2;
+        searched[current.Item1, current.Item2] = 2;
 
-            //Check the four adjacent squares
-            for (int k = 0; k < 4; k++)
-            {   int cinew = 0, cjnew = 0;
-                switch (k)
-                {
-                    case 0: //Check the square above
-                        cinew = ci - 1;
-                        cjnew = cj;
-                        break;
-                    case 1: //Check the square below
-                        cinew = ci + 1;
-                        cjnew = cj;
-                        break;
-                    case 2: //Check the square right
-                        cinew = ci;
-                        cjnew = cj+1;
-                        break;
-                    case 3: //Check the square left
-                        cinew = ci;
-                        cjnew = cj -1;
-                        break;
-                }
-                if (cinew >= 0 && cinew < root && cjnew >= 0 && cjnew < root &&
-                    searched[cinew, cjnew] < 2)
-                {
-                    if (g[cinew, cjnew] > g[ci, cj] + grid[cinew, cjnew])
-                    {   g[cinew, cjnew] = g[ci, cj] + grid[cinew, cjnew];
-                        if(searched[cinew, cjnew] == 1)
-                        {   int index = openList.IndexOfValue(new Tuple<int, int>(cinew, cjnew));
-                            openList.RemoveAt(index);
-                        }
-                        int l = 0;
-                        while (true)
-                        {   Tuple<int,int> tpl;
-                            tpl = new Tuple<int,int>(g[cinew, cjnew] + h[cinew, cjnew],l);
-                            if (openList.ContainsKey(tpl) == false) break;
-                            l++;
-                        }
-                        Tuple<int,int> tpl2;
-                        tpl2 = new Tuple<int,int>(g[cinew, cjnew] + h[cinew, cjnew],l);
-                        openList.Add(tpl2, new Tuple<int, int>(cinew, cjnew));
-                        searched[cinew, cjnew] = 1;
+        //Check the four adjacent squares
+        for (int k = 0; k < 4; k++)
+        {   int cinew = 0, cjnew = 0;
+            switch (k)
+            {
+                case 0: //Check the square above
+                    cinew = ci - 1;
+                    cjnew = cj;
+                    break;
+                case 1: //Check the square below
+                    cinew = ci + 1;
+                    cjnew = cj;
+                    break;
+                case 2: //Check the square right
+                    cinew = ci;
+                    cjnew = cj+1;
+                    break;
+                case 3: //Check the square left
+                    cinew = ci;
+                    cjnew = cj -1;
+                    break;
+            }
+            if (cinew >= 0 && cinew < root && cjnew >= 0 && cjnew < root &&
+                searched[cinew, cjnew] < 2)
+            {
+                if (g[cinew, cjnew] > g[ci, cj] + grid[cinew, cjnew])
+                {   g[cinew, cjnew] = g[ci, cj] + grid[cinew, cjnew];
+                    if(searched[cinew, cjnew] == 1)
+                    {   int index = openList.IndexOfValue(new Tuple<int, int>(cinew, cjnew));
+                        openList.RemoveAt(index);
                     }
+                    int l = 0;
+                    while (true)
+                    {   Tuple<int,int> tpl;
+                        tpl = new Tuple<int,int>(g[cinew, cjnew] + h[cinew, cjnew],l);
+                        if (openList.ContainsKey(tpl) == false) break;
+                        l++;
+                    }
+                    Tuple<int,int> tpl2;
+                    tpl2 = new Tuple<int,int>(g[cinew, cjnew] + h[cinew, cjnew],l);
+                    openList.Add(tpl2, new Tuple<int, int>(cinew, cjnew));
+                    searched[cinew, cjnew] = 1;
                 }
             }
-        } 
-        return g[root-1, root-1];
-    }
-
-    static int problem83(string fn = "euler83.txt")
-    {
-        int [,] grid;
-        int lines = 0;
-        string line;
-        string[] linePieces;
-        int minval = int.MaxValue;
-        StreamReader r = new StreamReader(fn);
-        while (r.ReadLine() != null) lines++;
-        grid = new int[lines, lines];
-        r.BaseStream.Seek(0, SeekOrigin.Begin);
-        for (int j = 0; (line = r.ReadLine()) != null; j++)
-        {   linePieces = line.Split(' ');
-            for (int i = 0; i < linePieces.Length; i++)
-            {   grid[j, i] = int.Parse(linePieces[i]);
-                minval = (minval > grid[j, i]) ? grid[j, i] : minval;
-            }
         }
-        r.Close();
-        return Astar(grid, minval);
+    } 
+    return g[root-1, root-1];
+}
+
+static int problem83(string fn = "euler83.txt")
+{
+    int [,] grid;
+    int lines = 0;
+    string line;
+    string[] linePieces;
+    int minval = int.MaxValue;
+    StreamReader r = new StreamReader(fn);
+    while (r.ReadLine() != null) lines++;
+    grid = new int[lines, lines];
+    r.BaseStream.Seek(0, SeekOrigin.Begin);
+    for (int j = 0; (line = r.ReadLine()) != null; j++)
+    {   linePieces = line.Split(' ');
+        for (int i = 0; i < linePieces.Length; i++)
+        {   grid[j, i] = int.Parse(linePieces[i]);
+            minval = (minval > grid[j, i]) ? grid[j, i] : minval;
+        }
     }
+    r.Close();
+    return Astar(grid, minval);
+}
 
 /*
 #84: Monopoly odds
@@ -861,8 +1020,10 @@ Antwoord: 101,524
     }
 
     static UInt64[] answers = {233168, 4613732, 6857, 906609, 232792560,
-        25164150, 104743, 0, 31875000, 142913828922, 70600674, 76576500,
-        5537376230, 837799, 137846528820};
+        25164150, 104743, 23514624000, 31875000, 142913828922, 70600674, 76576500,
+        5537376230, 837799, 137846528820, 1366, 21124, 1074, 171, 648, 31626,
+        871198282, 4179871, 2783915460, 4782, 983, 0, 669171001, 9183, 443839,
+        73682, 45228, 100, 40730, 55, 872187, 748317};
 
     static UInt64 run(UInt32 p)
     {
@@ -879,6 +1040,10 @@ Antwoord: 101,524
         case 9: return problem9();
         case 10: return problem10();
         case 11: return problem11();
+        case 12: return problem12();
+        case 13: return problem13();
+        case 14: return problem14();
+        case 15: return problem15();
         }
         return 0;
     }
@@ -888,14 +1053,14 @@ Antwoord: 101,524
         UInt64 answer = run(p);
 
         if (answer != answers[p - 1])
-            throw new System.Exception("error");
+            Console.WriteLine("Error");
 
         Console.WriteLine("#" + p + ": " + answer);
     }
 
     static void Main()
     {
-        for (UInt32 i = 1; i <= 11; i++)
+        for (UInt32 i = 1; i <= 15; i++)
             runjob(i);
         Console.WriteLine(problem25());
         Console.WriteLine(problem39());
