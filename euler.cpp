@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <math.h>
 #include <map>
 #include <ctime>
 #include <vector>
@@ -2538,8 +2537,7 @@ Antwoord: 142,857
 */
 
 static bool test52(uint32_t n)
-{
-    vector<uint8_t> nset;
+{   vector<uint8_t> nset;
     for (uint32_t x = n; x; x = x / 10) nset.push_back(x % 10);
     for (uint32_t m = 2; m <= 6; m++)
     {   vector<uint8_t> nset2;
@@ -3132,9 +3130,60 @@ Antwoord: 26,033
 13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
 */
 
+static bool comb(uint64_t a, uint64_t b)
+{
+    return isPrime(a * myPow<uint64_t>(10, decimals(b) + b)) &&
+        isPrime(b * myPow<uint64_t>(10, decimals(a) + a));
+}
+
+static uint32_t opdracht60()
+{
+    vector<uint32_t> lprimes;
+    Sieve sieve(10000);
+    while (sieve.hasNext())
+        lprimes.push_back(sieve.next());
+    for (vector<uint32_t>::iterator ita = lprimes.begin(); ita != lprimes.end(); ita++)
+    {
+        for (vector<uint32_t>::iterator itb = lprimes.begin(); itb != lprimes.end(); itb++)
+        {
+            if (*itb < *ita) continue;
+            if (comb(*ita, *itb))
+            {
+                for (vector<uint32_t>::iterator itc = lprimes.begin();
+                    itc != lprimes.end(); itc++)
+                {
+                    if (*itc < *itb) continue;
+                    if (comb(*ita, *itc) && comb(*itb, *itc))
+                    {
+                        for (vector<uint32_t>::iterator itd = lprimes.begin();
+                            itd != lprimes.end(); itd++)
+                        {
+                            if (*itd < *itc) continue;
+                            if (comb(*ita, *itd) && comb(*itb, *itd) && comb(*itc, *itd))
+                            {
+                                for (vector<uint32_t>::iterator ite = lprimes.begin();
+                                    ite != lprimes.end(); ite++)
+                                {
+                                    if (*ite < *itd) continue;
+                                    if (comb(*ita, *ite) && comb(*itb, *ite) &&
+                                        comb(*itc, *ite) && comb(*itd, *ite))
+                                    {
+                                        return *ita + *itb + *itc + *itd + *ite;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 static string problem60()
 {
-    return twostring<uint32_t>(0);
+    return twostring<uint32_t>(opdracht60());
 }
 
 static string problem61()
@@ -3193,22 +3242,39 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 */
 
+//https://stackoverflow.com/questions/35968963/
+//trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
+static const double LN10 = 2.3025850929940456840179914546844;
+
+static double xln(double x)
+{   double old_sum = 0.0, xmlxpl = (x - 1) / (x + 1);
+    double xmlxpl_2 = xmlxpl * xmlxpl, denom = 1.0;
+    double frac = xmlxpl;
+    double term = frac;                 // denom start from 1.0
+    double sum = term;
+    while (sum != old_sum)
+        old_sum = sum, denom += 2.0, frac *= xmlxpl_2, sum += frac / denom;
+    return 2.0 * sum;
+}
+
+static double xlog10(double x)
+{   return xln(x) / LN10;    
+}
+
 static uint32_t decipow(uint32_t base, uint32_t e)
-{
-    return (uint32_t)(e * log10(base)) + 1;
+{   return (uint32_t)(e * xlog10(base)) + 1;
 }
 
 static string problem63()
-{
-    uint64_t xsum = 0;
-    for (uint64_t e = 1; e < 99; e++)
-    {   uint64_t subsum = 0;
-        for (uint64_t base = 1; base < 10; base++)
+{   uint32_t xsum = 0;
+    for (uint32_t e = 1; e < 99; e++)
+    {   uint32_t subsum = 0;
+        for (uint32_t base = 1; base < 10; base++)
             subsum += decipow(base, e) == e;
         xsum += subsum;
         if (subsum == 0) break;
     }
-    return twostring<uint64_t>(xsum);
+    return twostring<uint32_t>(xsum);
 }
 
 /*

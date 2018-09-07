@@ -2746,12 +2746,65 @@ static char *problem62()
     return ret;
 }
 
+/*
+#63: Powerful digit counts
+
+The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
+the 9-digit number, 134217728=8^9, is a ninth power.
+
+How many n-digit positive integers exist which are also an nth power?
+
+Antwoord: 49
+*/
+
+/*
+1^1 ~ 9^1, 4^2 ~ 9^2, 5^3 ~ 9^3, 6^4 ~ 9^4, 7^5 ~ 9^5, 7^6 ~ 9^6,
+8^7, 9^7, 8^8, 9^8, 8^9, 9^9, 8^10, 9^10, 9^11, 9^12, 9^13, 9^14,
+9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
+*/
+
+//https://stackoverflow.com/questions/35968963/
+//trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
+#define LN10 2.3025850929940456840179914546844
+
+static double xln(double x)
+{   double old_sum = 0.0, xmlxpl = (x - 1) / (x + 1);
+    double xmlxpl_2 = xmlxpl * xmlxpl, denom = 1.0;
+    double frac = xmlxpl;
+    double term = frac;                 // denom start from 1.0
+    double sum = term;
+    while (sum != old_sum)
+        old_sum = sum, denom += 2.0, frac *= xmlxpl_2, sum += frac / denom;
+    return 2.0 * sum;
+}
+
+static double xlog10(double x)
+{   return xln(x) / LN10;
+}
+
+static uint32_t decipow(uint32_t base, uint32_t e)
+{   return (uint32_t)(e * xlog10(base)) + 1;
+}
+
 static char *problem63()
-{
+{   uint32_t xsum = 0, e;
+    for (e = 1; e < 99; e++)
+    {   uint32_t subsum = 0, base;
+        for (base = 1; base < 10; base++)
+            subsum += decipow(base, e) == e;
+        xsum += subsum;
+        if (subsum == 0) break;
+    }
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, xsum);
     return ret;
 }
+
+/*
+#64: Odd period square roots
+
+Antwoord: 1,322
+*/
 
 static char *problem64()
 {
