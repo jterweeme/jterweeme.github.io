@@ -571,6 +571,17 @@ static uint64_t floorsqrt(uint64_t n)
     return i - 1;
 }
 
+static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
+{
+    uint32_t *lst = new uint32_t[target + 1];
+    for (uint32_t i = 0; i <= target; i++) lst[i] = 0;
+    lst[0] = 1;
+    for (uint32_t *it = begin; it != end; it++)
+        for (uint32_t i = *it; i < target + 1; i++)
+            lst[i] += lst[i - *it];
+    return lst[target];
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -1762,14 +1773,9 @@ Antwoord: 73,682
 */
 
 static string problem31()
-{   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
-    uint32_t ways[target + 1];
-    memset(ways, 0, (target + 1) * 4);
-    ways[0] = 1;
-    for (uint8_t i = 0; i < sizeof(coins); i++)
-        for (uint8_t j = coins[i]; j <= target; j++)
-            ways[j] += ways[j - coins[i]];
-    return twostring<uint32_t>(ways[target]);
+{
+    uint32_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
+    return twostring<uint32_t>(ways32(target, coins, coins + 8));
 }
 
 /*
@@ -3537,6 +3543,31 @@ static string problem75()
 }
 
 /*
+#76: Counting summations
+
+It is possible to write five as a sum in exactly six different ways:
+
+4 + 1
+3 + 2
+3 + 1 + 1
+2 + 2 + 1
+2 + 1 + 1 + 1
+1 + 1 + 1 + 1 + 1
+
+How many different ways can one hundred be written
+as a sum of at least two positive integers?
+
+Antwoord: 190,569,291
+*/
+
+static string problem76()
+{
+    uint32_t target = 100, coins[100];
+    for (uint32_t i = 0; i < 100; i++) coins[i] = i;
+    return twostring<uint32_t>(ways32(target, coins, coins + 100));
+}
+
+/*
 Einde opdrachten
 */
 
@@ -3619,6 +3650,7 @@ static string run2(uint32_t p)
     case 73: return problem73();
     case 74: return problem74();
     case 75: return problem75();
+    case 76: return problem76();
     }
     return 0;
 }
@@ -3753,7 +3785,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(75);
+    singlethread(76);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

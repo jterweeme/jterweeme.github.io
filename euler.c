@@ -2452,7 +2452,8 @@ Antwoord: 249
 
 static bool islychrel(uint64_t n, uint64_t it)
 {
-    for (uint64_t i = 0; i < it; i++)
+    uint64_t i = 0;
+    for (i = 0; i < it; i++)
     {   n += reverse64(n, 10);
         if (ispalindrome64(n, 10)) return false;
     }
@@ -2462,7 +2463,8 @@ static bool islychrel(uint64_t n, uint64_t it)
 static char *problem55()
 {
     uint64_t xsum = 0;
-    for (uint16_t i = 0; i < 10000; i++)
+    uint16_t i;
+    for (i = 0; i < 10000; i++)
         if (islychrel(i, 50)) xsum++;
     char *ret = malloc(50);
     xstring64(ret, xsum);
@@ -2658,19 +2660,20 @@ static char *problem59()
 
     // generate keys
     uint32_t *keys = malloc(26*26*26*4);
-    for (uint8_t i = 0; i < 26; i++)
-        for (uint8_t j = 0; j < 26; j++)
-            for (uint8_t k = 0; k < 26; k++)
+    uint8_t i, j, k;
+    for (i = 0; i < 26; i++)
+        for (j = 0; j < 26; j++)
+            for (k = 0; k < 26; k++)
                 keys[i * 26 * 26 + j * 26 + k] = (i + 97) << 24 | (j + 97) << 16 | (k + 97) << 8;
     char output[1400];
     double best_sumdif = 999999.9;
-    uint32_t best_key = 0;
-    for (uint32_t *it = keys; it != keys + 26 * 26 * 26; it++)
+    uint32_t best_key = 0, *it;
+    for (it = keys; it != keys + 26 * 26 * 26; it++)
     {   decipher(msg, msg + end, output, *it);
         uint32_t letters[26];
         uint32_t total = analysis(output, output + end, letters);
         double sumdif = 0;
-        for (uint8_t i = 0; i < 26; i++)
+        for (i = 0; i < 26; i++)
         {   double relative = (double)letters[i] / (double)total;
             double diff = relative - english[i];
             if (diff < 0) diff *= -1;
@@ -2681,7 +2684,8 @@ static char *problem59()
     }
     uint32_t xsum = 0;
     decipher(msg, msg + end, output, best_key);
-    for (char *it = output; it != output + end; it++) xsum += *it;
+    char *it2;
+    for (it2 = output; it2 != output + end; it2++) xsum += *it2;
     char *ret = malloc(50);
     xstring32(ret, xsum);
     free(keys);
