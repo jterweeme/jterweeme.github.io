@@ -579,7 +579,9 @@ static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
     for (uint32_t *it = begin; it != end; it++)
         for (uint32_t i = *it; i < target + 1; i++)
             lst[i] += lst[i - *it];
-    return lst[target];
+    uint32_t ret = lst[target];
+    delete[] lst;
+    return ret;
 }
 
 /*
@@ -3561,10 +3563,37 @@ Antwoord: 190,569,291
 */
 
 static string problem76()
-{
-    uint32_t target = 100, coins[100];
+{   uint32_t target = 100, coins[100];
     for (uint32_t i = 0; i < 100; i++) coins[i] = i;
     return twostring<uint32_t>(ways32(target, coins, coins + 100));
+}
+
+/*
+#77: Prime summations
+
+It is possible to write ten as the sum of primes in exactly five different ways:
+
+7 + 3
+5 + 5
+5 + 3 + 2
+3 + 3 + 2 + 2
+2 + 2 + 2 + 2 + 2
+
+What is the first value which can be written as the
+sum of primes in over five thousand different ways?
+
+Antwoord: 71
+*/
+
+static string problem77()
+{
+    uint32_t lprimes[100], end = 0, n;
+    Sieve sieve(100);
+    while (sieve.hasNext())
+        lprimes[end++] = sieve.next();
+    for (n = 10; n < 100; n++)
+        if (ways32(n, lprimes, lprimes + end) > 5000) break;
+    return twostring<uint32_t>(n);
 }
 
 /*
@@ -3651,6 +3680,7 @@ static string run2(uint32_t p)
     case 74: return problem74();
     case 75: return problem75();
     case 76: return problem76();
+    case 77: return problem77();
     }
     return 0;
 }
@@ -3785,7 +3815,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(76);
+    singlethread(75);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
