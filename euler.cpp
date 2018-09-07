@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include <map>
 #include <ctime>
 #include <vector>
@@ -582,6 +583,10 @@ static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
     uint32_t ret = lst[target];
     delete[] lst;
     return ret;
+}
+
+static double xabs(double n)
+{   return n < 0 ? n *= -1 : n;
 }
 
 /*
@@ -1345,33 +1350,6 @@ What is the total of all the name scores in the file?
 Antwoord: 871,198,282
 */
 
-#if 0
-static const uint8_t letterwaarde(uint8_t c)
-{   return c > 64 ? c - 64 : c;
-}
-
-static string problem22()
-{   ifstream ifs;
-    ifs.open("euler22.txt");
-    vector<string> vec;
-    string tmp;
-    while (getline(ifs, tmp))
-        if (tmp.size() > 0)
-            vec.push_back(tmp);
-    ifs.close();
-    sort(vec.begin(), vec.end());
-    uint32_t total = 0;
-    for (uint32_t i = 0; i < vec.size(); i++)
-    {   uint32_t score = 0;
-        string tmp = vec.at(i);
-        for (uint32_t j = 0; j < tmp.size(); j++)
-            score += letterwaarde(tmp.at(j));
-        score = score * (i + 1);
-        total += score;
-    }
-    return twostring(total);
-}
-#else
 static uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
@@ -1413,7 +1391,6 @@ static string problem22()
     delete[] names;
     return twostring(total);
 }
-#endif
 
 /*
 #23 Non-abundant sums
@@ -2507,26 +2484,22 @@ prime value family.
 Antwoord: 121,313
 */
 
-static void binarize51(vector<uint32_t> &out, uint32_t n)
-{   uint32_t div = 2, dec = 1;
-    while (n)
-    {   out.push_back(n % div ? dec : 0);
-        n -= n % div;
-        div *= 2;
-        dec *= 10;
-    }
-}
-
 template <typename T> static void
 family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
 {   uint32_t xlen = decimals<uint32_t>(n);
-    vector<uint32_t> bmask;
-    binarize51(bmask, mask);
-    for (uint32_t i = 0; i < bmask.size(); i++)
-        n -= bmask.at(i) * digit<uint32_t>(n, i);
+    uint32_t bmask2[64], div = 2, dec = 1, end2 = 0;
+    for (uint32_t n2 = mask; n2;)
+    {
+        bmask2[end2++] = n2 % div ? dec : 0;
+        n2 -= n2 % div;
+        div *= 2;
+        dec *= 10;
+    }
+    for (uint32_t i = 0; i < end2; i++)
+        n -= bmask2[i] * digit<uint32_t>(n, i);
     for (uint32_t i = 0; i < 10; i++)
     {   uint32_t tmp = n;
-        for (vector<uint32_t>::iterator it = bmask.begin(); it != bmask.end(); it++)
+        for (uint32_t *it = bmask2; it != bmask2 + end2; it++)
             tmp += *it * i;
         if (decimals<uint32_t>(tmp) == xlen && binSearch(beg, end, tmp))
             out.push_back(tmp);
@@ -2534,8 +2507,7 @@ family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
 }
 
 static uint32_t opdracht51()
-{
-    uint32_t primes[80000*4], end = 0;
+{   uint32_t primes[80000*4], end = 0;
     Sieve sieve(1000000);
     while (sieve.hasNext()) primes[end++] = sieve.next();
     end--;
@@ -3129,7 +3101,7 @@ static string problem59()
         double sumdif = 0;
         for (uint8_t i = 0; i < 26; i++)
         {   double relative = (double)letters[i] / (double)total;
-            sumdif += abs(relative - english[i]);
+            sumdif += xabs(relative - english[i]);
         }
         if (sumdif < best_sumdif)
             best_sumdif = sumdif, best_key = *it;
@@ -3221,13 +3193,18 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 */
 
+static uint32_t decipow(uint32_t base, uint32_t e)
+{
+    return (uint32_t)(e * log10(base)) + 1;
+}
+
 static string problem63()
 {
     uint64_t xsum = 0;
     for (uint64_t e = 1; e < 99; e++)
     {   uint64_t subsum = 0;
         for (uint64_t base = 1; base < 10; base++)
-            subsum += decimals<uint64_t>(myPow<uint64_t>(base, e)) == e;
+            subsum += decipow(base, e) == e;
         xsum += subsum;
         if (subsum == 0) break;
     }
@@ -3815,7 +3792,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(75);
+    singlethread(77);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

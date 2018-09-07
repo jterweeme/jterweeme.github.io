@@ -2512,12 +2512,21 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 """
 
+"""
+the number of decimal digits of n is 1 + floor((log_10(n))), and log_10(9^21) = 21 * log_10(9) = 21 * (.954242509...) = 20.04..., and 1 + floor(that) = 21.
+"""
+
+import math
+def decipow(base, e):
+    return math.floor(e * math.log10(base)) + 1
+
 def problem63():
     xsum = 0
     for e in range(1,99):
         subsum = 0
         for base in range(1,10):
-            subsum += decimals(base**e) == e
+            subsum += decipow(base, e) == e
+            #subsum += decimals(base**e) == e
         xsum += subsum
         if subsum == 0: break
     return xsum
