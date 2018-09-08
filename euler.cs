@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Linq;
 
 class Sieve
@@ -277,7 +278,7 @@ static UInt64 problem8(string s = series8)
     
     foreach (char c in s)
     {
-        cur = (cur % 1000000000000) * 10 + Convert.ToUInt64(c);
+        cur = (cur % 1000000000000) * 10 + (UInt64)((byte)c - 48);
         UInt64 peel = cur;
         UInt64 product = 1;
         while (peel > 0)
@@ -478,7 +479,33 @@ Antwoord: 5,537,376,230
 
 static UInt32 problem13()
 {
-    return 0;
+#if true
+    byte[] numbers2 = File.ReadAllBytes("euler13.txt");
+    byte[] numbers3 = new byte[5000];
+    UInt16 i2 = 0;
+    foreach (byte c in numbers2)
+        if (c >= 48 && c <= 57)
+            numbers3[i2++] = (byte)(c - 48);
+    byte[] totalSum = new byte[100];
+    UInt64 sum = 0;
+    byte end = 0;
+    for (byte i = 50; i > 0; i--)
+    {   for (byte j = 0; j < 100; j++)
+            sum += numbers2[j * 50 + (i - 1)];
+        totalSum[end++] = (byte)(sum % 10);
+        sum /= 10;
+    }
+    for (;sum > 0; sum /= 10)
+        totalSum[end++] = (byte)(sum % 10);
+    end--;
+#endif
+    UInt32 ret = 0;
+    for (byte i = 0; i < 10; i++)
+    {
+        Console.Write(totalSum[end--]);
+    }
+    Console.Write("\r\n");
+    return ret;
 }
 
 /*
@@ -556,10 +583,40 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1,366
 */
 
-static UInt32 problem16()
-{
-    return 0;
+static UInt32 problem16(UInt16 e = 1000)
+{   byte[] largeNum = new byte[400];
+    largeNum[0] = 2;
+    byte carry = 0;
+    UInt32 sum = 0;
+    while (--e > 0)
+    {   for (UInt16 i = 0; i < 400; i++)
+        {   largeNum[i] *= 2;
+            largeNum[i] += carry;
+            carry = (byte)(largeNum[i] / 10);
+            largeNum[i] = (byte)(largeNum[i] % 10);
+        }
+    }
+    for (UInt16 i = 0; i < 400; i++)
+        sum += largeNum[i];
+    return sum;
 }
+
+/*
+#17 Number letter counts
+
+If the numbers 1 to 5 are written out in words: one, two, three, four,
+five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+
+If all the numbers from 1 to 1000 (one thousand) inclusive
+were written out in words, how many letters would be used?
+
+NOTE: Do not count spaces or hyphens. For example, 342 (three hundred and
+forty-two) contains 23 letters and 115 (one hundred and fifteen) contains
+20 letters. The use of "and" when writing out numbers is in compliance
+with British usage.
+
+Antwoord: 21,124
+*/
 
 static UInt32 problem17()
 {
@@ -571,14 +628,82 @@ static UInt32 problem18()
     return 0;
 }
 
-static UInt32 problem19()
-{
-    return 0;
+/*
+#19 Counting Sundays
+
+You are given the following information, but you may prefer to do some research for yourself.
+
+    * 1 Jan 1900 was a Monday.
+    * Thirty days has September,
+      April, June and November.
+      All the rest have thirty-one,
+      Saving February alone,
+      Which has twenty-eight, rain or shine.
+      And on leap years, twenty-nine.
+    * A leap year occurs on any year evenly divisible by 4, but not on a
+      century unless it is divisible by 400.
+
+How many Sundays fell on the first of the month during
+the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+Antwoord: 171
+*/
+
+static bool isLeap(UInt16 year)
+{   if (year % 4 > 0) return false;
+    if (year % 100 > 0) return true;
+    return false;
 }
 
-static UInt32 problem20()
+static byte SUNDAY = 5;
+
+static UInt32 problem19()
 {
-    return 0;
+    byte[] months = new byte[] {31,28,31,30,31,30,31,31,30,31,30,31};
+    UInt32 day = 0;
+    UInt32 sunday_count = 0;
+    for (UInt16 year = 1901; year <= 2000; year++)
+    {   bool leap = isLeap(year);
+        for (byte m = 0; m < 12; m++)
+        {   if (day % 7 == SUNDAY) sunday_count++;
+            day += months[m];
+            if (leap == true && months[m] == 28) day++;
+        }
+    }
+    return sunday_count;
+}
+
+/*
+#20 Factorial digit sum
+
+n! means n x (n − 1) x ... x 3 x 2 x 1
+
+For example, 10! = 10 x 9 x ... x 3 x 2 x 1 = 3628800,
+and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
+
+Find the sum of the digits in the number 100!
+
+Antwoord: 648
+*/
+
+static UInt32 problem20(int f = 100)
+{
+    int[] buf = new int[200];
+    buf[0] = f;
+    for (int i = f - 1; i > 0; i--)
+    {
+        int carry = 0;
+        for (int j = 0; j < 200; j++)
+        {
+            buf[j] *= i;
+            buf[j] += carry;
+            carry = buf[j] / 10;
+            buf[j] = buf[j] % 10;
+        }
+    }
+    int sum = 0;
+    for (int i = 0; i < 200; i++) sum += buf[i];
+    return (UInt32)sum;
 }
 
 static UInt32 problem21()
@@ -596,9 +721,46 @@ static UInt32 problem23()
     return 0;
 }
 
+/*
+#24: Lexicographic permutations
+
+A permutation is an ordered arrangement of objects. For example, 3124 is
+one possible permutation of the digits 1, 2, 3 and 4. If all of the
+permutations are listed numerically or alphabetically, we call it
+lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
+
+012   021   102   120   201   210
+
+What is the millionth lexicographic permutation
+of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
+
+Antwoord: 2,783,915,460
+*/
+
+static int fac32(int n)
+{   int product = 1;
+    while (n > 1) product *= n--;
+    return product;
+}
+
 static UInt32 problem24()
-{
-    return 0;
+{   byte[] a = {0,1,2,3,4,5,6,7,8,9};
+    int perm = 999999, r = 0;
+    byte[] ret = new byte[20];
+    for (int j = 0; j < 10; j++)
+    {   int i = perm / fac32(9 - j);
+        perm = perm % fac32(9 - j);
+        ret[r++] = a[i];
+        for (int k = 0; k < 9 - i; k++)
+            a[i + k] = a[i + k + 1];    // rearrange a
+    }
+    UInt32 ret2 = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        ret2 *= 10;
+        ret2 += ret[i];
+    }
+    return ret2;
 }
 
 /*
@@ -632,11 +794,11 @@ Antwoord: 4,782
 
 static UInt64 problem25()
 {
-#if true
+#if false
     return 0;
 #else
-    int i = 0;
-    int cnt = 2;
+    UInt64 i = 0;
+    UInt64 cnt = 2;
     BigInteger limit = BigInteger.Pow(10, 999);
     BigInteger[] fib = new BigInteger[3];
      
@@ -648,7 +810,7 @@ static UInt64 problem25()
         cnt++;
         fib[i] = fib[(i + 1) % 3] + fib[(i + 2) % 3];
     }
-    return i;
+    return cnt;
 #endif
 }
 
@@ -1044,6 +1206,16 @@ Antwoord: 101,524
         case 13: return problem13();
         case 14: return problem14();
         case 15: return problem15();
+        case 16: return problem16();
+        case 17: return problem17();
+        case 18: return problem18();
+        case 19: return problem19();
+        case 20: return problem20();
+        case 21: return problem21();
+        case 22: return problem22();
+        case 23: return problem23();
+        case 24: return problem24();
+        case 25: return problem25();
         }
         return 0;
     }
@@ -1060,9 +1232,8 @@ Antwoord: 101,524
 
     static void Main()
     {
-        for (UInt32 i = 1; i <= 15; i++)
+        for (UInt32 i = 1; i <= 25; i++)
             runjob(i);
-        Console.WriteLine(problem25());
         Console.WriteLine(problem39());
         Console.WriteLine(problem62());
         Console.WriteLine(problem83());

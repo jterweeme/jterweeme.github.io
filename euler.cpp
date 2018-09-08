@@ -1249,7 +1249,7 @@ static string problem19()
 {   uint8_t months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     uint32_t day = 0;
     uint32_t sunday_count = 0;
-    for (uint32_t year = 1901; year <= 2000; year++)
+    for (uint16_t year = 1901; year <= 2000; year++)
     {   bool leap = isLeap(year);
         for (uint8_t m = 0; m < 12; m++)
         {   if (day % 7 == SUNDAY)

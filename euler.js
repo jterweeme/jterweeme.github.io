@@ -3246,14 +3246,68 @@ function problem62()
     return 0;
 }
 
+/*
+#63: Powerful digit counts
+
+The 5-digit number, 16807=7^5, is also a fifth power. Similarly,
+the 9-digit number, 134217728=8^9, is a ninth power.
+
+How many n-digit positive integers exist which are also an nth power?
+
+Antwoord: 49
+*/
+
+/*
+1^1 ~ 9^1, 4^2 ~ 9^2, 5^3 ~ 9^3, 6^4 ~ 9^4, 7^5 ~ 9^5, 7^6 ~ 9^6,
+8^7, 9^7, 8^8, 9^8, 8^9, 9^9, 8^10, 9^10, 9^11, 9^12, 9^13, 9^14,
+9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
+*/
+
+function decipow(base, e)
+{   return Math.floor(e * Math.log10(base)) + 1;
+}
+
 function problem63()
 {
-    return 0;
+    var xsum = 0;
+    for (var e = 1; e < 99; e++)
+    {   var subsum = 0;
+        for (var base = 1; base < 10; base++)
+            subsum += decipow(base, e) == e;
+        xsum += subsum;
+        if (subsum == 0) break;
+    }
+    return xsum;
 }
+
+/*
+#64: Odd period square roots
+
+Antwoord: 1,322
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-64-solution/
+*/
 
 function problem64()
 {
     return 0;
+    var L = 10000, odd_period = 0;
+    for (var N = 2; N <= L; N++)
+    {
+        var r = Math.floor(Math.sqrt(N));
+        var limit = Math.floor(Math.sqrt(N));
+        if (limit * limit == N) continue;
+        var k = 1, period = 0;
+        while (k != 1 || period == 0)
+        {   k = Math.floor((N - r * r) / k);
+            r = Math.floor((limit + r) / k * k - r);
+            period++;
+        }
+        if (period % 2 == 1) odd_period++;
+    }
+    return odd_period;
 }
 
 function run(p)
@@ -3349,7 +3403,7 @@ function runjob(p)
 
 function main()
 {
-    for (var i = 1; i <= 62; i++)
+    for (var i = 1; i <= 64; i++)
         runjob(i);
 }
 
