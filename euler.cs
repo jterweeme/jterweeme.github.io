@@ -65,6 +65,13 @@ class PrimeFactors
 class Euler
 {
 
+static UInt32 myPow32(UInt32 xbase, UInt32 e)
+{   if (e == 0) return 1;
+    UInt32 ret = xbase;
+    while (--e > 0) ret *= xbase;
+    return ret;
+}
+
 /*
 #1 Multiples of 3 and 5
 
@@ -144,29 +151,29 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-    static UInt32 reverse(UInt32 n, byte xbase = 10)
-    {   UInt32 rev = 0;
-        for (UInt32 temp = n; temp != 0; temp /= xbase)
-            rev = rev * xbase + temp % xbase;
-        return rev;
-    }
+static UInt32 reverse(UInt32 n, byte xbase = 10)
+{   UInt32 rev = 0;
+    for (UInt32 temp = n; temp != 0; temp /= xbase)
+        rev = rev * xbase + temp % xbase;
+    return rev;
+}
 
-    static bool ispalindrome(UInt32 n, byte xbase = 10)
-    {   return n == reverse(n, xbase);
-    }
+static bool ispalindrome(UInt32 n, byte xbase = 10)
+{   return n == reverse(n, xbase);
+}
 
-    static UInt32 problem4()
-    {
-        UInt32 best = 0;
-        for (UInt32 a = 0; a < 1000; a++)
-        {   for (UInt32 b = 0; b < 1000; b++)
-            {   UInt32 c = a * b;
-                if (ispalindrome(c) && c > best)
-                    best = c;
-            }
+static UInt32 problem4()
+{
+    UInt32 best = 0;
+    for (UInt32 a = 0; a < 1000; a++)
+    {   for (UInt32 b = 0; b < 1000; b++)
+        {   UInt32 c = a * b;
+            if (ispalindrome(c) && c > best)
+                best = c;
         }
-        return best;
     }
+    return best;
+}
 
 /*
 #5 Smallest multiple
@@ -210,13 +217,13 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-    static UInt32 problem6(UInt32 min = 1, UInt32 max = 100)
-    {   UInt32 sumsquare = 0, squaresum = 0;
-        for (UInt32 i = min; i <= max; i++) sumsquare += i * i;
-        for (UInt32 i = min; i <= max; i++) squaresum += i;
-        squaresum = squaresum * squaresum;
-        return squaresum - sumsquare;
-    }
+static UInt32 problem6(UInt32 min = 1, UInt32 max = 100)
+{   UInt32 sumsquare = 0, squaresum = 0;
+    for (UInt32 i = min; i <= max; i++) sumsquare += i * i;
+    for (UInt32 i = min; i <= max; i++) squaresum += i;
+    squaresum = squaresum * squaresum;
+    return squaresum - sumsquare;
+}
 
 /*
 #7 By listing the first six prime numbers: 2, 3, 5,
@@ -271,11 +278,7 @@ const string series8 = "73167176531330624919225119674426574742355349194934" +
 
 static UInt64 problem8(string s = series8)
 {
-#if false
-    return 0;
-#else
     UInt64 cur = 0, best = 0;
-    
     foreach (char c in s)
     {
         cur = (cur % 1000000000000) * 10 + (UInt64)((byte)c - 48);
@@ -289,7 +292,6 @@ static UInt64 problem8(string s = series8)
         if (product > best) best = product;
     }
     return best;
-#endif
 }
 
 /*
@@ -477,9 +479,9 @@ Work out the first ten digits of the sum of the following one-hundred 50-digit n
 Antwoord: 5,537,376,230
 */
 
-static UInt32 problem13()
+#if false
+static UInt64 problem13()
 {
-#if true
     byte[] numbers2 = File.ReadAllBytes("euler13.txt");
     byte[] numbers3 = new byte[5000];
     UInt16 i2 = 0;
@@ -498,8 +500,7 @@ static UInt32 problem13()
     for (;sum > 0; sum /= 10)
         totalSum[end++] = (byte)(sum % 10);
     end--;
-#endif
-    UInt32 ret = 0;
+    UInt64 ret = 0;
     for (byte i = 0; i < 10; i++)
     {
         Console.Write(totalSum[end--]);
@@ -507,6 +508,22 @@ static UInt32 problem13()
     Console.Write("\r\n");
     return ret;
 }
+#else
+static UInt64 problem13()
+{
+    BigInteger result = new BigInteger();
+    string line;
+    StreamReader r = new StreamReader("euler13.txt");
+    while ((line = r.ReadLine()) != null)
+    {
+        if (line.Length < 10) continue;
+        result += BigInteger.Parse(line);
+    }
+    r.Close();
+    result /= BigInteger.Pow(10,42);
+    return (UInt64)result;
+}
+#endif
 
 /*
 #14 Longest Collatz sequence
@@ -794,9 +811,6 @@ Antwoord: 4,782
 
 static UInt64 problem25()
 {
-#if false
-    return 0;
-#else
     UInt64 i = 0;
     UInt64 cnt = 2;
     BigInteger limit = BigInteger.Pow(10, 999);
@@ -811,7 +825,108 @@ static UInt64 problem25()
         fib[i] = fib[(i + 1) % 3] + fib[(i + 2) % 3];
     }
     return cnt;
-#endif
+}
+
+static UInt32 problem26()
+{
+    return 0;
+}
+
+static UInt32 problem27()
+{
+    return 0;
+}
+
+static UInt32 problem28(UInt32 root = 1001)
+{
+    UInt32 xsum = 1;
+    for (UInt32 step = 2, foo = 1; foo < root * root; step += 2)
+        for (UInt32 i = 0; i < 4; i++) { foo += step; xsum += foo; }
+    return xsum;
+}
+
+static UInt32 problem29()
+{
+    return 0;
+}
+
+/*
+#30: Digit fifth powers
+
+Surprisingly there are only three numbers that can
+be written as the sum of fourth powers of their digits:
+
+1634 = 1^4 + 6^4 + 3^4 + 4^4
+8208 = 8^4 + 2^4 + 0^4 + 8^4
+9474 = 9^4 + 4^4 + 7^4 + 4^4
+
+As 1 = 14 is not a sum it is not included.
+
+The sum of these numbers is 1634 + 8208 + 9474 = 19316.
+
+Find the sum of all the numbers that can be written
+as the sum of fifth powers of their digits.
+
+Antwoord: 443,839
+*/
+
+/*
+4,150 + 4,151 + 54,748 + 92,727 + 93,084 + 194,979 = 443,83
+*/
+
+static bool test30(UInt32 n, UInt32 p)
+{
+    UInt32 xsum = 0;
+    for (UInt32 tmp = n; tmp > 0; tmp = tmp / 10)
+        xsum += myPow32(tmp % 10, p);
+    return xsum == n;
+}
+
+static UInt32 problem30(UInt32 p = 5)
+{
+    UInt32 xsum = 0;
+    for (UInt32 i = 2; i < 1000000; i++) xsum += test30(i, p) ? i : 0;
+    return xsum;
+}
+
+static UInt32 problem31()
+{
+    return 0;
+}
+
+static UInt32 problem32()
+{
+    return 0;
+}
+
+static UInt32 problem33()
+{
+    return 0;
+}
+
+static UInt32 problem34()
+{
+    return 0;
+}
+
+static UInt32 problem35()
+{
+    return 0;
+}
+
+static UInt32 problem36()
+{
+    return 0;
+}
+
+static UInt32 problem37()
+{
+    return 0;
+}
+
+static UInt32 problem38()
+{
+    return 0;
 }
 
 /*
@@ -1107,34 +1222,34 @@ dice are used, find the six-digit modal string.
 Antwoord: 101,524
 */
 
-    static Random random;
-    static int cPos = 0;
-    static int ccPos = 0;
-    static int chancePos = 0;
+static Random random;
+static int cPos = 0;
+static int ccPos = 0;
+static int chancePos = 0;
 
-    static private void CC()
-    {   int[] cc = { 0, 10 };
-        ccPos = ++ccPos % 16;
-        if (ccPos < 2) cPos = cc[ccPos];
-        return;
+static private void CC()
+{   int[] cc = { 0, 10 };
+    ccPos = ++ccPos % 16;
+    if (ccPos < 2) cPos = cc[ccPos];
+    return;
+}
+
+static private void chance()
+{
+    int[] chance = { 0, 10, 11, 24, 39, 5 };
+    chancePos = ++chancePos % 16;
+    if (chancePos < 6) cPos = chance[chancePos];
+
+    if (chancePos == 6 || chancePos == 7) {
+        if (cPos == 7) cPos = 15;
+        if (cPos == 22) cPos = 25;
+        if (cPos == 36) cPos = 5;
     }
 
-    static private void chance()
-    {
-        int[] chance = { 0, 10, 11, 24, 39, 5 };
-        chancePos = ++chancePos % 16;
-        if (chancePos < 6) cPos = chance[chancePos];
-
-        if (chancePos == 6 || chancePos == 7) {
-            if (cPos == 7) cPos = 15;
-            if (cPos == 22) cPos = 25;
-            if (cPos == 36) cPos = 5;
-        }
-
-        if (chancePos == 8) cPos = (cPos == 22) ? 28 : 12;
-        if (chancePos == 9) cPos -= 3;
-        return;
-    }
+    if (chancePos == 8) cPos = (cPos == 22) ? 28 : 12;
+    if (chancePos == 9) cPos -= 3;
+    return;
+}
 
     static public int problem84()
     {   
@@ -1185,7 +1300,8 @@ Antwoord: 101,524
         25164150, 104743, 23514624000, 31875000, 142913828922, 70600674, 76576500,
         5537376230, 837799, 137846528820, 1366, 21124, 1074, 171, 648, 31626,
         871198282, 4179871, 2783915460, 4782, 983, 0, 669171001, 9183, 443839,
-        73682, 45228, 100, 40730, 55, 872187, 748317};
+        73682, 45228, 100, 40730, 55, 872187, 748317, 932718654, 840, 210,
+        7652413, 162, 16695334890};
 
     static UInt64 run(UInt32 p)
     {
@@ -1216,6 +1332,20 @@ Antwoord: 101,524
         case 23: return problem23();
         case 24: return problem24();
         case 25: return problem25();
+        case 26: return problem26();
+        case 27: return problem27();
+        case 28: return problem28();
+        case 29: return problem29();
+        case 30: return problem30();
+        case 31: return problem31();
+        case 32: return problem32();
+        case 33: return problem33();
+        case 34: return problem34();
+        case 35: return problem35();
+        case 36: return problem36();
+        case 37: return problem37();
+        case 38: return problem38();
+        case 39: return problem39();
         }
         return 0;
     }
@@ -1225,16 +1355,15 @@ Antwoord: 101,524
         UInt64 answer = run(p);
 
         if (answer != answers[p - 1])
-            Console.WriteLine("Error");
+            Console.Write("Error ");
 
         Console.WriteLine("#" + p + ": " + answer);
     }
 
     static void Main()
     {
-        for (UInt32 i = 1; i <= 25; i++)
+        for (UInt32 i = 1; i <= 39; i++)
             runjob(i);
-        Console.WriteLine(problem39());
         Console.WriteLine(problem62());
         Console.WriteLine(problem83());
         Console.WriteLine(problem84());
