@@ -3607,8 +3607,8 @@ Antwoord: 190,569,291
 
 static string problem76()
 {   uint32_t target = 100, coins[100];
-    for (uint32_t i = 0; i < 100; i++) coins[i] = i;
-    return twostring<uint32_t>(ways32(target, coins, coins + 100));
+    for (uint32_t i = 1; i < 100; i++) coins[i - 1] = i;
+    return twostring<uint32_t>(ways32(target, coins, coins + 99));
 }
 
 /*
@@ -3637,6 +3637,84 @@ static string problem77()
     for (n = 10; n < 100; n++)
         if (ways32(n, lprimes, lprimes + end) > 5000) break;
     return twostring<uint32_t>(n);
+}
+
+/*
+#78: Coin partitions
+
+Let p(n) represent the number of different ways in which n coins can be
+separated into piles. For example, five coins can be separated into piles
+in exactly seven different ways, so p(5)=7.
+
+  OOOOO
+ OOOO O
+ OOO OO
+ OOO O O
+ OO OO O
+OO O O O
+O O O O O
+
+Find the least value of n for which p(n) is divisible by one million.
+
+Antwoord: 55,374
+*/
+
+static string problem78()
+{
+    vector<int64_t> k, p;
+    p.push_back(1);
+    int64_t sgn[] = {1,1,-1,-1};
+    int64_t n = 0;
+    int64_t m = 1000000;
+    for (int64_t i = 1; i < 250; i++)
+    {
+        k.push_back(i * (3 * i - 1) / 2);
+        k.push_back(i * (3 * i - 1) / 2 + i);
+    }
+    while (p.at(n) > 0)
+    {
+        n++;
+        int64_t px = 0, i = 0;
+        while (k.at(i) <= n)
+        {   px += p.at(n - k.at(i)) * sgn[i % 4];
+            i++;
+        }
+        p.push_back(px % m);
+    }
+    return twostring<uint64_t>(n);
+}
+
+/*
+#79: Passcode derivation
+
+A common security method used for online banking is to ask the user for
+three random characters from a passcode. For example, if the passcode
+was 531278, they may ask for the 2nd, 3rd, and 5th characters; the
+expected reply would be: 317.
+
+The text file, keylog.txt, contains fifty successful login attempts.
+
+Given that the three characters are always asked for in order, analyse the
+file so as to determine the shortest possible secret passcode of unknown length.
+
+Antwoord: 73,162,890
+*/
+
+/*
+129, 160, 162, 168, 180, 289, 290, 316, 318, 319, 362, 368, 380, 389, 620, 629, 680,
+689, 690, 710, 716, 718, 719, 720, 728, 729, 731, 736, 760, 762, 769, 790, 890
+
+73162890
+*/
+
+static string problem79()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem80()
+{
+    return twostring<uint32_t>(0);
 }
 
 /*
@@ -3724,6 +3802,9 @@ static string run2(uint32_t p)
     case 75: return problem75();
     case 76: return problem76();
     case 77: return problem77();
+    case 78: return problem78();
+    case 79: return problem79();
+    case 80: return problem80();
     }
     return 0;
 }
@@ -3737,10 +3818,9 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
     "121313", "142857", "4075", "376", "249", "972", "153", "26241",
-    "107359", "26033", "28684",
-    "127035954683", "49", "1322", "272", "661", "7273",
+    "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
     "6531031914842725", "510510", "8319823", "428570", "303963552391", "7295372", "402", "161667",
-    "381138582", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
+    "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
     "101524", "2772", "1818"};
 
 
@@ -3858,7 +3938,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(77);
+    singlethread(80);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

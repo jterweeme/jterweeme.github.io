@@ -1,3 +1,7 @@
+/*
+Project Euler
+*/
+
 function reverse(n, base = 10)
 {   var rev = 0;
     for (var temp = n; temp != 0; temp = Math.floor(temp/base))
@@ -42,6 +46,18 @@ function linearSearch(a, n)
     return 0;
 }
 
+function binSearch(d, n)
+{   var first = 0, last = d.length - 1;
+    var middle = (first + last) >> 1;
+    while (first <= last)
+    {   if (d[middle] < n) first = middle + 1;
+        else if (d[middle] == n) return true;
+        else last = middle - 1;
+        middle = (first + last) >> 1;
+    }
+    return false;
+}
+
 function hasDigitsOnce(n, nset)
 {   for (var i = 0; i < n.length; i++)
     {   var nseti = linearSearch(nset, n[i]);
@@ -61,11 +77,33 @@ function isPandigital(n)
     return hasDigitsOnce(n, nset);
 }
 
+function isPrime(n)
+{
+    function reducer(n, presets = [300, 100, 8])
+    {   for (var i = 0; i < presets.length; i++)
+            if (n > presets[i] * presets[i]) return n / presets[i] |0;
+        return n;
+    }
+    if (n < 2) return false;
+    for (var i = 2; i < reducer(n); i++)
+        if (n % i == 0) return false;
+    return true;
+}
+
 function triangler(n) { return n * (n + 1) >> 1; }
 
 function triangle(n) { return Math.floor(n * (n + 1) / 2); }
 function pentagon(n) { return Math.floor(n * (3 * n - 1) / 2); }
 function hexagon(n) { return n * (2 * n - 1); }
+
+function ways(target, coins)
+{   var xways = Array(target + 1).fill(0);
+    xways[0] = 1;
+    for (var i = 0; i < coins.length; i++)
+        for (var j = coins[i]; j <= target; j++)
+            xways[j] += xways[j - coins[i]];
+    return xways[target];
+}
 
 /*
 #1 Multiples of 3 and 5
@@ -78,7 +116,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 Antwoord: 233,168
 */
 
-function opdracht1(limit = 1000)
+function problem1(limit = 1000)
 {   function summation(n, xmax)
     {   var xlen = xmax / n |0;
         return Math.floor((xlen * (xlen + 1)) / 2) * n;
@@ -100,7 +138,7 @@ exceed four million, find the sum of the even-valued terms.
 Antwoord: 4,613,732
 */
 
-function opdracht2()
+function problem2()
 {   var xmax = 4*10**6, term1 = 1, term2 = 2, temp = 0, xsum = 2;
     while ((temp = term1 + term2) <= xmax)
     {   if (temp % 2 == 0) xsum += temp;
@@ -118,7 +156,7 @@ What is the largest prime factor of the number 600,851,475,143?
 Antwoord: 6,857
 */
 
-function opdracht3()
+function problem3()
 {   function primefactors(n)
     {   var primes = [], factors = [];
         function primefactor(primes, n = 13195)
@@ -157,7 +195,7 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 Antwoord: 906,609
 */
 
-function opdracht4()
+function problem4()
 {   var best = 0;
     for (var a = 100; a < 1000; a++)
     {   for (var b = 100; b < 1000; b++)
@@ -180,7 +218,7 @@ divisible by all of the numbers from 1 to 20?
 Antwoord: 232,792,560
 */
 
-function opdracht5()
+function problem5()
 {   function isdivisible(n, l)
     {   for (var i = 0; i < l.length; i++) if (n % l[i] > 0) return 0;
         return 1;
@@ -208,7 +246,7 @@ first one hundred natural numbers and the square of the sum.
 Antwoord: 25,164,150
 */
 
-function opdracht6()
+function problem6()
 {   var sumsquare = 0, squaresum = 0;
     for (var x = 1; x <= 100; x++)
         sumsquare += x**2, squaresum += x;
@@ -224,7 +262,7 @@ What is the 10 001st prime number?
 Antwoord: 104,743
 */
 
-function opdracht7()
+function problem7()
 {   function reducer(n, presets = [300, 100, 8])
     {   for (var i = 0; i < presets.length; i++)
             if (n > presets[i] * presets[i]) return n / presets[i] |0;
@@ -252,7 +290,7 @@ Antwoord: 23,514,624,000
 
 series8 = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
 
-function opdracht8(series1 = series8)
+function problem8(series1 = series8)
 {   var best = 0;
     for (var i = 0; i < series1.length - 13; i++)
     {   var product = 1;
@@ -276,7 +314,7 @@ Find the product abc.
 Antwoord: 31,875,000
 */
 
-function opdracht9(search = 1000)
+function problem9(search = 1000)
 {   for (var a = 1; a < search - 1; a++)
     {   for (var b = 1; b < search - a; b++)
         {   var c = search - a - b;
@@ -901,16 +939,16 @@ names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER",
 "BRANDI","BLANCHE","SANDY","ROSIE","JOANNA","IRIS","EUNICE","ANGIE",
 "INEZ","LYNDA","MADELINE","AMELIA","ALBERTA","GENEVIEVE","MONIQUE",
 "JODI","JANIE","MAGGIE","KAYLA","SONYA","JAN","LEE","KRISTINE","CANDACE",
-"FANNIE","MARYANN","OPAL","ALISON","YVETTE","MELODY","LUZ",
-"SUSIE","OLIVIA","FLORA","SHELLEY","KRISTY",
-"MAMIE","LULA","LOLA","VERNA","BEULAH","ANTOINETTE","CANDICE","JUANA","JEANNETTE","PAM",
-"KELLI","HANNAH","WHITNEY","BRIDGET","KARLA","CELIA","LATOYA","PATTY","SHELIA","GAYLE",
-"DELLA","VICKY","LYNNE","SHERI","MARIANNE","KARA",
-"JACQUELYN","ERMA","BLANCA","MYRA","LETICIA",
-"PAT","KRISTA","ROXANNE","ANGELICA","JOHNNIE","ROBYN","FRANCIS","ADRIENNE","ROSALIE",
-"ALEXANDRA","BROOKE","BETHANY","SADIE","BERNADETTE",
-"TRACI","JODY","KENDRA","JASMINE","NICHOLE",
-"RACHAEL","CHELSEA","MABLE","ERNESTINE","MURIEL","MARCELLA","ELENA","KRYSTAL",
+"FANNIE","MARYANN","OPAL","ALISON","YVETTE","MELODY","LUZ","SUSIE",
+"OLIVIA","FLORA","SHELLEY","KRISTY","MAMIE","LULA","LOLA","VERNA",
+"BEULAH","ANTOINETTE","CANDICE","JUANA","JEANNETTE","PAM","KELLI",
+"HANNAH","WHITNEY","BRIDGET","KARLA","CELIA","LATOYA","PATTY","SHELIA",
+"GAYLE","DELLA","VICKY","LYNNE","SHERI","MARIANNE","KARA","JACQUELYN",
+"ERMA","BLANCA","MYRA","LETICIA","PAT","KRISTA","ROXANNE","ANGELICA",
+"JOHNNIE","ROBYN","FRANCIS","ADRIENNE","ROSALIE","ALEXANDRA","BROOKE",
+"BETHANY","SADIE","BERNADETTE","TRACI","JODY","KENDRA","JASMINE",
+"NICHOLE","RACHAEL","CHELSEA","MABLE","ERNESTINE","MURIEL","MARCELLA",
+"ELENA","KRYSTAL",
 "ANGELINA","NADINE","KARI","ESTELLE","DIANNA","PAULETTE",
 "LORA","MONA","DOREEN","ROSEMARIE","ANGEL",
 "DESIREE","ANTONIA","HOPE","GINGER","JANIS","BETSY","CHRISTIE","FREDA","MERCEDES",
@@ -1855,13 +1893,8 @@ How many different ways can P2 be made using any number of coins?
 Antwoord: 73,682
 */
 
-function opdracht31(target = 200, coins = [1,2,5,10,20,50,100,200])
-{   var ways = Array(target + 1).fill(0);
-    ways[0] = 1;
-    for (var i = 0; i < coins.length; i++)
-        for (var j = coins[i]; j <= target; j++)
-            ways[j] += ways[j - coins[i]];
-    return ways[target];
+function problem31(target = 200, coins = [1,2,5,10,20,50,100,200])
+{   return ways(target, coins);
 }
 
 /*
@@ -2519,7 +2552,7 @@ var words42 = ["A","ABILITY","ABLE","ABOUT","ABOVE","ABSENCE","ABSOLUTELY","ACAD
 "WRITE","WRITER","WRITING","WRONG","YARD","YEAH","YEAR","YES","YESTERDAY",
 "YET","YOU","YOUNG","YOUR","YOURSELF","YOUTH"];
 
-function opdracht42(words = words42)
+function problem42(words = words42)
 {
     var triangles = [];
     for (var i = 0; i < 20; i++) triangles[i] = triangler(i);
@@ -2540,7 +2573,7 @@ function opdracht42(words = words42)
     return ret;
 }
 
-function opdracht43()
+function problem43()
 {   function permutations(pool)
     {   ret = [], n = pool.length, c = Array(n).fill(0), i = 0, tmp = 0;
         ret.push(pool.slice());
@@ -2592,18 +2625,7 @@ Antwoord: 5,482,660
 */
 
 function opdracht44(window = 10**4)
-{   function binSearch(d, n)
-    {   var first = 0, last = d.length - 1;
-        var middle = (first + last) >> 1;
-        while (first <= last)
-        {   if (d[middle] < n) first = middle + 1;
-            else if (d[middle] == n) return true;
-            else last = middle - 1;
-            middle = (first + last) >> 1;
-        }
-        return false;
-    }
-    var lpgs = [];
+{   var lpgs = [];
     for (var i = 1; i < window; i++) lpgs.push(pentagon(i));
     for (var a = 0; a < lpgs.length; a++)
         for (var b = a; b < lpgs.length; b++)
@@ -2628,17 +2650,7 @@ Antwoord: 1,533,776,805
 */
 
 function opdracht45()
-{   function binSearch(d, n)
-    {   var first = 0, last = d.length - 1;
-        var middle = (first + last) >> 1;
-        while (first <= last)
-        {   if (d[middle] < n) first = middle + 1;
-            else if (d[middle] == n) return true;
-            else last = middle - 1;
-            middle = (first + last) >> 1;
-        }
-        return false;
-    }
+{
     var ltriangle = [], lpentagon = [], lhexagon = [];
     for (var i = 286; i < 10**5; i++) ltriangle.push(triangle(i));
     for (var i = 166; i < 10**5; i++) lpentagon.push(pentagon(i));
@@ -2649,18 +2661,29 @@ function opdracht45()
     return 0;
 }
 
+/*
+#46: Goldbach's other conjecture
+
+It was proposed by Christian Goldbach that every odd composite
+number can be written as the sum of a prime and twice a square.
+
+9 = 7 + 2x1^2
+15 = 7 + 2x2^2
+21 = 3 + 2x3^2
+25 = 7 + 2x3^2
+27 = 19 + 2x2^2
+33 = 31 + 2x1^2
+
+It turns out that the conjecture was false.
+
+What is the smallest odd composite that cannot be
+written as the sum of a prime and twice a square?
+
+Antwoord: 5,777
+*/
+
 function opdracht46()
-{   function binSearch(d, n)
-    {   var first = 0, last = d.length - 1;
-        var middle = (first + last) >> 1;
-        while (first <= last)
-        {   if (d[middle] < n) first = middle + 1;
-            else if (d[middle] == n) return true;
-            else last = middle - 1;
-            middle = (first + last) >> 1;
-        }
-        return false;
-    }
+{
     var sieve = Array(10**6).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i < sieve.length; i++)
@@ -2682,12 +2705,28 @@ function opdracht46()
     return 0;
 }
 
-function opdracht47(distinct = 4)
-{   function linearSearch(a, n)
-    {   for (var i = 0; i < a.length; i++)
-            if (a[i] === n) return i + 1;   // leave 0 for not found
-        return 0;
-    }
+/*
+#47: Distinct primes factors
+
+The first two consecutive numbers to have two distinct prime factors are:
+
+14 = 2 × 7
+15 = 3 × 5
+
+The first three consecutive numbers to have three distinct prime factors are:
+
+644 = 2^2 × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+
+Find the first four consecutive integers to have four distinct
+prime factors each. What is the first of these numbers?
+
+Antwoord: 134,043
+*/
+
+function problem47(distinct = 4)
+{
     var sieve = Array(10**6).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i < sieve.length; i++)
@@ -2810,7 +2849,23 @@ function opdracht49()
     return 0;
 }
 
-function opdracht50(max = 10**6-1)
+/*
+#50: Consecutive prime sum
+
+The prime 41, can be written as the sum of six consecutive primes:
+41 = 2 + 3 + 5 + 7 + 11 + 13
+
+This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+The longest sum of consecutive primes below one-thousand
+that adds to a prime, contains 21 terms, and is equal to 953.
+
+Which prime, below one-million, can be written as the sum of the most consecutive primes?
+
+Antwoord: 997,651
+*/
+
+function problem50(max = 10**6-1)
 {   var sieve = Array(max + 1).fill(true);
     sieve[0] = sieve[1] = false;
     for (var i = 0; i < sieve.length; i++)
@@ -2819,10 +2874,6 @@ function opdracht50(max = 10**6-1)
     for (var i = 0; i < sieve.length; i++) if (sieve[i]) primes.push(i);
     var best_prime = 0, best_sum = 0
     var xlen = primes.length;
-    function linearSearch(lst, n)
-    {   for (var i = 0; i < lst.length; i++) if (lst[i] == n) return true;
-        return false;
-    }
     for (var i = 0; i < xlen; i++)
     {   for (var j = i + best_sum; j < xlen; j++)
         {   var xsum = 0;
@@ -3178,6 +3229,17 @@ Antwoord: 26,241
 function problem58()
 {
     return 0;
+    var sl = 2, cnt = 3, c = 9;
+    while (cnt / 2 * sl + 1 >= 0.10)
+    {
+        sl += 2;
+        for (var i = 0; i < 3; i++)
+        {   c += sl;
+            if (isPrime(c)) cnt++;
+        }
+        c += sl;
+    }
+    return sl + 1;
 }
 
 /*
@@ -3218,10 +3280,52 @@ function problem59()
     return 0;
 }
 
+/*
+#60: Prime pair sets
+
+The primes 3, 7, 109, and 673, are quite remarkable. By taking any two
+primes and concatenating them in any order the result will always be
+prime. For example, taking 7 and 109, both 7109 and 1097 are prime. The
+sum of these four primes, 792, represents the lowest sum for a set of
+four primes with this property.
+
+Find the lowest sum for a set of five primes for which any two primes
+concatenate to produce another prime.
+
+Antwoord: 26,033
+*/
+
 function problem60()
 {
     return 0;
 }
+
+/*
+#61: Cyclical figurate numbers
+
+Triangle, square, pentagonal, hexagonal, heptagonal, and octagonal numbers
+are all figurate (polygonal) numbers and are generated by the following formulae:
+Triangle     P3,n=n(n+1)/2     1, 3, 6, 10, 15, ...
+Square     P4,n=n2     1, 4, 9, 16, 25, ...
+Pentagonal     P5,n=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     P6,n=n(2n-1)     1, 6, 15, 28, 45, ...
+Heptagonal     P7,n=n(5n-3)/2     1, 7, 18, 34, 55, ...
+Octagonal     P8,n=n(3n-2)     1, 8, 21, 40, 65, ...
+
+The ordered set of three 4-digit numbers: 8128, 2882, 8281, has three interesting properties.
+
+1.    The set is cyclic, in that the last two digits of each number is the
+first two digits of the next number (including the last number with the first).
+2.    Each polygonal type: triangle (P3,127=8128), square (P4,91=8281), and
+pentagonal (P5,44=2882), is represented by a different number in the set.
+3.    This is the only set of 4-digit numbers with this property.
+
+Find the sum of the only ordered set of six cyclic 4-digit numbers for which
+each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal,
+and octagonal, is represented by a different number in the set.
+
+Antwoord: 28,684
+*/
 
 function problem61()
 {
@@ -3310,19 +3414,131 @@ function problem64()
     return odd_period;
 }
 
+function problem65()
+{
+    return 0;
+}
+
+function problem66()
+{
+    return 0;
+}
+
+function problem67()
+{
+    return 0;
+}
+
+function problem68()
+{
+    return 0;
+}
+
+function problem69()
+{
+    return 0;
+}
+
+function problem70()
+{
+    return 0;
+}
+
+/*
+#71: Ordered fractions
+
+Consider the fraction, n/d, where n and d are positive integers.
+If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions
+for d <= 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2,
+4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that 2/5 is the fraction immediately to the left of 3/7.
+
+By listing the set of reduced proper fractions for d <= 1,000,000 in
+ascending order of size, find the numerator of the fraction immediately
+to the left of 3/7.
+
+Antwoord: 428,570
+*/
+
+function problem71(limit = 1000000)
+{
+    var a = 3, b = 7, r = 0, s = 1, q = limit;
+    while (q > 2)
+    {   var p = Math.floor((a * q - 1) / b);
+        if (p * s > r * q) s = q, r = p;
+        q--;
+    }
+    return r;
+}
+
+function problem72()
+{
+    return 0;
+}
+
+function problem73()
+{
+    return 0;
+}
+
+function problem74()
+{
+    return 0;
+}
+
+function problem75()
+{
+    return 0;
+}
+
+/*
+#76: Counting summations
+
+It is possible to write five as a sum in exactly six different ways:
+
+4 + 1
+3 + 2
+3 + 1 + 1
+2 + 2 + 1
+2 + 1 + 1 + 1
+1 + 1 + 1 + 1 + 1
+
+How many different ways can one hundred be written
+as a sum of at least two positive integers?
+
+Antwoord: 190,569,291
+*/
+
+function problem76(target = 100)
+{
+    coins = [];
+    for (var i = 1; i < 100; i++) coins.push(i);
+    return ways(target, coins);
+}
+
+function problem77()
+{
+    return 0;
+}
+
 function run(p)
 {
     switch (p)
     {
-    case 1: return opdracht1();
-    case 2: return opdracht2();
-    case 3: return opdracht3();
-    case 4: return opdracht4();
-    case 5: return opdracht5();
-    case 6: return opdracht6();
-    case 7: return opdracht7();
-    case 8: return opdracht8();
-    case 9: return opdracht9();
+    case 1: return problem1();
+    case 2: return problem2();
+    case 3: return problem3();
+    case 4: return problem4();
+    case 5: return problem5();
+    case 6: return problem6();
+    case 7: return problem7();
+    case 8: return problem8();
+    case 9: return problem9();
     case 10: return opdracht10();
     case 11: return opdracht11();
     case 12: return opdracht12();
@@ -3344,7 +3560,7 @@ function run(p)
     case 28: return opdracht28();
     case 29: return opdracht29();
     case 30: return opdracht30();
-    case 31: return opdracht31();
+    case 31: return problem31();
     case 32: return opdracht32();
     case 33: return opdracht33();
     case 34: return opdracht34();
@@ -3355,15 +3571,15 @@ function run(p)
     case 39: return opdracht39();
     case 40: return opdracht40();
     case 41: return opdracht41();
-    case 42: return opdracht42();
-    case 43: return opdracht43();
+    case 42: return problem42();
+    case 43: return problem43();
     case 44: return opdracht44();
     case 45: return opdracht45();
     case 46: return opdracht46();
-    case 47: return opdracht47();
+    case 47: return problem47();
     case 48: return opdracht48();
     case 49: return opdracht49();
-    case 50: return opdracht50();
+    case 50: return problem50();
     case 51: return opdracht51();
     case 52: return opdracht52();
     case 53: return opdracht53();
@@ -3378,6 +3594,19 @@ function run(p)
     case 62: return problem62();
     case 63: return problem63();
     case 64: return problem64();
+    case 65: return problem65();
+    case 66: return problem66();
+    case 67: return problem67();
+    case 68: return problem68();
+    case 69: return problem69();
+    case 70: return problem70();
+    case 71: return problem71();
+    case 72: return problem72();
+    case 73: return problem73();
+    case 74: return problem74();
+    case 75: return problem75();
+    case 76: return problem76();
+    case 77: return problem77();
     }
 }
 
@@ -3389,7 +3618,10 @@ answers = [233168, 4613732, 6857, 906609, 232792560,
         210, 7652413, 162, 16695334890, 5482660, 1533776805, 5777,
         134043, 9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
         153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
-        6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667];
+        6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
+        190569291, 71, 55374, 73162890, 40886, 427337, 260324, 425185, 101524, 2772, 1818,
+        1097343, 7587457, 743, 1217, 14234, 8581146, 1258, 518408346, 14316, 24702,
+        8739992577, 18769, 709, 756872327473, 37076114526, 228];
 
 function runjob(p)
 {
@@ -3403,7 +3635,7 @@ function runjob(p)
 
 function main()
 {
-    for (var i = 1; i <= 64; i++)
+    for (var i = 1; i <= 77; i++)
         runjob(i);
 }
 

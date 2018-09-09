@@ -1,3 +1,5 @@
+// mcs /reference:System.Numerics euler.cs
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -976,6 +978,102 @@ static UInt32 problem39()
 }
 
 /*
+#40: Champernowne's constant
+
+An irrational decimal fraction is created by concatenating the positive integers:
+
+0.123456789101112131415161718192021...
+
+It can be seen that the 12th digit of the fractional part is 1.
+
+If dn represents the nth digit of the fractional
+part, find the value of the following expression.
+
+d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+
+Antwoord: 210
+*/
+
+// 1*1*5*3*7*2*1=210
+
+static UInt32 getDigit40(UInt32 i)
+{
+    UInt32 offset = 0, decimals = 1, setLow = 1, setLength = 9;
+    for (UInt32 limit = 9; i >= limit; limit += setLength * decimals)
+    {   offset = limit;
+        decimals++;
+        setLow *= 10;
+        setLength *= 10;
+    }
+    UInt32 n = (i - offset) / decimals + setLow, ind = (i - offset) % decimals;
+    for (UInt32 x = 0; x < decimals - (ind + 1); x++) n /= 10;
+    return n % 10;
+}
+
+static UInt32 problem40()
+{
+    UInt32 product = 1;
+    for (UInt32 i = 1; i <= 1000000; i *= 10) product *= getDigit40(i - 1);
+    return product;
+}
+
+static UInt32 problem41()
+{
+    return 0;
+}
+
+static UInt32 problem42()
+{
+    return 0;
+}
+
+static UInt32 problem43()
+{
+    return 0;
+}
+
+static UInt32 problem44()
+{
+    return 0;
+}
+
+static UInt32 problem45()
+{
+    return 0;
+}
+
+static UInt32 problem46()
+{
+    return 0;
+}
+
+static UInt32 problem47()
+{
+    return 0;
+}
+
+/*
+#48: Self powers
+*/
+
+static UInt64 problem48()
+{
+    UInt64 result = 0, modulo = 10000000000;
+    for (UInt16 i = 1; i <= 1000; i++)
+    {   UInt64 temp = i;
+        for (UInt16 j = 1; j < i; j++) { temp *= i; temp %= modulo; }
+        result += temp;
+        result %= modulo;
+    }
+    return result;
+}
+
+static UInt32 problem49()
+{
+    return 0;
+}
+
+/*
 #62: Cubic permutations
 
 The cube, 41063625 (345^3), can be permuted to produce two other
@@ -1301,7 +1399,8 @@ static private void chance()
         5537376230, 837799, 137846528820, 1366, 21124, 1074, 171, 648, 31626,
         871198282, 4179871, 2783915460, 4782, 983, 0, 669171001, 9183, 443839,
         73682, 45228, 100, 40730, 55, 872187, 748317, 932718654, 840, 210,
-        7652413, 162, 16695334890};
+        7652413, 162, 16695334890, 5482660, 1533776805, 5777, 134043,
+        9110846700, 296962999629};
 
     static UInt64 run(UInt32 p)
     {
@@ -1346,6 +1445,16 @@ static private void chance()
         case 37: return problem37();
         case 38: return problem38();
         case 39: return problem39();
+        case 40: return problem40();
+        case 41: return problem41();
+        case 42: return problem42();
+        case 43: return problem43();
+        case 44: return problem44();
+        case 45: return problem45();
+        case 46: return problem46();
+        case 47: return problem47();
+        case 48: return problem48();
+        case 49: return problem49();
         }
         return 0;
     }
@@ -1362,7 +1471,7 @@ static private void chance()
 
     static void Main()
     {
-        for (UInt32 i = 1; i <= 39; i++)
+        for (UInt32 i = 1; i <= 49; i++)
             runjob(i);
         Console.WriteLine(problem62());
         Console.WriteLine(problem83());
