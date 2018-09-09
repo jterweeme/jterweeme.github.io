@@ -96,6 +96,17 @@ function triangle(n) { return Math.floor(n * (n + 1) / 2); }
 function pentagon(n) { return Math.floor(n * (3 * n - 1) / 2); }
 function hexagon(n) { return n * (2 * n - 1); }
 
+function floorsqrt(n)
+{
+    var i = 0, step = 1, sum = 0;
+    while (sum < n)
+    {   sum += step;
+        step += 2;
+        i++;
+    }
+    return i - 1;
+}
+
 function ways(target, coins)
 {   var xways = Array(target + 1).fill(0);
     xways[0] = 1;
@@ -948,8 +959,7 @@ names22 = ["MARY","PATRICIA","LINDA","BARBARA","ELIZABETH","JENNIFER",
 "JOHNNIE","ROBYN","FRANCIS","ADRIENNE","ROSALIE","ALEXANDRA","BROOKE",
 "BETHANY","SADIE","BERNADETTE","TRACI","JODY","KENDRA","JASMINE",
 "NICHOLE","RACHAEL","CHELSEA","MABLE","ERNESTINE","MURIEL","MARCELLA",
-"ELENA","KRYSTAL",
-"ANGELINA","NADINE","KARI","ESTELLE","DIANNA","PAULETTE",
+"ELENA","KRYSTAL","ANGELINA","NADINE","KARI","ESTELLE","DIANNA","PAULETTE",
 "LORA","MONA","DOREEN","ROSEMARIE","ANGEL",
 "DESIREE","ANTONIA","HOPE","GINGER","JANIS","BETSY","CHRISTIE","FREDA","MERCEDES",
 "MEREDITH","LYNETTE","TERI","CRISTINA","EULA",
@@ -3400,8 +3410,8 @@ function problem64()
     var L = 10000, odd_period = 0;
     for (var N = 2; N <= L; N++)
     {
-        var r = Math.floor(Math.sqrt(N));
-        var limit = Math.floor(Math.sqrt(N));
+        var r = floorsqrt(N);
+        var limit = floorsqrt(N);
         if (limit * limit == N) continue;
         var k = 1, period = 0;
         while (k != 1 || period == 0)
@@ -3628,9 +3638,9 @@ function runjob(p)
     answer = run(p);
     
     if (answer != answers[p - 1])
-        console.log("error");
-
-    console.log("#" + p + ": " + answer);
+        console.log("error #" + p + ": " + answer);
+    else
+        console.log("#" + p + ": " + answer);
 }
 
 function main()

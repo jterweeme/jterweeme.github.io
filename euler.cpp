@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <map>
 #include <ctime>
 #include <vector>
 #ifdef MULTITHREAD
@@ -393,61 +392,68 @@ template <typename T> static bool ispalindrome(T n, uint8_t base = 10)
 class Kounter
 {
 private:
-    map<uint32_t, uint32_t> _kounter;
+    vector<uint16_t> _kounter2;
 public:
-    void insert(uint32_t n);
-    void dump(ostream &os) const;
-    bool hasKey(uint32_t n) const;
-    uint32_t max1() const;
-    uint32_t max2() const;
-    uint32_t min1() const;
-    uint32_t min2() const;
-    map<uint32_t, uint32_t>::iterator begin() { return _kounter.begin(); }
-    map<uint32_t, uint32_t>::iterator end() { return _kounter.end(); }
+    void insert(uint8_t n);
+    bool hasKey(uint8_t n) const;
+    uint8_t max1() const;
+    uint8_t max2() const;
+    uint8_t min1() const;
+    uint8_t min2() const;
+    vector<uint16_t>::const_iterator cbegin() { return _kounter2.cbegin(); }
+    vector<uint16_t>::const_iterator cend() { return _kounter2.cend(); }
 };
 
-bool Kounter::hasKey(uint32_t n) const
-{   for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        if (it->first == n) return true;
+bool Kounter::hasKey(uint8_t n) const
+{
+    for (vector<uint16_t>::const_iterator it = _kounter2.cbegin(); it != _kounter2.cend(); it++)
+        if ((uint8_t)(*it >> 8) == n) return true;
     return false;
 }
 
-uint32_t Kounter::max1() const
-{   uint32_t xmax = 0;
-    for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        xmax = std::max(xmax, it->first);
+uint8_t Kounter::max1() const
+{
+    uint8_t xmax = 0;
+    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+        xmax = std::max(xmax, (uint8_t)((*it >> 8) & 0xff));
     return xmax;
 }
 
-uint32_t Kounter::max2() const
-{   uint32_t xmax = 0;
-    for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        xmax = std::max(xmax, it->second);
+uint8_t Kounter::max2() const
+{
+    uint8_t xmax = 0;
+    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+        xmax = std::max(xmax, (uint8_t)(*it & 0xff));
     return xmax;
 }
 
-uint32_t Kounter::min1() const
-{   uint32_t xmin = 0xffffffff;
-    for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        xmin = std::min(xmin, it->first);
+uint8_t Kounter::min1() const
+{
+    uint8_t xmin = 0xff;
+    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+        xmin = std::min(xmin, (uint8_t)((*it >> 8) & 0xff));
     return xmin;
 }
 
-uint32_t Kounter::min2() const
-{   uint32_t xmin = 0xffffffff;
-    for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        xmin = std::min(xmin, it->second);
+uint8_t Kounter::min2() const
+{
+    uint8_t xmin = 0xff;
+    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+        xmin = std::min(xmin, (uint8_t)(*it & 0xff));
     return xmin;
 }
 
-void Kounter::insert(uint32_t n)
-{   if (_kounter.count(n)) _kounter[n]++;
-    else _kounter[n] = 1;
-}
-
-void Kounter::dump(ostream &os) const
-{   for (map<uint32_t, uint32_t>::const_iterator it = _kounter.begin(); it != _kounter.end(); it++)
-        os << it->first << ": " << it->second << "\r\n";
+void Kounter::insert(uint8_t n)
+{
+    bool found = false;
+    for (vector<uint16_t>::iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+    {   if ((*it & 0xff00) == (uint16_t)n << 8)
+        {   found = true;
+            *it += 1;
+        }
+    }
+    if (found == false)
+        _kounter2.push_back((uint16_t)n << 8 | 1);
 }
 
 class Primes
@@ -2688,8 +2694,8 @@ static uint64_t parse(string s)
     return p1 | (uint64_t)p2 << 32;
 }
 
-static uint32_t straight(Kounter &cnt)
-{   uint32_t xmax = cnt.max1();
+static uint8_t straight(Kounter &cnt)
+{   uint8_t xmax = cnt.max1();
     for (uint8_t i = 0; i < 5; i++)
         if (cnt.hasKey(xmax - i) == false) return 0;
     return xmax;
@@ -2711,29 +2717,29 @@ static uint32_t threekind(Kounter &cnt)
 {   return cnt.max2() == 3 && cnt.min2() == 1;
 }
 
-static uint32_t twopair(Kounter &cnt)
-{   uint32_t best = 0;
-    uint32_t pairCount = 0;
-    for (map<uint32_t, uint32_t>::iterator it = cnt.begin(); it != cnt.end(); it++)
-    {   if (it->second == 2)
+static uint8_t twopair(Kounter &cnt)
+{   uint8_t best = 0;
+    uint8_t pairCount = 0;
+    for (vector<uint16_t>::const_iterator it = cnt.cbegin(); it != cnt.cend(); it++)
+    {
+        if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
-            best = max(best, it->first);
+            best = max(best, (uint8_t)(*it >> 8));
         }
     }
     return pairCount == 2 ? best : 0;
 }
 
-static uint32_t onepair(Kounter &cnt)
-{   uint32_t bestKicker = 0;
-    uint32_t pairValue = 0;
-    uint32_t pairCount = 0;
-    for (map<uint32_t, uint32_t>::iterator it = cnt.begin(); it != cnt.end(); it++)
-    {   if (it->second == 2)
+static uint8_t onepair(Kounter &cnt)
+{   uint8_t bestKicker = 0, pairValue = 0, pairCount = 0;
+    for (vector<uint16_t>::const_iterator it = cnt.cbegin(); it != cnt.cend(); it++)
+    {
+        if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
-            pairValue = it->first;
+            pairValue = (uint8_t)((*it >> 8) & 0xff);
         }
-        else if (it->second == 1)
-        {   bestKicker = max(bestKicker, it->first);
+        else if ((uint8_t)(*it & 0xff) == 1)
+        {   bestKicker = max(bestKicker, (uint8_t)((*it >> 8) & 0xff));
         }
     }
     return pairCount == 1 ? pairValue * 15 + bestKicker : 0;
