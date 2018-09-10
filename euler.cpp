@@ -23,7 +23,7 @@ int xstrcmp(const char* s1, const char* s2)
     return *(const uint8_t*)s1-*(const uint8_t*)s2;
 }
 
-void xmemcpy(void *dest, void *src, size_t n)
+void xmemcpy(const void *dest, const void *src, size_t n)
 {   char *csrc = (char *)src;
     char *cdest = (char *)dest;
     size_t i;
@@ -54,16 +54,11 @@ static uint32_t fac32(uint32_t n)
     return product;
 }
 
-template <typename T> static uint8_t decimals(T n)
-{   uint8_t i = 0;
-    while (n) n = n / 10, i++;
-    return i;
-}
-
 template <typename T> static T digit(T n, T i)
 {   return n / myPow<T>(10, i) % 10;
 }
 
+#if 0
 static uint32_t primeHelper(uint32_t n)
 {   uint16_t presets[] = {3000,300,100,8};
     for (uint8_t i = 0; i < 4; i++)
@@ -78,6 +73,7 @@ static bool isprime27(uint32_t n)
         if (n % i == 0) return false;
     return true;
 }
+#endif
 
 static uint64_t mulmod(uint64_t a, uint64_t b, uint64_t modulo)
 {
@@ -103,7 +99,7 @@ static uint64_t mulmod(uint64_t a, uint64_t b, uint64_t modulo)
     return result;
 }
 
-static uint64_t powmod(uint64_t base, unsigned long long exponent, unsigned long long modulo)
+static uint64_t powmod(uint64_t base, uint64_t exponent, uint64_t modulo)
 {   uint64_t result = 1;
     while (exponent > 0)
     {   if (exponent & 1) result = mulmod(result, base, modulo);
@@ -208,6 +204,7 @@ Sieve::Sieve(uint32_t limit)
     _it = _primes.begin();
 }
 
+#if 0
 static void testPrimes() __attribute__((unused));
 static void testPrimes()
 {
@@ -226,6 +223,7 @@ static void testPrimes()
             cout << "ERROR\r\n";
     }
 }
+#endif
 
 template <typename T> static T triangle(T n) { return n * (n + 1) >> 1; }
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
@@ -262,11 +260,10 @@ template <typename T> void bubbleSort(T begin, T end)
                 xswap(b[0], b[1]);
 }
 
-template <typename T> bool hasDigitsOnce(T n, vector<uint8_t> &nset)
+template <typename T, typename U> bool hasDigitsOnce2(T n, U nsetbeg, U nsetend)
 {   while (n)
-    {
-        uint32_t pos = linSearch(nset.begin(), nset.end(), n % 10);
-        if (pos) nset.erase(nset.begin() + (pos - 1)); else return false;
+    {   uint32_t pos = linSearch(nsetbeg, nsetend, n % 10);
+        if (pos) nsetbeg[pos - 1] = 99; else return false;
         n = n / 10;
     }
     return true;
@@ -275,44 +272,130 @@ template <typename T> bool hasDigitsOnce(T n, vector<uint8_t> &nset)
 template <typename T> bool sameDigs(T a, T b)
 {   vector<uint8_t> nset;
     for (;a ;a = a / 10) nset.push_back(a % 10);
-    return hasDigitsOnce<T>(b, nset);
+    return hasDigitsOnce2<T>(b, nset.begin(), nset.end());
 }
 
-template <typename T> static string twostring(T n)
-{   if (n == 0) return string("0");
-    char buf[50];
-    uint8_t len = decimals<T>(n), i = 0;
-    for (i = 0; i < len; i++) buf[i] = digit<T>(n, len - (i + 1)) + '0';
-    buf[i] = 0;
-    return string(buf);
-}
+struct BigNum : public std::vector<unsigned int>
+{   static const uint32_t MaxDigit = 10;
+    BigNum(uint64_t x = 0)
+    {   do
+        {   push_back(x % MaxDigit);
+            x /= MaxDigit;
+        } while (x > 0);
+    }
+    BigNum operator+(const BigNum &other) const
+    {   BigNum result = *this;
+        if (result.size() < other.size())
+            result.resize(other.size(), 0);
+        uint32_t carry = 0;
+        for (size_t i = 0; i < result.size(); i++)
+        {   carry += result[i];
+            if (i < other.size()) carry += other[i];
+            else if (carry == 0) return result;
+            if (carry < MaxDigit) result[i] = carry, carry = 0;
+            else result[i] = carry - MaxDigit, carry = 1;
+        }
+        if (carry > 0) result.push_back(carry);
+        return result;
+    }
+    BigNum operator*(uint32_t factor) const
+    {
+        uint64_t carry = 0;
+        BigNum result = *this;
 
-static string to_string32s(int32_t n)
-{   char tmp[50];
-    snprintf(tmp, 50, "%d", n);
-    return string(tmp);
-}
+        for (auto &i : result)
+        {
+            carry += i * (uint64_t)factor;
+            i      = carry % MaxDigit;
+            carry /= MaxDigit;
+        }
+        while (carry > 0)
+        {
+            result.push_back(carry % MaxDigit);
+            carry /= MaxDigit;
+        }
+        return result;
+    }
+};
 
 class LongNumber25
 {
-public:
+private:
     uint16_t _buf[1500];
 public:
+    uint16_t *begin() { return _buf; }
+    uint16_t *end() { return _buf + 1500; } // moet eigenlijk echte einde aangeven
     void clear() { set(0); }
     LongNumber25() { clear(); }
     LongNumber25(uint64_t n) { set(n); }
+#if 1
+    LongNumber25(const LongNumber25 &n)
+    {   for (uint16_t i = 0; i < 1500; i++) _buf[i] = n._buf[i];
+    }
+#endif
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
-    void add(LongNumber25 &n);
-    void operator+=(LongNumber25 n) { add(n); }
+    bool isZero() const
+    {   for (uint16_t i = 0; i < 1500; i++)
+            if (_buf[i] != 0) return false;
+        return true;
+    }
+    operator bool() const
+    {   return isZero();
+    }
+    void add(const LongNumber25 &n)
+    {   uint8_t carry = 0;
+        for (uint16_t i = 0; i < 1500; i++)
+        {   _buf[i] += carry + n.decimal(i);
+            carry = _buf[i] / 10;
+            _buf[i] = _buf[i] % 10;
+        }
+    }
+    void operator+=(const LongNumber25 n) { add(n); }
+    LongNumber25 operator+(const LongNumber25 n) const
+    {   LongNumber25 ret = *this;
+        ret.add(n);
+        return ret;
+    }
     void set(uint64_t n);
     void operator=(uint64_t n) { set(n); }
-    void set(LongNumber25 n);
+    void set(const LongNumber25 n)
+    {   for (uint16_t i = 0; i < 1500; i++)
+            _buf[i] = n.decimal(i);
+    }
     void dump(ostream &os) const;
     bool equals(LongNumber25 n);
+    
+    void shiftdec(uint16_t n)
+    {   uint16_t i = 0;
+        for (i = 0; i < 1500 - n; i++)
+            _buf[i] = _buf[i + n];
+        while (i < 1500)
+            _buf[i] = 0, i++;
+    }
+    void div(uint16_t n)
+    {   if (n == 10) shiftdec(1);
+    }
+    void operator/=(uint16_t n)
+    {   div(n);
+    }
+    void shiftdec2(uint16_t n)
+    {   uint16_t i = digits() - n;
+        while (i < 1500) _buf[i] = 0, i++;
+    }
     uint16_t digits() const;
     LongNumber25 reverse();
-    bool ispalindrome();
-    void mul(uint8_t n);
+    bool ispalindrome() { return equals(reverse()); }
+    void mul(uint8_t n)
+    {
+        uint8_t carry = 0;
+        for (uint16_t i = 0; i < 1500; i++)
+        {
+            _buf[i] *= n;
+            _buf[i] += carry;
+            carry = _buf[i] / 10;
+            _buf[i] = _buf[i] % 10;
+        }
+    }
 };
 
 bool LongNumber25::equals(LongNumber25 n)
@@ -328,15 +411,6 @@ LongNumber25 LongNumber25::reverse()
     for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
         a._buf[j] = _buf[i - 1];
     return a;
-}
-
-bool LongNumber25::ispalindrome()
-{   return equals(reverse());
-}
-
-void LongNumber25::set(LongNumber25 n)
-{   for (uint16_t i = 0; i < 1500; i++)
-        _buf[i] = n.decimal(i);
 }
 
 void LongNumber25::dump(ostream &os) const
@@ -358,25 +432,26 @@ void LongNumber25::set(uint64_t n)
         _buf[i] = n % 10, n = n / 10;
 }
 
-void LongNumber25::add(LongNumber25 &n)
-{   uint8_t carry = 0;
-    for (uint16_t i = 0; i < 1500; i++)
-    {   _buf[i] += carry + n.decimal(i);
-        carry = _buf[i] / 10;
-        _buf[i] = _buf[i] % 10;
-    }
+template <typename T> uint16_t decimals(T n)
+{   uint16_t i = 0;
+    while (n) n /= 10, i++;
+    return i;
 }
 
-void LongNumber25::mul(uint8_t n)
+#if 1
+template <> uint16_t decimals<LongNumber25>(LongNumber25 n)
+{   return n.digits();
+}
+#endif
+
+static void testLongNum()
 {
-    uint8_t carry = 0;
-    for (uint16_t i = 0; i < 1500; i++)
-    {
-        _buf[i] *= n;
-        _buf[i] += carry;
-        carry = _buf[i] / 10;
-        _buf[i] = _buf[i] % 10;
-    }
+    LongNumber25 x(123456789);
+    LongNumber25 y(100000000);
+    x += y;
+    LongNumber25 z = x + y;
+    z.dump(cout);
+    cout << "\r\n";
 }
 
 template <typename T> static T reverse(T n, uint8_t base = 10)
@@ -400,58 +475,49 @@ public:
     uint8_t max2() const;
     uint8_t min1() const;
     uint8_t min2() const;
-    vector<uint16_t>::const_iterator cbegin() { return _kounter2.cbegin(); }
-    vector<uint16_t>::const_iterator cend() { return _kounter2.cend(); }
+    vector<uint16_t>::const_iterator cbegin() const { return _kounter2.cbegin(); }
+    vector<uint16_t>::const_iterator cend() const { return _kounter2.cend(); }
 };
 
 bool Kounter::hasKey(uint8_t n) const
-{
-    for (vector<uint16_t>::const_iterator it = _kounter2.cbegin(); it != _kounter2.cend(); it++)
+{   for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
         if ((uint8_t)(*it >> 8) == n) return true;
     return false;
 }
 
 uint8_t Kounter::max1() const
-{
-    uint8_t xmax = 0;
-    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+{   uint8_t xmax = 0;
+    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
         xmax = std::max(xmax, (uint8_t)((*it >> 8) & 0xff));
     return xmax;
 }
 
 uint8_t Kounter::max2() const
-{
-    uint8_t xmax = 0;
-    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+{   uint8_t xmax = 0;
+    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
         xmax = std::max(xmax, (uint8_t)(*it & 0xff));
     return xmax;
 }
 
 uint8_t Kounter::min1() const
-{
-    uint8_t xmin = 0xff;
-    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+{   uint8_t xmin = 0xff;
+    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
         xmin = std::min(xmin, (uint8_t)((*it >> 8) & 0xff));
     return xmin;
 }
 
 uint8_t Kounter::min2() const
-{
-    uint8_t xmin = 0xff;
-    for (vector<uint16_t>::const_iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
+{   uint8_t xmin = 0xff;
+    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
         xmin = std::min(xmin, (uint8_t)(*it & 0xff));
     return xmin;
 }
 
 void Kounter::insert(uint8_t n)
-{
-    bool found = false;
+{   bool found = false;
     for (vector<uint16_t>::iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
-    {   if ((*it & 0xff00) == (uint16_t)n << 8)
-        {   found = true;
-            *it += 1;
-        }
-    }
+        if ((*it & 0xff00) == (uint16_t)n << 8)
+            found = true, *it += 1;
     if (found == false)
         _kounter2.push_back((uint16_t)n << 8 | 1);
 }
@@ -466,30 +532,28 @@ public:
     uint32_t get(uint16_t i);
 };
 
-class PrimeFactors2 : public Generator<uint64_t>
+template <class T> class PrimeFactors2 : public Generator<uint64_t>
 {
 private:
-    vector<uint32_t>::iterator _begin;
-    vector<uint32_t>::iterator _end;
+    T _begin;
+    T _end;
     uint64_t _n;
 public:
-    PrimeFactors2(vector<uint32_t>::iterator begin,
-        vector<uint32_t>::iterator end, uint64_t n) : _begin(begin), _end(end), _n(n) { }
+    PrimeFactors2(T begin, T end, uint64_t n) : _begin(begin), _end(end), _n(n) { }
     bool hasNext() { return _n > 1; }
-    uint64_t next();
-};
-
-uint64_t PrimeFactors2::next()
-{   uint64_t factor = 0;
-    for (vector<uint32_t>::const_iterator it = _begin; it != _end; it++)
-    {   if (_n % *it == 0)
-        {   factor = *it;
-            break;
+    uint64_t next()
+    {
+        uint64_t factor = 0;
+        for (T it = _begin; it != _end; it++)
+        {   if (_n % *it == 0)
+            {   factor = *it;
+                break;
+            }
         }
+        _n = _n / factor;
+        return factor;
     }
-    _n = _n / factor;
-    return factor;
-}
+};
 
 class PrimeFactors3 : public Generator<uint64_t>
 {
@@ -527,12 +591,9 @@ static uint32_t sumDivs1(uint32_t n)
 {   return sumProperDivs1(n) + n;
 }
 
-static uint32_t sumDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
-    uint32_t n) __attribute__((unused));
-static uint32_t sumDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
-    uint32_t n)
+template <typename T> static uint32_t sumDivs2(T begin, T end, uint32_t n)
 {
-    PrimeFactors2 gen(begin, end, n);
+    PrimeFactors2<T> gen(begin, end, n);
     uint32_t previous = 0, ret = 1, current = 1;
     while (gen.hasNext())
     {
@@ -547,15 +608,14 @@ static uint32_t sumDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::ite
     return ret * sumDivs1(current);
 }
 
-static uint32_t sumProperDivs2(vector<uint32_t>::iterator begin, vector<uint32_t>::iterator end,
-    uint32_t n)
+template <typename T> static uint32_t sumProperDivs2(T begin, T end, uint32_t n)
 {   return sumDivs2(begin, end, n) - n;
 }
 
 static bool isPandigital41(uint32_t n)
 {   vector<uint8_t> nset;
     for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
-    return hasDigitsOnce(n, nset);
+    return hasDigitsOnce2(n, nset.begin(), nset.end());
 }
 
 static uint32_t gcd(uint32_t a, uint32_t b)
@@ -592,6 +652,21 @@ static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
 
 static double xabs(double n)
 {   return n < 0 ? n *= -1 : n;
+}
+
+template <typename T> static string twostring(T n)
+{   if (n == 0) return string("0");
+    char buf[50];
+    uint8_t len = decimals<T>(n), i = 0;
+    for (i = 0; i < len; i++) buf[i] = digit<T>(n, len - (i + 1)) + '0';
+    buf[i] = 0;
+    return string(buf);
+}
+
+static string to_string32s(int32_t n)
+{   char tmp[50];
+    snprintf(tmp, 50, "%d", n);
+    return string(tmp);
 }
 
 /*
@@ -1368,7 +1443,7 @@ static void swap22(char *a, char *b)
 static string problem22()
 {   FILE *fp;
     fp = fopen("euler22.txt", "r");
-    char *names = new char[30*6000]; //malloc(30*6000);
+    char *names = new char[30*6000];
     memset(names, 0, 30*6000);
     int c;
     uint16_t a = 0, b = 0;
@@ -1423,21 +1498,21 @@ Antwoord: 4,179,871
 
 static string problem23()
 {   uint16_t xmax = 28123;
-    vector<uint32_t> lprimes;
+    uint32_t *lprimes = new uint32_t[9999], end = 0, end2 = 0;
     Sieve sieve(99999);
     while (sieve.hasNext())
-        lprimes.push_back(sieve.next());
-    vector<uint16_t> abundants;
+        lprimes[end++] = sieve.next();
+    uint16_t *abundants = new uint16_t[28123];
     for (uint16_t i = 1; i <= xmax; i++)
-        if (sumProperDivs2(lprimes.begin(), lprimes.end(), i) > i)
-            abundants.push_back(i);
+        if (sumProperDivs2(lprimes, lprimes + end, i) > i)
+            abundants[end2++] = i;
     uint32_t xsum = 1;
     for (uint16_t i = 2; i <= xmax; i++)
     {   bool boo = true;
-        for (vector<uint16_t>::const_iterator it = abundants.begin(); it != abundants.end(); it++)
+        for (uint16_t *it = abundants; it != abundants + (end2 - 1); it++)
         {   if (*it < i)
             {
-                if (binSearch(abundants.begin(), abundants.end(), i - *it))
+                if (binSearch(abundants, abundants + (end2 - 1), i - *it))
                 {   boo = false;
                     break;
                 }
@@ -1445,6 +1520,8 @@ static string problem23()
         }
         if (boo == true) xsum += i;
     }
+    delete[] lprimes;
+    delete[] abundants;
     return twostring(xsum);
 }
 
@@ -1514,7 +1591,7 @@ static string problem25()
     fib[0] = 1;
     fib[1] = 0;
     fib[2] = 1;
-    while (fib[i].digits() < 1000)
+    while (decimals(fib[i]) < 1000)
     {   i = (i + 1) % 3;
         cnt++;
         LongNumber25 tmp = fib[(i + 1) % 3];
@@ -1780,26 +1857,28 @@ include it once in your sum.
 Antwoord: 45,228
 */
 
-static void panProducts32(vector<uint32_t> &st)
-{   for (uint32_t i = 2; i < 60; i++)
+static uint32_t panProducts32(uint32_t *st)
+{   uint32_t ret = 0;
+    for (uint32_t i = 2; i < 60; i++)
     {   uint32_t start = i < 10 ? 1234 : 123;
         for (uint32_t j = start; j < 10000/i; j++)
-        {   vector<uint8_t> nset;
-            for (uint8_t n = 1; n <= 9; n++) nset.push_back(n);
-            if (hasDigitsOnce<uint32_t>(i, nset) == false) continue;
-            if (hasDigitsOnce<uint32_t>(j, nset) == false) continue;
-            if (hasDigitsOnce<uint32_t>(i * j, nset)  == false) continue;
-            st.push_back(i*j);
+        {   uint8_t nset[9];
+            for (uint8_t n = 1; n <= 9; n++) nset[n - 1] = n;
+            if (hasDigitsOnce2(i, nset, nset + 9) == false) continue;
+            if (hasDigitsOnce2(j, nset, nset + 9) == false) continue;
+            if (hasDigitsOnce2(i * j, nset, nset + 9)  == false) continue;
+            st[ret++] = i * j;
         }
     }
+    return ret;
 }
 
 static string problem32()
-{   vector<uint32_t> st;
-    panProducts32(st);
-    bubbleSort(st.begin(), st.end());
+{   uint32_t st[100];
+    uint32_t end = panProducts32(st);
+    bubbleSort(st, st + end);
     uint32_t xsum = 0, previous = 0;
-    for (vector<uint32_t>::const_iterator it = st.begin(); it != st.end(); it++)
+    for (uint32_t *it = st; it != st + end; it++)
     {   if (*it != previous)
             xsum += *it;
         previous = *it;
@@ -2542,6 +2621,8 @@ Find the smallest positive integer, x, such that
 Antwoord: 142,857
 */
 
+
+
 static bool test52(uint32_t n)
 {   vector<uint8_t> nset;
     for (uint32_t x = n; x; x = x / 10) nset.push_back(x % 10);
@@ -2549,7 +2630,7 @@ static bool test52(uint32_t n)
     {   vector<uint8_t> nset2;
         for (vector<uint8_t>::iterator it = nset.begin(); it != nset.end(); it++)
             nset2.push_back(*it);
-        if (hasDigitsOnce<uint32_t>(n * m, nset2) == false) return false;
+        if (hasDigitsOnce2(n * m, nset2.begin(), nset2.end()) == false) return false;
     }
     return true;
 }
@@ -2862,59 +2943,18 @@ Antwoord: 972
 http://euler.stephan-brumme.com/56/
 */
 
-struct BigNum : public std::vector<unsigned int>
-{   static const uint32_t MaxDigit = 10;
-    BigNum(uint64_t x = 0)
-    {   do
-        {   push_back(x % MaxDigit);
-            x /= MaxDigit;
-        } while (x > 0);
-    }
-    BigNum operator+(const BigNum& other) const
-    {   BigNum result = *this;
-        if (result.size() < other.size())
-            result.resize(other.size(), 0);
-        uint32_t carry = 0;
-        for (size_t i = 0; i < result.size(); i++)
-        {   carry += result[i];
-            if (i < other.size()) carry += other[i];
-            else if (carry == 0) return result;
-            if (carry < MaxDigit) result[i] = carry, carry = 0;
-            else result[i] = carry - MaxDigit, carry = 1;
-        }
-        if (carry > 0) result.push_back(carry);
-        return result;
-    }
-    BigNum operator*(uint32_t factor) const
-    {
-        uint64_t carry = 0;
-        BigNum result = *this;
-
-        for (auto &i : result)
-        {
-            carry += i * (uint64_t)factor;
-            i      = carry % MaxDigit;
-            carry /= MaxDigit;
-        }
-        while (carry > 0)
-        {
-            result.push_back(carry % MaxDigit);
-            carry /= MaxDigit;
-        }
-        return result;
-    }
-};
-
 static string problem56()
-{   uint32_t maximum = 100, maxSum = 1;
-    for (unsigned int base = 1; base <= maximum; base++)
-    {   BigNum power = 1;
+{
+    uint32_t maximum = 100, maxSum = 1;
+    for (uint32_t base = 1; base <= maximum; base++)
+    {   LongNumber25 power(1);
         for (uint32_t exponent = 1; exponent <= maximum; exponent++)
         {
-            unsigned int sum = 0;
-            for (auto digit : power) sum += digit;
-            if (maxSum < sum) maxSum = sum;
-            power = power * base;
+            uint32_t sum = 0;
+            for (uint16_t *it = power.begin(); it != power.end(); it++)
+                sum += *it;
+            maxSum = max(maxSum, sum);
+            power.mul(base);
         }
     }
     return twostring<uint32_t>(maxSum);
@@ -3939,6 +3979,7 @@ static void singlethread(uint8_t max)
 
 int main()
 {
+    testLongNum();
     time_t begin = time(0);
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD

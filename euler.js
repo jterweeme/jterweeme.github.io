@@ -575,7 +575,14 @@ digits13 = ["37107287533902102798797998220837590246510135740250",
 "53503534226472524250874054075591789781264330331690"];
 
 function opdracht13(l = digits13)
-{   var totalSum = [], sum = 0;
+{
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'file:///data/code/tmp/jterweeme.github.io/euler13.txt', false);
+    xhr.send(null);
+    if (xhr.status != 200)
+        return 0;
+    var totalSum = [], sum = 0;
     for (var i = 50; i > 0; i--)
     {   for (var j = 0; j < l.length; j++) sum += l[j].charCodeAt(i - 1) - 48;
         totalSum.push(sum % 10);
