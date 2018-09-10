@@ -275,49 +275,6 @@ template <typename T> bool sameDigs(T a, T b)
     return hasDigitsOnce2<T>(b, nset.begin(), nset.end());
 }
 
-struct BigNum : public std::vector<unsigned int>
-{   static const uint32_t MaxDigit = 10;
-    BigNum(uint64_t x = 0)
-    {   do
-        {   push_back(x % MaxDigit);
-            x /= MaxDigit;
-        } while (x > 0);
-    }
-    BigNum operator+(const BigNum &other) const
-    {   BigNum result = *this;
-        if (result.size() < other.size())
-            result.resize(other.size(), 0);
-        uint32_t carry = 0;
-        for (size_t i = 0; i < result.size(); i++)
-        {   carry += result[i];
-            if (i < other.size()) carry += other[i];
-            else if (carry == 0) return result;
-            if (carry < MaxDigit) result[i] = carry, carry = 0;
-            else result[i] = carry - MaxDigit, carry = 1;
-        }
-        if (carry > 0) result.push_back(carry);
-        return result;
-    }
-    BigNum operator*(uint32_t factor) const
-    {
-        uint64_t carry = 0;
-        BigNum result = *this;
-
-        for (auto &i : result)
-        {
-            carry += i * (uint64_t)factor;
-            i      = carry % MaxDigit;
-            carry /= MaxDigit;
-        }
-        while (carry > 0)
-        {
-            result.push_back(carry % MaxDigit);
-            carry /= MaxDigit;
-        }
-        return result;
-    }
-};
-
 class LongNumber25
 {
 private:
@@ -2996,15 +2953,20 @@ http://euler.stephan-brumme.com/57/
 
 static string problem57()
 {   uint32_t iterations = 1000;
-    BigNum a = 1, b = 1;
+    LongNumber25 a2(1);
+    LongNumber25 b2(1);
     uint32_t count = 0;
     for (uint32_t i = 0; i <= iterations; i++)
-    {   if (a.size() > b.size()) count++;
-        BigNum twoB  = b + b;
-        BigNum nextA = a + twoB;
-        BigNum nextB = b + a;
-        a = nextA;
-        b = nextB;
+    {
+        if (a2.digits() > b2.digits()) count++;
+        LongNumber25 twoB(b2);
+        twoB.add(b2);
+        LongNumber25 nextA(a2);
+        nextA.add(twoB);
+        LongNumber25 nextB(b2);
+        nextB.add(a2);
+        a2.set(nextA);
+        b2.set(nextB);
     }
     return twostring<uint32_t>(count);
 }
