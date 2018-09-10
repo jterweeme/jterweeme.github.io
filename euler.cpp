@@ -2597,7 +2597,7 @@ family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
 }
 
 static uint32_t opdracht51()
-{   uint32_t primes[80000*4], end = 0;
+{   uint32_t primes[80000], end = 0;
     Sieve sieve(1000000);
     while (sieve.hasNext()) primes[end++] = sieve.next();
     end--;

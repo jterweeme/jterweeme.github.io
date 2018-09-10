@@ -1,15 +1,50 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <time.h>
 
 #define bool int
 #define true 1
 #define false 0
 
-void xmemcpy(void *dest, void *src, size_t n)
+static bool xisdigit(char c)
+{   return c >= '0' && c <= '9';
+}
+
+static bool xislower(char c)
+{   return c >= 'a' && c <= 'z';
+}
+
+static bool xisupper(char c)
+{   return c >= 'A' && c <= 'Z';
+}
+
+static bool xisalpha(char c)
+{   return xislower(c) || xisupper(c);
+}
+
+static char xtolower(char c)
+{   return xisupper(c) ? c + 32 : c;
+}
+
+static int xstrcmp(const char *s1, const char *s2)
+{   while(*s1 && (*s1==*s2)) s1++, s2++;
+    return *(const uint8_t*)s1 - *(const uint8_t*)s2;
+}
+
+static void *xmemset(void *s, int c, size_t n)
+{   uint8_t *p = s;
+    while(n--) *p++ = (uint8_t)c;
+    return s;
+}
+
+static size_t xstrlen(const char *s)
+{   size_t i;
+    for (i = 0; s[i] != '\0'; i++);
+    return i;
+}
+
+static void xmemcpy(void *dest, void *src, size_t n)
 {   char *csrc = (char *)src;
     char *cdest = (char *)dest;
     size_t i;
@@ -50,6 +85,10 @@ static uint32_t fac32(uint32_t n)
 {   uint32_t product = 1;
     while (n > 1) product *= n--;
     return product;
+}
+
+static uint32_t digit32(uint32_t n, uint32_t i)
+{   return n / myPow32(10, i) % 10;
 }
 
 static uint8_t decimals32(uint32_t n)
@@ -704,7 +743,7 @@ static char *problem13()
     while (i < 5000)
     {
         int c = fgetc(fp);
-        if (isdigit(c))
+        if (xisdigit(c))
             numbers[i++] = c - '0';
     }
     fclose(fp);
@@ -806,7 +845,7 @@ Antwoord: 1,366
 static char *problem16()
 {   uint16_t e = 1000;
     uint8_t largeNum[400];
-    memset(largeNum, 0, 400);
+    xmemset(largeNum, 0, 400);
     largeNum[0] = 2;
     uint8_t carry = 0;
     uint32_t sum = 0;
@@ -845,7 +884,7 @@ Antwoord: 21,124
 
 static size_t len(const char *s)
 {
-    return strlen(s);
+    return xstrlen(s);
 }
 
 static char *problem17()
@@ -1021,7 +1060,7 @@ Antwoord: 648
 static char *problem20()
 {   uint8_t f = 100;
     uint16_t buf[200];
-    memset(buf, 0, 400);
+    xmemset(buf, 0, 400);
     buf[0] = f;
     uint8_t i, j;
     for (i = f - 1; i > 0; i--)
@@ -1069,7 +1108,7 @@ static char *problem21()
 {
     uint32_t low = 1, high = 10000;
     uint32_t l[high - low];
-    memset(l, 0, (high - low) * 4);
+    xmemset(l, 0, (high - low) * 4);
     uint32_t i;
     for (i = low; i <= high; i++)
         l[i - low] = sumProperDivs1(i);
@@ -1115,7 +1154,7 @@ static char *problem22()
 {   FILE *fp;
     fp = fopen("euler22.txt", "r");
     char *names = malloc(30*6000);
-    memset(names, 0, 30*6000);
+    xmemset(names, 0, 30*6000);
     int c;
     uint16_t a = 0, b = 0;
     while ((c = fgetc(fp)) != EOF)
@@ -1129,7 +1168,7 @@ static char *problem22()
     uint8_t i;
     for (a = 0; a < 5162; a++)
         for (b = 0; b < 5162; b++)
-            if (strcmp(names + b * 30, names + (b + 1) * 30) > 0)
+            if (xstrcmp(names + b * 30, names + (b + 1) * 30) > 0)
                 for (i = 0; i < 30; i++)
                     swap22(names + b * 30 + i, names + (b + 1) * 30 + i);
     uint32_t total = 0;
@@ -1276,9 +1315,9 @@ static void xprint(uint8_t *x)
 static char *problem25()
 {   uint16_t cnt = 3, i;
     uint8_t fib1[1000], fib2[1000], fib3[1000], carry = 0;
-    memset(fib1, 0, 1000);
-    memset(fib2, 0, 1000);
-    memset(fib3, 0, 1000);
+    xmemset(fib1, 0, 1000);
+    xmemset(fib2, 0, 1000);
+    xmemset(fib3, 0, 1000);
     fib1[0] = 1, fib2[0] = 1, fib3[0] = 2;
     while (fib3[999] == 0)
     {   xmemcpy(fib1, fib2, 1000);
@@ -1535,7 +1574,7 @@ Antwoord: 73,682
 static char *problem31()
 {   uint8_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
     uint32_t ways[target + 1];
-    memset(ways, 0, (target + 1) * 4);
+    xmemset(ways, 0, (target + 1) * 4);
     ways[0] = 1;
     uint8_t i, j;
     for (i = 0; i < sizeof(coins); i++)
@@ -1976,7 +2015,7 @@ static char *problem42()
 {
     FILE *fp = fopen("euler42.txt", "r");
     char *words = malloc(2000*40);
-    memset(words, 0, 2000*40);
+    xmemset(words, 0, 2000*40);
     uint32_t triangles[20], i = 0, j = 0;
     int c;
     while ((c = fgetc(fp)) != EOF)
@@ -2212,7 +2251,7 @@ static uint32_t opdracht47()
 {
     uint32_t L = 300000, nf = 4, ns = 4;
     uint32_t f[L], c = 0, n, i;
-    memset(f, 0, 4*L);
+    xmemset(f, 0, 4*L);
     for (n = 2; n < L - ns; n++)
     {   if (f[n] == nf) { if (++c == ns) return n - ns + 1; }
         else { c = 0; if (f[n] == 0) for (i = n; i < L; i += n) f[i]++; }
@@ -2352,10 +2391,49 @@ prime value family.
 Antwoord: 121,313
 */
 
+static uint32_t family51(uint32_t *first, uint32_t *beg, uint32_t *end, uint32_t n, uint32_t mask)
+{
+    uint32_t xlen = decimals32(n);
+    uint32_t bmask2[64], div = 2, dec = 1, end2 = 0, n2 = mask, i;
+    while (n2)
+    {
+        bmask2[end2++] = n2 % div ? dec : 0;
+        n2 -= n2 % div;
+        div *= 2;
+        dec *= 10;
+    }
+    for (i = 0; i < end2; i++)
+        n -= bmask2[i] * digit32(n, i);
+    uint32_t size = 0;
+    for (i = 0; i < 10; i++)
+    {   uint32_t tmp = n, *it;
+        for (it = bmask2; it != bmask2 + end2; it++)
+            tmp += *it * i;
+        if (decimals32(tmp) == xlen && binSearch(beg, end, tmp))
+        {   size++;
+            if (size == 1) *first = tmp;
+        }
+    }
+    return size;
+}
+
+static uint32_t opdracht51()
+{
+    uint32_t primes[80000], end = 0, *it, mask, size, first = 0;
+    end = sieve232(primes, 1000000);
+    for (it = primes; it != primes + end; it++)
+    {   for (mask = 1; mask < myPow32(2, decimals32(*it)); mask++)
+        {   size = family51(&first, primes, primes + end, *it, mask);
+            if (size == 8) return first;
+        }
+    }
+    return 0;
+}
+
 static char *problem51()
 {
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, opdracht51());
     return ret;
 }
 
@@ -2373,9 +2451,10 @@ Antwoord: 142,857
 
 static bool test52(uint32_t n)
 {   uint8_t nset[10], end = 0;
-    for (uint32_t x = n; x; x = x / 10)
+    uint32_t x, m;
+    for (x = n; x; x = x / 10)
         nset[end++] = x % 10;
-    for (uint32_t m = 2; m <= 6; m++)
+    for (m = 2; m <= 6; m++)
     {   uint8_t nset2[10];
         xmemcpy(nset2, nset, end);
         if (hasDigitsOnce32(n * m, nset2, nset2 + end) == false) return false;
@@ -2384,13 +2463,13 @@ static bool test52(uint32_t n)
 }
 
 static uint32_t opdracht52()
-{   for (uint32_t n = 2; n < 200000; n++) if (test52(n)) return n;
+{   uint32_t n;
+    for (n = 2; n < 200000; n++) if (test52(n)) return n;
     return 0;
 }
 
 static char *problem52()
-{
-    char *ret = malloc(50);
+{   char *ret = malloc(50);
     xstring32(ret, opdracht52());
     return ret;
 }
@@ -2770,9 +2849,9 @@ static uint32_t analysis(char *beg, char *end, uint32_t *letters)
     uint8_t i;
     for (i = 0; i < 26; i++) letters[i] = 0;
     while (beg != end)
-    {   if (isalpha(*beg))
+    {   if (xisalpha(*beg))
         {   total++;
-            char low = tolower(*beg);
+            char low = xtolower(*beg);
             letters[low - 'a']++;
         }
         beg++;
@@ -2788,7 +2867,7 @@ static char *problem59()
     uint8_t n = 0;
     uint32_t end = 0;
     while ((c = fgetc(fp)) != EOF)
-    {   if (isdigit(c) == false)
+    {   if (xisdigit(c) == false)
         {   msg[end++] = n;
             n = 0;
             continue;
@@ -3121,7 +3200,7 @@ static void runjob(uint32_t p)
     time_t begin = time(0);
     char *answer = run(p);
     time_t end = time(0);
-    if (strcmp(answer, answers2[p - 1]) != 0)
+    if (xstrcmp(answer, answers2[p - 1]) != 0)
         printf("error!");
     printf("#%u: %s %lus\r\n", p, answer, end - begin);
     free(answer);
