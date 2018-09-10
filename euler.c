@@ -2488,10 +2488,47 @@ Antwoord: 972
 http://euler.stephan-brumme.com/56/
 */
 
+static void setbig(uint16_t *big, uint64_t n)
+{
+    uint16_t i = 0;
+    while (n)
+    {
+        big[i++] = n % 10;
+        n /= 10;
+    }
+    while (i < 1500)
+        big[i++] = 0;
+}
+
+static void mulbig(uint16_t *big, uint16_t n)
+{
+    uint16_t carry = 0;
+    for (uint16_t i = 0; i < 1500; i++)
+    {   big[i] *= n;
+        big[i] += carry;
+        carry = big[i] / 10;
+        big[i] = big[i] % 10;
+    }
+}
+
 static char *problem56()
 {
+    uint32_t xmax = 100, maxSum = 1, base;
+    uint16_t power[1500];
+    for (base = 1; base <= xmax; base++)
+    {
+        setbig(power, 1);
+        for (uint32_t e = 1; e <= xmax; e++)
+        {
+            uint32_t sum = 0;
+            for (uint16_t *it = power; it != power + 1500; it++)
+                sum += *it;
+            if (sum > maxSum) maxSum = sum;
+            mulbig(power, base);
+        }
+    }
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, maxSum);
     return ret;
 }
 
