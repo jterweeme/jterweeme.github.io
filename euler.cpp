@@ -2568,9 +2568,10 @@ prime value family.
 Antwoord: 121,313
 */
 
-template <typename T> static void
+template <typename T> static uint32_t
 family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
-{   uint32_t xlen = decimals<uint32_t>(n);
+{
+    uint32_t xlen = decimals<uint32_t>(n);
     uint32_t bmask2[64], div = 2, dec = 1, end2 = 0;
     for (uint32_t n2 = mask; n2;)
     {
@@ -2581,13 +2582,18 @@ family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
     }
     for (uint32_t i = 0; i < end2; i++)
         n -= bmask2[i] * digit<uint32_t>(n, i);
+    uint32_t size = 0;
     for (uint32_t i = 0; i < 10; i++)
     {   uint32_t tmp = n;
         for (uint32_t *it = bmask2; it != bmask2 + end2; it++)
             tmp += *it * i;
         if (decimals<uint32_t>(tmp) == xlen && binSearch(beg, end, tmp))
+        {
+            size++;
             out.push_back(tmp);
+        }
     }
+    return size;
 }
 
 static uint32_t opdracht51()
@@ -2598,8 +2604,8 @@ static uint32_t opdracht51()
     for (uint32_t *it = primes; it != primes + end; it++)
     {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals<uint32_t>(*it)); mask++)
         {   vector<uint32_t> fam;
-            family51(fam, primes, primes + end, *it, mask);
-            if (fam.size() == 8) return fam.at(0);
+            uint32_t size = family51(fam, primes, primes + end, *it, mask);
+            if (size == 8) return fam.at(0);
         }
     }
     return 0;
@@ -2621,16 +2627,15 @@ Find the smallest positive integer, x, such that
 Antwoord: 142,857
 */
 
-
-
 static bool test52(uint32_t n)
-{   vector<uint8_t> nset;
-    for (uint32_t x = n; x; x = x / 10) nset.push_back(x % 10);
+{   uint8_t nset[10], end = 0;;
+    for (uint32_t x = n; x; x = x / 10)
+        nset[end++] = x % 10;
     for (uint32_t m = 2; m <= 6; m++)
-    {   vector<uint8_t> nset2;
-        for (vector<uint8_t>::iterator it = nset.begin(); it != nset.end(); it++)
-            nset2.push_back(*it);
-        if (hasDigitsOnce2(n * m, nset2.begin(), nset2.end()) == false) return false;
+    {
+        uint8_t nset2[10];
+        xmemcpy(nset2, nset, end);
+        if (hasDigitsOnce2(n * m, nset2, nset2 + end) == false) return false;
     }
     return true;
 }
@@ -2998,8 +3003,8 @@ static string problem57()
         BigNum twoB  = b + b;
         BigNum nextA = a + twoB;
         BigNum nextB = b + a;
-        a = std::move(nextA);
-        b = std::move(nextB);
+        a = nextA;
+        b = nextB;
     }
     return twostring<uint32_t>(count);
 }

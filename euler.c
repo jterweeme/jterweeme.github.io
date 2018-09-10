@@ -117,25 +117,51 @@ static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
 
+static void swap16(uint16_t *a, uint16_t *b)
+{   uint16_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void swap32(uint32_t *a, uint32_t *b)
+{   uint32_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static void reversea16(uint16_t *beg, uint16_t *end)
+{
+    while (beg < end)
+    {
+        swap16(beg, end);
+        beg++;
+        end--;
+    }
+}
+
 static uint32_t reverse32(uint32_t n, uint8_t base)
 {   uint32_t rev = 0, temp = 0;
     for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
     return rev;
 }
 
+#if 0
 static uint64_t reverse64(uint64_t n, uint8_t base)
 {   uint64_t rev = 0, temp = 0;
     for (temp = n; temp != 0; temp /= base) rev = rev * base + temp % base;
     return rev;
 }
+#endif
 
 static int ispalindrome32(uint32_t n, uint8_t base)
 {   return n == reverse32(n, base);
 }
 
+#if 0
 static int ispalindrome64(uint32_t n, uint8_t base)
 {   return n == reverse64(n, base);
 }
+#endif
 
 static uint32_t gcd(uint32_t a, uint32_t b)
 {   while (b)
@@ -180,18 +206,12 @@ static bool binSearch(uint32_t *first, uint32_t *last, uint32_t n)
     return false;
 }
 
-static void swap29(uint32_t *a, uint32_t *b)
-{   uint32_t temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 static void sort29(uint32_t *begin, uint32_t *end)
 {   uint32_t *a, *b;
     for (a = begin; a < end - 1; a++)
         for (b = begin; b < end - 1; b++)
             if (b[0] > b[1])
-                swap29(b, b + 1);
+                swap32(b, b + 1);
 }
 
 static bool hasDigitsOnce32(uint32_t n, uint8_t *beg, uint8_t *end)
@@ -2351,10 +2371,27 @@ Find the smallest positive integer, x, such that
 Antwoord: 142,857
 */
 
+static bool test52(uint32_t n)
+{   uint8_t nset[10], end = 0;
+    for (uint32_t x = n; x; x = x / 10)
+        nset[end++] = x % 10;
+    for (uint32_t m = 2; m <= 6; m++)
+    {   uint8_t nset2[10];
+        xmemcpy(nset2, nset, end);
+        if (hasDigitsOnce32(n * m, nset2, nset2 + end) == false) return false;
+    }
+    return true;
+}
+
+static uint32_t opdracht52()
+{   for (uint32_t n = 2; n < 200000; n++) if (test52(n)) return n;
+    return 0;
+}
+
 static char *problem52()
 {
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, opdracht52());
     return ret;
 }
 
@@ -2450,6 +2487,61 @@ emphasise the theoretical nature of Lychrel numbers.
 Antwoord: 249
 */
 
+static uint16_t setbig(uint16_t *big, uint64_t n)
+{   uint16_t i = 0;
+    while (n)
+        big[i++] = n % 10, n /= 10;
+    uint16_t digits = i;
+    while (i < 1500)
+        big[i++] = 0;
+    return digits;
+}
+
+// add a bignum to an existing bignum
+static void addbig(uint16_t *big, uint16_t *n)
+{
+    uint16_t carry = 0, i;
+    for (i = 0; i < 1500; i++)
+    {   big[i] += carry + n[i];
+        carry = big[i] / 10;
+        big[i] = big[i] % 10;
+    }
+}
+
+static void mulbig(uint16_t *big, uint16_t n)
+{
+    uint16_t carry = 0, i;
+    for (i = 0; i < 1500; i++)
+    {   big[i] *= n;
+        big[i] += carry;
+        carry = big[i] / 10;
+        big[i] = big[i] % 10;
+    }
+}
+
+static uint16_t decbig(uint16_t *big)
+{
+    uint16_t i = 1499;
+    while (true)
+    {   if (big[i] != 0) break;
+        i--;
+    }
+    return i + 1;
+}
+
+static bool palindromebig(uint16_t *big)
+{
+    uint16_t digits = decbig(big);
+    uint16_t rev[1500], i;
+    for (i = 0; i < 1500; i++)
+        rev[i] = big[i];
+    reversea16(rev, rev + (digits - 1));
+    for (i = 0; i < 1500; i++)
+        if (rev[i] != big[i]) return false;
+    return true;
+}
+
+#if 0
 static bool islychrel(uint64_t n, uint64_t it)
 {
     uint64_t i = 0;
@@ -2459,13 +2551,46 @@ static bool islychrel(uint64_t n, uint64_t it)
     }
     return true;
 }
+#endif
+
+static bool islychrel2(uint16_t n, uint16_t it)
+{
+    //printf("lychrel %u\r\n", n);
+    uint16_t big1[1500], big2[1500], i;
+    setbig(big1, n);
+    setbig(big2, 0);
+    for (i = 0; i < it; i++)
+    {
+        uint16_t digits = decbig(big1);
+        reversea16(big2, big2 + (digits - 1));
+        addbig(big1, big2);
+        if (palindromebig(big1)) return false;
+    }
+    return true;
+}
 
 static char *problem55()
 {
+#if 0
+    uint16_t big1[1500], big2[1500];
+    setbig(big1, 121);
+    printf("%u\r\n", palindromebig(big1));
+    uint16_t arr1[9] = {1,2,3,4,5,6,7,8,9};
+    reversea16(arr1, arr1 + 8);
+    for (uint8_t i = 0; i < 9; i++)
+        printf("%u", arr1[i]);
+    printf("\r\n");
+    setbig(big2, 200);
+    addbig(big1, big2);
+    printf("%u\r\n", decbig(big1));
+    for (uint8_t j = 0; j < 3; j++)
+        printf("%u", big1[j]);
+    printf("\r\n");
+#endif
     uint64_t xsum = 0;
     uint16_t i;
-    for (i = 0; i < 10000; i++)
-        if (islychrel(i, 50)) xsum++;
+    for (i = 1; i < 10000; i++)
+        if (islychrel2(i, 50)) xsum++;
     char *ret = malloc(50);
     xstring64(ret, xsum);
     return ret;
@@ -2488,40 +2613,17 @@ Antwoord: 972
 http://euler.stephan-brumme.com/56/
 */
 
-static void setbig(uint16_t *big, uint64_t n)
-{
-    uint16_t i = 0;
-    while (n)
-    {
-        big[i++] = n % 10;
-        n /= 10;
-    }
-    while (i < 1500)
-        big[i++] = 0;
-}
-
-static void mulbig(uint16_t *big, uint16_t n)
-{
-    uint16_t carry = 0;
-    for (uint16_t i = 0; i < 1500; i++)
-    {   big[i] *= n;
-        big[i] += carry;
-        carry = big[i] / 10;
-        big[i] = big[i] % 10;
-    }
-}
-
 static char *problem56()
 {
-    uint32_t xmax = 100, maxSum = 1, base;
-    uint16_t power[1500];
+    uint32_t xmax = 100, maxSum = 1, base, e;
+    uint16_t power[1500], *it;
     for (base = 1; base <= xmax; base++)
     {
         setbig(power, 1);
-        for (uint32_t e = 1; e <= xmax; e++)
+        for (e = 1; e <= xmax; e++)
         {
             uint32_t sum = 0;
-            for (uint16_t *it = power; it != power + 1500; it++)
+            for (it = power; it != power + 1500; it++)
                 sum += *it;
             if (sum > maxSum) maxSum = sum;
             mulbig(power, base);
