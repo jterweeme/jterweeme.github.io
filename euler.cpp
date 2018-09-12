@@ -174,72 +174,23 @@ static uint64_t sum(Generator<uint32_t> &s)
     return xsum;
 }
 
-#if 1
 class Sieve : public Generator<uint32_t>
 {
 private:
     uint8_t *_sieve;
     uint32_t _limit;
     uint32_t _next;
-    bool _hasNext;
-    uint32_t _findNext();
-    vector<uint32_t> _primes;
-    vector<uint32_t>::iterator _it;
-public:
-    Sieve(uint32_t limit);
-    ~Sieve() { delete[] _sieve; }
-    bool hasNext() { return _it != _primes.end(); }
-    uint32_t next() { return *_it++; }
-};
-
-uint32_t Sieve::_findNext()
-{
-    for (uint32_t i = _next + 1; i < _limit; i++)
-        if (_sieve[i]) return i;
-    return 0;
-}
-
-Sieve::Sieve(uint32_t limit)
-{   _limit = limit;
-    _sieve = new uint8_t[limit];
-    for (uint32_t i = 0; i < limit; i++) _sieve[i] = 1;
-    _sieve[0] = _sieve[1] = 0;
-    for (uint32_t p = 2; p * p < limit; p++)
-        if (_sieve[p] == 1)
-            for (uint32_t i = p * 2; i < limit; i += p)
-                _sieve[i] = 0;
-    _next = 0;
-    while ((_next = _findNext()) > 0)
-        _primes.push_back(_next);
-    _it = _primes.begin();
-}
-#else
-class Sieve : public Generator<uint32_t>
-{
-private:
-    uint8_t *_sieve;
-    uint32_t _limit;
-    uint32_t _next;
-    bool _hasNext;
-    uint32_t _i;
     uint32_t _findNext();
 public:
     Sieve(uint32_t limit);
     ~Sieve() { delete[] _sieve; }
     bool hasNext() { return _next > 0; }
-    uint32_t next()
-    {
-        uint32_t ret = _next;
-        _next = _findNext();
-        return ret;
-    }
+    uint32_t next() { uint32_t ret = _next; _next = _findNext(); return ret; }
 };
 
 uint32_t Sieve::_findNext()
-{
-    for (uint32_t i = _next; i < _limit; i++)
-        if (_sieve[i])
-            return i;
+{   for (uint32_t i = _next + 1; i < _limit; i++)
+        if (_sieve[i]) return i;
     return 0;
 }
 
@@ -254,7 +205,6 @@ Sieve::Sieve(uint32_t limit)
                 _sieve[i] = 0;
     _next = 2;
 }
-#endif
 
 #if 0
 static void testPrimes() __attribute__((unused));
