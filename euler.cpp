@@ -174,6 +174,7 @@ static uint64_t sum(Generator<uint32_t> &s)
     return xsum;
 }
 
+#if 1
 class Sieve : public Generator<uint32_t>
 {
 private:
@@ -181,6 +182,7 @@ private:
     uint32_t _limit;
     uint32_t _next;
     bool _hasNext;
+    uint32_t _findNext();
     vector<uint32_t> _primes;
     vector<uint32_t>::iterator _it;
 public:
@@ -189,6 +191,13 @@ public:
     bool hasNext() { return _it != _primes.end(); }
     uint32_t next() { return *_it++; }
 };
+
+uint32_t Sieve::_findNext()
+{
+    for (uint32_t i = _next + 1; i < _limit; i++)
+        if (_sieve[i]) return i;
+    return 0;
+}
 
 Sieve::Sieve(uint32_t limit)
 {   _limit = limit;
@@ -199,10 +208,53 @@ Sieve::Sieve(uint32_t limit)
         if (_sieve[p] == 1)
             for (uint32_t i = p * 2; i < limit; i += p)
                 _sieve[i] = 0;
-    for (uint32_t i = 0; i < limit; i++)
-        if (_sieve[i]) { _primes.push_back(i); }
+    _next = 0;
+    while ((_next = _findNext()) > 0)
+        _primes.push_back(_next);
     _it = _primes.begin();
 }
+#else
+class Sieve : public Generator<uint32_t>
+{
+private:
+    uint8_t *_sieve;
+    uint32_t _limit;
+    uint32_t _next;
+    bool _hasNext;
+    uint32_t _i;
+    uint32_t _findNext();
+public:
+    Sieve(uint32_t limit);
+    ~Sieve() { delete[] _sieve; }
+    bool hasNext() { return _next > 0; }
+    uint32_t next()
+    {
+        uint32_t ret = _next;
+        _next = _findNext();
+        return ret;
+    }
+};
+
+uint32_t Sieve::_findNext()
+{
+    for (uint32_t i = _next; i < _limit; i++)
+        if (_sieve[i])
+            return i;
+    return 0;
+}
+
+Sieve::Sieve(uint32_t limit)
+{   _limit = limit;
+    _sieve = new uint8_t[limit];
+    for (uint32_t i = 0; i < limit; i++) _sieve[i] = 1;
+    _sieve[0] = _sieve[1] = 0;
+    for (uint32_t p = 2; p * p < limit; p++)
+        if (_sieve[p] == 1)
+            for (uint32_t i = p * 2; i < limit; i += p)
+                _sieve[i] = 0;
+    _next = 2;
+}
+#endif
 
 #if 0
 static void testPrimes() __attribute__((unused));
@@ -267,12 +319,6 @@ template <typename T, typename U> bool hasDigitsOnce2(T n, U nsetbeg, U nsetend)
         n = n / 10;
     }
     return true;
-}
-
-template <typename T> bool sameDigs(T a, T b)
-{   vector<uint8_t> nset;
-    for (;a ;a = a / 10) nset.push_back(a % 10);
-    return hasDigitsOnce2<T>(b, nset.begin(), nset.end());
 }
 
 class LongNumber25
@@ -389,6 +435,16 @@ void LongNumber25::set(uint64_t n)
         _buf[i] = n % 10, n = n / 10;
 }
 
+static void testLongNum()
+{
+    LongNumber25 x(123456789);
+    LongNumber25 y(100000000);
+    x += y;
+    LongNumber25 z = x + y;
+    z.dump(cout);
+    cout << "\r\n";
+}
+
 template <typename T> uint16_t decimals(T n)
 {   uint16_t i = 0;
     while (n) n /= 10, i++;
@@ -401,14 +457,13 @@ template <> uint16_t decimals<LongNumber25>(LongNumber25 n)
 }
 #endif
 
-static void testLongNum()
-{
-    LongNumber25 x(123456789);
-    LongNumber25 y(100000000);
-    x += y;
-    LongNumber25 z = x + y;
-    z.dump(cout);
-    cout << "\r\n";
+template <typename T> bool sameDigs(T a, T b)
+{   uint16_t decs = decimals(a), end = 0;
+    uint8_t *nset = new uint8_t[decs];
+    for (;a ;a = a / 10) nset[end++] = a % 10;
+    bool ret = hasDigitsOnce2<T>(b, nset, nset + end);
+    delete[] nset;
+    return ret;
 }
 
 template <typename T> static T reverse(T n, uint8_t base = 10)
@@ -478,16 +533,6 @@ void Kounter::insert(uint8_t n)
     if (found == false)
         _kounter2.push_back((uint16_t)n << 8 | 1);
 }
-
-class Primes
-{
-private:
-    vector<uint64_t> _primes;
-    void _add();
-public:
-    Primes();
-    uint32_t get(uint16_t i);
-};
 
 template <class T> class PrimeFactors2 : public Generator<uint64_t>
 {
@@ -570,9 +615,13 @@ template <typename T> static uint32_t sumProperDivs2(T begin, T end, uint32_t n)
 }
 
 static bool isPandigital41(uint32_t n)
-{   vector<uint8_t> nset;
-    for (uint8_t i = 1; i <= decimals<uint32_t>(n); i++) nset.push_back(i);
-    return hasDigitsOnce2(n, nset.begin(), nset.end());
+{
+    uint16_t decs = decimals(n);
+    uint8_t *nset = new uint8_t[decs];
+    for (uint8_t i = 1; i <= decs; i++) nset[i - 1] = i;
+    bool ret = hasDigitsOnce2(n, nset, nset + decs + 1);
+    delete[] nset;
+    return ret;
 }
 
 static uint32_t gcd(uint32_t a, uint32_t b)
@@ -2804,36 +2853,19 @@ static uint32_t score(uint32_t hand)
     return values.max1();   // high card
 }
 
-static void translate(uint64_t hand, ostream &os) __attribute__((unused));
-static void translate(uint64_t hand, ostream &os)
-{   char value[] = "23456789TJQKA";
-    char suit[] = "CDHS";
-    uint32_t player1 = hand & 0xffffffff, player2 = (hand & 0xffffffff00000000ULL) >> 32;
-    for (uint8_t i = 0; i < 5; i++)
-    {   os.put(value[(player1 >> i * 6 & 0xf) - 2]);
-        os.put(suit[player1 >> (i * 6 + 4) & 3]);
-        os.put(' ');
-    }
-    for (uint8_t i = 0; i < 5; i++)
-    {   os.put(value[(player2 >> i * 6 & 0xf) - 2]);
-        os.put(suit[player2 >> (i * 6 + 4) & 3]);
-        os.put(' ');
-    }
-}
-
 static string problem54()
-{   vector<uint64_t> twoHands;
-    ifstream ifs;
+{   ifstream ifs;
     ifs.open("euler54.txt");
     string tmp;
-    while (getline(ifs, tmp))
-        if (tmp.size() > 0)
-            twoHands.push_back(parse(tmp));
-    ifs.close();
     uint32_t ret = 0;
-    for (vector<uint64_t>::iterator it = twoHands.begin(); it != twoHands.end(); it++)
-        if (score(*it & 0xffffffff) > score((*it & 0xffffffff00000000ULL) >> 32))
-            ret++;
+    while (getline(ifs, tmp))
+    {   if (tmp.size() > 0)
+        {   uint64_t hand = parse(tmp);
+            if (score(hand & 0xffffffff) > score((hand & 0xffffffff00000000ULL) >> 32))
+                ret++;
+        }
+    }
+    ifs.close();
     return twostring<uint32_t>(ret);
 }
 

@@ -582,6 +582,7 @@ function opdracht13(l = digits13)
     xhr.send(null);
     if (xhr.status != 200)
         return 0;
+    console.log(xhr.responseText.length);
     var totalSum = [], sum = 0;
     for (var i = 50; i > 0; i--)
     {   for (var j = 0; j < l.length; j++) sum += l[j].charCodeAt(i - 1) - 48;

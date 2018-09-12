@@ -2523,11 +2523,118 @@ static char *problem53()
     return ret;
 }
 
+/*
+#54 Poker hands
+
+In the card game poker, a hand consists of five cards and
+are ranked, from lowest to highest, in the following way:
+
+High Card: Highest value card.
+One Pair: Two cards of the same value.
+Two Pairs: Two different pairs.
+Three of a Kind: Three cards of the same value.
+Straight: All cards are consecutive values.
+Flush: All cards of the same suit.
+Full House: Three of a kind and a pair.
+Four of a Kind: Four cards of the same value.
+Straight Flush: All cards are consecutive values of same suit.
+Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
+
+The cards are valued in the order:
+2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
+
+If two players have the same ranked hands then the rank made up of the
+highest value wins; for example, a pair of eights beats a pair of fives
+(see example 1 below). But if two ranks tie, for example, both players
+have a pair of queens, then highest cards in each hand are compared (see
+example 4 below); if the highest cards tie then the next highest cards
+are compared, and so on.
+
+Consider the following five hands dealt to two players:
+
+Hand    Player 1            Player 2          Winner
+
+ 1    5H 5C 6S 7S KD     2C 3S 8S 8D TD      Player 2
+      Pair of Fives      Pair of Eights
+
+ 2   5D 8C 9S JS AC      2C 5C 7D 8S QH      Player 1
+    Highest card Ace   Highest card Queen
+
+ 3   2D 9C AS AH AC      3D 6D 7D TD QD      Player 2
+       Three Aces     Flush with Diamonds
+
+ 4   4D 6S 9H QH QC      3D 6D 7H QD QS      Player 1
+     Pair of Queens      Pair of Queens
+    Highest card Nine  Highest card Seven
+   
+ 5   2H 2D 4C 4D 4S     3C 3D 3S 9S 9D       Player 1
+       Full House         Full House
+   With Three Fours   with Three Threes
+
+The file, poker.txt, contains one-thousand random hands dealt to two
+players. Each line of the file contains ten cards (separated by a single
+space): the first five are Player 1's cards and the last five are Player 2's
+cards. You can assume that all hands are valid (no invalid characters or
+repeated cards), each player's hand is in no specific order, and in each
+hand there is a clear winner.
+
+How many hands does Player 1 win?
+
+Antwoord: 376
+*/
+
+static uint32_t parseHand(uint16_t *cards)
+{   char value[] = "23456789TJQKA";
+    char suit[] = "CDHS";
+    uint32_t ret = 0;
+    for (uint8_t i = 0; i < 5; i++)
+    {   char x = cards[i] & 0xff;
+        for (uint8_t j = 0; j <= 12; j++)
+            if (x == value[j])
+                ret |= (j + 2) << (i * 6);
+        x = (cards[i] & 0xff00) >> 8;
+        for (uint8_t j = 0; j <= 4; j++)
+            if (x == suit[j])
+                ret |= j << (i * 6 + 4);
+    }
+    return ret;
+}
+
+static uint64_t parse(char *s)
+{   uint16_t cards[10];
+    for (uint8_t i = 0, j = 0; i < 30; i += 3)
+        cards[j++] = s[i] | s[i + 1] << 8;
+    uint32_t p1 = parseHand(cards), p2 = parseHand(cards + 5);
+    return p1 | (uint64_t)p2 << 32;
+}
+
+static uint32_t score(uint32_t hand)
+{
+    
+}
+
 static char *problem54()
 {
-    char *ret = malloc(50);
-    xstring32(ret, 0);
-    return ret;
+    FILE *fp = fopen("euler54.txt", "ro");
+    uint32_t ret = 0;
+    char tmp[50];
+    int c;
+    uint8_t col = 0;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        if (c == 0x0a)
+        {   if (col > 0)
+            {   tmp[col++] = 0;
+                uint64_t hand = parse(tmp);
+            }
+        }
+        tmp[col++] = c;
+        
+    }
+    fclose(fp);
+    char *ret2 = malloc(50);
+    xstring32(ret2, 0);
+    return ret2;
 }
 
 /*
