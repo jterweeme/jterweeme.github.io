@@ -7,6 +7,10 @@
 #define true 1
 #define false 0
 
+static uint32_t max32(uint32_t a, uint32_t b)
+{   return a > b ? a : b;
+}
+
 static bool xisdigit(char c)
 {   return c >= '0' && c <= '9';
 }
@@ -156,26 +160,18 @@ static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
 
+#if 0
 static void swap16(uint16_t *a, uint16_t *b)
 {   uint16_t temp = *a;
     *a = *b;
     *b = temp;
 }
+#endif
 
 static void swap32(uint32_t *a, uint32_t *b)
 {   uint32_t temp = *a;
     *a = *b;
     *b = temp;
-}
-
-static void reversea16(uint16_t *beg, uint16_t *end)
-{
-    while (beg < end)
-    {
-        swap16(beg, end);
-        beg++;
-        end--;
-    }
 }
 
 static uint32_t reverse32(uint32_t n, uint8_t base)
@@ -293,6 +289,55 @@ static void xstring64(char *s, uint64_t n)
     s[decs] = 0;
     while (n)
         s[--decs] = n % 10 + '0', n = n / 10;
+}
+
+// Counter
+static void cntins(uint16_t *data, uint16_t *n, uint8_t value)
+{
+    uint16_t i;
+    for (i = 0; i < *n; i++)
+    {   if ((data[i] & 0xff00) == (uint16_t)value << 8)
+        { data[i]++; return; }
+    }
+    data[*n] = (uint16_t)value << 8 | 1;
+    *n = *n + 1;
+}
+
+static uint8_t maxkey(uint16_t *data, uint16_t n)
+{   uint8_t xmax = 0;
+    uint16_t i;
+    for (i = 0; i < n; i++)
+    {   uint8_t key = (uint8_t)((data[i] >> 8) & 0xff);
+        if (key > xmax) xmax = key;
+    }
+    return xmax;
+}
+
+static uint8_t maxcnt(uint16_t *data, uint16_t n)
+{   uint8_t xmax = 0;
+    uint16_t i;
+    for (i = 0; i < n; i++)
+    {   uint8_t cnt = (uint8_t)(data[i] & 0xff);
+        if (cnt > xmax) xmax = cnt;
+    }
+    return xmax;
+}
+
+static uint8_t mincnt(uint16_t *data, uint16_t n)
+{   uint8_t xmin = 0xff;
+    uint16_t i;
+    for (i = 0; i < n; i++)
+    {   uint8_t cnt = (uint8_t)(data[i] & 0xff);
+        if (cnt < xmin) xmin = cnt;
+    }
+    return xmin;
+}
+
+static bool haskey(uint16_t *data, uint16_t n, uint8_t key)
+{   uint16_t i;
+    for (i = 0; i < n; i++)
+        if ((uint8_t)(data[i] >> 8) == key) return true;
+    return false;
 }
 
 /*
@@ -2268,6 +2313,12 @@ static char *problem47()
 
 /*
 #48: Self powers
+
+The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+
+Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+
+Antwoord: 9,110,846,700
 */
 
 static char *problem48()
@@ -2587,13 +2638,14 @@ static uint32_t parseHand(uint16_t *cards)
 {   char value[] = "23456789TJQKA";
     char suit[] = "CDHS";
     uint32_t ret = 0;
-    for (uint8_t i = 0; i < 5; i++)
+    uint8_t i, j;
+    for (i = 0; i < 5; i++)
     {   char x = cards[i] & 0xff;
-        for (uint8_t j = 0; j <= 12; j++)
+        for (j = 0; j <= 12; j++)
             if (x == value[j])
                 ret |= (j + 2) << (i * 6);
         x = (cards[i] & 0xff00) >> 8;
-        for (uint8_t j = 0; j <= 4; j++)
+        for (j = 0; j <= 4; j++)
             if (x == suit[j])
                 ret |= j << (i * 6 + 4);
     }
@@ -2602,37 +2654,88 @@ static uint32_t parseHand(uint16_t *cards)
 
 static uint64_t parse(char *s)
 {   uint16_t cards[10];
-    for (uint8_t i = 0, j = 0; i < 30; i += 3)
+    uint8_t i, j;
+    for (i = 0, j = 0; i < 30; i += 3)
         cards[j++] = s[i] | s[i + 1] << 8;
     uint32_t p1 = parseHand(cards), p2 = parseHand(cards + 5);
     return p1 | (uint64_t)p2 << 32;
 }
 
+static uint8_t straight(uint16_t *values, uint16_t n)
+{   uint8_t xmax = maxkey(values, n), i;
+    for (i = 0; i < 5; i++)
+        if (haskey(values, n, xmax -i) == false) return 0;
+    return xmax;
+}
+
+static uint8_t twopair(uint16_t *values, uint16_t n)
+{   uint8_t best = 0, pairCount = 0;
+    uint16_t i;
+    for (i = 0; i < n; i++)
+    {   if ((uint8_t)(values[i] & 0xff) == 2)
+        {   pairCount++;
+            uint8_t value = (uint8_t)(values[i] >> 8);
+            if (value > best) best = value;
+        }
+    }
+    return pairCount == 2 ? best : 0;
+}
+
+static uint8_t onepair(uint16_t *values, uint16_t n)
+{   uint8_t bestKicker = 0, pairValue = 0, pairCount = 0;
+    uint16_t i;
+    for (i = 0; i < n; i++)
+    {   if ((uint8_t)(values[i] & 0xff) == 2)
+        {   pairCount++;
+            pairValue = (uint8_t)((values[i] >> 8) & 0xff);
+        }
+        else if ((uint8_t)(values[i] & 0xff) == 1)
+        {   uint8_t kicker = (uint8_t)((values[i] >> 8) & 0xff);
+            if (kicker > bestKicker) bestKicker = kicker;
+        }
+    }
+    return pairCount == 1 ? pairValue * 15 + bestKicker : 0;
+}
+
 static uint32_t score(uint32_t hand)
-{
+{   uint16_t values[50], suits[50], nvalues = 0, nsuits = 0;
+    uint8_t i;
+    for (i = 0; i < 5; i++)
+    {   cntins(values, &nvalues, hand >> i * 6 & 0xf);
+        cntins(suits, &nsuits, hand >> (i * 6 + 4) & 3);
+    }
+    if (maxcnt(values, nvalues) == 4) return 5004;  // 4ofkind
+    if (maxcnt(values, nvalues) == 3 && mincnt(values, nvalues) == 2) return 5003; // fullhouse
+    if (maxcnt(suits, nsuits) == 5) return 5002;    // flush
+    if (straight(values, nvalues)) return 5001;
+    if (maxcnt(values, nvalues) == 3) return 5000;  // 3ofkind
+    if (twopair(values, nvalues)) return twopair(values, nvalues) + 300;
+    if (onepair(values, nvalues)) return onepair(values, nvalues);
+    return maxkey(values, nvalues); // high card
 }
 
 static char *problem54()
-{
-    FILE *fp = fopen("euler54.txt", "ro");
+{   FILE *fp = fopen("euler54.txt", "ro");
     uint32_t ret = 0;
     char tmp[50];
     int c;
     uint8_t col = 0;
     while ((c = fgetc(fp)) != EOF)
-    {
-        if (c == 0x0a)
+    {   if (c == 0x0a)
         {   if (col > 0)
             {   tmp[col++] = 0;
                 uint64_t hand = parse(tmp);
+                if (score(hand & 0xffffffff) > score((hand & 0xffffffff00000000ULL) >> 32))
+                    ret++;
             }
+            col = 0;
+            continue;
         }
         tmp[col++] = c;
-        
     }
     fclose(fp);
     char *ret2 = malloc(50);
-    xstring32(ret2, 0);
+    xstring32(ret2, ret);
     return ret2;
 }
 
@@ -2684,8 +2787,7 @@ static uint16_t setbig(uint16_t *big, uint64_t n)
 
 // add a bignum to an existing bignum
 static void addbig(uint16_t *big, uint16_t *n)
-{
-    uint16_t carry = 0, i;
+{   uint16_t carry = 0, i;
     for (i = 0; i < 1500; i++)
     {   big[i] += carry + n[i];
         carry = big[i] / 10;
@@ -2694,8 +2796,7 @@ static void addbig(uint16_t *big, uint16_t *n)
 }
 
 static void mulbig(uint16_t *big, uint16_t n)
-{
-    uint16_t carry = 0, i;
+{   uint16_t carry = 0, i;
     for (i = 0; i < 1500; i++)
     {   big[i] *= n;
         big[i] += carry;
@@ -2704,9 +2805,9 @@ static void mulbig(uint16_t *big, uint16_t n)
     }
 }
 
+// number of digits
 static uint16_t decbig(uint16_t *big)
-{
-    uint16_t i = 1499;
+{   uint16_t i = 1499;
     while (true)
     {   if (big[i] != 0) break;
         i--;
@@ -2715,39 +2816,22 @@ static uint16_t decbig(uint16_t *big)
 }
 
 static bool palindromebig(uint16_t *big)
-{
-    uint16_t digits = decbig(big);
-    uint16_t rev[1500], i;
-    for (i = 0; i < 1500; i++)
-        rev[i] = big[i];
-    reversea16(rev, rev + (digits - 1));
-    for (i = 0; i < 1500; i++)
+{   uint16_t digits = decbig(big), rev[1500], i;
+    for (i = 0; i < digits; i++)
+        rev[i] = big[digits - 1 - i];
+    for (i = 0; i < digits; i++)
         if (rev[i] != big[i]) return false;
     return true;
 }
 
-#if 0
-static bool islychrel(uint64_t n, uint64_t it)
-{
-    uint64_t i = 0;
-    for (i = 0; i < it; i++)
-    {   n += reverse64(n, 10);
-        if (ispalindrome64(n, 10)) return false;
-    }
-    return true;
-}
-#endif
-
 static bool islychrel2(uint16_t n, uint16_t it)
-{
-    //printf("lychrel %u\r\n", n);
-    uint16_t big1[1500], big2[1500], i;
+{   uint16_t big1[1500], big2[1500], i, j;
     setbig(big1, n);
     setbig(big2, 0);
     for (i = 0; i < it; i++)
-    {
-        uint16_t digits = decbig(big1);
-        reversea16(big2, big2 + (digits - 1));
+    {   uint16_t digits = decbig(big1);
+        for (j = 0; j < digits; j++)
+            big2[j] = big1[digits - 1 - j];
         addbig(big1, big2);
         if (palindromebig(big1)) return false;
     }
@@ -2755,29 +2839,12 @@ static bool islychrel2(uint16_t n, uint16_t it)
 }
 
 static char *problem55()
-{
-#if 0
-    uint16_t big1[1500], big2[1500];
-    setbig(big1, 121);
-    printf("%u\r\n", palindromebig(big1));
-    uint16_t arr1[9] = {1,2,3,4,5,6,7,8,9};
-    reversea16(arr1, arr1 + 8);
-    for (uint8_t i = 0; i < 9; i++)
-        printf("%u", arr1[i]);
-    printf("\r\n");
-    setbig(big2, 200);
-    addbig(big1, big2);
-    printf("%u\r\n", decbig(big1));
-    for (uint8_t j = 0; j < 3; j++)
-        printf("%u", big1[j]);
-    printf("\r\n");
-#endif
-    uint64_t xsum = 0;
+{   uint32_t xsum = 0;
     uint16_t i;
     for (i = 1; i < 10000; i++)
         if (islychrel2(i, 50)) xsum++;
     char *ret = malloc(50);
-    xstring64(ret, xsum);
+    xstring32(ret, xsum);
     return ret;
 }
 
@@ -2799,18 +2866,15 @@ http://euler.stephan-brumme.com/56/
 */
 
 static char *problem56()
-{
-    uint32_t xmax = 100, maxSum = 1, base, e;
+{   uint32_t xmax = 100, maxSum = 1, base, e;
     uint16_t power[1500], *it;
     for (base = 1; base <= xmax; base++)
-    {
-        setbig(power, 1);
+    {   setbig(power, 1);
         for (e = 1; e <= xmax; e++)
-        {
-            uint32_t sum = 0;
+        {   uint32_t sum = 0;
             for (it = power; it != power + 1500; it++)
                 sum += *it;
-            if (sum > maxSum) maxSum = sum;
+            maxSum = max32(maxSum, sum);
             mulbig(power, base);
         }
     }
@@ -2849,9 +2913,23 @@ http://euler.stephan-brumme.com/57/
 */
 
 static char *problem57()
-{
+{   uint32_t iterations = 1000, count = 0, i;
+    uint16_t a[1500], b[1500], twoB[1500], nextA[1500], nextB[1500];
+    setbig(a, 1);
+    setbig(b, 1);
+    for (i = 0; i <= iterations; i++)
+    {   if (decbig(a) > decbig(b)) count++;
+        xmemcpy(twoB, b, 3000);
+        addbig(twoB, b);
+        xmemcpy(nextA, a, 3000);
+        addbig(nextA, twoB);
+        xmemcpy(nextB, b, 3000);
+        addbig(nextB, a);
+        xmemcpy(a, nextA, 3000);
+        xmemcpy(b, nextB, 3000);
+    }
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, count);
     return ret;
 }
 
@@ -2886,8 +2964,7 @@ https://www.mathblog.dk/project-euler-58-primes-diagonals-spiral/
 */
 
 static char *problem58()
-{
-    uint32_t sl = 2, cnt = 3, c = 9;
+{   uint32_t sl = 2, cnt = 3, c = 9;
     while ((double)cnt / (2*sl+1) >= 0.10)
     {   sl += 2;
         uint8_t i;
@@ -3035,12 +3112,78 @@ Antwoord: 26,033
 13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
 */
 
+static bool comb(uint32_t a, uint32_t b)
+{   return isprime32(a * myPow64(10, decimals64(b)) + b) &&
+        isprime32(b * myPow64(10, decimals64(a)) + a);
+}
+
+static uint32_t opdracht60()
+{   uint32_t lprimes[10000];
+    uint32_t end = sieve232(lprimes, 10000), *ita, *itb, *itc, *itd, *ite;
+    for (ita = lprimes; ita != lprimes + end; ita++)
+    {   for (itb = lprimes; itb != lprimes + end; itb++)
+        {   if (*itb < *ita) continue;
+            if (comb(*ita, *itb))
+            {   for (itc = lprimes; itc != lprimes + end; itc++)
+                {   if (*itc < *itb) continue;
+                    if (comb(*ita, *itc) && comb(*itb, *itc))
+                    {   for (itd = lprimes; itd != lprimes + end; itd++)
+                        {   if (*itd < *itc) continue;
+                            if (comb(*ita, *itd) && comb(*itb, *itd) && comb(*itc, *itd))
+                            {   for (ite = lprimes; ite != lprimes + end; ite++)
+                                {   if (*ite < *itd) continue;
+                                    if (comb(*ita, *ite) && comb(*itb, *ite) &&
+                                        comb(*itc, *ite) && comb(*itd, *ite))
+                                    {
+                                        return *ita + *itb + *itc + *itd + *ite;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 static char *problem60()
-{
-    char *ret = malloc(50);
-    xstring32(ret, 0);
+{   char *ret = malloc(50);
+    xstring32(ret, opdracht60());
     return ret;
 }
+
+/*
+#61: Cyclical figurate numbers
+
+Triangle, square, pentagonal, hexagonal, heptagonal, and octagonal numbers
+are all figurate (polygonal) numbers and are generated by the following formulae:
+Triangle     P3,n=n(n+1)/2     1, 3, 6, 10, 15, ...
+Square     P4,n=n2     1, 4, 9, 16, 25, ...
+Pentagonal     P5,n=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     P6,n=n(2n-1)     1, 6, 15, 28, 45, ...
+Heptagonal     P7,n=n(5n-3)/2     1, 7, 18, 34, 55, ...
+Octagonal     P8,n=n(3n-2)     1, 8, 21, 40, 65, ...
+
+The ordered set of three 4-digit numbers: 8128, 2882, 8281, has three interesting properties.
+
+1.    The set is cyclic, in that the last two digits of each number is the
+first two digits of the next number (including the last number with the first).
+2.    Each polygonal type: triangle (P3,127=8128), square (P4,91=8281), and
+pentagonal (P5,44=2882), is represented by a different number in the set.
+3.    This is the only set of 4-digit numbers with this property.
+
+Find the sum of the only ordered set of six cyclic 4-digit numbers for which
+each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal,
+and octagonal, is represented by a different number in the set.
+
+Antwoord: 28,684
+*/
+
+/*
+8128 (Hex) + 2882 (Pent) + 8256 (Tri) + 5625 (Sq) + 2512 (Hept) + 1281 (Oct) = 28,684
+*/
 
 static char *problem61()
 {

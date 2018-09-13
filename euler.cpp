@@ -625,6 +625,22 @@ static string to_string32s(int32_t n)
     return string(tmp);
 }
 
+template <typename T> class Permutation
+{
+private:
+    T *_pool;
+    uint8_t _size;
+public:
+    Permutation(T *begin, T *end)
+    {
+        _size = end - begin;
+        _pool = new T[_size];
+    }
+    ~Permutation()
+    {   delete[] _pool;
+    }
+};
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -2419,6 +2435,12 @@ static string problem47()
 
 /*
 #48: Self powers
+
+The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+
+Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+
+Antwoord: 9,110,846,700
 */
 
 static string problem48()
@@ -2757,8 +2779,7 @@ static uint8_t twopair(Kounter &cnt)
 {   uint8_t best = 0;
     uint8_t pairCount = 0;
     for (auto it = cnt.begin(); it != cnt.end(); it++)
-    {
-        if ((uint8_t)(*it & 0xff) == 2)
+    {   if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
             best = max(best, (uint8_t)(*it >> 8));
         }
@@ -2882,13 +2903,11 @@ http://euler.stephan-brumme.com/56/
 */
 
 static string problem56()
-{
-    uint32_t maximum = 100, maxSum = 1;
+{   uint32_t maximum = 100, maxSum = 1;
     for (uint32_t base = 1; base <= maximum; base++)
     {   LongNumber25 power(1);
         for (uint32_t exponent = 1; exponent <= maximum; exponent++)
-        {
-            uint32_t sum = 0;
+        {   uint32_t sum = 0;
             for (uint16_t *it = power.begin(); it != power.end(); it++)
                 sum += *it;
             maxSum = max(maxSum, sum);
@@ -2929,20 +2948,19 @@ http://euler.stephan-brumme.com/57/
 
 static string problem57()
 {   uint32_t iterations = 1000;
-    LongNumber25 a2(1);
-    LongNumber25 b2(1);
+    LongNumber25 a(1);
+    LongNumber25 b(1);
     uint32_t count = 0;
     for (uint32_t i = 0; i <= iterations; i++)
-    {
-        if (a2.digits() > b2.digits()) count++;
-        LongNumber25 twoB(b2);
-        twoB.add(b2);
-        LongNumber25 nextA(a2);
+    {   if (a.digits() > b.digits()) count++;
+        LongNumber25 twoB(b);
+        twoB.add(b);
+        LongNumber25 nextA(a);
         nextA.add(twoB);
-        LongNumber25 nextB(b2);
-        nextB.add(a2);
-        a2.set(nextA);
-        b2.set(nextB);
+        LongNumber25 nextB(b);
+        nextB.add(a);
+        a.set(nextA);
+        b.set(nextB);
     }
     return twostring<uint32_t>(count);
 }
@@ -3119,44 +3137,28 @@ Antwoord: 26,033
 13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
 */
 
-#if 0
-static bool comb(uint64_t a, uint64_t b)
-{
-    return isPrime(a * myPow<uint64_t>(10, decimals(b) + b)) &&
-        isPrime(b * myPow<uint64_t>(10, decimals(a) + a));
+static bool comb(uint32_t a, uint32_t b)
+{   return isPrime(a * myPow<uint32_t>(10, decimals(b)) + b) &&
+        isPrime(b * myPow<uint32_t>(10, decimals(a)) + a);
 }
-#endif
 
 static uint32_t opdracht60()
-{
-#if 0
-    vector<uint32_t> lprimes;
+{   uint32_t lprimes[10000], end = 0;
     Sieve sieve(10000);
     while (sieve.hasNext())
-        lprimes.push_back(sieve.next());
-    for (vector<uint32_t>::iterator ita = lprimes.begin(); ita != lprimes.end(); ita++)
-    {
-        for (vector<uint32_t>::iterator itb = lprimes.begin(); itb != lprimes.end(); itb++)
-        {
-            if (*itb < *ita) continue;
+        lprimes[end++] = sieve.next();
+    for (uint32_t *ita = lprimes; ita != lprimes + end; ita++)
+    {   for (uint32_t *itb = lprimes; itb != lprimes + end; itb++)
+        {   if (*itb < *ita) continue;
             if (comb(*ita, *itb))
-            {
-                for (vector<uint32_t>::iterator itc = lprimes.begin();
-                    itc != lprimes.end(); itc++)
-                {
-                    if (*itc < *itb) continue;
+            {   for (uint32_t *itc = lprimes; itc != lprimes + end; itc++)
+                {   if (*itc < *itb) continue;
                     if (comb(*ita, *itc) && comb(*itb, *itc))
-                    {
-                        for (vector<uint32_t>::iterator itd = lprimes.begin();
-                            itd != lprimes.end(); itd++)
-                        {
-                            if (*itd < *itc) continue;
+                    {   for (uint32_t *itd = lprimes; itd != lprimes + end; itd++)
+                        {   if (*itd < *itc) continue;
                             if (comb(*ita, *itd) && comb(*itb, *itd) && comb(*itc, *itd))
-                            {
-                                for (vector<uint32_t>::iterator ite = lprimes.begin();
-                                    ite != lprimes.end(); ite++)
-                                {
-                                    if (*ite < *itd) continue;
+                            {   for (uint32_t *ite = lprimes; ite != lprimes + end; ite++)
+                                {   if (*ite < *itd) continue;
                                     if (comb(*ita, *ite) && comb(*itb, *ite) &&
                                         comb(*itc, *ite) && comb(*itd, *ite))
                                     {
@@ -3170,14 +3172,43 @@ static uint32_t opdracht60()
             }
         }
     }
-#endif
     return 0;
 }
 
 static string problem60()
-{
-    return twostring<uint32_t>(opdracht60());
+{   return twostring<uint32_t>(opdracht60());
 }
+
+/*
+#61: Cyclical figurate numbers
+
+Triangle, square, pentagonal, hexagonal, heptagonal, and octagonal numbers
+are all figurate (polygonal) numbers and are generated by the following formulae:
+Triangle     P3,n=n(n+1)/2     1, 3, 6, 10, 15, ...
+Square     P4,n=n2     1, 4, 9, 16, 25, ...
+Pentagonal     P5,n=n(3n-1)/2     1, 5, 12, 22, 35, ...
+Hexagonal     P6,n=n(2n-1)     1, 6, 15, 28, 45, ...
+Heptagonal     P7,n=n(5n-3)/2     1, 7, 18, 34, 55, ...
+Octagonal     P8,n=n(3n-2)     1, 8, 21, 40, 65, ...
+
+The ordered set of three 4-digit numbers: 8128, 2882, 8281, has three interesting properties.
+
+1.    The set is cyclic, in that the last two digits of each number is the
+first two digits of the next number (including the last number with the first).
+2.    Each polygonal type: triangle (P3,127=8128), square (P4,91=8281), and
+pentagonal (P5,44=2882), is represented by a different number in the set.
+3.    This is the only set of 4-digit numbers with this property.
+
+Find the sum of the only ordered set of six cyclic 4-digit numbers for which
+each polygonal type: triangle, square, pentagonal, hexagonal, heptagonal,
+and octagonal, is represented by a different number in the set.
+
+Antwoord: 28,684
+*/
+
+/*
+8128 (Hex) + 2882 (Pent) + 8256 (Tri) + 5625 (Sq) + 2512 (Hept) + 1281 (Oct) = 28,684
+*/
 
 static string problem61()
 {
@@ -3199,17 +3230,14 @@ Antwoord: 127,035,954,683
 */
 
 static string problem62()
-{
-    uint64_t lst[9000];
+{   uint64_t lst[9000];
     for (uint64_t n = 0; n < 9000; n++)
         lst[n] = n * n * n;
     for (uint32_t i = 0; i < 9000; i++)
-    {
-        uint32_t cnt = 0;
+    {   uint32_t cnt = 0;
         uint8_t ln = decimals<uint64_t>(lst[i]);
         for (uint32_t b = i; b < 9000; b++)
-        {
-            if (decimals(lst[b]) > ln) break;
+        {   if (decimals(lst[b]) > ln) break;
             if (sameDigs<uint64_t>(lst[i], lst[b])) cnt++;
         }
         if (cnt == 5)
