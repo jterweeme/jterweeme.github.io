@@ -2610,7 +2610,6 @@ static uint64_t parse(char *s)
 
 static uint32_t score(uint32_t hand)
 {
-    
 }
 
 static char *problem54()

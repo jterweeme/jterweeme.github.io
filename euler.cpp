@@ -3,8 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include <vector>
 #ifdef MULTITHREAD
+#include <vector>
 #include <queue>
 #include <functional>
 #include <future>
@@ -429,59 +429,59 @@ template <typename T> static bool ispalindrome(T n, uint8_t base = 10)
 class Kounter
 {
 private:
-    vector<uint16_t> _kounter2;
+    uint16_t _kounter3[50];
+    uint8_t _end = 0;
 public:
     void insert(uint8_t n);
-    bool hasKey(uint8_t n) const;
-    uint8_t max1() const;
-    uint8_t max2() const;
-    uint8_t min1() const;
-    uint8_t min2() const;
-    vector<uint16_t>::const_iterator cbegin() const { return _kounter2.cbegin(); }
-    vector<uint16_t>::const_iterator cend() const { return _kounter2.cend(); }
+    bool hasKey(uint8_t n);
+    uint8_t maxKey();
+    uint8_t maxCount();
+    uint8_t minKey();
+    uint8_t minCount();
+    uint16_t *begin() { return _kounter3; }
+    uint16_t *end() { return _kounter3 + _end; }
 };
 
-bool Kounter::hasKey(uint8_t n) const
-{   for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
+bool Kounter::hasKey(uint8_t n)
+{   for (auto it = begin(); it != end(); it++)
         if ((uint8_t)(*it >> 8) == n) return true;
     return false;
 }
 
-uint8_t Kounter::max1() const
+uint8_t Kounter::maxKey()
 {   uint8_t xmax = 0;
-    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
-        xmax = std::max(xmax, (uint8_t)((*it >> 8) & 0xff));
+    for (uint8_t i = 0; i < _end; i++)
+        xmax = std::max(xmax, (uint8_t)((_kounter3[i] >> 8) & 0xff));
     return xmax;
 }
 
-uint8_t Kounter::max2() const
+uint8_t Kounter::maxCount()
 {   uint8_t xmax = 0;
-    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
+    for (auto it = begin(); it != end(); it++)
         xmax = std::max(xmax, (uint8_t)(*it & 0xff));
     return xmax;
 }
 
-uint8_t Kounter::min1() const
+uint8_t Kounter::minKey()
 {   uint8_t xmin = 0xff;
-    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
+    for (auto it = begin(); it != end(); it++)
         xmin = std::min(xmin, (uint8_t)((*it >> 8) & 0xff));
     return xmin;
 }
 
-uint8_t Kounter::min2() const
+uint8_t Kounter::minCount()
 {   uint8_t xmin = 0xff;
-    for (vector<uint16_t>::const_iterator it = cbegin(); it != cend(); it++)
+    for (auto it = begin(); it != end(); it++)
         xmin = std::min(xmin, (uint8_t)(*it & 0xff));
     return xmin;
 }
 
 void Kounter::insert(uint8_t n)
-{   bool found = false;
-    for (vector<uint16_t>::iterator it = _kounter2.begin(); it != _kounter2.end(); it++)
-        if ((*it & 0xff00) == (uint16_t)n << 8)
-            found = true, *it += 1;
-    if (found == false)
-        _kounter2.push_back((uint16_t)n << 8 | 1);
+{   for (uint8_t i = 0; i < _end; i++)
+    {   if ((_kounter3[i] & 0xff00) == (uint16_t)n << 8)
+        { _kounter3[i]++; return; }
+    }
+    _kounter3[_end++] = (uint16_t)n << 8 | 1;
 }
 
 template <class T> class PrimeFactors2 : public Generator<uint64_t>
@@ -569,7 +569,7 @@ static bool isPandigital41(uint32_t n)
     uint16_t decs = decimals(n);
     uint8_t *nset = new uint8_t[decs];
     for (uint8_t i = 1; i <= decs; i++) nset[i - 1] = i;
-    bool ret = hasDigitsOnce2(n, nset, nset + decs + 1);
+    bool ret = hasDigitsOnce2(n, nset, nset + decs);
     delete[] nset;
     return ret;
 }
@@ -2186,19 +2186,18 @@ static uint32_t wordcount42(const char *w)
 }
 
 static string problem42()
-{   vector<string> words;
-    ifstream ifs;
+{   ifstream ifs;
     ifs.open("euler42.txt");
-    string tmp;
-    while (getline(ifs, tmp))
-        if (tmp.size() > 0)
-            words.push_back(tmp);
-    ifs.close();
     uint32_t triangles[20], ret = 0;
     for (uint32_t i = 0; i < 20; i++) triangles[i] = triangle32(i);
-    for (vector<string>::iterator it = words.begin(); it != words.end(); it++)
-        if (linSearch(triangles, triangles + 20, wordcount42(it->c_str())))
-            ret++;
+    string tmp;
+    while (getline(ifs, tmp))
+    {   if (tmp.size() > 0)
+        {   if (linSearch(triangles, triangles + 20, wordcount42(tmp.c_str())))
+                ret++;
+        }
+    }
+    ifs.close();
     return twostring<uint32_t>(ret);
 }
 
@@ -2525,13 +2524,11 @@ Antwoord: 121,313
 */
 
 template <typename T> static uint32_t
-family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
-{
-    uint32_t xlen = decimals<uint32_t>(n);
+family51(uint32_t *first, T beg, T end, uint32_t n, uint32_t mask)
+{   uint32_t xlen = decimals<uint32_t>(n);
     uint32_t bmask2[64], div = 2, dec = 1, end2 = 0;
     for (uint32_t n2 = mask; n2;)
-    {
-        bmask2[end2++] = n2 % div ? dec : 0;
+    {   bmask2[end2++] = n2 % div ? dec : 0;
         n2 -= n2 % div;
         div *= 2;
         dec *= 10;
@@ -2543,25 +2540,22 @@ family51(vector<uint32_t> &out, T beg, T end, uint32_t n, uint32_t mask)
     {   uint32_t tmp = n;
         for (uint32_t *it = bmask2; it != bmask2 + end2; it++)
             tmp += *it * i;
-        if (decimals<uint32_t>(tmp) == xlen && binSearch(beg, end, tmp))
-        {
-            size++;
-            out.push_back(tmp);
+        if (decimals<uint32_t>(tmp) == xlen && binSearch(beg, end - 1, tmp))
+        {   size++;
+            if (size == 1) *first = tmp;
         }
     }
     return size;
 }
 
 static uint32_t opdracht51()
-{   uint32_t primes[80000], end = 0;
+{   uint32_t primes[80000], end = 0, first = 0;
     Sieve sieve(1000000);
     while (sieve.hasNext()) primes[end++] = sieve.next();
-    end--;
     for (uint32_t *it = primes; it != primes + end; it++)
     {   for (uint32_t mask = 1; mask < myPow<uint32_t>(2, decimals<uint32_t>(*it)); mask++)
-        {   vector<uint32_t> fam;
-            uint32_t size = family51(fam, primes, primes + end, *it, mask);
-            if (size == 8) return fam.at(0);
+        {   uint32_t size = family51(&first, primes, primes + end, *it, mask);
+            if (size == 8) return first;
         }
     }
     return 0;
@@ -2737,32 +2731,32 @@ static uint64_t parse(string s)
 }
 
 static uint8_t straight(Kounter &cnt)
-{   uint8_t xmax = cnt.max1();
+{   uint8_t xmax = cnt.maxKey();
     for (uint8_t i = 0; i < 5; i++)
         if (cnt.hasKey(xmax - i) == false) return 0;
     return xmax;
 }
 
 static bool flush(Kounter &cnt)
-{   return cnt.max2() == 5;
+{   return cnt.maxCount() == 5;
 }
 
 static uint32_t fullHouse(Kounter &cnt)
-{   return cnt.max2() == 3 && cnt.min2() == 2;
+{   return cnt.maxCount() == 3 && cnt.minCount() == 2;
 }
 
 static uint32_t fourkind(Kounter &cnt)
-{   return cnt.max2() == 4;
+{   return cnt.maxCount() == 4;
 }
 
 static uint32_t threekind(Kounter &cnt)
-{   return cnt.max2() == 3 && cnt.min2() == 1;
+{   return cnt.maxCount() == 3 && cnt.minCount() == 1;
 }
 
 static uint8_t twopair(Kounter &cnt)
 {   uint8_t best = 0;
     uint8_t pairCount = 0;
-    for (vector<uint16_t>::const_iterator it = cnt.cbegin(); it != cnt.cend(); it++)
+    for (auto it = cnt.begin(); it != cnt.end(); it++)
     {
         if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
@@ -2774,7 +2768,7 @@ static uint8_t twopair(Kounter &cnt)
 
 static uint8_t onepair(Kounter &cnt)
 {   uint8_t bestKicker = 0, pairValue = 0, pairCount = 0;
-    for (vector<uint16_t>::const_iterator it = cnt.cbegin(); it != cnt.cend(); it++)
+    for (auto it = cnt.begin(); it != cnt.end(); it++)
     {
         if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
@@ -2800,7 +2794,7 @@ static uint32_t score(uint32_t hand)
     if (threekind(values)) return 5000;
     if (twopair(values)) return twopair(values) + 300;
     if (onepair(values)) return onepair(values);
-    return values.max1();   // high card
+    return values.maxKey();   // high card
 }
 
 static string problem54()
@@ -3125,14 +3119,17 @@ Antwoord: 26,033
 13 + 5,197 + 5,701 + 6,733 + 8,389 = 26,033
 */
 
+#if 0
 static bool comb(uint64_t a, uint64_t b)
 {
     return isPrime(a * myPow<uint64_t>(10, decimals(b) + b)) &&
         isPrime(b * myPow<uint64_t>(10, decimals(a) + a));
 }
+#endif
 
 static uint32_t opdracht60()
 {
+#if 0
     vector<uint32_t> lprimes;
     Sieve sieve(10000);
     while (sieve.hasNext())
@@ -3173,6 +3170,7 @@ static uint32_t opdracht60()
             }
         }
     }
+#endif
     return 0;
 }
 
@@ -3383,6 +3381,8 @@ Antwoord: 7,273
 
 static string problem67()
 {
+    return twostring<uint32_t>(0);
+#if 0
     ifstream ifs;
     ifs.open("euler67.txt");
     vector<uint8_t> vec;
@@ -3428,6 +3428,7 @@ static string problem67()
         root--;
     }
     return twostring<uint64_t>((uint64_t)vec.at(0));
+#endif
 }
 
 /*
@@ -3656,6 +3657,8 @@ Antwoord: 55,374
 
 static string problem78()
 {
+    return twostring<uint32_t>(0);
+#if 0
     vector<int64_t> k, p;
     p.push_back(1);
     int64_t sgn[] = {1,1,-1,-1};
@@ -3677,6 +3680,7 @@ static string problem78()
         p.push_back(px % m);
     }
     return twostring<uint64_t>(n);
+#endif
 }
 
 /*
