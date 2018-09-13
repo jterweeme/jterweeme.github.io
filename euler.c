@@ -261,6 +261,18 @@ static bool hasDigitsOnce32(uint32_t n, uint8_t *beg, uint8_t *end)
     return true;
 }
 
+static bool hasDigitsOnce64(uint64_t n, uint8_t *beg, uint8_t *end)
+{
+    while (n)
+    {
+        int32_t pos = linSearch8(beg, end, n % 10);
+        if (pos >= 0) beg[pos] = 99;
+        else return false;
+        n = n / 10;
+    }
+    return true;
+}
+
 static uint64_t floorsqrt(uint64_t n)
 {
     uint64_t i = 0, step = 1, sum = 0;
@@ -285,7 +297,12 @@ static void xstring32(char *s, uint32_t n)
 }
 
 static void xstring64(char *s, uint64_t n)
-{   uint8_t decs = decimals64(n);
+{   if (n == 0)
+    {   s[0] = '0';
+        s[1] = 0;
+        return;
+    }
+    uint8_t decs = decimals64(n);
     s[decs] = 0;
     while (n)
         s[--decs] = n % 10 + '0', n = n / 10;
@@ -338,6 +355,26 @@ static bool haskey(uint16_t *data, uint16_t n, uint8_t key)
     for (i = 0; i < n; i++)
         if ((uint8_t)(data[i] >> 8) == key) return true;
     return false;
+}
+
+static bool sameDigs32(uint32_t a, uint32_t b)
+{   uint8_t n = decimals32(a), i = 0;
+    if (decimals32(b) != n) return false;
+    uint8_t *digits = malloc(n);
+    for (;a ; a = a / 10) digits[i++] = a % 10;
+    bool ret = hasDigitsOnce32(b, digits, digits + n);
+    free(digits);
+    return ret;
+}
+
+static bool sameDigs64(uint64_t a, uint64_t b)
+{   uint8_t n = decimals64(a), i = 0;
+    if (decimals64(b) != n) return false;
+    uint8_t *digits = malloc(n);
+    for (;a ; a = a / 10) digits[i++] = a % 10;
+    bool ret = hasDigitsOnce64(b, digits, digits + n);
+    free(digits);
+    return ret;
 }
 
 /*
@@ -2350,17 +2387,6 @@ What 12-digit number do you form by concatenating the three terms in this sequen
 Antwoord: 296,962,999,629
 */
 
-static bool sameDigs32(uint32_t a, uint32_t b)
-{
-    uint32_t n = decimals32(a), i = 0;
-    if (decimals32(b) != n) return false;
-    uint8_t *digits = malloc(n);
-    for (;a ; a = a / 10) digits[i++] = a % 10;
-    bool ret = hasDigitsOnce32(b, digits, digits + n);
-    free(digits);
-    return ret;
-}
-
 static uint64_t check(uint32_t *begin, uint32_t *end)
 {   uint32_t *it;
     for (it = begin; it != end; it++)
@@ -3206,10 +3232,28 @@ five permutations of its digits are cube.
 Antwoord: 127,035,954,683
 */
 
+static uint64_t opdracht62()
+{
+    uint64_t lst[9000];
+    for (uint64_t n = 0; n < 9000; n++)
+        lst[n] = n * n * n;
+    for (uint32_t i = 0; i < 9000; i++)
+    {   uint32_t cnt = 0;
+        uint8_t ln = decimals64(lst[i]);
+        for (uint32_t b = i; b < 9000; b++)
+        {   if (decimals64(lst[b]) > ln) break;
+            if (sameDigs64(lst[i], lst[b])) cnt++;
+        }
+        if (cnt == 5)
+            return lst[i];
+    }
+    return 0;
+}
+
 static char *problem62()
 {
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring64(ret, opdracht62());
     return ret;
 }
 

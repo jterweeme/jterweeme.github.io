@@ -46,10 +46,11 @@ hexagon = lambda n: n * (2 * n - 1)
 heptagon = lambda n: n * (5 * n - 3) >> 1
 octagon = lambda n: n * (3 * n - 2)
 
-def polygonizer(limit, n = 1):
+def polygonizer(limit, n = 1, xmin = 0):
     step, ret = 1, 0
     while ret < limit:
-        yield ret
+        if ret >= xmin:
+            yield ret
         ret += step
         step += n
 
@@ -2446,14 +2447,8 @@ Antwoord: 28,684
 """
 
 def problem61():
-    func=[triangle,square,pentagon,hexagon,heptagon,octagon]
-    A=list()
-    for f in range(0,6):
-        A += [set()]
-        for n in range(15,142):
-            val=func[f](n)
-            if 1000 <= val <=9999:A[f].add(int(val))
-    for p in permutations2(range(6)):
+    A = [list(polygonizer(9999, f, 1000)) for f in range(1, 7)]
+    for p in permutations([0,1,2,3,4,5]):
         for n0 in A[p[0]]:
             for n1 in A[p[1]]:
                 if n1//100==n0%100:
@@ -3037,7 +3032,7 @@ def problem78():
             px += p[n - k[i]] * sgn[i%4]
             i += 1
         p.append(px % m)
-    print(len(p))
+    #print(len(p))
     return n
 
 """

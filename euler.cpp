@@ -30,7 +30,7 @@ void xmemcpy(const void *dest, const void *src, size_t n)
     for (i = 0; i<n; i++) cdest[i] = csrc[i];
 }
 
-void *memset(void *s, int c, size_t n)
+void *xmemset(void *s, int c, size_t n)
 {   uint8_t *p = (uint8_t *)s;
     while (n--) *p++ = (uint8_t)c;
     return s;
@@ -380,7 +380,7 @@ uint16_t LongNumber25::digits() const
 }
 
 void LongNumber25::set(uint64_t n)
-{   memset(_buf, 0, sizeof(_buf));
+{   xmemset(_buf, 0, sizeof(_buf));
     for (uint16_t i = 0; n > 0; i++)
         _buf[i] = n % 10, n = n / 10;
 }
@@ -640,6 +640,31 @@ public:
     {   delete[] _pool;
     }
 };
+
+#if 1
+class Polygonizer : public Generator<uint32_t>
+{
+private:
+    uint32_t _step = 1;
+    uint32_t _ret = 0;
+    bool _hasNext = true;
+    uint32_t _limit;
+    uint32_t _n;
+    uint32_t _xmin;
+public:
+    Polygonizer(uint32_t limit, uint32_t n = 1, uint32_t xmin = 0) :
+        _limit(limit), _n(n), _xmin(xmin) { }
+    bool hasNext() { return _hasNext; }
+    uint32_t next()
+    {
+        uint32_t ret = _ret;
+        _ret += _step;
+        _step += _n;
+        if (_ret >= _limit) _hasNext = false;
+        return ret;
+    }
+};
+#endif
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -1120,7 +1145,7 @@ Antwoord: 1,366
 
 static string problem16(uint16_t e = 1000)
 {   uint8_t largeNum[400];
-    memset(largeNum, 0, 400);
+    xmemset(largeNum, 0, 400);
     largeNum[0] = 2;
     uint8_t carry = 0;
     uint32_t sum = 0;
@@ -1330,7 +1355,7 @@ Antwoord: 648
 
 static string problem20(uint8_t f = 100)
 {   uint16_t buf[200];
-    memset(buf, 0, 400);
+    xmemset(buf, 0, 400);
     buf[0] = f;
     for (uint8_t i = f - 1; i > 0; i--)
     {   uint16_t carry = 0;
@@ -1373,7 +1398,7 @@ Antwoord: 31,626
 
 static string problem21(uint32_t low = 1, uint32_t high = 10000)
 {   uint32_t l[high - low];
-    memset(l, 0, (high - low) * 4);
+    xmemset(l, 0, (high - low) * 4);
     for (uint32_t i = low; i <= high; i++)
         l[i - low] = sumProperDivs1(i);
     uint32_t sum = 0;
@@ -1416,7 +1441,7 @@ static string problem22()
 {   FILE *fp;
     fp = fopen("euler22.txt", "r");
     char *names = new char[30*6000];
-    memset(names, 0, 30*6000);
+    xmemset(names, 0, 30*6000);
     int c;
     uint16_t a = 0, b = 0;
     while ((c = fgetc(fp)) != EOF)
@@ -2261,7 +2286,7 @@ static bool test43(uint64_t n)
 }
 
 static string problem43()
-{   uint32_t i = 0, size = 10, tmp = 0;
+{   uint8_t i = 0, size = 10, tmp = 0;
     uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[10] = {0};
     uint64_t xsum = 0;
     while (i < size)
@@ -2421,7 +2446,7 @@ interpreted from https://blog.dreamshire.com/project-euler-47/
 
 static uint32_t opdracht47(uint32_t L = 300000, uint32_t nf = 4, uint32_t ns = 4)
 {   uint32_t f[L], c = 0;
-    memset(f, 0, 4*L);
+    xmemset(f, 0, 4*L);
     for (uint32_t n = 2; n < L - ns; n++)
     {   if (f[n] == nf) { if (++c == ns) return n - ns + 1; }
         else { c = 0; if (f[n] == 0) for (uint32_t i = n; i < L; i += n) f[i]++; }
@@ -3212,6 +3237,35 @@ Antwoord: 28,684
 
 static string problem61()
 {
+    Polygonizer triangler(100);
+#if 0
+    while (triangler.hasNext())
+        cout << triangler.next() << "\r\n";
+#endif
+    uint8_t i = 0, size = 6, tmp = 0;
+    uint8_t perms[4320], pool[] = {0,1,2,3,4,5}, c[6] = {0};
+    uint16_t i16 = 6;
+    xmemset(perms, 0, 4320);
+    xmemcpy(perms, pool, 6);
+    while (i < size)
+    {   if (c[i] < i)
+        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
+            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
+            c[i]++, i = 0;
+            xmemcpy(perms + i16, pool, 6);
+            i16 += 6;
+        }
+        else c[i++] = 0;
+    }
+#if 0
+    for (uint16_t i16 = 0; i16 < 4320;)
+    {
+        for (uint8_t j = 0; j < 6; j++)
+            printf("%u", perms[i16++]);
+        printf("\r\n");
+    }
+#endif
+    
     return twostring<uint32_t>(0);
 }
 
