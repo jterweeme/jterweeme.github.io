@@ -385,6 +385,7 @@ void LongNumber25::set(uint64_t n)
         _buf[i] = n % 10, n = n / 10;
 }
 
+#if 0
 static void testLongNum()
 {
     LongNumber25 x(123456789);
@@ -394,6 +395,7 @@ static void testLongNum()
     z.dump(cout);
     cout << "\r\n";
 }
+#endif
 
 template <typename T> uint16_t decimals(T n)
 {   uint16_t i = 0;
@@ -3421,13 +3423,25 @@ Antwoord: 272
 */
 
 static string problem65()
-{   uint64_t n0 = 1, n1 = 2, L = 100;
+{   uint64_t L = 100;
+    LongNumber25 n0(1), n1(2);
     for (uint64_t i = 2; i <= L; i++)
-    {   uint64_t tmp = n1;
-        n1 = i % 3 ? n0 + n1 : n0 + n1 * 2 * i/3;
-        n0 = tmp;
+    {   LongNumber25 tmp(n1);
+        if (i % 3 > 0)
+        {   n1.add(n0);
+        }
+        else
+        {   LongNumber25 tmp2(n1);
+            tmp2.mul(2 * i/3);
+            n1.set(n0);
+            n1.add(tmp2);
+        }
+        n0.set(tmp);
     }
-    return twostring<uint32_t>(0);
+    uint64_t xsum = 0;
+    for (uint16_t *it = n1.begin(); it != n1.end(); it++)
+        xsum += *it;
+    return twostring<uint64_t>(xsum);
 }
 
 /*
@@ -4047,7 +4061,7 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    testLongNum();
+    //testLongNum();
     time_t begin = time(0);
     //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD

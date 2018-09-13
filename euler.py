@@ -2562,6 +2562,7 @@ def problem65():
     n0, n1, L = 1, 2, 100
     for i in range(2, L+1): 
         n0, n1 = n1, n0 + n1 * (1 if i%3 else 2 * i//3)
+    print(n1)
     return sum(digits(n1))
 
 """
