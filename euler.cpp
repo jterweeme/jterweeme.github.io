@@ -657,10 +657,15 @@ public:
     bool hasNext() { return _hasNext; }
     uint32_t next()
     {
-        uint32_t ret = _ret;
-        _ret += _step;
-        _step += _n;
-        if (_ret >= _limit) _hasNext = false;
+        uint32_t ret;
+        while (true)
+        {
+            ret = _ret;
+            _ret += _step;
+            _step += _n;
+            if (_ret >= _limit) _hasNext = false;
+            if (ret >= _xmin) break;
+        }
         return ret;
     }
 };
@@ -3235,19 +3240,12 @@ Antwoord: 28,684
 8128 (Hex) + 2882 (Pent) + 8256 (Tri) + 5625 (Sq) + 2512 (Hept) + 1281 (Oct) = 28,684
 */
 
-static string problem61()
-{
-    Polygonizer triangler(100);
-#if 0
-    while (triangler.hasNext())
-        cout << triangler.next() << "\r\n";
-#endif
-    uint8_t i = 0, size = 6, tmp = 0;
-    uint8_t perms[4320], pool[] = {0,1,2,3,4,5}, c[6] = {0};
+static uint32_t opdracht61()
+{   uint8_t perms[4320], pool[] = {0,1,2,3,4,5}, c[6] = {0};
     uint16_t i16 = 6;
     xmemset(perms, 0, 4320);
     xmemcpy(perms, pool, 6);
-    while (i < size)
+    for (uint8_t i = 0, size = 6, tmp = 0; i < size;)
     {   if (c[i] < i)
         {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
             else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
@@ -3257,16 +3255,51 @@ static string problem61()
         }
         else c[i++] = 0;
     }
-#if 0
-    for (uint16_t i16 = 0; i16 < 4320;)
-    {
-        for (uint8_t j = 0; j < 6; j++)
-            printf("%u", perms[i16++]);
-        printf("\r\n");
+    for (uint16_t i = 0; i < 720; i++)
+    {   Polygonizer p0(9999, perms[i * 6] + 1, 1000);
+        while (p0.hasNext())
+        {   uint32_t n0 = p0.next();
+            Polygonizer p1(9999, perms[i * 6 + 1] + 1, 1000);
+            while (p1.hasNext())
+            {   uint32_t n1 = p1.next();
+                if (n1 / 100 == n0 % 100)
+                {   Polygonizer p2(9999, perms[i * 6 + 2] + 1, 1000);
+                    while (p2.hasNext())
+                    {   uint32_t n2 = p2.next();
+                        if (n2 / 100 == n1 % 100)
+                        {   Polygonizer p3(9999, perms[i * 6 + 3] + 1, 1000);
+                            while (p3.hasNext())
+                            {   uint32_t n3 = p3.next();
+                                if (n3 / 100 == n2 % 100)
+                                {   Polygonizer p4(9999, perms[i * 6 + 4] + 1, 1000);
+                                    while (p4.hasNext())
+                                    {   uint32_t n4 = p4.next();
+                                        if (n4 / 100 == n3 % 100)
+                                        {   Polygonizer p5(9999, perms[i * 6 + 5] + 1, 1000);
+                                            while (p5.hasNext())
+                                            {   uint32_t n5 = p5.next();
+                                                if (n5 / 100 == n4 % 100)
+                                                {   if (n5 % 100 == n0 / 100)
+                                                    {   return n0 + n1 + n2 + n3 + n4 + n5;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
     }
-#endif
-    
-    return twostring<uint32_t>(0);
+    return 0;
+}
+
+static string problem61()
+{   return twostring<uint32_t>(opdracht61());
 }
 
 /*

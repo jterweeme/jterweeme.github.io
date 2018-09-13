@@ -2447,21 +2447,20 @@ Antwoord: 28,684
 """
 
 def problem61():
-    A = [list(polygonizer(9999, f, 1000)) for f in range(1, 7)]
     for p in permutations([0,1,2,3,4,5]):
-        for n0 in A[p[0]]:
-            for n1 in A[p[1]]:
-                if n1//100==n0%100:
-                    for n2 in A[p[2]]:
-                        if n2//100==n1%100:
-                            for n3 in A[p[3]]:
+        for n0 in polygonizer(9999, p[0] + 1, 1000):
+            for n1 in polygonizer(9999, p[1] + 1, 1000):
+                if n1 // 100 == n0 % 100:
+                    for n2 in polygonizer(9999, p[2] + 1, 1000):
+                        if n2 // 100 == n1 % 100:
+                            for n3 in polygonizer(9999, p[3] + 1, 1000):
                                 if n3//100==n2%100:
-                                    for n4 in A[p[4]]:
+                                    for n4 in polygonizer(9999, p[4] + 1, 1000):
                                         if n4//100==n3%100:
-                                            for n5 in A[p[5]]:
+                                            for n5 in polygonizer(9999, p[5] + 1, 1000):
                                                 if n5//100==n4%100:
                                                     if n5%100 ==n0//100:
-                                                        return sum((n0,n1,n2,n3,n4,n5))
+                                                        return n0 + n1 + n2 + n3 + n4 + n5
 
 """
 #62: Cubic permutations
