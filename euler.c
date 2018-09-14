@@ -157,8 +157,11 @@ static uint32_t sieve232(uint32_t *primes, uint32_t n)
 }
 
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
-static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
+static const uint32_t square32(uint32_t n) { return n * n; }
+static const uint32_t pentagon32(uint32_t n) { return (n * (3 * n - 1)) >> 1; }
 static const uint32_t hexagon32(uint32_t n) { return n * (2 * n - 1); }
+static const uint32_t heptagon32(uint32_t n) { return (n * (5 * n - 3)) >> 1; }
+static const uint32_t octagon32(uint32_t n) { return n * (3 * n - 2); }
 
 #if 0
 static void swap16(uint16_t *a, uint16_t *b)
@@ -3211,10 +3214,90 @@ Antwoord: 28,684
 8128 (Hex) + 2882 (Pent) + 8256 (Tri) + 5625 (Sq) + 2512 (Hept) + 1281 (Oct) = 28,684
 */
 
+static uint32_t opdracht61()
+{   uint8_t perms[4320], pool[] = {0,1,2,3,4,5}, c[6], i8, size, tmp;
+    uint16_t i16 = 6, npoly[6], j, k, l, m, n, o;
+    uint32_t polygons[600], x;
+    xmemset(c, 0, 6);
+    xmemset(perms, 0, 4320);
+    xmemcpy(perms, pool, 6);
+    for (i8 = 0, size = 6, tmp = 0; i8 < size;)
+    {   if (c[i8] < i8)
+        {   if (i8 % 2 == 0) tmp = pool[0], pool[0] = pool[i8], pool[i8] = tmp;
+            else tmp = pool[c[i8]], pool[c[i8]] = pool[i8], pool[i8] = tmp;
+            c[i8]++, i8 = 0;
+            xmemcpy(perms + i16, pool, 6);
+            i16 += 6;
+        }
+        else c[i8++] = 0;
+    }
+    for (i8 = 0; i8 < 6; i8++) npoly[i8] = 0;
+    for (i8 = 0; i8 < 150; i8++)
+    {   x = triangle32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[npoly[0]++] = x;
+        x = square32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[100 + npoly[1]++] = x;
+        x = pentagon32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[200 + npoly[2]++] = x;
+        x = hexagon32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[300 + npoly[3]++] = x;
+        x = heptagon32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[400 + npoly[4]++] = x;
+        x = octagon32(i8);
+        if (x >= 1000 && x <= 9999)
+            polygons[500 + npoly[5]++] = x;
+    }
+    for (i16 = 0; i16 < 720; i16++)
+    {   uint8_t p0 = perms[i16 * 6 + 0];
+        for (j = 0; j < npoly[p0]; j++)
+        {   uint32_t n0 = polygons[p0 * 100 + j];
+            uint8_t p1 = perms[i16 * 6 + 1];
+            for (k = 0; k < npoly[p1]; k++)
+            {   uint32_t n1 = polygons[p1 * 100 + k];
+                uint8_t p2 = perms[i16 * 6 + 2];
+                if (n1 / 100 == n0 % 100)
+                {   for (l = 0; l < npoly[p2]; l++)
+                    {   uint32_t n2 = polygons[p2 * 100 + l];
+                        uint8_t p3 = perms[i16 * 6 + 3];
+                        if (n2 / 100 == n1 % 100)
+                        {   for (m = 0; m < npoly[p3]; m++)
+                            {   uint32_t n3 = polygons[p3 * 100 + m];
+                                uint8_t p4 = perms[i16 * 6 + 4];
+                                if (n3 / 100 == n2 % 100)
+                                {   for (n = 0; n < npoly[p4]; n++)
+                                    {   uint32_t n4 = polygons[p4 * 100 + n];
+                                        uint8_t p5 = perms[i16 * 6 + 5];
+                                        if (n4 / 100 == n3 % 100)
+                                        {   for (o = 0; o < npoly[p5]; o++)
+                                            {   uint32_t n5 = polygons[p5 * 100 + o];
+                                                if (n5 / 100 == n4 % 100)
+                                                {   if (n5 % 100 == n0 / 100)
+                                                    {   return n0 + n1 + n2 + n3 + n4 + n5;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 static char *problem61()
 {
     char *ret = malloc(50);
-    xstring32(ret, 0);
+    xstring32(ret, opdracht61());
     return ret;
 }
 
@@ -3233,14 +3316,14 @@ Antwoord: 127,035,954,683
 */
 
 static uint64_t opdracht62()
-{
-    uint64_t lst[9000];
-    for (uint64_t n = 0; n < 9000; n++)
+{   uint64_t lst[9000], n;
+    uint32_t i, b;
+    for (n = 0; n < 9000; n++)
         lst[n] = n * n * n;
-    for (uint32_t i = 0; i < 9000; i++)
+    for (i = 0; i < 9000; i++)
     {   uint32_t cnt = 0;
         uint8_t ln = decimals64(lst[i]);
-        for (uint32_t b = i; b < 9000; b++)
+        for (b = i; b < 9000; b++)
         {   if (decimals64(lst[b]) > ln) break;
             if (sameDigs64(lst[i], lst[b])) cnt++;
         }
