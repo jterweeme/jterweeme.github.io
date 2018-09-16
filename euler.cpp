@@ -3423,9 +3423,9 @@ Antwoord: 272
 */
 
 static string problem65()
-{   uint64_t L = 100;
+{   uint32_t L = 100;
     LongNumber25 n0(1), n1(2);
-    for (uint64_t i = 2; i <= L; i++)
+    for (uint32_t i = 2; i <= L; i++)
     {   LongNumber25 tmp(n1);
         if (i % 3 > 0)
         {   n1.add(n0);
@@ -3438,10 +3438,10 @@ static string problem65()
         }
         n0.set(tmp);
     }
-    uint64_t xsum = 0;
+    uint32_t xsum = 0;
     for (uint16_t *it = n1.begin(); it != n1.end(); it++)
         xsum += *it;
-    return twostring<uint64_t>(xsum);
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -3481,6 +3481,44 @@ static string problem66()
     }
     return twostring<uint64_t>(best_d);
 }
+
+#if 0
+static string xproblem66()
+{
+    uint64_t best_x = 0, best_d = 0;
+    for (uint64_t d = 2; d <= 1000; d++)
+    {
+        uint64_t root = floorsqrt(d);
+        if (root * root == d) continue;
+        LongNumber25 a(root);
+        LongNumber25 numerator(0);
+        LongNumber25 denominator(1);
+        LongNumber25 x[] = {0, 1, root};
+        LongNumber25 y[] = {0, 0, 1};
+        //uint64_t x[] = {0, 1, root};
+        //uint64_t y[] = {0, 0, 1};
+        while (true)
+        {
+            numerator = denominator * a - numerator;
+            denominator = (d - numerator * numerator) / denominator;
+            a = (root + numerator) / denominator;
+            x[0] = x[1];
+            x[1] = x[2];
+            x[2] = x[1] * a + x[0];
+            y[0] = y[1];
+            y[1] = y[2];
+            y[2] = y[1] * a + y[0];
+            if (x[2] * x[2] == y[2] * y[2] * d + 1)
+                break;
+        }
+        if (best_x < x[2])
+        {   best_x = x[2];
+            best_d = d;
+        }
+    }
+    return twostring<uint64_t>(best_d);
+}
+#endif
 
 /*
 #67: Maximum path sum II
@@ -3612,11 +3650,11 @@ Antwoord: 510,510
 
 static uint32_t opdracht69()
 {
-    uint32_t lprimes[100], end = 0;
+    uint32_t lprimes[100], nprimes = 0;
     Sieve sieve(100);
-    while (sieve.hasNext()) lprimes[end++] = sieve.next();
+    while (sieve.hasNext()) lprimes[nprimes++] = sieve.next();
     uint32_t maxn = 1, L = 1000000;
-    for (uint32_t i = 0; i < end; i++)
+    for (uint32_t i = 0; i < nprimes; i++)
     {
         if (maxn * lprimes[i] > L) return maxn;
         maxn *= lprimes[i];
@@ -3648,9 +3686,31 @@ permutation of n and the ratio n/phi(n) produces a minimum.
 Answer: 8,319,823
 */
 
-static string problem70(uint32_t L = 10000000)
+static uint64_t opdracht70(uint32_t L = 10000000)
 {
-    return twostring(0);
+    Sieve sieve(3800);
+    uint32_t primes[600], nprimes = 0;
+    while (sieve.hasNext()) primes[nprimes++] = sieve.next();
+    uint64_t min_n = 0, i = 0;
+    double min_q = 2;
+    for (uint32_t *p1 = primes; p1 != primes + nprimes; p1++)
+    {   i++;
+        for (uint32_t *p2 = primes + i; p2 != primes + nprimes; p2++)
+        {
+            if ((*p1 + *p2) % 9 != 1) continue;
+            uint64_t n = *p1 * *p2;
+            if (n > L) return min_n;
+            uint64_t phi = (*p1 - 1) * (*p2 - 1);
+            double q = n / (double)phi;
+            if (sameDigs(phi, n) && min_q > q)
+                min_q = q, min_n = n;
+        }
+    }
+    return 0;
+}
+
+static string problem70()
+{   return twostring<uint64_t>(opdracht70());
 }
 
 /*

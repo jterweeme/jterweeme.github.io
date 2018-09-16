@@ -2752,7 +2752,8 @@ https://blog.dreamshire.com/project-euler-70-solution/
 """
 
 def problem70(L = 10**7):
-    primes = list(sieve(int(floorsqrt(L) * 1.2)))
+    #primes = list(sieve(int(floorsqrt(L) * 1.2)))
+    primes = list(sieve(3800))
     min_q, min_n, i = 2, 0, 0
     for p1 in primes:
         i+=1
