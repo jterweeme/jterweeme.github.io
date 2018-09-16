@@ -3749,12 +3749,38 @@ static string problem71(uint64_t limit = 1000000)
 /*
 #72: Counting fractions
 
+Consider the fraction, n/d, where n and d are positive integers. If n<d
+and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions
+for d <= 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7, 1/2,
+4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that there are 21 elements in this set.
+
+How many elements would be contained in the set of
+reduced proper fractions for d <= 1,000,000?
+
 Antwoord: 303,963,552,391
 */
 
 static string problem72(uint64_t L = 1000000)
-{   //uint32_t *phi = new uint32_t[1000001];
-    return twostring(0);
+{   uint64_t *phi = new uint64_t[1000001];
+    for (uint64_t i = 0; i <= L; i++)
+        phi[i] = i;
+    for (uint64_t n = 2; n <= L; n++)
+    {   if (phi[n] == n)
+        {   for (uint64_t k = n; k <= L; k += n)
+                phi[k] -= phi[k] / n;
+        }
+    }
+    uint64_t xsum = 0;
+    for (uint64_t i = 0; i <= L; i++)
+        xsum += phi[i];
+    delete[] phi;
+    return twostring<uint64_t>(xsum - 1);
 }
 
 static string problem73()
