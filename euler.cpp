@@ -3938,31 +3938,28 @@ L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
 Antwoord: 161,667
 */
 
-//#include <vector>
+#include <set>
 
 static string problem75()
 {
-#if 0
     uint64_t L = 1500001;
-    vector<uint64_t> maybe;
-    vector<uint64_t> nope;
+    set<uint64_t> maybe;
+    set<uint64_t> nope;
     uint64_t fsqrt = floorsqrt(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
-    {   for (uint64_t n = m - 1; n > 0; n -= 2)
+    {   for (int64_t n = m - 1; n > 0; n -= 2)
         {   if (gcd(m, n) == 1)
             {   uint64_t s = 2 * (m * m + m * n);
                 for (uint64_t k = 1; k <= L / s; k++)
-                {   if (linSearch(maybe.begin(), maybe.end(), k * s))
-                        nope.push_back(k * s);
+                {   if (maybe.count(k * s))
+                        nope.insert(k * s);
                     else
-                        maybe.push_back(k * s);
+                        maybe.insert(k * s);
                 }
             }
         }
     }
-#endif
-    return twostring<uint32_t>(0);
-    //return twostring<uint32_t>((maybe.end() - maybe.begin()) - (nope.end() - nope.end()));
+    return twostring<uint32_t>(maybe.size() - nope.size());
 }
 
 /*
