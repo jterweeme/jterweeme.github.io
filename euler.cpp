@@ -281,19 +281,14 @@ public:
     void clear() { set(0); }
     LongNumber25() { clear(); }
     LongNumber25(uint64_t n) { set(n); }
-#if 1
     LongNumber25(const LongNumber25 &n)
     {   for (uint16_t i = 0; i < 1500; i++) _buf[i] = n._buf[i];
     }
-#endif
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
     bool isZero() const
     {   for (uint16_t i = 0; i < 1500; i++)
             if (_buf[i] != 0) return false;
         return true;
-    }
-    operator bool() const
-    {   return isZero();
     }
     void add(const LongNumber25 &n)
     {   uint8_t carry = 0;
@@ -303,21 +298,45 @@ public:
             _buf[i] = _buf[i] % 10;
         }
     }
-    void operator+=(const LongNumber25 n) { add(n); }
-    LongNumber25 operator+(const LongNumber25 n) const
-    {   LongNumber25 ret = *this;
-        ret.add(n);
-        return ret;
+    void dec(LongNumber25 n)
+    {
+        if (lteq(n))
+        {   set(0);
+            return;
+        }
+        uint16_t carry = 0;
+        for (uint16_t i = 0; i < 1500; i++)
+        {   if (_buf[i] >= n._buf[i] + carry)
+            {
+                _buf[i] -= n._buf[i] + carry;
+                carry = 0;
+            }
+            else
+            {
+                carry += n._buf[i] - _buf[i];
+                _buf[i] = 10 - carry;
+            }
+        }
     }
-    void set(uint64_t n);
-    void operator=(uint64_t n) { set(n); }
+    void set(uint64_t n)
+    {   xmemset(_buf, 0, sizeof(_buf));
+        for (uint16_t i = 0; n > 0; i++)
+            _buf[i] = n % 10, n = n / 10;
+    }
     void set(const LongNumber25 n)
     {   for (uint16_t i = 0; i < 1500; i++)
             _buf[i] = n.decimal(i);
     }
-    void dump(ostream &os) const;
-    bool equals(LongNumber25 n);
-    
+    void dump(ostream &os) const
+    {   for (uint16_t i = digits(); i > 0; i--)
+            os << (uint16_t)_buf[i - 1];
+    }
+    bool equals(LongNumber25 n)
+    {   for (uint16_t i = 0; i < 1500; i++)
+            if (_buf[i] != n._buf[i])
+                return false;
+        return true;
+    }
     void shiftdec(uint16_t n)
     {   uint16_t i = 0;
         for (i = 0; i < 1500 - n; i++)
@@ -325,77 +344,108 @@ public:
         while (i < 1500)
             _buf[i] = 0, i++;
     }
-    void div(uint16_t n)
-    {   if (n == 10) shiftdec(1);
+    bool gt(LongNumber25 n)
+    {   for (uint16_t i = 1; i <= 1500; i++)
+        {   if (_buf[1500 - i] > n._buf[1500 - i]) return true;
+            if (_buf[1500 - i] < n._buf[1500 - i]) return false;
+        }
+        return false;
     }
-    void operator/=(uint16_t n)
-    {   div(n);
+    bool gteq(LongNumber25 n)
+    {   return gt(n) || equals(n);
+    }
+    bool lt(LongNumber25 n)
+    {   return gteq(n) == false;
+    }
+    bool lteq(LongNumber25 n)
+    {   return lt(n) || equals(n);
+    }
+    void mod(uint64_t n)
+    {   LongNumber25 ln(n);
+        while (gteq(ln))
+            dec(ln);
+    }
+    void div(LongNumber25 d)
+    {
+        LongNumber25 i(0);
+        while (gteq(d))
+        {   dec(d);
+            i.add(LongNumber25(1));
+        }
+        set(i);
+    }
+    void div(uint64_t d)
+    {
+        LongNumber25 ld(d);
+        LongNumber25 i(0);
+        while (gteq(ld))
+        {   dec(ld);
+            i.add(LongNumber25(1));
+        }
+        set(i);
     }
     void shiftdec2(uint16_t n)
     {   uint16_t i = digits() - n;
         while (i < 1500) _buf[i] = 0, i++;
     }
-    uint16_t digits() const;
-    LongNumber25 reverse();
+    uint16_t digits() const
+    {   uint16_t i;
+        for (i = 1500; i > 0; i--)
+            if (_buf[i - 1] > 0)
+                return i;
+        return 1;
+    }
+    LongNumber25 reverse()
+    {   LongNumber25 a;
+        for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
+            a._buf[j] = _buf[i - 1];
+        return a;
+    }
     bool ispalindrome() { return equals(reverse()); }
-    void mul(uint8_t n)
+    void mul(uint64_t n)
+    {   LongNumber25 adder(*this);
+        for (uint64_t i = 1; i < n; i++)
+            add(adder);
+    }
+    void mul(LongNumber25 n)
     {
-        uint8_t carry = 0;
-        for (uint16_t i = 0; i < 1500; i++)
-        {
-            _buf[i] *= n;
-            _buf[i] += carry;
-            carry = _buf[i] / 10;
-            _buf[i] = _buf[i] % 10;
+        LongNumber25 adder(*this);
+        LongNumber25 i(1);
+        while (i.lt(n))
+        {   add(adder);
+            i.add(LongNumber25(1));
         }
     }
 };
 
-bool LongNumber25::equals(LongNumber25 n)
+static void myAssert(bool a, bool b, const char *msg)
 {
-    for (uint16_t i = 0; i < 1500; i++)
-        if (_buf[i] != n._buf[i])
-            return false;
-    return true;
+    if (a != b)
+        cout << "Error: " << msg << "\r\n";
 }
 
-LongNumber25 LongNumber25::reverse()
-{   LongNumber25 a;
-    for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
-        a._buf[j] = _buf[i - 1];
-    return a;
-}
-
-void LongNumber25::dump(ostream &os) const
-{   for (uint16_t i = digits(); i > 0; i--)
-        os << (uint16_t)_buf[i - 1];
-}
-
-uint16_t LongNumber25::digits() const
-{   uint16_t i;
-    for (i = 1500; i > 0; i--)
-        if (_buf[i - 1] > 0)
-            return i;
-    return 1;
-}
-
-void LongNumber25::set(uint64_t n)
-{   xmemset(_buf, 0, sizeof(_buf));
-    for (uint16_t i = 0; n > 0; i++)
-        _buf[i] = n % 10, n = n / 10;
-}
-
-#if 0
 static void testLongNum()
 {
     LongNumber25 x(123456789);
-    LongNumber25 y(100000000);
-    x += y;
-    LongNumber25 z = x + y;
-    z.dump(cout);
-    cout << "\r\n";
+    x.dec(LongNumber25(30000000));
+    if (x.equals(LongNumber25(93456789)) == false) cout << "Error DEC\r\n";
+    x.set(11);
+    if (x.gt(LongNumber25(10)) == false) cout << "Error GT\r\n";
+    if (x.gt(LongNumber25(11)) == true) cout << "Error GT\r\n";
+    if (x.gt(LongNumber25(12)) == true) cout << "Error GT\r\n";
+    x.dec(11);
+    if (x.equals(LongNumber25(0)) == false) cout << "Error DEC\r\n";
+    x.set(20);
+    x.mod(10);
+    if (x.equals(LongNumber25(0)) == false)
+        cout << "Error MOD\r\n";
+    x.set(19);
+    myAssert(x.gt(LongNumber25(20)), false, "GT1");
+    myAssert(x.gteq(LongNumber25(20)), false, "GTEQ");
+    myAssert(x.lt(LongNumber25(20)), true, "LT");
+    x.dec(LongNumber25(20));
+    if (x.equals(LongNumber25(0)) == false) cout << "Error DEC\r\n";
 }
-#endif
 
 template <typename T> uint16_t decimals(T n)
 {   uint16_t i = 0;
@@ -643,7 +693,6 @@ public:
     }
 };
 
-#if 1
 class Polygonizer : public Generator<uint32_t>
 {
 private:
@@ -671,7 +720,6 @@ public:
         return ret;
     }
 };
-#endif
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -1592,15 +1640,15 @@ static string problem25()
 {   uint8_t i = 0;
     uint16_t cnt = 2;
     LongNumber25 fib[3];
-    fib[0] = 1;
-    fib[1] = 0;
-    fib[2] = 1;
+    fib[0].set(1);
+    fib[1].set(0);
+    fib[2].set(1);
     while (decimals(fib[i]) < 1000)
     {   i = (i + 1) % 3;
         cnt++;
-        LongNumber25 tmp = fib[(i + 1) % 3];
-        tmp += fib[(i + 2) % 3];
-        fib[i] = tmp;
+        LongNumber25 tmp(fib[(i + 1) % 3]);
+        tmp.add(fib[(i + 2) % 3]);
+        fib[i].set(tmp);
     }
     return twostring(cnt);
 }
@@ -2904,7 +2952,7 @@ Antwoord: 249
 
 static uint8_t isLychrel(LongNumber25 n, uint8_t it = 50)
 {   while (it--)
-    {   n += n.reverse();
+    {   n.add(n.reverse());
         if (n.ispalindrome()) return 0;
     }
     return 1;
@@ -3447,9 +3495,34 @@ static string problem65()
 /*
 #66: Diophantine equation
 
+Consider quadratic Diophantine equations of the form:
+
+x^2 – Dy^2 = 1
+
+For example, when D=13, the minimal solution in x is 649^2 - 13x180^2 = 1.
+
+It can be assumed that there are no solutions
+in positive integers when D is square.
+
+By finding minimal solutions in x for
+D = {2, 3, 5, 6, 7}, we obtain the following:
+
+32 - 2x22 = 1
+22 - 3x12 = 1
+92 - 5x42 = 1
+52 - 6x22 = 1
+82 - 7x32 = 1
+
+Hence, by considering minimal solutions in x for
+D <= 7, the largest x is obtained when D=5.
+
+Find the value of D <= 1000 in minimal solutions
+of x for which the largest value of x is obtained.
+
 Antwoord: 661
 */
 
+#if 0
 static string problem66()
 {
     uint64_t best_x = 0, best_d = 0;
@@ -3481,13 +3554,14 @@ static string problem66()
     }
     return twostring<uint64_t>(best_d);
 }
-
-#if 0
-static string xproblem66()
+#else
+static string problem66()
 {
-    uint64_t best_x = 0, best_d = 0;
-    for (uint64_t d = 2; d <= 1000; d++)
+    LongNumber25 best_x(0);
+    uint64_t best_d = 0;
+    for (uint64_t d = 2; d <= 11; d++)
     {
+        if (d == 4 || d == 9 || d == 10 || d == 11) continue;
         uint64_t root = floorsqrt(d);
         if (root * root == d) continue;
         LongNumber25 a(root);
@@ -3495,24 +3569,42 @@ static string xproblem66()
         LongNumber25 denominator(1);
         LongNumber25 x[] = {0, 1, root};
         LongNumber25 y[] = {0, 0, 1};
-        //uint64_t x[] = {0, 1, root};
-        //uint64_t y[] = {0, 0, 1};
         while (true)
         {
-            numerator = denominator * a - numerator;
-            denominator = (d - numerator * numerator) / denominator;
-            a = (root + numerator) / denominator;
-            x[0] = x[1];
-            x[1] = x[2];
-            x[2] = x[1] * a + x[0];
-            y[0] = y[1];
-            y[1] = y[2];
-            y[2] = y[1] * a + y[0];
-            if (x[2] * x[2] == y[2] * y[2] * d + 1)
-                break;
+            LongNumber25 tmp(numerator);
+            numerator.set(denominator);
+            numerator.mul(a);
+            numerator.dec(tmp);
+            tmp.set(denominator);
+            LongNumber25 tmp2(numerator);
+            tmp2.mul(numerator);
+            denominator.set(d);
+            denominator.dec(tmp2);
+            denominator.div(tmp);
+            a.set(root);
+            a.add(numerator);
+            a.div(denominator);
+            x[0].set(x[1]);
+            x[1].set(x[2]);
+            x[2].set(x[1]);
+            x[2].mul(a);
+            x[2].add(x[0]);
+            y[0].set(y[1]);
+            y[1].set(y[2]);
+            y[2].set(y[1]);
+            y[2].mul(a);
+            y[2].add(y[0]);
+            
+            tmp.set(x[2]);
+            tmp.mul(x[2]);
+            tmp2.set(y[2]);
+            tmp2.mul(y[2]);
+            tmp2.mul(d);
+            tmp2.add(LongNumber25(1));
+            if (tmp.equals(tmp2)) break;
         }
-        if (best_x < x[2])
-        {   best_x = x[2];
+        if (best_x.lt(x[2]))
+        {   best_x.set(x[2]);
             best_d = d;
         }
     }
@@ -3539,7 +3631,7 @@ one-hundred rows.
 
 NOTE: This is a much more difficult version of Problem 18. It is not
 possible to try every route to solve this problem, as there are 299
-altogether! If you could check one trillion (1012) routes every second
+altogether! If you could check one trillion (10^12) routes every second
 it would take over twenty billion years to check them all. There is an
 efficient algorithm to solve it. ;o)
 
@@ -3547,55 +3639,29 @@ Antwoord: 7,273
 */
 
 static string problem67()
-{
-    return twostring<uint32_t>(0);
-#if 0
+{   uint64_t arr[5050];
     ifstream ifs;
     ifs.open("euler67.txt");
-    vector<uint8_t> vec;
     char c;
+    uint16_t i = 0;
     uint8_t x = 0;
-    uint64_t root = 100;
     while ((ifs.get(c)))
-    {
-        if (isdigit(c))
-        {
-            x *= 10;
-            x += c - '0';
-        }
+    {   if (isdigit(c))
+            x = x * 10 + (c - '0');
         else if (x > 0)
-        {
-            vec.push_back(x);
-            x = 0;
-        }
+            arr[i++] = x, x = 0;
     }
     ifs.close();
-#if 0
-    for (vector<uint8_t>::iterator it = vec.begin(); it != vec.end(); it++)
-    {
-        cout << (uint16_t)*it << "\r\n";
-    }
-#endif
-#if 0
-    uint32_t xsum = 0;
-    for (vector<uint8_t>::iterator it = vec.begin(); it != vec.end(); it++)
-    {
-        xsum += *it;
-    }
-    cout << xsum << "\r\n";
-#endif
+    uint64_t root = 100;
     while (root > 1)
-    {
-        for (uint64_t i = 0; i < root - 1; i++)
-        {
-            uint64_t j = triangle<uint64_t>(root - 2) + i;
-            uint64_t k = triangle<uint64_t>(root - 1) + i;
-            vec[j] += max(vec[k], vec[k + 1]);
+    {   for (uint64_t j = 0; j < root - 1; j++)
+        {   uint64_t k = triangle(root - 2) + j;
+            uint64_t l = triangle(root - 1) + j;
+            arr[k] += std::max(arr[l], arr[l + 1]);
         }
         root--;
     }
-    return twostring<uint64_t>((uint64_t)vec.at(0));
-#endif
+    return twostring<uint64_t>(arr[0]);
 }
 
 /*
@@ -3783,19 +3849,120 @@ static string problem72(uint64_t L = 1000000)
     return twostring<uint64_t>(xsum - 1);
 }
 
+/*
+#73: Counting fractions in a range
+
+Consider the fraction, n/d, where n and d are positive integers.
+If n<d and HCF(n,d)=1, it is called a reduced proper fraction.
+
+If we list the set of reduced proper fractions
+for d <= 8 in ascending order of size, we get:
+
+1/8, 1/7, 1/6, 1/5, 1/4, 2/7, 1/3, 3/8, 2/5, 3/7,
+1/2, 4/7, 3/5, 5/8, 2/3, 5/7, 3/4, 4/5, 5/6, 6/7, 7/8
+
+It can be seen that there are 3 fractions between 1/3 and 1/2.
+
+How many fractions lie between 1/3 and 1/2 in the
+sorted set of reduced proper fractions for d <= 12,000?
+
+Antwoord: 7,295,372
+*/
+
 static string problem73()
 {
     return twostring<uint32_t>(0);
 }
+
+/*
+#74: Digit factorial chains
+
+The number 145 is well known for the property that the
+sum of the factorial of its digits is equal to 145:
+
+1! + 4! + 5! = 1 + 24 + 120 = 145
+
+Perhaps less well known is 169, in that it produces the longest chain of
+numbers that link back to 169; it turns out that there are only three such
+loops that exist:
+
+169 -> 363601 -> 1454 -> 169
+871 -> 45361 -> 871
+872 -> 45362 -> 872
+
+It is not difficult to prove that EVERY starting number
+will eventually get stuck in a loop. For example,
+
+69 -> 363600 -> 1454 -> 169 -> 363601 (-> 1454)
+78 -> 45360 -> 871 -> 45361 (-> 871)
+540 -> 145 (-> 145)
+
+Starting with 69 produces a chain of five non-repeating terms, but the longest
+non-repeating chain with a starting number below one million is sixty terms.
+
+How many chains, with a starting number below one
+million, contain exactly sixty non-repeating terms?
+
+Antwoord: 402
+*/
 
 static string problem74()
 {
     return twostring<uint32_t>(0);
 }
 
+/*
+#75: Singular integer right triangles
+
+It turns out that 12 cm is the smallest length of wire that can be bent
+to form an integer sided right angle triangle in exactly one way, but
+there are many more examples.
+
+12 cm: (3,4,5)
+24 cm: (6,8,10)
+30 cm: (5,12,13)
+36 cm: (9,12,15)
+40 cm: (8,15,17)
+48 cm: (12,16,20)
+
+In contrast, some lengths of wire, like 20 cm, cannot be bent to form an
+integer sided right angle triangle, and other lengths allow more than one
+solution to be found; for example, using 120 cm it is possible to form
+exactly three different integer sided right angle triangles.
+
+120 cm: (30,40,50), (20,48,52), (24,45,51)
+
+Given that L is the length of the wire, for how many values of
+L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
+
+Antwoord: 161,667
+*/
+
+//#include <vector>
+
 static string problem75()
 {
+#if 0
+    uint64_t L = 1500001;
+    vector<uint64_t> maybe;
+    vector<uint64_t> nope;
+    uint64_t fsqrt = floorsqrt(L/2);
+    for (uint64_t m = 2; m < fsqrt; m++)
+    {   for (uint64_t n = m - 1; n > 0; n -= 2)
+        {   if (gcd(m, n) == 1)
+            {   uint64_t s = 2 * (m * m + m * n);
+                for (uint64_t k = 1; k <= L / s; k++)
+                {   if (linSearch(maybe.begin(), maybe.end(), k * s))
+                        nope.push_back(k * s);
+                    else
+                        maybe.push_back(k * s);
+                }
+            }
+        }
+    }
+#endif
     return twostring<uint32_t>(0);
+    //return twostring<uint32_t>((maybe.end() - maybe.begin()) - (nope.end() - nope.end()));
 }
 
 /*
@@ -4147,9 +4314,8 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    //testLongNum();
+    testLongNum();
     time_t begin = time(0);
-    //strcpy(answers2[43-1], "0");
 #ifdef MULTITHREAD
     multithread(59);
 #else
