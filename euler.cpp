@@ -4191,6 +4191,46 @@ static string problem81()
     return twostring<uint32_t>(arr[n - 1]);
 }
 
+static string problem82()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem83()
+{
+    return twostring<uint32_t>(0);
+}
+
+static string problem84()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#85: Counting rectangles
+
+By counting carefully it can be seen that a rectangular
+grid measuring 3 by 2 contains eighteen rectangles:
+
+Although there exists no rectangular grid that contains exactly two
+million rectangles, find the area of the grid with the nearest solution.
+
+Antwoord: 2,772
+*/
+
+static string problem85()
+{
+    int32_t best_x = 0xffff, best_y = 0xffff, best_rects = 0xffff;
+    for (int32_t x = 1; x <= 2000; x++)
+    {   for (int32_t y = 1; y <= 2000; y++)
+        {   int32_t diff = std::abs((x*x+x)*(y*y+y)/4 - 2000000);
+            if (diff < best_rects)
+                best_x = x, best_y = y, best_rects = diff;
+        }
+    }
+    return twostring<uint32_t>(best_x * best_y);
+}
+
 /*
 http://code.jasonbhill.com/c/project-euler-97/
 */
@@ -4289,6 +4329,10 @@ static string run2(uint32_t p)
     case 79: return problem79();
     case 80: return problem80();
     case 81: return problem81();
+    case 82: return problem82();
+    case 83: return problem83();
+    case 84: return problem84();
+    case 85: return problem85();
     }
     return 0;
 }
@@ -4422,7 +4466,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(81);
+    singlethread(85);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
