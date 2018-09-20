@@ -174,6 +174,12 @@ static uint64_t sum(Generator<uint32_t> &s)
     return xsum;
 }
 
+static uint64_t last(Generator<uint32_t> &s)
+{   uint64_t ret = 0;
+    while (s.hasNext()) ret = s.next();
+    return ret;
+}
+
 class Sieve : public Generator<uint32_t>
 {
 private:
@@ -687,6 +693,15 @@ public:
         return ret;
     }
 };
+
+static bool ispolygon32(uint32_t n, uint32_t size)
+{   Polygonizer p(n + 1, size);
+    return last(p) == n;
+}
+
+static bool issquare32(uint32_t n)
+{   return ispolygon32(n, 2);
+}
 
 static uint32_t floorsqrt32(uint32_t n)
 {   Polygonizer p(n + 1, 2);
@@ -3991,8 +4006,7 @@ Antwoord: 71
 */
 
 static string problem77()
-{
-    uint32_t lprimes[100], end = 0, n;
+{   uint32_t lprimes[100], end = 0, n;
     Sieve sieve(100);
     while (sieve.hasNext())
         lprimes[end++] = sieve.next();
@@ -4232,6 +4246,47 @@ static string problem85()
 }
 
 /*
+#86: Cuboid route
+
+A spider, S, sits in one corner of a cuboid room, measuring 6 by 5 by 3,
+and a fly, F, sits in the opposite corner. By travelling on the surfaces
+of the room the shortest "straight line" distance from S to F is 10 and
+the path is shown on the diagram.
+
+However, there are up to three "shortest" path candidates for any given
+cuboid and the shortest route doesn't always have integer length.
+
+It can be shown that there are exactly 2060 distinct cuboids, ignoring
+rotations, with integer dimensions, up to a maximum size of M by M by M,
+for which the shortest route has integer length when M = 100. This is the
+least value of M for which the number of solutions first exceeds two
+thousand; the number of solutions when M = 99 is 1975.
+
+Find the least value of M such that the number
+of solutions first exceeds one million.
+
+Antwoord: 1,818
+*/
+
+static string problem86()
+{
+    uint32_t L = 1000000, c = 0, a = 2, nprimes = 0;
+    Sieve sieve(16511080);
+    uint32_t *lprimes = new uint32_t[16511080];
+    while (sieve.hasNext()) lprimes[nprimes++] = sieve.next();
+    while (c < L)
+    {   a++;
+        for (uint32_t bc = 3; bc < 2 * a; bc++)
+        {   if (bc * a % 12 == 0 && issquare32(bc * bc + a*a))
+            {   c += std::min(bc, a + 1) - (bc + 1) / 2;
+            }
+        }
+    }
+    delete[] lprimes;
+    return twostring<uint32_t>(a);
+}
+
+/*
 http://code.jasonbhill.com/c/project-euler-97/
 */
 
@@ -4333,6 +4388,7 @@ static string run2(uint32_t p)
     case 83: return problem83();
     case 84: return problem84();
     case 85: return problem85();
+    case 86: return problem86();
     }
     return 0;
 }
@@ -4466,7 +4522,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(85);
+    singlethread(86);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";

@@ -3923,9 +3923,8 @@ def problem86():
     while c < L:
         a += 1
         for bc in range(3, 2*a):
-            if bc * a % 12 == 0:
-                if issquare3(bc*bc + a*a):
-                    c += min(bc, a + 1) - (bc + 1) // 2
+            if bc * a % 12 == 0 and issquare3(bc*bc + a*a):
+                c += min(bc, a + 1) - (bc + 1) // 2
     return a
 
 """
