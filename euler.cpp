@@ -465,8 +465,9 @@ class Kounter
 {
 private:
     uint16_t _kounter3[50];
-    uint8_t _end = 0;
+    uint8_t _end;
 public:
+    Kounter() : _end(0) { }
     void insert(uint8_t n);
     bool hasKey(uint8_t n);
     uint8_t maxKey();
@@ -478,7 +479,7 @@ public:
 };
 
 bool Kounter::hasKey(uint8_t n)
-{   for (auto it = begin(); it != end(); it++)
+{   for (uint16_t *it = begin(); it != end(); it++)
         if ((uint8_t)(*it >> 8) == n) return true;
     return false;
 }
@@ -492,21 +493,21 @@ uint8_t Kounter::maxKey()
 
 uint8_t Kounter::maxCount()
 {   uint8_t xmax = 0;
-    for (auto it = begin(); it != end(); it++)
+    for (uint16_t *it = begin(); it != end(); it++)
         xmax = std::max(xmax, (uint8_t)(*it & 0xff));
     return xmax;
 }
 
 uint8_t Kounter::minKey()
 {   uint8_t xmin = 0xff;
-    for (auto it = begin(); it != end(); it++)
+    for (uint16_t *it = begin(); it != end(); it++)
         xmin = std::min(xmin, (uint8_t)((*it >> 8) & 0xff));
     return xmin;
 }
 
 uint8_t Kounter::minCount()
 {   uint8_t xmin = 0xff;
-    for (auto it = begin(); it != end(); it++)
+    for (uint16_t *it = begin(); it != end(); it++)
         xmin = std::min(xmin, (uint8_t)(*it & 0xff));
     return xmin;
 }
@@ -529,8 +530,7 @@ public:
     PrimeFactors2(T begin, T end, uint64_t n) : _begin(begin), _end(end), _n(n) { }
     bool hasNext() { return _n > 1; }
     uint64_t next()
-    {
-        uint64_t factor = 0;
+    {   uint64_t factor = 0;
         for (T it = _begin; it != _end; it++)
         {   if (_n % *it == 0)
             {   factor = *it;
@@ -669,15 +669,15 @@ public:
 class Polygonizer : public Generator<uint32_t>
 {
 private:
-    uint32_t _step = 1;
-    uint32_t _ret = 0;
-    bool _hasNext = true;
+    uint32_t _step;
+    uint32_t _ret;
+    bool _hasNext;
     uint32_t _limit;
     uint32_t _n;
     uint32_t _xmin;
 public:
     Polygonizer(uint32_t limit, uint32_t n = 1, uint32_t xmin = 0) :
-        _limit(limit), _n(n), _xmin(xmin) { }
+        _step(1), _ret(0), _hasNext(true), _limit(limit), _n(n), _xmin(xmin) { }
     bool hasNext() { return _hasNext; }
     uint32_t next()
     {
@@ -2344,7 +2344,9 @@ static bool test43(uint64_t n)
 
 static string problem43()
 {   uint8_t i = 0, size = 10, tmp = 0;
-    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[size] = {0};
+    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[size];
+    for (i = 0; i < size; i++) c[i] = 0;
+    i = 0;
     uint64_t xsum = 0;
     while (i < size)
     {   if (c[i] < i)
@@ -2860,7 +2862,7 @@ static uint32_t threekind(Kounter &cnt)
 static uint8_t twopair(Kounter &cnt)
 {   uint8_t best = 0;
     uint8_t pairCount = 0;
-    for (auto it = cnt.begin(); it != cnt.end(); it++)
+    for (uint16_t *it = cnt.begin(); it != cnt.end(); it++)
     {   if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
             best = max(best, (uint8_t)(*it >> 8));
@@ -2871,7 +2873,7 @@ static uint8_t twopair(Kounter &cnt)
 
 static uint8_t onepair(Kounter &cnt)
 {   uint8_t bestKicker = 0, pairValue = 0, pairCount = 0;
-    for (auto it = cnt.begin(); it != cnt.end(); it++)
+    for (uint16_t *it = cnt.begin(); it != cnt.end(); it++)
     {
         if ((uint8_t)(*it & 0xff) == 2)
         {   pairCount++;
@@ -4287,6 +4289,306 @@ static string problem86()
 }
 
 /*
+#87: Prime power triples
+
+The smallest number expressible as the sum of a prime square, prime cube,
+and prime fourth power is 28. In fact, there are exactly four numbers
+below fifty that can be expressed in such a way:
+
+28 = 22 + 23 + 24
+33 = 32 + 23 + 24
+49 = 52 + 23 + 24
+47 = 22 + 33 + 24
+
+How many numbers below fifty million can be expressed as the
+sum of a prime square, prime cube, and prime fourth power?
+
+Antwoord: 1,097,343
+*/
+
+static string problem87()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#88: Product-sum numbers
+
+A natural number, N, that can be written as the sum and product of a
+given set of at least two natural numbers, {a1, a2, ... , ak} is called
+a product-sum number: N = a1 + a2 + ... + ak = a1 x a2 x ... x ak.
+
+For example, 6 = 1 + 2 + 3 = 1 x 2 x 3.
+
+For a given set of size, k, we shall call the smallest N with this
+property a minimal product-sum number. The minimal product-sum numbers
+for sets of size, k = 2, 3, 4, 5, and 6 are as follows.
+
+k=2: 4 = 2 x 2 = 2 + 2
+k=3: 6 = 1 x 2 x 3 = 1 + 2 + 3
+k=4: 8 = 1 x 1 x 2 x 4 = 1 + 1 + 2 + 4
+k=5: 8 = 1 x 1 x 2 x 2 x 2 = 1 + 1 + 2 + 2 + 2
+k=6: 12 = 1 x 1 x 1 x 1 x 2 x 6 = 1 + 1 + 1 + 1 + 2 + 6
+
+Hence for 2<=k<=6, the sum of all the minimal product-sum numbers is
+4+6+8+12 = 30; note that 8 is only counted once in the sum.
+
+In fact, as the complete set of minimal product-sum numbers
+for 2<=k<=12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
+
+What is the sum of all the minimal product-sum numbers for 2<=k<=12000?
+
+Antwoord: 7,587,457
+*/
+
+static string problem88()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#89: Roman numerals
+
+For a number written in Roman numerals to be considered valid there are
+basic rules which must be followed. Even though the rules allow some
+numbers to be expressed in more than one way there is always a "best"
+way of writing a particular number.
+
+For example, it would appear that there are
+at least six ways of writing the number sixteen:
+
+IIIIIIIIIIIIIIII
+VIIIIIIIIIII
+VVIIIIII
+XIIIIII
+VVVI
+XVI
+
+However, according to the rules only XIIIIII and XVI are valid, and the
+last example is considered to be the most efficient, as it uses the least
+number of numerals.
+
+The 11K text file, roman.txt (right click and 'Save Link/Target As...'),
+contains one thousand numbers written in valid, but not necessarily
+minimal, Roman numerals; see About... Roman Numerals for the definitive
+rules for this problem.
+
+Find the number of characters saved by
+writing each of these in their minimal form.
+
+Note: You can assume that all the Roman numerals in the
+file contain no more than four consecutive identical units.
+
+Antwoord: 743
+*/
+
+static string problem89()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#90: Cube digit pairs
+
+Antwoord: 1,217
+*/
+
+static string problem90()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#91: Right triangles with integer coordinates
+
+Antwoord: 14,234
+*/
+
+static string problem91()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#92: Square digit chains
+
+A number chain is created by continuously adding the square of the
+digits in a number to form a new number until it has been seen before.
+
+For example,
+
+44 -> 32 -> 13 -> 10 -> 1 -> 1
+85 -> 89 -> 145 -> 42 -> 20 -> 4 -> 16 -> 37 -> 58 -> 89
+
+Therefore any chain that arrives at 1 or 89 will become stuck in an endless
+loop. What is most amazing is that EVERY starting number will eventually
+arrive at 1 or 89.
+
+How many starting numbers below ten million will arrive at 89?
+
+Antwoord: 8,581,146
+*/
+
+static string problem92()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#93: Arithmetic expressions
+
+By using each of the digits from the set, {1, 2, 3, 4}, exactly once, and
+making use of the four arithmetic operations (+, −, *, /) and
+brackets/parentheses, it is possible to form different positive integer targets.
+
+For example,
+
+8 = (4 * (1 + 3)) / 2
+14 = 4 * (3 + 1 / 2)
+19 = 4 * (2 + 3) − 1
+36 = 3 * 4 * (2 + 1)
+
+Note that concatenations of the digits, like 12 + 34, are not allowed.
+
+Using the set, {1, 2, 3, 4}, it is possible to obtain thirty-one different
+target numbers of which 36 is the maximum, and each of the numbers 1 to 28
+can be obtained before encountering the first non-expressible number.
+
+Find the set of four distinct digits, a < b < c < d, for which the longest
+set of consecutive positive integers, 1 to n, can be obtained, giving your
+answer as a string: abcd.
+
+Antwoord: 1,258
+*/
+
+static string problem93()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#94: Almost equilateral triangles
+
+It is easily proved that no equilateral triangle exists with integral
+length sides and integral area. However, the almost equilateral triangle
+5-5-6 has an area of 12 square units.
+
+We shall define an almost equilateral triangle to be a triangle for which
+two sides are equal and the third differs by no more than one unit.
+
+Find the sum of the perimeters of all almost equilateral triangles with
+integral side lengths and area and whose perimeters do not exceed one
+billion (1,000,000,000).
+
+Antwoord: 518,408,346
+*/
+
+static string problem94()
+{   int64_t side0 = 1, side = 1, s = 0, p = 0, m = 1, L = 1000000000;
+    while (p <= L)
+    {   int64_t tmp = 4 * side - side0 + 2 * m;
+        side0 = side;
+        side = tmp;
+        m = -m;
+        s += p;
+        p = 3 * side - m;
+    }
+    return twostring<uint64_t>(s);
+}
+
+/*
+#95: Amicable chains
+
+The proper divisors of a number are all the divisors excluding the number
+itself. For example, the proper divisors of 28 are 1, 2, 4, 7, and 14. As
+the sum of these divisors is equal to 28, we call it a perfect number.
+
+Interestingly the sum of the proper divisors of 220 is 284 and the sum of
+the proper divisors of 284 is 220, forming a chain of two numbers. For
+this reason, 220 and 284 are called an amicable pair.
+
+Perhaps less well known are longer chains. For example,
+starting with 12496, we form a chain of five numbers:
+
+12496 → 14288 → 15472 → 14536 → 14264 (→ 12496 → ...)
+
+Since this chain returns to its starting
+point, it is called an amicable chain.
+
+Find the smallest member of the longest amicable
+chain with no element exceeding one million.
+
+Antwoord: 14,316
+*/
+
+static string problem95()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#96: Su Doku
+
+Su Doku (Japanese meaning number place) is the name given to a popular
+puzzle concept. Its origin is unclear, but credit must be attributed to
+Leonhard Euler who invented a similar, and much more difficult, puzzle
+idea called Latin Squares. The objective of Su Doku puzzles, however, is
+to replace the blanks (or zeros) in a 9 by 9 grid in such that each row,
+column, and 3 by 3 box contains each of the digits 1 to 9. Below is an
+example of a typical starting puzzle grid and its solution grid.
+
+003  020  600
+900  305  001
+001  806  400
+
+008  102  900
+700  000  008
+006  708  200
+
+002  609  500
+800  203  009
+005  010  300
+
+A well constructed Su Doku puzzle has a unique solution and can be solved
+by logic, although it may be necessary to employ "guess and test" methods
+in order to eliminate options (there is much contested opinion over this).
+The complexity of the search determines the difficulty of the puzzle; the
+example above is considered easy because it can be solved by straight
+forward direct deduction.
+
+The 6K text file, sudoku.txt (right click and 'Save Link/Target As...'),
+contains fifty different Su Doku puzzles ranging in difficulty, but all
+with unique solutions (the first puzzle in the file is the example above).
+
+By solving all fifty puzzles find the sum of the 3-digit numbers found in
+the top left corner of each solution grid; for example, 483 is the 3-digit
+number found in the top left corner of the solution grid above.
+
+Antwoord: 24,702
+*/
+
+static string problem96()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#97: Large non-Mersenne prime
+
+The first known prime found to exceed one million digits was discovered in
+1999, and is a Mersenne prime of the form 26972593-1; it contains exactly
+2,098,960 digits. Subsequently other Mersenne primes, of the form 2p-1,
+have been found which contain more digits.
+
+However, in 2004 there was found a massive non-Mersenne
+prime which contains 2,357,207 digits: 28433x27830457+1.
+
+Find the last ten digits of this prime number.
+
+Antwoord: 8,739,992,577
+*/
+
+/*
 http://code.jasonbhill.com/c/project-euler-97/
 */
 
@@ -4389,6 +4691,17 @@ static string run2(uint32_t p)
     case 84: return problem84();
     case 85: return problem85();
     case 86: return problem86();
+    case 87: return problem87();
+    case 88: return problem88();
+    case 89: return problem89();
+    case 90: return problem90();
+    case 91: return problem91();
+    case 92: return problem92();
+    case 93: return problem93();
+    case 94: return problem94();
+    case 95: return problem95();
+    case 96: return problem96();
+    case 97: return problem97();
     }
     return 0;
 }
@@ -4405,7 +4718,9 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
     "6531031914842725", "510510", "8319823", "428570", "303963552391", "7295372", "402", "161667",
     "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
-    "101524", "2772", "1818"};
+    "101524", "2772", "1818", "1097343", "7587457", "743", "1217", "14234", "8581146",
+    "1258", "518408346", "14316", "24702", "8739992577", "18769", "709", "756872327473",
+    "37076114526", "228"};
 
 
 #ifdef MULTITHREAD
@@ -4522,7 +4837,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(86);
+    singlethread(97);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
