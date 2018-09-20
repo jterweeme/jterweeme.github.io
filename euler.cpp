@@ -206,27 +206,6 @@ Sieve::Sieve(uint32_t limit)
     _next = 2;
 }
 
-#if 0
-static void testPrimes() __attribute__((unused));
-static void testPrimes()
-{
-    Sieve sieve(99999);
-    vector<uint32_t> primes;
-    vector<bool> primes2;
-    for (uint32_t i = 0; sieve.hasNext();)
-    {   uint32_t prime = sieve.next();
-        for (; i < prime; i++)
-            primes2.push_back(false);
-        primes2.push_back(true);
-        i++;
-    }
-    for (uint32_t i = 0; i < primes2.size(); i++)
-    {   if (isprime27(i) != primes2.at(i))
-            cout << "ERROR\r\n";
-    }
-}
-#endif
-
 template <typename T> static T triangle(T n) { return n * (n + 1) >> 1; }
 static const uint32_t triangle32(uint32_t n) { return n * (n + 1) >> 1; }
 static const uint32_t pentagon32(uint32_t n) { return n * (3 * n - 1) / 2; }
@@ -453,11 +432,9 @@ template <typename T> uint16_t decimals(T n)
     return i;
 }
 
-#if 1
 template <> uint16_t decimals<LongNumber25>(LongNumber25 n)
 {   return n.digits();
 }
-#endif
 
 template <typename T> bool sameDigs(T a, T b)
 {   uint16_t decs = decimals(a), end = 0;
@@ -635,16 +612,6 @@ static uint32_t gcd(uint32_t a, uint32_t b)
     return a;
 }
 
-static uint64_t floorsqrt(uint64_t n)
-{   uint64_t i = 0, step = 1, sum = 0;
-    while (sum < n)
-    {   sum += step;
-        step += 2;
-        i++;
-    }
-    return i - 1;
-}
-
 static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
 {
     uint32_t *lst = new uint32_t[target + 1];
@@ -720,6 +687,26 @@ public:
         return ret;
     }
 };
+
+static uint32_t floorsqrt32(uint32_t n)
+{   Polygonizer p(n + 1, 2);
+    uint32_t ret = 0;
+    while (p.hasNext())
+    {   p.next();
+        ret++;
+    }
+    return ret - 1;
+}
+
+static uint64_t floorsqrt64(uint64_t n)
+{   uint64_t i = 0, step = 1, sum = 0;
+    while (sum < n)
+    {   sum += step;
+        step += 2;
+        i++;
+    }
+    return i - 1;
+}
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -3450,8 +3437,8 @@ static string problem64()
     uint32_t L = 10000, odd_period = 0;
     for (uint32_t N = 2; N <= L; N++)
     {
-        uint32_t r = floorsqrt(N);
-        uint32_t limit = floorsqrt(N);
+        uint32_t r = floorsqrt32(N);
+        uint32_t limit = floorsqrt32(N);
         if (limit * limit == N) continue;
         uint32_t k = 1, period = 0;
         while (k != 1 || period == 0)
@@ -3562,7 +3549,7 @@ static string problem66()
     for (uint64_t d = 2; d <= 11; d++)
     {
         if (d == 4 || d == 9 || d == 10 || d == 11) continue;
-        uint64_t root = floorsqrt(d);
+        uint64_t root = floorsqrt64(d);
         if (root * root == d) continue;
         LongNumber25 a(root);
         LongNumber25 numerator(0);
@@ -3945,7 +3932,7 @@ static string problem75()
     uint64_t L = 1500001;
     set<uint64_t> maybe;
     set<uint64_t> nope;
-    uint64_t fsqrt = floorsqrt(L/2);
+    uint64_t fsqrt = floorsqrt64(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
     {   for (int64_t n = m - 1; n > 0; n -= 2)
         {   if (gcd(m, n) == 1)
@@ -4161,6 +4148,50 @@ static string problem80()
 }
 
 /*
+#81: Path sum: two ways
+
+In the 5 by 5 matrix below, the minimal path sum from the top left to the
+bottom right, by only moving to the right and down, is indicated in bold
+red and is equal to 2427.
+
+131  673  234  103  18
+201  96   342  965  150
+630  803  746  422  111
+537  699  497  121  956
+805  732  524  37   331
+
+Find the minimal path sum, in matrix.txt (right click and "Save Link/Target
+As..."), a 31K text file containing a 80 by 80 matrix, from the top left to
+the bottom right by only moving right and down.
+
+Antwoord: 427,337
+*/
+
+static string problem81()
+{   ifstream ifs;
+    ifs.open("euler81.txt");
+    uint16_t x = 0, n = 0;
+    char c;
+    uint32_t arr[80*80];
+    while ((ifs.get(c)))
+    {   if (isdigit(c))
+            x = x * 10 + (c - '0');
+        else if (x > 0)
+            arr[n++] = x, x = 0;
+    }
+    ifs.close();
+    uint16_t root = floorsqrt32(n);
+    for (uint16_t i = 0; i < root - 1; i++)
+        arr[i + 1] += arr[i];
+    for (uint16_t i = 0; i < root - 1; i++)
+        arr[(i + 1) * root] += arr[i * root];
+    for (uint16_t i = 0; i < root - 1; i++)
+        for (uint16_t j = 0; j < root - 1; j++)
+            arr[(i + 1) * root + (j + 1)] += std::min(arr[(i + 1)*root+j], arr[i*root+(j + 1)]);
+    return twostring<uint32_t>(arr[n - 1]);
+}
+
+/*
 http://code.jasonbhill.com/c/project-euler-97/
 */
 
@@ -4257,6 +4288,7 @@ static string run2(uint32_t p)
     case 78: return problem78();
     case 79: return problem79();
     case 80: return problem80();
+    case 81: return problem81();
     }
     return 0;
 }
@@ -4390,7 +4422,7 @@ int main()
 #ifdef MULTITHREAD
     multithread(59);
 #else
-    singlethread(80);
+    singlethread(81);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
