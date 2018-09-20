@@ -4581,7 +4581,7 @@ The first known prime found to exceed one million digits was discovered in
 have been found which contain more digits.
 
 However, in 2004 there was found a massive non-Mersenne
-prime which contains 2,357,207 digits: 28433x27830457+1.
+prime which contains 2,357,207 digits: 28433x2^7830457+1.
 
 Find the last ten digits of this prime number.
 
@@ -4593,8 +4593,11 @@ http://code.jasonbhill.com/c/project-euler-97/
 */
 
 static string problem97()
-{
-    return twostring<uint32_t>(0);
+{   uint64_t n = 2;
+    for (uint64_t i = 0; i < 7830456; i++)
+        n = (2 * n) % 10000000000ULL;
+    n = (n * 28433 + 1) % 10000000000;
+    return twostring<uint64_t>(n);
 }
 
 /*
