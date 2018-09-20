@@ -3079,7 +3079,7 @@ def problem79(fn = "euler79.txt"):
             arr = list()
             for n in attempt:
                 arr.append(passcode.index(n))
-            return sorted(arr) == arr
+            return sorted(arr) == arr   # is arr in ascending order?
         for attempt in attempts:
             if login(perm, reversed(list(digits(attempt)))) == False: return False
         return True
@@ -3088,7 +3088,8 @@ def problem79(fn = "euler79.txt"):
     for attempt in attempts:
         for dig in digits(attempt):
             digs.add(dig)
-    for perm in permutations2(digs):
+    ldigs = list(digs)
+    for perm in permutations(ldigs):
         if test(perm, attempts): return concat2(perm)
     raise("Answer not found")
     return 0

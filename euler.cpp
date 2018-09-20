@@ -2342,7 +2342,7 @@ static bool test43(uint64_t n)
 
 static string problem43()
 {   uint8_t i = 0, size = 10, tmp = 0;
-    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[10] = {0};
+    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[size] = {0};
     uint64_t xsum = 0;
     while (i < size)
     {   if (c[i] < i)
@@ -4085,12 +4085,86 @@ Antwoord: 73,162,890
 73162890
 */
 
+static uint16_t attempts[] = { 319, 680, 180, 690, 129, 620, 762, 689, 762, 318, 368, 710,
+    720, 710, 629, 168, 160, 689, 716, 731, 736, 729, 316, 729, 729, 710, 769, 290, 719,
+    680, 318, 389, 162, 289, 162, 718, 729, 319, 790, 680, 680, 362, 319, 760, 316, 729,
+    380, 319, 728, 716};
+
+bool login79(uint8_t *passcode, uint16_t attempt)
+{   uint8_t arr[3];
+    arr[0] = linSearch(passcode, passcode + 8, attempt / 100);
+    arr[1] = linSearch(passcode, passcode + 8, (attempt / 10) % 10);
+    arr[2] = linSearch(passcode, passcode + 8, attempt % 10);
+    return arr[1] > arr[0] && arr[2] > arr[1];  // is arr in ascending order?
+}
+
+bool test79(uint8_t *perm, uint16_t *attempts)
+{   for (uint8_t i = 0; i < 50; i++)
+        if (login79(perm, attempts[i]) == false) return false;
+    return true;
+}
+
 static string problem79()
+{   set<uint8_t> digs;
+    uint8_t i;
+    for (i = 0; i < 50; i++)
+    {   uint16_t attempt = attempts[i];
+        while (attempt)
+        {   digs.insert(attempt % 10);
+            attempt = attempt / 10;
+        }
+    }
+    uint8_t size = digs.size(), tmp = 0;
+    i = 0;
+    uint8_t *pool = new uint8_t[size];
+    for (set<uint8_t>::iterator it = digs.begin(); it != digs.end(); it++)
+        pool[i++] = *it;
+    uint8_t *c = new uint8_t[size];
+    for (i = 0; i < size; i++) c[i] = 0;
+    for (i = 0; i < size; )
+    {   if (c[i] < i)
+        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
+            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
+            c[i]++, i = 0;
+            if (test79(pool, attempts)) break;
+        }
+        else c[i++] = 0;
+    }
+    delete[] c;
+    char ret[9];
+    for (uint8_t i = 0; i < 8; i++)
+        ret[i] = pool[i] + '0';
+    ret[8] = 0;
+    delete[] pool;
+    return string(ret);
+}
+
+/*
+#80: Square root digital expansion
+
+It is well known that if the square root of a natural number is not an
+integer, then it is irrational. The decimal expansion of such square
+roots is infinite without any repeating pattern at all.
+
+The square root of two is 1.41421356237309504880..., and the
+digital sum of the first one hundred decimal digits is 475.
+
+For the first one hundred natural numbers, find the total of the digital sums
+of the first one hundred decimal digits for all the irrational square roots.
+
+Antwoord: 40,886
+*/
+
+static string problem80()
 {
     return twostring<uint32_t>(0);
 }
 
-static string problem80()
+/*
+http://code.jasonbhill.com/c/project-euler-97/
+*/
+
+static string problem97()
 {
     return twostring<uint32_t>(0);
 }
