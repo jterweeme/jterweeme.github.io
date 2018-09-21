@@ -2723,21 +2723,14 @@ possible to form 16- and 17-digit strings. What is the maximum
 Antwoord: 6,531,031,914,842,725
 """
 
-def ngon3():
-    for p in permutations2(range(1,7)):
-        if p[0] + p[3] + p[4] != p[1] + p[4] + p[5]: continue
-        if p[0] + p[3] + p[4] != p[2] + p[5] + p[3]: continue
-        if p[0] > p[1] or p[0] > p[2]: continue
-        print("{}  {},{},{}; {},{},{}; {},{},{}".format(
-            p[0] + p[3] + p[4], p[0], p[3], p[4], p[1], p[4], p[5], p[2], p[5], p[3]))
-
 def sumEqual(lst):
     for i in range(1,5):
         if sum(lst[0]) != sum(lst[i]):
             return False
     return True
 
-def ngon5():
+def problem68():
+    ret = 0
     for p in permutations2(range(1,11)):
         lines = list();
         lines.append((p[0], p[5], p[6]))
@@ -2747,14 +2740,12 @@ def ngon5():
         lines.append((p[4], p[9], p[5]))
         if sumEqual(lines) == False: continue
         if p[0] > p[1] or p[0] > p[2] or p[0] > p[3] or p[0] > p[4]: continue
-        xstr = str()
+        ret = 0
         for line in lines:
             for n in line:
-                xstr += str(n)
-        yield int(xstr)
-
-def problem68():
-    return last(ngon5())
+                ret *= 10**decimals(n)
+                ret += n
+    return ret
 
 """
 #69: Totient maximum

@@ -3741,36 +3741,38 @@ possible to form 16- and 17-digit strings. What is the maximum
 Antwoord: 6,531,031,914,842,725
 */
 
+static bool sumEqual(uint8_t *lines)
+{   uint8_t sum1 = lines[0] + lines[1] + lines[2];
+    for (uint8_t i = 1; i <= 4; i++)
+        if (lines[i * 3 + 0] + lines[i * 3 + 1] + lines[i * 3 + 2] != sum1)
+            return false;
+    return true;
+}
+
 static string problem68()
-{
-    uint8_t i = 0, size = 10;
-    uint8_t pool[] = {1,2,3,4,5,6,7,8,9,10}, c[size];
-    uint8_t *perms = new uint8_t[10*3628800];
-    uint32_t j = 0;
-    for (i = 0; i < size; i++) c[i] = 0;
-    i = 0;
-    while (i < size)
-    {   if (c[i] < i)
-        {   if (i % 2 == 0)
-                xswap(pool[0], pool[i]);
-            else
-                xswap(pool[c[i]], pool[i]);
-            c[i]++, i = 0;
-            for (uint8_t k = 0; k < 10; k++)
-                perms[j++] = pool[k];
-        }
-        else c[i++] = 0;
+{   uint8_t pool[] = {1,2,3,4,5,6,7,8,9,10};
+    Permutation<uint8_t> p(pool, pool + 10);
+    uint8_t lines[15];
+    uint64_t best = 0;
+    while (p.hasNext())
+    {   MyArray<uint8_t> ma = p.next();
+        lines[0] = ma.arr[0], lines[1] = ma.arr[5], lines[2] = ma.arr[6];
+        lines[3] = ma.arr[1], lines[4] = ma.arr[6], lines[5] = ma.arr[7];
+        lines[6] = ma.arr[2], lines[7] = ma.arr[7], lines[8] = ma.arr[8];
+        lines[9] = ma.arr[3], lines[10] = ma.arr[8], lines[11] = ma.arr[9];
+        lines[12] = ma.arr[4], lines[13] = ma.arr[9], lines[14] = ma.arr[5];
+        if (sumEqual(lines) == false) continue;
+        if (ma.arr[0] > ma.arr[1]) continue;
+        if (ma.arr[0] > ma.arr[2]) continue;
+        if (ma.arr[0] > ma.arr[3]) continue;
+        if (ma.arr[0] > ma.arr[4]) continue;
+        uint64_t digstr = 0;
+        for (uint8_t i = 0; i < 15; i++)
+            digstr *= lines[i] == 10 ? 100 : 10, digstr += lines[i];
+        if (decimals(digstr) != 16) continue;
+        best = std::max(best, digstr);
     }
-    uint64_t xsum = 0;
-#if 1
-    for (uint32_t k = 0; k < 36288000; k++)
-    {
-        xsum += perms[k];
-    }
-#endif
-    cout << xsum << "\r\n";
-    delete[] perms;
-    return twostring<uint32_t>(0);
+    return twostring<uint64_t>(best);
 }
 
 /*
