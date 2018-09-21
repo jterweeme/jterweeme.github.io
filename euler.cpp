@@ -259,22 +259,16 @@ template <typename T, typename U> bool hasDigitsOnce2(T n, U nsetbeg, U nsetend)
 class LongNumber25
 {
 private:
-    uint16_t _buf[1500];
+    uint8_t _buf[1500];
 public:
-    uint16_t *begin() { return _buf; }
-    uint16_t *end() { return _buf + 1500; } // moet eigenlijk echte einde aangeven
-    void clear() { set(0); }
-    LongNumber25() { clear(); }
+    uint8_t *begin() { return _buf; }
+    uint8_t *end() { return _buf + 1500; } // moet eigenlijk echte einde aangeven
+    LongNumber25() { set(0); }
     LongNumber25(uint64_t n) { set(n); }
     LongNumber25(const LongNumber25 &n)
     {   for (uint16_t i = 0; i < 1500; i++) _buf[i] = n._buf[i];
     }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
-    bool isZero() const
-    {   for (uint16_t i = 0; i < 1500; i++)
-            if (_buf[i] != 0) return false;
-        return true;
-    }
     void add(const LongNumber25 &n)
     {   uint8_t carry = 0;
         for (uint16_t i = 0; i < 1500; i++)
@@ -298,8 +292,8 @@ public:
             }
             else
             {
-                carry += n._buf[i] - _buf[i];
-                _buf[i] = 10 - carry;
+                _buf[i] = 10 - (n._buf[i] - _buf[i]);
+                carry = 1;
             }
         }
     }
@@ -316,41 +310,30 @@ public:
     {   for (uint16_t i = digits(); i > 0; i--)
             os << (uint16_t)_buf[i - 1];
     }
-    bool equals(LongNumber25 n)
+    bool equals(const LongNumber25 n) const
     {   for (uint16_t i = 0; i < 1500; i++)
             if (_buf[i] != n._buf[i])
                 return false;
         return true;
     }
-    void shiftdec(uint16_t n)
-    {   uint16_t i = 0;
-        for (i = 0; i < 1500 - n; i++)
-            _buf[i] = _buf[i + n];
-        while (i < 1500)
-            _buf[i] = 0, i++;
-    }
-    bool gt(LongNumber25 n)
+    bool gt(const LongNumber25 n) const
     {   for (uint16_t i = 1; i <= 1500; i++)
         {   if (_buf[1500 - i] > n._buf[1500 - i]) return true;
             if (_buf[1500 - i] < n._buf[1500 - i]) return false;
         }
         return false;
     }
-    bool gteq(LongNumber25 n)
+    bool gteq(const LongNumber25 n) const
     {   return gt(n) || equals(n);
     }
-    bool lt(LongNumber25 n)
+    bool lt(const LongNumber25 n) const
     {   return gteq(n) == false;
     }
-    bool lteq(LongNumber25 n)
+    bool lteq(const LongNumber25 n) const
     {   return lt(n) || equals(n);
     }
-    void mod(uint64_t n)
-    {   LongNumber25 ln(n);
-        while (gteq(ln))
-            dec(ln);
-    }
-    void div(LongNumber25 d)
+private:
+    void _div(LongNumber25 d)
     {
         LongNumber25 i(0);
         while (gteq(d))
@@ -359,19 +342,45 @@ public:
         }
         set(i);
     }
-    void div(uint64_t d)
+public:
+    void divmod(LongNumber25 &div, LongNumber25 &mod, const LongNumber25 d) const
     {
-        LongNumber25 ld(d);
-        LongNumber25 i(0);
-        while (gteq(ld))
-        {   dec(ld);
-            i.add(LongNumber25(1));
+        mod.set(*this);
+        LongNumber25 ret(0);
+        LongNumber25 tmp1(0);
+        LongNumber25 tmp2;
+        for (uint16_t i = mod.digits(); i > 0; i--)
+        {
+            tmp1.mul(10);
+            tmp1.add(mod._buf[i - 1]);
+            tmp2.set(tmp1);
+            tmp2._div(d);
+            if (tmp2.gt(0))
+            {
+                ret._buf[i - 1] = tmp2._buf[0];
+                tmp1.set(d);
+                tmp1.mul(tmp2);
+                for (uint16_t j = 1; j < i; j++)
+                    tmp1.mul(10);
+                mod.dec(tmp1);
+                i = mod.digits() + 1;
+                tmp1.set(0);
+            }
         }
-        set(i);
+        div.set(ret);
+        
     }
-    void shiftdec2(uint16_t n)
-    {   uint16_t i = digits() - n;
-        while (i < 1500) _buf[i] = 0, i++;
+    void longdiv(const LongNumber25 d)
+    {
+        LongNumber25 div, mod;
+        divmod(div, mod, d);
+        set(div);
+    }
+    void mod(const LongNumber25 d)
+    {
+        LongNumber25 div, mod;
+        divmod(div, mod, d);
+        set(mod);
     }
     uint16_t digits() const
     {   uint16_t i;
@@ -387,12 +396,7 @@ public:
         return a;
     }
     bool ispalindrome() { return equals(reverse()); }
-    void mul(uint64_t n)
-    {   LongNumber25 adder(*this);
-        for (uint64_t i = 1; i < n; i++)
-            add(adder);
-    }
-    void mul(LongNumber25 n)
+    void mul(const LongNumber25 n)
     {
         LongNumber25 adder(*this);
         LongNumber25 i(1);
@@ -412,24 +416,44 @@ static void myAssert(bool a, bool b, const char *msg)
 static void testLongNum()
 {
     LongNumber25 x(123456789);
-    x.dec(LongNumber25(30000000));
-    if (x.equals(LongNumber25(93456789)) == false) cout << "Error DEC\r\n";
+    x.dec(30000000);
+    myAssert(x.equals(93456789), true, "Error Decrement 1");
     x.set(11);
-    if (x.gt(LongNumber25(10)) == false) cout << "Error GT\r\n";
-    if (x.gt(LongNumber25(11)) == true) cout << "Error GT\r\n";
-    if (x.gt(LongNumber25(12)) == true) cout << "Error GT\r\n";
+    myAssert(x.gt(10), true, "Error GreaterThan 1");
+    myAssert(x.gt(11), false, "Error Greater Than 2");
+    myAssert(x.gt(12), false, "Error Greater Than 3");
     x.dec(11);
-    if (x.equals(LongNumber25(0)) == false) cout << "Error DEC\r\n";
+    myAssert(x.equals(0), true, "Error Decrement 2");
     x.set(20);
     x.mod(10);
-    if (x.equals(LongNumber25(0)) == false)
-        cout << "Error MOD\r\n";
+    myAssert(x.equals(0), true, "Error Mod 1");
     x.set(19);
-    myAssert(x.gt(LongNumber25(20)), false, "GT1");
-    myAssert(x.gteq(LongNumber25(20)), false, "GTEQ");
-    myAssert(x.lt(LongNumber25(20)), true, "LT");
-    x.dec(LongNumber25(20));
-    if (x.equals(LongNumber25(0)) == false) cout << "Error DEC\r\n";
+    myAssert(x.gt(20), false, "Error GreaterThan 4");
+    myAssert(x.gteq(20), false, "Error GreaterEqual 1");
+    myAssert(x.lt(20), true, "Error LesserThan 1");
+    x.dec(20);
+    myAssert(x.equals(0), true, "Error Decrement 3");
+    x.set(50);
+    x.dec(6);
+    myAssert(x.equals(44), true, "Error Decrement 4");
+    x.set(123456789);
+    x.mod(100);
+    myAssert(x.equals(89), true, "Error Mod 2");
+    x.set(123456789);
+    x.longdiv(100);
+    myAssert(x.equals(1234567), true, "Error Div 1");
+    x.set(150);
+    x.longdiv(140);
+    myAssert(x.equals(1), true, "Error LongDiv 1");
+    x.set(300);
+    x.longdiv(140);
+    myAssert(x.equals(2), true, "Error LongDiv 2");
+    x.set(3000);
+    x.longdiv(140);
+    myAssert(x.equals(21), true, "Error LongDiv 3");
+    x.set(404);
+    x.longdiv(2);
+    myAssert(x.equals(202), true, "Error LongDiv 4");
 }
 
 template <typename T> uint16_t decimals(T n)
@@ -650,38 +674,94 @@ static string to_string32s(int32_t n)
     return string(tmp);
 }
 
+template <typename T> struct MyArray
+{
+    T *arr;
+    uint32_t size;
+    MyArray(uint32_t xsize) : size(xsize) { arr = new T[size]; }
+    MyArray(T *begin, T *end)
+    {   size = end - begin;
+        arr = new T[size];
+        for (uint32_t i = 0; i < size; i++)
+            arr[i] = begin[i];
+    }
+    void operator=(const MyArray &ma)
+    {   size = ma.size;
+        arr = new T[size];
+        for (uint32_t i = 0; i < size; i++)
+            arr[i] = ma.arr[i];
+    }
+    MyArray(const MyArray &ma)
+    {   size = ma.size;
+        arr = new T[size];
+        for (uint32_t i = 0; i < size; i++)
+            arr[i] = ma.arr[i];
+    }
+    ~MyArray() { delete[] arr; }
+};
+
 template <typename T> class Permutation
 {
 private:
     T *_pool;
     uint8_t _size;
+    T *_c;
+    uint32_t _i;
+    bool _hasNext;
 public:
-    Permutation(T *begin, T *end)
+    Permutation(T *begin, T *end) : _i(0), _hasNext(true)
     {
         _size = end - begin;
         _pool = new T[_size];
+        _c = new T[_size];
+        for (uint8_t j = 0; j < _size; j++) _c[j] = 0;
+        uint32_t i = 0;
+        while (begin != end)
+            _pool[i++] = *begin++;
     }
     ~Permutation()
     {   delete[] _pool;
+        delete[] _c;
+    }
+    bool hasNext()
+    {
+        return _hasNext;;
+    }
+    MyArray<T> next()
+    {
+        MyArray<T> ret(_pool, _pool + _size);
+        while (_i < _size)
+        {   if (_c[_i] < _i)
+            {   if (_i % 2 == 0)
+                    xswap(_pool[0], _pool[_i]);
+                else
+                    xswap(_pool[_c[_i]], _pool[_i]);
+                _c[_i]++, _i = 0;
+                return ret;
+            }
+            else _c[_i++] = 0;
+        }
+        _hasNext = false;
+        return ret;
     }
 };
 
-class Polygonizer : public Generator<uint32_t>
+template <class T> class Polygonizer2 : public Generator<T>
 {
 private:
-    uint32_t _step;
-    uint32_t _ret;
+    T _step;
+    T _ret;
     bool _hasNext;
-    uint32_t _limit;
-    uint32_t _n;
-    uint32_t _xmin;
+    T _limit;
+    T _n;
+    T _xmin;
 public:
-    Polygonizer(uint32_t limit, uint32_t n = 1, uint32_t xmin = 0) :
+    Polygonizer2(T limit, T n = 1, T xmin = 0) :
         _step(1), _ret(0), _hasNext(true), _limit(limit), _n(n), _xmin(xmin) { }
     bool hasNext() { return _hasNext; }
-    uint32_t next()
+    T next()
     {
-        uint32_t ret;
+        T ret;
         while (true)
         {
             ret = _ret;
@@ -694,33 +774,23 @@ public:
     }
 };
 
-static bool ispolygon32(uint32_t n, uint32_t size)
-{   Polygonizer p(n + 1, size);
+template <typename T> static bool ispolygon(T n, T size)
+{   Polygonizer2<T> p(n + 1, size);
     return last(p) == n;
 }
 
-static bool issquare32(uint32_t n)
-{   return ispolygon32(n, 2);
+template <typename T> static bool issquare(T n)
+{   return ispolygon<T>(n, 2);
 }
 
-static uint32_t floorsqrt32(uint32_t n)
-{   Polygonizer p(n + 1, 2);
-    uint32_t ret = 0;
+template <typename T> static T floorsqrt(T n)
+{   Polygonizer2<T> p(n + 1, 2);
+    T ret = 0;
     while (p.hasNext())
     {   p.next();
         ret++;
     }
     return ret - 1;
-}
-
-static uint64_t floorsqrt64(uint64_t n)
-{   uint64_t i = 0, step = 1, sum = 0;
-    while (sum < n)
-    {   sum += step;
-        step += 2;
-        i++;
-    }
-    return i - 1;
 }
 
 /*
@@ -1309,13 +1379,6 @@ solved by brute force, and requires a clever method! ;o)
 Antwoord: 1,074
 */
 
-#if 0
-static uint8_t triangle[][4] = {
-    {3,0,0,0},
-    {7,4,0,0},
-    {2,4,6,0},
-    {8,5,9,3}};
-#else
 static uint8_t triangle18[][15] = {
     {75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -1332,7 +1395,6 @@ static uint8_t triangle18[][15] = {
     {91,71,52,38,17,14,91,43,58,50,27,29,48, 0, 0},
     {63,66, 4,68,89,53,67,30,73,16,69,87,40,31, 0},
     { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
-#endif
 
 static string problem18()
 {   uint32_t possibilities = myPow<uint64_t>(2, sizeof(triangle18[0]) - 1);
@@ -2343,20 +2405,13 @@ static bool test43(uint64_t n)
 }
 
 static string problem43()
-{   uint8_t i = 0, size = 10, tmp = 0;
-    uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9}, c[size];
-    for (i = 0; i < size; i++) c[i] = 0;
-    i = 0;
+{   uint8_t pool[] = {0,1,2,3,4,5,6,7,8,9};
     uint64_t xsum = 0;
-    while (i < size)
-    {   if (c[i] < i)
-        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
-            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
-            c[i]++, i = 0;
-            uint64_t ccat = concat43(pool);
-            xsum += test43(ccat) ? ccat : 0;
-        }
-        else c[i++] = 0;
+    Permutation<uint8_t> p(pool, pool + 10);
+    while (p.hasNext())
+    {   MyArray<uint8_t> ma = p.next();
+        uint64_t ccat = concat43(ma.arr);
+        xsum += test43(ccat) ? ccat : 0;
     }
     return twostring(xsum);
 }
@@ -2992,7 +3047,7 @@ static string problem56()
     {   LongNumber25 power(1);
         for (uint32_t exponent = 1; exponent <= maximum; exponent++)
         {   uint32_t sum = 0;
-            for (uint16_t *it = power.begin(); it != power.end(); it++)
+            for (uint8_t *it = power.begin(); it != power.end(); it++)
                 sum += *it;
             maxSum = max(maxSum, sum);
             power.mul(base);
@@ -3310,26 +3365,27 @@ static uint32_t opdracht61()
         else c[i++] = 0;
     }
     for (uint16_t i = 0; i < 720; i++)
-    {   Polygonizer p0(9999, perms[i * 6] + 1, 1000);
+    {   Polygonizer2<uint32_t> p0(9999, perms[i * 6] + 1, 1000);
         while (p0.hasNext())
         {   uint32_t n0 = p0.next();
-            Polygonizer p1(9999, perms[i * 6 + 1] + 1, 1000);
+            Polygonizer2<uint32_t> p1(9999, perms[i * 6 + 1] + 1, 1000);
             while (p1.hasNext())
             {   uint32_t n1 = p1.next();
                 if (n1 / 100 == n0 % 100)
-                {   Polygonizer p2(9999, perms[i * 6 + 2] + 1, 1000);
+                {   Polygonizer2<uint32_t> p2(9999, perms[i * 6 + 2] + 1, 1000);
                     while (p2.hasNext())
                     {   uint32_t n2 = p2.next();
                         if (n2 / 100 == n1 % 100)
-                        {   Polygonizer p3(9999, perms[i * 6 + 3] + 1, 1000);
+                        {   Polygonizer2<uint32_t> p3(9999, perms[i * 6 + 3] + 1, 1000);
                             while (p3.hasNext())
                             {   uint32_t n3 = p3.next();
                                 if (n3 / 100 == n2 % 100)
-                                {   Polygonizer p4(9999, perms[i * 6 + 4] + 1, 1000);
+                                {   Polygonizer2<uint32_t> p4(9999, perms[i * 6 + 4] + 1, 1000);
                                     while (p4.hasNext())
                                     {   uint32_t n4 = p4.next();
                                         if (n4 / 100 == n3 % 100)
-                                        {   Polygonizer p5(9999, perms[i * 6 + 5] + 1, 1000);
+                                        {   Polygonizer2<uint32_t> p5(9999,
+                                                perms[i * 6 + 5] + 1, 1000);
                                             while (p5.hasNext())
                                             {   uint32_t n5 = p5.next();
                                                 if (n5 / 100 == n4 % 100)
@@ -3454,8 +3510,8 @@ static string problem64()
     uint32_t L = 10000, odd_period = 0;
     for (uint32_t N = 2; N <= L; N++)
     {
-        uint32_t r = floorsqrt32(N);
-        uint32_t limit = floorsqrt32(N);
+        uint32_t r = floorsqrt<uint32_t>(N);
+        uint32_t limit = floorsqrt<uint32_t>(N);
         if (limit * limit == N) continue;
         uint32_t k = 1, period = 0;
         while (k != 1 || period == 0)
@@ -3491,7 +3547,7 @@ static string problem65()
         n0.set(tmp);
     }
     uint32_t xsum = 0;
-    for (uint16_t *it = n1.begin(); it != n1.end(); it++)
+    for (uint8_t *it = n1.begin(); it != n1.end(); it++)
         xsum += *it;
     return twostring<uint32_t>(xsum);
 }
@@ -3526,68 +3582,47 @@ of x for which the largest value of x is obtained.
 Antwoord: 661
 */
 
-#if 0
 static string problem66()
 {
-    uint64_t best_x = 0, best_d = 0;
-    for (uint64_t d = 2; d <= 1000; d++)
-    {
-        uint64_t root = floorsqrt(d);
-        if (root * root == d) continue;
-        uint64_t a = root, numerator = 0, denominator = 1;
-        uint64_t x[] = {0, 1, root};
-        uint64_t y[] = {0, 0, 1};
-        while (true)
-        {
-            numerator = denominator * a - numerator;
-            denominator = (d - numerator * numerator) / denominator;
-            a = (root + numerator) / denominator;
-            x[0] = x[1];
-            x[1] = x[2];
-            x[2] = x[1] * a + x[0];
-            y[0] = y[1];
-            y[1] = y[2];
-            y[2] = y[1] * a + y[0];
-            if (x[2] * x[2] == y[2] * y[2] * d + 1)
-                break;
-        }
-        if (best_x < x[2])
-        {   best_x = x[2];
-            best_d = d;
-        }
-    }
-    return twostring<uint64_t>(best_d);
-}
-#else
-static string problem66()
-{
-    LongNumber25 best_x(0);
+    return twostring<uint32_t>(0);
+    LongNumber25 a, numerator, denominator, x[3], y[3], tmp, tmp2, best_x;
+    best_x.set(0);
     uint64_t best_d = 0;
-    for (uint64_t d = 2; d <= 11; d++)
+    for (uint64_t d = 661; d <= 661; d++)
     {
-        if (d == 4 || d == 9 || d == 10 || d == 11) continue;
-        uint64_t root = floorsqrt64(d);
+        uint64_t root = floorsqrt<uint64_t>(d);
         if (root * root == d) continue;
-        LongNumber25 a(root);
-        LongNumber25 numerator(0);
-        LongNumber25 denominator(1);
-        LongNumber25 x[] = {0, 1, root};
-        LongNumber25 y[] = {0, 0, 1};
+        a.set(root);
+        numerator.set(0);
+        denominator.set(1);
+        x[0].set(0);
+        x[1].set(1);
+        x[2].set(root);
+        y[0].set(0);
+        y[1].set(0);
+        y[2].set(1);
         while (true)
         {
-            LongNumber25 tmp(numerator);
+            tmp.set(numerator);
             numerator.set(denominator);
             numerator.mul(a);
             numerator.dec(tmp);
-            tmp.set(denominator);
-            LongNumber25 tmp2(numerator);
-            tmp2.mul(numerator);
+            tmp.set(numerator);
+            tmp.mul(numerator);
+            tmp2.set(denominator);
             denominator.set(d);
-            denominator.dec(tmp2);
-            denominator.div(tmp);
+            denominator.dec(tmp);
+            denominator.longdiv(tmp2);
             a.set(root);
             a.add(numerator);
-            a.div(denominator);
+#if 1
+            a.dump(cout);
+            cout << "\r\n";
+            denominator.dump(cout);
+            cout << "\r\n";
+#endif
+            a.longdiv(denominator);
+
             x[0].set(x[1]);
             x[1].set(x[2]);
             x[2].set(x[1]);
@@ -3598,13 +3633,18 @@ static string problem66()
             y[2].set(y[1]);
             y[2].mul(a);
             y[2].add(y[0]);
-            
             tmp.set(x[2]);
             tmp.mul(x[2]);
             tmp2.set(y[2]);
             tmp2.mul(y[2]);
             tmp2.mul(d);
             tmp2.add(LongNumber25(1));
+#if 1
+            tmp.dump(cout);
+            cout << "\r\n";
+            tmp2.dump(cout);
+            cout << "\r\n";
+#endif
             if (tmp.equals(tmp2)) break;
         }
         if (best_x.lt(x[2]))
@@ -3614,7 +3654,6 @@ static string problem66()
     }
     return twostring<uint64_t>(best_d);
 }
-#endif
 
 /*
 #67: Maximum path sum II
@@ -3704,6 +3743,33 @@ Antwoord: 6,531,031,914,842,725
 
 static string problem68()
 {
+    uint8_t i = 0, size = 10;
+    uint8_t pool[] = {1,2,3,4,5,6,7,8,9,10}, c[size];
+    uint8_t *perms = new uint8_t[10*3628800];
+    uint32_t j = 0;
+    for (i = 0; i < size; i++) c[i] = 0;
+    i = 0;
+    while (i < size)
+    {   if (c[i] < i)
+        {   if (i % 2 == 0)
+                xswap(pool[0], pool[i]);
+            else
+                xswap(pool[c[i]], pool[i]);
+            c[i]++, i = 0;
+            for (uint8_t k = 0; k < 10; k++)
+                perms[j++] = pool[k];
+        }
+        else c[i++] = 0;
+    }
+    uint64_t xsum = 0;
+#if 1
+    for (uint32_t k = 0; k < 36288000; k++)
+    {
+        xsum += perms[k];
+    }
+#endif
+    cout << xsum << "\r\n";
+    delete[] perms;
     return twostring<uint32_t>(0);
 }
 
@@ -3949,7 +4015,7 @@ static string problem75()
     uint64_t L = 1500001;
     set<uint64_t> maybe;
     set<uint64_t> nope;
-    uint64_t fsqrt = floorsqrt64(L/2);
+    uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
     {   for (int64_t n = m - 1; n > 0; n -= 2)
         {   if (gcd(m, n) == 1)
@@ -4196,7 +4262,7 @@ static string problem81()
             arr[n++] = x, x = 0;
     }
     ifs.close();
-    uint16_t root = floorsqrt32(n);
+    uint16_t root = floorsqrt<uint32_t>(n);
     for (uint16_t i = 0; i < root - 1; i++)
         arr[i + 1] += arr[i];
     for (uint16_t i = 0; i < root - 1; i++)
@@ -4279,10 +4345,8 @@ static string problem86()
     while (c < L)
     {   a++;
         for (uint32_t bc = 3; bc < 2 * a; bc++)
-        {   if (bc * a % 12 == 0 && issquare32(bc * bc + a*a))
-            {   c += std::min(bc, a + 1) - (bc + 1) / 2;
-            }
-        }
+            if (bc * a % 12 == 0 && issquare<uint32_t>(bc * bc + a*a))
+                c += std::min(bc, a + 1) - (bc + 1) / 2;
     }
     delete[] lprimes;
     return twostring<uint32_t>(a);

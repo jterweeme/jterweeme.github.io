@@ -2575,7 +2575,7 @@ Antwoord: 661
 adapted from: https://euler.stephan-brumme.com/66/
 """
 
-def problem66():
+def problem66a():
     best_x, best_d = 0, 0
     for d in range(2, 1001):
         root = floorsqrt(d)
@@ -2599,6 +2599,58 @@ def problem66():
         if best_x < x[2]:
             best_x, best_d = x[2], d
     return best_d
+
+def problem66():
+    best_x = 0
+    best_d = 0
+    for d in range(661, 662):
+        root = floorsqrt(d)
+        if root * root == d: continue
+        a = root
+        numerator = 0
+        denominator = 1
+        x = [0, 1, root]
+        y = [0, 0, 1]
+        while True:
+            tmp = numerator
+            numerator = denominator
+            numerator *= a
+            numerator -= tmp
+            print(numerator)
+            tmp = numerator
+            tmp *= numerator
+            tmp2 = denominator
+            denominator = d
+            denominator -= tmp
+            denominator //= tmp2
+            a = root
+            a += numerator
+            a //= denominator
+            x[0] = x[1]
+            x[1] = x[2]
+            tmp = x[1]
+            tmp *= a
+            tmp += x[0]
+            x[2] = tmp
+            y[0] = y[1]
+            y[1] = y[2]
+            tmp = y[1]
+            tmp *= a
+            tmp += y[0]
+            y[2] = tmp
+            tmp = x[2]
+            tmp *= x[2]
+            tmp2 = y[2]
+            tmp2 *= y[2]
+            tmp2 *= d
+            tmp2 += 1
+            if tmp == tmp2:
+                break
+        if best_x < x[2]:
+            best_x, best_d = x[2], d
+    return best_d
+
+
 
 """
 #67: Maximum path sum II
