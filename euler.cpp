@@ -268,6 +268,13 @@ public:
     LongNumber25(const LongNumber25 &n)
     {   for (uint16_t i = 0; i < 1500; i++) _buf[i] = n._buf[i];
     }
+    uint16_t digits() const
+    {   uint16_t i;
+        for (i = 1500; i > 0; i--)
+            if (_buf[i - 1] > 0)
+                return i;
+        return 1;
+    }
     uint8_t decimal(uint16_t i) const { return _buf[i]; }
     void add(const LongNumber25 &n)
     {   uint8_t carry = 0;
@@ -332,6 +339,17 @@ public:
     bool lteq(const LongNumber25 n) const
     {   return lt(n) || equals(n);
     }
+    void shiftup()
+    {
+        uint16_t ln = digits();
+        for (uint16_t i = ln; i > 0; i--)
+            _buf[i] = _buf[i - 1];
+        _buf[0] = 0;
+    }
+    void shiftup(uint16_t n)
+    {   for (uint16_t i = 0; i < n; i++)
+            shiftup();
+    }
 private:
     void _div(LongNumber25 d)
     {
@@ -343,6 +361,16 @@ private:
         set(i);
     }
 public:
+    void mul(const LongNumber25 n)
+    {
+        LongNumber25 adder(*this);
+        LongNumber25 i(1);
+        while (i.lt(n))
+        {   add(adder);
+            i.add(LongNumber25(1));
+        }
+    }
+public:
     void divmod(LongNumber25 &div, LongNumber25 &mod, const LongNumber25 d) const
     {
         mod.set(*this);
@@ -351,7 +379,7 @@ public:
         LongNumber25 tmp2;
         for (uint16_t i = mod.digits(); i > 0; i--)
         {
-            tmp1.mul(10);
+            tmp1.shiftup();
             tmp1.add(mod._buf[i - 1]);
             tmp2.set(tmp1);
             tmp2._div(d);
@@ -361,7 +389,7 @@ public:
                 tmp1.set(d);
                 tmp1.mul(tmp2);
                 for (uint16_t j = 1; j < i; j++)
-                    tmp1.mul(10);
+                    tmp1.shiftup();
                 mod.dec(tmp1);
                 i = mod.digits() + 1;
                 tmp1.set(0);
@@ -382,28 +410,29 @@ public:
         divmod(div, mod, d);
         set(mod);
     }
-    uint16_t digits() const
-    {   uint16_t i;
-        for (i = 1500; i > 0; i--)
-            if (_buf[i - 1] > 0)
-                return i;
-        return 1;
-    }
-    LongNumber25 reverse()
-    {   LongNumber25 a;
+    void reverse2()
+    {
+#if 0
+        for (uint16_t beg = 0, end = digits() - 1; beg <= end; beg++, end--)
+            xswap(_buf[beg], _buf[end]);
+#else
+        LongNumber25 a;
         for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
             a._buf[j] = _buf[i - 1];
-        return a;
+        set(a);
+#endif
     }
-    bool ispalindrome() { return equals(reverse()); }
-    void mul(const LongNumber25 n)
+    void mul2(const LongNumber25 n)
     {
-        LongNumber25 adder(*this);
-        LongNumber25 i(1);
-        while (i.lt(n))
-        {   add(adder);
-            i.add(LongNumber25(1));
+        LongNumber25 tmp;
+        LongNumber25 sum(0);
+        for (uint16_t i = 0; i < n.digits(); i++)
+        {   tmp.set(*this);
+            tmp.mul(n._buf[i]);
+            tmp.shiftup(i);
+            sum.add(tmp);
         }
+        set(sum);
     }
 };
 
@@ -417,7 +446,14 @@ static void testLongNum()
 {
     LongNumber25 x(123456789);
     x.dec(30000000);
+    myAssert(x.digits() == 8, true, "Error digits 1");
     myAssert(x.equals(93456789), true, "Error Decrement 1");
+    x.set(10);
+    x.shiftup();
+    myAssert(x.equals(100), true, "Error shiftup 1");
+    x.set(123);
+    x.shiftup(3);
+    myAssert(x.equals(123000), true, "Error shiftup 2");
     x.set(11);
     myAssert(x.gt(10), true, "Error GreaterThan 1");
     myAssert(x.gt(11), false, "Error Greater Than 2");
@@ -454,6 +490,15 @@ static void testLongNum()
     x.set(404);
     x.longdiv(2);
     myAssert(x.equals(202), true, "Error LongDiv 4");
+    x.set(123456789);
+    x.reverse2();
+    myAssert(x.equals(987654321), true, "Error reverse 1");
+    x.set(8118);
+    x.reverse2();
+    myAssert(x.equals(8118), true, "Error reverse 2");
+    x.set(123456789);
+    x.mul2(123456789);
+    myAssert(x.equals(15241578750190521), true, "Error mul 1");
 }
 
 template <typename T> uint16_t decimals(T n)
@@ -781,6 +826,11 @@ template <typename T> static bool ispolygon(T n, T size)
 
 template <typename T> static bool issquare(T n)
 {   return ispolygon<T>(n, 2);
+}
+
+static uint64_t ceildiv(uint64_t a, uint64_t b)
+{   uint64_t ret = a / b;
+    return ret * b == a ? ret : ret + 1;
 }
 
 template <typename T> static T floorsqrt(T n)
@@ -3011,8 +3061,13 @@ Antwoord: 249
 
 static uint8_t isLychrel(LongNumber25 n, uint8_t it = 50)
 {   while (it--)
-    {   n.add(n.reverse());
-        if (n.ispalindrome()) return 0;
+    {
+        LongNumber25 rev(n);
+        rev.reverse2();
+        n.add(rev);
+        rev.set(n);
+        rev.reverse2();
+        if (n.equals(rev)) return 0;
     }
     return 1;
 }
@@ -3584,11 +3639,11 @@ Antwoord: 661
 
 static string problem66()
 {
-    return twostring<uint32_t>(0);
+    //return twostring<uint32_t>(0);
     LongNumber25 a, numerator, denominator, x[3], y[3], tmp, tmp2, best_x;
     best_x.set(0);
     uint64_t best_d = 0;
-    for (uint64_t d = 661; d <= 661; d++)
+    for (uint64_t d = 2; d <= 60; d++)
     {
         uint64_t root = floorsqrt<uint64_t>(d);
         if (root * root == d) continue;
@@ -3607,6 +3662,10 @@ static string problem66()
             numerator.set(denominator);
             numerator.mul(a);
             numerator.dec(tmp);
+#if 0
+            numerator.dump(cout);
+            cout << "\r\n";
+#endif
             tmp.set(numerator);
             tmp.mul(numerator);
             tmp2.set(denominator);
@@ -3615,14 +3674,12 @@ static string problem66()
             denominator.longdiv(tmp2);
             a.set(root);
             a.add(numerator);
-#if 1
+            a.longdiv(denominator);
+#if 0
             a.dump(cout);
             cout << "\r\n";
-            denominator.dump(cout);
-            cout << "\r\n";
 #endif
-            a.longdiv(denominator);
-
+            
             x[0].set(x[1]);
             x[1].set(x[2]);
             x[2].set(x[1]);
@@ -3639,13 +3696,20 @@ static string problem66()
             tmp2.mul(y[2]);
             tmp2.mul(d);
             tmp2.add(LongNumber25(1));
-#if 1
+#if 0
             tmp.dump(cout);
             cout << "\r\n";
             tmp2.dump(cout);
             cout << "\r\n";
 #endif
-            if (tmp.equals(tmp2)) break;
+            if (tmp.equals(tmp2))
+            {
+#if 0
+                tmp.dump(cout);
+                cout << "\r\n";
+#endif
+                break;
+            }
         }
         if (best_x.lt(x[2]))
         {   best_x.set(x[2]);
@@ -3942,8 +4006,19 @@ Antwoord: 7,295,372
 */
 
 static string problem73()
-{
-    return twostring<uint32_t>(0);
+{   uint64_t L = 12000, n1 = 1, d1 = 3, n2 = 1, d2 = 2;
+    uint64_t *n = new uint64_t[L + 1];
+    for (uint64_t i = 0; i <= L; i++) n[i] = 0; // zero out n
+    for (uint64_t d = 1; d <= L; d++)
+    {   n[d] += ceildiv(n2 * d, d2) - ceildiv(n1 * d, d1) - 1;
+        for (uint64_t i = 2 * d; i <= L; i += d)
+            n[i] = n[i] - n[d];
+    }
+    uint64_t xsum = 0;
+    for (uint64_t i = 0; i <= L; i++)
+        xsum += n[i];
+    delete[] n;
+    return twostring<uint64_t>(xsum);
 }
 
 /*
@@ -4662,7 +4737,7 @@ static string problem97()
 {   uint64_t n = 2;
     for (uint64_t i = 0; i < 7830456; i++)
         n = (2 * n) % 10000000000ULL;
-    n = (n * 28433 + 1) % 10000000000;
+    n = (n * 28433 + 1) % 10000000000ULL;
     return twostring<uint64_t>(n);
 }
 

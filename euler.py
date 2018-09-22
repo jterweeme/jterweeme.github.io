@@ -352,6 +352,12 @@ def concat2(lst):
         ret += n
     return ret
 
+""" division, rounded up """
+def ceildiv(a, b):
+    ret = a // b
+    return ret if ret * b == a else ret + 1
+    return -(-a // b)
+
 def testSuite():
     lprimes1 = list(sieve(500))
     lprimes2 = list()
@@ -2562,7 +2568,6 @@ def problem65():
     n0, n1, L = 1, 2, 100
     for i in range(2, L+1): 
         n0, n1 = n1, n0 + n1 * (1 if i%3 else 2 * i//3)
-    print(n1)
     return sum(digits(n1))
 
 """
@@ -2603,7 +2608,7 @@ def problem66a():
 def problem66():
     best_x = 0
     best_d = 0
-    for d in range(661, 662):
+    for d in range(61, 62):
         root = floorsqrt(d)
         if root * root == d: continue
         a = root
@@ -2612,39 +2617,43 @@ def problem66():
         x = [0, 1, root]
         y = [0, 0, 1]
         while True:
-            tmp = numerator
+            tmp1 = numerator
             numerator = denominator
             numerator *= a
-            numerator -= tmp
-            print(numerator)
-            tmp = numerator
-            tmp *= numerator
+            numerator -= tmp1
+            #print(numerator)
+            tmp1 = numerator
+            tmp1 *= numerator
             tmp2 = denominator
             denominator = d
-            denominator -= tmp
+            denominator -= tmp1
             denominator //= tmp2
             a = root
             a += numerator
             a //= denominator
+            #print(a)
             x[0] = x[1]
             x[1] = x[2]
-            tmp = x[1]
-            tmp *= a
-            tmp += x[0]
-            x[2] = tmp
+            tmp1 = x[1]
+            tmp1 *= a
+            tmp1 += x[0]
+            x[2] = tmp1
             y[0] = y[1]
             y[1] = y[2]
-            tmp = y[1]
-            tmp *= a
-            tmp += y[0]
-            y[2] = tmp
-            tmp = x[2]
-            tmp *= x[2]
+            tmp1 = y[1]
+            tmp1 *= a
+            tmp1 += y[0]
+            y[2] = tmp1
+            tmp1 = x[2]
+            tmp1 *= x[2]
             tmp2 = y[2]
             tmp2 *= y[2]
             tmp2 *= d
             tmp2 += 1
-            if tmp == tmp2:
+            #print(tmp1)
+            #print(tmp2)
+            if tmp1 == tmp2:
+                print(tmp1)
                 break
         if best_x < x[2]:
             best_x, best_d = x[2], d
@@ -2898,12 +2907,12 @@ Antwoord: 7,295,372
 https://blog.dreamshire.com/project-euler-73-solution/
 """
 
-def problem73(L = 12000, n1 = 1, d1 = 3, n2 = 1, d2 = 2):
-    ceildiv = lambda a, b: -(-a // b)
-    n = [0] * (L+1) 
-    for d in range(1, L+1):
+def problem73(L = 12001, n1 = 1, d1 = 3, n2 = 1, d2 = 2):
+    n = [0] * L 
+    for d in range(1, L):
         n[d] += ceildiv(n2*d, d2) - ceildiv(n1*d, d1) - 1
-        n[2*d::d] = [k-n[d] for k in n[2*d::d]]
+        for i in range(2*d, L, d):
+            n[i] = n[i] - n[d]
     return sum(n)
 
 """
@@ -4713,7 +4722,7 @@ def runn2(n = 1):
     if n == 63: return problem63()
     if n == 64: return problem64()
     if n == 65: return problem65()
-    if n == 66: return problem66()
+    if n == 66: return problem66a()
     if n == 67: return problem67()
     if n == 68: return problem68()
     if n == 69: return problem69()
