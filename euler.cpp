@@ -358,8 +358,7 @@ public:
     }
 private:
     void _div(LongNumber25 d)
-    {
-        LongNumber25 i(0);
+    {   LongNumber25 i(0);
         while (gteq(d))
         {   dec(d);
             i.add(LongNumber25(1));
@@ -367,16 +366,53 @@ private:
         set(i);
     }
 public:
-    void mul(const LongNumber25 n)
+    void reverse2()
     {
-        LongNumber25 adder(*this);
-        LongNumber25 i(1);
-        while (i.lt(n))
-        {   add(adder);
-            i.add(LongNumber25(1));
+#if 0
+        for (uint16_t beg = 0, end = digits() - 1; beg <= end; beg++, end--)
+            xswap(_buf[beg], _buf[end]);
+#else
+        LongNumber25 a;
+        for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
+            a._buf[j] = _buf[i - 1];
+        set(a);
+#endif
+    }
+    void mul3(uint64_t n)
+    {
+        if (n == 0)
+        {
+            set(0);
+            return;
+        }
+        if (n == 1)
+            return;
+        uint64_t carry = 0;
+        uint64_t i;
+        for (i = 0; i < 1500; i++)
+        {
+            carry += _buf[i] * n;
+            _buf[i] = carry % 10;
+            carry /= 10;
+        }
+        while (carry > 0)
+        {
+            _buf[i++] = carry % 10;
+            carry /= 10;
         }
     }
-public:
+    void mul2(const LongNumber25 n)
+    {
+        LongNumber25 tmp;
+        LongNumber25 sum(0);
+        for (uint16_t i = 0; i < n.digits(); i++)
+        {   tmp.set(*this);
+            tmp.mul3(n._buf[i]);
+            tmp.shiftup(i);
+            sum.add(tmp);
+        }
+        set(sum);
+    }
     void divmod(LongNumber25 &div, LongNumber25 &mod, const LongNumber25 d) const
     {
         mod.set(*this);
@@ -393,7 +429,7 @@ public:
             {
                 ret._buf[i - 1] = tmp2._buf[0];
                 tmp1.set(d);
-                tmp1.mul(tmp2);
+                tmp1.mul2(tmp2);
                 for (uint16_t j = 1; j < i; j++)
                     tmp1.shiftup();
                 mod.dec(tmp1);
@@ -415,30 +451,6 @@ public:
         LongNumber25 div, mod;
         divmod(div, mod, d);
         set(mod);
-    }
-    void reverse2()
-    {
-#if 0
-        for (uint16_t beg = 0, end = digits() - 1; beg <= end; beg++, end--)
-            xswap(_buf[beg], _buf[end]);
-#else
-        LongNumber25 a;
-        for (uint16_t i = digits(), j = 0; i > 0; i--, j++)
-            a._buf[j] = _buf[i - 1];
-        set(a);
-#endif
-    }
-    void mul2(const LongNumber25 n)
-    {
-        LongNumber25 tmp;
-        LongNumber25 sum(0);
-        for (uint16_t i = 0; i < n.digits(); i++)
-        {   tmp.set(*this);
-            tmp.mul(n._buf[i]);
-            tmp.shiftup(i);
-            sum.add(tmp);
-        }
-        set(sum);
     }
 };
 
@@ -505,6 +517,9 @@ static void testLongNum()
     x.set(123456789);
     x.mul2(123456789);
     myAssert(x.equals(15241578750190521), true, "Error mul 1");
+    x.set(999);
+    x.mul2(999);
+    myAssert(x.equals(998001), true, "Error mul 2");
 }
 
 template <typename T> uint16_t decimals(T n)
@@ -3128,7 +3143,7 @@ static string problem56()
             for (uint8_t *it = power.begin(); it != power.end(); it++)
                 sum += *it;
             maxSum = max(maxSum, sum);
-            power.mul(base);
+            power.mul3(base);
         }
     }
     return twostring<uint32_t>(maxSum);
@@ -3618,7 +3633,7 @@ static string problem65()
         }
         else
         {   LongNumber25 tmp2(n1);
-            tmp2.mul(2 * i/3);
+            tmp2.mul3(2 * i/3);
             n1.set(n0);
             n1.add(tmp2);
         }
@@ -3661,18 +3676,16 @@ Antwoord: 661
 */
 
 static string problem66()
-{
-    //return twostring<uint32_t>(0);
-    LongNumber25 a, numerator, denominator, x[3], y[3], tmp, tmp2, best_x;
+{   LongNumber25 x[3], y[3], tmp, tmp2, best_x;
+    uint64_t a2, numerator2, denominator2;
     best_x.set(0);
     uint64_t best_d = 0;
-    for (uint64_t d = 2; d <= 60; d++)
-    {
-        uint64_t root = floorsqrt<uint64_t>(d);
+    for (uint64_t d = 2; d <= 1000; d++)
+    {   uint64_t root = floorsqrt<uint64_t>(d);
         if (root * root == d) continue;
-        a.set(root);
-        numerator.set(0);
-        denominator.set(1);
+        a2 = root;
+        numerator2 = 0;
+        denominator2 = 1;
         x[0].set(0);
         x[1].set(1);
         x[2].set(root);
@@ -3680,59 +3693,27 @@ static string problem66()
         y[1].set(0);
         y[2].set(1);
         while (true)
-        {
-            tmp.set(numerator);
-            numerator.set(denominator);
-            numerator.mul(a);
-            numerator.dec(tmp);
-#if 0
-            numerator.dump(cout);
-            cout << "\r\n";
-#endif
-            tmp.set(numerator);
-            tmp.mul(numerator);
-            tmp2.set(denominator);
-            denominator.set(d);
-            denominator.dec(tmp);
-            denominator.longdiv(tmp2);
-            a.set(root);
-            a.add(numerator);
-            a.longdiv(denominator);
-#if 0
-            a.dump(cout);
-            cout << "\r\n";
-#endif
-            
+        {   numerator2 = denominator2 * a2 - numerator2;
+            denominator2 = (d - numerator2 * numerator2) / denominator2;
+            a2 = (root + numerator2) / denominator2;
             x[0].set(x[1]);
             x[1].set(x[2]);
             x[2].set(x[1]);
-            x[2].mul(a);
+            x[2].mul3(a2);
             x[2].add(x[0]);
             y[0].set(y[1]);
             y[1].set(y[2]);
             y[2].set(y[1]);
-            y[2].mul(a);
+            y[2].mul3(a2);
             y[2].add(y[0]);
             tmp.set(x[2]);
-            tmp.mul(x[2]);
+            tmp.mul2(x[2]);
             tmp2.set(y[2]);
-            tmp2.mul(y[2]);
-            tmp2.mul(d);
-            tmp2.add(LongNumber25(1));
-#if 0
-            tmp.dump(cout);
-            cout << "\r\n";
-            tmp2.dump(cout);
-            cout << "\r\n";
-#endif
+            tmp2.mul2(y[2]);
+            tmp2.mul3(d);
+            tmp2.add(1);
             if (tmp.equals(tmp2))
-            {
-#if 0
-                tmp.dump(cout);
-                cout << "\r\n";
-#endif
                 break;
-            }
         }
         if (best_x.lt(x[2]))
         {   best_x.set(x[2]);
