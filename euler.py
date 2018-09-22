@@ -2947,30 +2947,21 @@ million, contain exactly sixty non-repeating terms?
 Antwoord: 402
 """
 
-def dfchain(n):
-    previous = set()
-    while True:
-        yield n
-        if n in previous: return
-        previous.add(n)
-        n = sum(factorial(digit) for digit in digits(n))
-
 def dfccnt(cache, n):
     previous = set()
     count = 0
     while True:
-        if n in cache: return count + cache[n]
+        if n < 10**6 and cache[n] > 0: return count + cache[n]
         count += 1
         if n in previous: return count
         previous.add(n)
         n = sum(factorial(digit) for digit in digits(n))
 
 def problem74():
-    count = 0
-    cache = dict()
+    cache = [0] * 10**6
     for n in range(3,10**6):
         cache[n] = dfccnt(cache, n)
-    return sum(n == 61 for n in cache.values())
+    return sum(n == 61 for n in cache)
 
 """
 #75: Singular integer right triangles

@@ -54,6 +54,12 @@ static uint32_t fac32(uint32_t n)
     return product;
 }
 
+template <typename T> static T factorial(T n)
+{   T product = 1;
+    while (n > 1) product *= n--;
+    return product;
+}
+
 template <typename T> static T digit(T n, T i)
 {   return n / myPow<T>(10, i) % 10;
 }
@@ -818,6 +824,23 @@ public:
         return ret;
     }
 };
+
+#if 0
+class Digits : public Generator<uint8_t>
+{
+private:
+    uint64_t _n;
+public:
+    Digits(uint64_t n) : _n(n) { }
+    bool hasNext() { return _n > 0; }
+    uint8_t next()
+    {
+        uint8_t ret = _n % 10;
+        _n = _n / 10;
+        return ret;
+    }
+};
+#endif
 
 template <typename T> static bool ispolygon(T n, T size)
 {   Polygonizer2<T> p(n + 1, size);
@@ -4053,9 +4076,32 @@ million, contain exactly sixty non-repeating terms?
 Antwoord: 402
 */
 
+#include <set>
+
+static uint64_t dfccnt(uint64_t *cache, uint64_t n)
+{   set<uint64_t> previous;
+    uint64_t count = 0;
+    while (true)
+    {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
+        count++;
+        if (previous.count(n)) return count;
+        previous.insert(n);
+        uint64_t xsum = 0;
+        while (n > 0) xsum += factorial<uint64_t>(n % 10), n = n / 10;
+        n = xsum;
+    }
+}
+
 static string problem74()
-{
-    return twostring<uint32_t>(0);
+{   uint64_t *cache = new uint64_t[1000000];
+    for (uint32_t i = 0; i < 1000000; i++) cache[i] = 0;
+    for (uint64_t n = 3; n < 1000000; n++)
+        cache[n] = dfccnt(cache, n);
+    uint32_t xsum = 0;
+    for (uint32_t i = 0; i < 1000000; i++)
+        xsum += cache[i] == 61 ? 1 : 0;
+    delete[] cache;
+    return twostring<uint32_t>(xsum);
 }
 
 /*
@@ -4084,8 +4130,6 @@ L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
 
 Antwoord: 161,667
 */
-
-#include <set>
 
 static string problem75()
 {
