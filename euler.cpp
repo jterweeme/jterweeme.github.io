@@ -180,11 +180,13 @@ static uint64_t sum(Generator<uint32_t> &s)
     return xsum;
 }
 
+#if 0
 static uint64_t last(Generator<uint32_t> &s)
 {   uint64_t ret = 0;
     while (s.hasNext()) ret = s.next();
     return ret;
 }
+#endif
 
 class Sieve : public Generator<uint32_t>
 {
@@ -864,6 +866,21 @@ template <typename T> static bool ispolygon(T n, T size)
 
 template <typename T> static bool issquare(T n)
 {   return ispolygon<T>(n, 2);
+}
+
+static bool _issquare3(uint64_t n, uint64_t lower, uint64_t upper)
+{
+    uint64_t range2 = upper - lower;
+    uint64_t root = lower + range2 / 2;
+    if (root * root == n) return true;
+    if (lower == upper) return false;
+    if (root * root > n) return _issquare3(n, lower, root);
+    return _issquare3(n, root + 1, upper);
+}
+
+static bool issquare3(uint64_t n)
+{
+    return _issquare3(n, 1, n - 1);
 }
 
 static uint64_t ceildiv(uint64_t a, uint64_t b)
@@ -4209,14 +4226,12 @@ Antwoord: 55,374
 https://euler.stephan-brumme.com/78/
 */
 
-#include <vector>
-
 static string problem78()
-{   vector<uint64_t> partitions;
-    partitions.push_back(1);
+{   uint32_t limit = 100000, nparts = 0; // the solution is < 100000, program ab
+    uint64_t *partitions = new uint64_t[limit];
+    partitions[nparts++] = 1;
     const int64_t modulo = 1000000;
-    const uint32_t limit = 100000; // the solution is < 100000, program ab
-    for (uint32_t n = partitions.size(); n <= limit; n++)
+    for (uint32_t n = 1; n <= limit; n++)
     {   int64_t sum = 0;
         for (uint32_t i = 0; ; i++) // abort inside loop
         {   int32_t alternate = 1 + (i / 2); // generate the digit 1,1,2,2,3,3,...
@@ -4231,9 +4246,10 @@ static string problem78()
         }
         if (sum < 0) sum += modulo;
         if (sum == 0) break;
-        partitions.push_back(sum);
+        partitions[nparts++] = sum;
     }
-    return twostring<uint32_t>(partitions.size());
+    delete[] partitions;
+    return twostring<uint32_t>(nparts);
 }
 
 /*
@@ -4406,8 +4422,7 @@ Antwoord: 2,772
 */
 
 static string problem85()
-{
-    int32_t best_x = 0xffff, best_y = 0xffff, best_rects = 0xffff;
+{   int32_t best_x = 0xffff, best_y = 0xffff, best_rects = 0xffff;
     for (int32_t x = 1; x <= 2000; x++)
     {   for (int32_t y = 1; y <= 2000; y++)
         {   int32_t diff = std::abs((x*x+x)*(y*y+y)/4 - 2000000);
@@ -4442,18 +4457,13 @@ Antwoord: 1,818
 */
 
 static string problem86()
-{
-    uint32_t L = 1000000, c = 0, a = 2, nprimes = 0;
-    Sieve sieve(16511080);
-    uint32_t *lprimes = new uint32_t[16511080];
-    while (sieve.hasNext()) lprimes[nprimes++] = sieve.next();
+{   uint32_t L = 1000000, c = 0, a = 2;
     while (c < L)
     {   a++;
         for (uint32_t bc = 3; bc < 2 * a; bc++)
-            if (bc * a % 12 == 0 && issquare<uint32_t>(bc * bc + a*a))
+            if (bc * a % 12 == 0 && issquare3(bc * bc + a*a))
                 c += std::min(bc, a + 1) - (bc + 1) / 2;
     }
-    delete[] lprimes;
     return twostring<uint32_t>(a);
 }
 
