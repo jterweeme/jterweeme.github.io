@@ -516,7 +516,7 @@ static void testLongNum()
     myAssert(x.equals(8118), true, "Error reverse 2");
     x.set(123456789);
     x.mul2(123456789);
-    myAssert(x.equals(15241578750190521), true, "Error mul 1");
+    myAssert(x.equals(15241578750190521ULL), true, "Error mul 1");
     x.set(999);
     x.mul2(999);
     myAssert(x.equals(998001), true, "Error mul 2");
@@ -4205,32 +4205,35 @@ Find the least value of n for which p(n) is divisible by one million.
 Antwoord: 55,374
 */
 
+/*
+https://euler.stephan-brumme.com/78/
+*/
+
+#include <vector>
+
 static string problem78()
-{
-    return twostring<uint32_t>(0);
-#if 0
-    vector<int64_t> k, p;
-    p.push_back(1);
-    int64_t sgn[] = {1,1,-1,-1};
-    int64_t n = 0;
-    int64_t m = 1000000;
-    for (int64_t i = 1; i < 250; i++)
-    {
-        k.push_back(i * (3 * i - 1) / 2);
-        k.push_back(i * (3 * i - 1) / 2 + i);
-    }
-    while (p.at(n) > 0)
-    {
-        n++;
-        int64_t px = 0, i = 0;
-        while (k.at(i) <= n)
-        {   px += p.at(n - k.at(i)) * sgn[i % 4];
-            i++;
+{   vector<uint64_t> partitions;
+    partitions.push_back(1);
+    const int64_t modulo = 1000000;
+    const uint32_t limit = 100000; // the solution is < 100000, program ab
+    for (uint32_t n = partitions.size(); n <= limit; n++)
+    {   int64_t sum = 0;
+        for (uint32_t i = 0; ; i++) // abort inside loop
+        {   int32_t alternate = 1 + (i / 2); // generate the digit 1,1,2,2,3,3,...
+            if (i % 2 == 1) alternate = -alternate;
+            uint32_t offset = alternate * (3 * alternate - 1) / 2;
+            if (n < offset) break;
+            if (i % 4 < 2)
+                sum += partitions[n - offset]; // i % 4 = { 0, 1 }
+            else
+                sum -= partitions[n - offset]; // i % 4 = { 2, 3 }
+            sum %= modulo;
         }
-        p.push_back(px % m);
+        if (sum < 0) sum += modulo;
+        if (sum == 0) break;
+        partitions.push_back(sum);
     }
-    return twostring<uint64_t>(n);
-#endif
+    return twostring<uint32_t>(partitions.size());
 }
 
 /*
