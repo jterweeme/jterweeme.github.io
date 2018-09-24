@@ -3301,296 +3301,11 @@ def heappop(heap):
         returnitem = lastelt
     return returnitem
 
-class Graph(object):
+class DiGraph(object):
     node_dict_factory = dict
     adjlist_outer_dict_factory = dict
     adjlist_inner_dict_factory = dict
     edge_attr_dict_factory = dict
-    def __getstate__(self):
-        attr = self.__dict__.copy()
-        if 'nodes' in attr:
-            del attr['nodes']
-        if 'edges' in attr:
-            del attr['edges']
-        if 'degree' in attr:
-            del attr['degree']
-        return attr
-    def __init__(self, incoming_graph_data=None, **attr):
-        self.node_dict_factory = ndf = self.node_dict_factory
-        self.adjlist_outer_dict_factory = self.adjlist_outer_dict_factory
-        self.adjlist_inner_dict_factory = self.adjlist_inner_dict_factory
-        self.edge_attr_dict_factory = self.edge_attr_dict_factory
-        self.root_graph = self
-        self.graph = {}   # dictionary for graph attributes
-        self._node = ndf()  # empty node attribute dict
-        self._adj = self.adjlist_outer_dict_factory()  # empty adjacency dict
-        if incoming_graph_data is not None:
-            to_networkx_graph(incoming_graph_data, create_using=self)
-        self.graph.update(attr)
-    @property
-    def name(self):
-        return self.graph.get('name', '')
-    @name.setter
-    def name(self, s):
-        self.graph['name'] = s
-    def __str__(self):
-        return self.name
-    def __iter__(self):
-        return iter(self._node)
-    def __contains__(self, n):
-        try:
-            return n in self._node
-        except TypeError:
-            return False
-    def __len__(self):
-        return len(self._node)
-    def __getitem__(self, n):
-        return self.adj[n]
-    def add_node(self, node_for_adding, **attr):
-        if node_for_adding not in self._node:
-            self._adj[node_for_adding] = self.adjlist_inner_dict_factory()
-            self._node[node_for_adding] = attr
-        else:  # update attr even if node already exists
-            self._node[node_for_adding].update(attr)
-    def add_nodes_from(self, nodes_for_adding, **attr):
-        for n in nodes_for_adding:
-            try:
-                if n not in self._node:
-                    self._adj[n] = self.adjlist_inner_dict_factory()
-                    self._node[n] = attr.copy()
-                else:
-                    self._node[n].update(attr)
-            except TypeError:
-                nn, ndict = n
-                if nn not in self._node:
-                    self._adj[nn] = self.adjlist_inner_dict_factory()
-                    newdict = attr.copy()
-                    newdict.update(ndict)
-                    self._node[nn] = newdict
-                else:
-                    olddict = self._node[nn]
-                    olddict.update(attr)
-                    olddict.update(ndict)
-    def remove_node(self, n):
-        adj = self._adj
-        try:
-            nbrs = list(adj[n])  # list handles self-loops (allows mutation)
-            del self._node[n]
-        except KeyError:
-            raise Exception("The node %s is not in the graph." % (n,))
-        for u in nbrs:
-            del adj[u][n]   # remove all edges n-u in graph
-        del adj[n]          # now remove node
-    def remove_nodes_from(self, nodes):
-        adj = self._adj
-        for n in nodes:
-            try:
-                del self._node[n]
-                for u in list(adj[n]):   # list handles self-loops
-                    del adj[u][n]  # (allows mutation of dict in loop)
-                del adj[n]
-            except KeyError:
-                pass
-    @property
-    def nodes(self):
-        nodes = NodeView(self)
-        self.__dict__['nodes'] = nodes
-        return nodes
-    node = nodes
-    def add_path(self, nodes, **attr):
-        msg = "add_path is deprecated. Use nx.add_path instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.add_path(self, nodes, **attr)
-    def add_cycle(self, nodes, **attr):
-        msg = "add_cycle is deprecated. Use nx.add_cycle instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.add_cycle(self, nodes, **attr)
-    def add_star(self, nodes, **attr):
-        msg = "add_star is deprecated. Use nx.add_star instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.add_star(self, nodes, **attr)
-    def nodes_with_selfloops(self):
-        msg = "nodes_with_selfloops is deprecated." \
-              "Use nx.nodes_with_selfloops instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.nodes_with_selfloops(self)
-    def number_of_selfloops(self):
-        msg = "number_of_selfloops is deprecated." \
-              "Use nx.number_of_selfloops instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.number_of_selfloops(self)
-    def selfloop_edges(self, data=False, keys=False, default=None):
-        msg = "selfloop_edges is deprecated. Use nx.selfloop_edges instead."
-        warnings.warn(msg, DeprecationWarning)
-        return nx.selfloop_edges(self, data=False, keys=False, default=None)
-    def number_of_nodes(self):
-        return len(self._node)
-    def order(self):
-        return len(self._node)
-    def has_node(self, n):
-        try:
-            return n in self._node
-        except TypeError:
-            return False
-    def add_edge(self, u_of_edge, v_of_edge, **attr):
-        u, v = u_of_edge, v_of_edge
-        if u not in self._node:
-            self._adj[u] = self.adjlist_inner_dict_factory()
-            self._node[u] = {}
-        if v not in self._node:
-            self._adj[v] = self.adjlist_inner_dict_factory()
-            self._node[v] = {}
-        datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
-        datadict.update(attr)
-        self._adj[u][v] = datadict
-        self._adj[v][u] = datadict
-    def add_edges_from(self, ebunch_to_add, **attr):
-        for e in ebunch_to_add:
-            ne = len(e)
-            if ne == 3:
-                u, v, dd = e
-            elif ne == 2:
-                u, v = e
-                dd = {}  # doesnt need edge_attr_dict_factory
-            else:
-                raise Exception("Edge tuple %s must be a 2-tuple or 3-tuple." % (e,))
-            if u not in self._node:
-                self._adj[u] = self.adjlist_inner_dict_factory()
-                self._node[u] = {}
-            if v not in self._node:
-                self._adj[v] = self.adjlist_inner_dict_factory()
-                self._node[v] = {}
-            datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
-            datadict.update(attr)
-            datadict.update(dd)
-            self._adj[u][v] = datadict
-            self._adj[v][u] = datadict
-    def add_weighted_edges_from(self, ebunch_to_add, weight='weight', **attr):
-        self.add_edges_from(((u, v, {weight: d}) for u, v, d in ebunch_to_add), **attr)
-    def remove_edge(self, u, v):
-        try:
-            del self._adj[u][v]
-            if u != v:  # self-loop needs only one entry removed
-                del self._adj[v][u]
-        except KeyError:
-            raise Exception("The edge %s-%s is not in the graph" % (u, v))
-
-    def remove_edges_from(self, ebunch):
-        adj = self._adj
-        for e in ebunch:
-            u, v = e[:2]  # ignore edge data if present
-            if u in adj and v in adj[u]:
-                del adj[u][v]
-                if u != v:  # self loop needs only one entry removed
-                    del adj[v][u]
-    def has_edge(self, u, v):
-        try:
-            return v in self._adj[u]
-        except KeyError:
-            return False
-    def neighbors(self, n):
-        try:
-            return iter(self._adj[n])
-        except KeyError:
-            raise Exception("The node %s is not in the graph." % (n,))
-    def get_edge_data(self, u, v, default=None):
-        try:
-            return self._adj[u][v]
-        except KeyError:
-            return default
-    def adjacency(self):
-        return iter(self._adj.items())
-    def clear(self):
-        self._adj.clear()
-        self._node.clear()
-        self.graph.clear()
-    def is_multigraph(self):
-        return False
-    def is_directed(self):
-        return False
-    def fresh_copy(self):
-        return Graph()
-    def to_directed(self, as_view=False):
-        if as_view is True:
-            return nx.graphviews.DiGraphView(self)
-        G = DiGraph()
-        G.graph.update(deepcopy(self.graph))
-        G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
-        G.add_edges_from((u, v, deepcopy(data))
-                         for u, nbrs in self._adj.items()
-                         for v, data in nbrs.items())
-        return G
-    def to_undirected(self, as_view=False):
-        if as_view is True:
-            return nx.graphviews.GraphView(self)
-        G = Graph()
-        G.graph.update(deepcopy(self.graph))
-        G.add_nodes_from((n, deepcopy(d)) for n, d in self._node.items())
-        G.add_edges_from((u, v, deepcopy(d))
-                         for u, nbrs in self._adj.items()
-                         for v, d in nbrs.items())
-        return G
-    def subgraph(self, nodes):
-        induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
-        SubGraph = nx.graphviews.SubGraph
-        if hasattr(self, '_NODE_OK'):
-            return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
-        return SubGraph(self, induced_nodes)
-    def edge_subgraph(self, edges):
-        return nx.edge_subgraph(self, edges)
-    def size(self, weight=None):
-        s = sum(d for v, d in self.degree(weight=weight))
-        return s // 2 if weight is None else s / 2
-    def number_of_edges(self, u=None, v=None):
-        if u is None:
-            return int(self.size())
-        if v in self._adj[u]:
-            return 1
-        return 0
-    def nbunch_iter(self, nbunch=None):
-        if nbunch is None:   # include all nodes via iterator
-            bunch = iter(self._adj)
-        elif nbunch in self:  # if nbunch is a single node
-            bunch = iter([nbunch])
-        else:                # if nbunch is a sequence of nodes
-            def bunch_iter(nlist, adj):
-                try:
-                    for n in nlist:
-                        if n in adj:
-                            yield n
-                except TypeError as e:
-                    message = e.args[0]
-                    # capture error for non-sequence/iterator nbunch.
-                    if 'iter' in message:
-                        msg = "nbunch is not a node or a sequence of nodes."
-                        raise Exception(msg)
-                    # capture error for unhashable node.
-                    elif 'hashable' in message:
-                        msg = "Node {} in sequence nbunch is not a valid node."
-                        raise Exception(msg.format(n))
-                    else:
-                        raise
-            bunch = bunch_iter(nbunch, self._adj)
-        return bunch
-
-class DiGraph(Graph):
-    def __getstate__(self):
-        attr = self.__dict__.copy()
-        if 'nodes' in attr:
-            del attr['nodes']
-        if 'edges' in attr:
-            del attr['edges']
-        if 'out_edges' in attr:
-            del attr['out_edges']
-        if 'in_edges' in attr:
-            del attr['in_edges']
-        if 'degree' in attr:
-            del attr['degree']
-        if 'in_degree' in attr:
-            del attr['in_degree']
-        if 'out_degree' in attr:
-            del attr['out_degree']
-        return attr
     def __init__(self, incoming_graph_data=None, **attr):
         self.node_dict_factory = ndf = self.node_dict_factory
         self.adjlist_outer_dict_factory = self.adjlist_outer_dict_factory
@@ -3614,7 +3329,6 @@ class DiGraph(Graph):
             self._node[node_for_adding].update(attr)
     def add_edge(self, u_of_edge, v_of_edge, **attr):
         u, v = u_of_edge, v_of_edge
-        # add nodes
         if u not in self._succ:
             self._succ[u] = self.adjlist_inner_dict_factory()
             self._pred[u] = self.adjlist_inner_dict_factory()
@@ -3623,46 +3337,13 @@ class DiGraph(Graph):
             self._succ[v] = self.adjlist_inner_dict_factory()
             self._pred[v] = self.adjlist_inner_dict_factory()
             self._node[v] = {}
-        # add the edge
         datadict = self._adj[u].get(v, self.edge_attr_dict_factory())
         datadict.update(attr)
         self._succ[u][v] = datadict
         self._pred[v][u] = datadict
-    def has_successor(self, u, v):
-        return (u in self._succ and v in self._succ[u])
-    def has_predecessor(self, u, v):
-        return (u in self._pred and v in self._pred[u])
-    def successors(self, n):
-        try:
-            return iter(self._succ[n])
-        except KeyError:
-            raise Exception("The node %s is not in the digraph." % (n,))
-    neighbors = successors
-    def predecessors(self, n):
-        try:
-            return iter(self._pred[n])
-        except KeyError:
-            raise Exception("The node %s is not in the digraph." % (n,))
-    def clear(self):
-        self._succ.clear()
-        self._pred.clear()
-        self._node.clear()
-        self.graph.clear()
-    def is_multigraph(self):
-        return False
-    def is_directed(self):
-        return True
-    def fresh_copy(self):
-        return DiGraph()
-    def subgraph(self, nodes):
-        induced_nodes = nx.filters.show_nodes(self.nbunch_iter(nodes))
-        SubGraph = nx.graphviews.SubDiGraph
-        if hasattr(self, '_NODE_OK'):
-            return SubGraph(self._graph, induced_nodes, self._EDGE_OK)
-        return SubGraph(self, induced_nodes)
 
 def _dijkstra_multisource(G, sources, weight, pred=None, paths=None, cutoff=None, target=None):
-    G_succ = G._succ if G.is_directed() else G._adj
+    G_succ = G._succ
     push = heappush
     pop = heappop
     dist = {}  # dictionary of final distances
@@ -3702,28 +3383,23 @@ def _dijkstra_multisource(G, sources, weight, pred=None, paths=None, cutoff=None
                     pred[u].append(v)
     return dist
 
-def _dijkstra(G, source, weight, pred=None, paths=None, cutoff=None,
-              target=None):
+def _dijkstra(G, source, weight, pred=None, paths=None, cutoff=None, target=None):
     return _dijkstra_multisource(G, [source], weight, pred=pred, paths=paths,
                                  cutoff=cutoff, target=target)
 
 def _weight_function(G, weight):
     if callable(weight):
         return weight
-    if G.is_multigraph():
-        return lambda u, v, d: min(attr.get(weight, 1) for attr in d.values())
     return lambda u, v, data: data.get(weight, 1)
 
 def dijkstra_path_length(G, source, target, weight='weight'):
-    if source == target:
-        return 0
+    if source == target: return 0
     weight = _weight_function(G, weight)
     length = _dijkstra(G, source, weight, target=target)
     try:
         return length[target]
     except KeyError:
-        raise nx.NetworkXNoPath(
-            "Node %s not reachable from %s" % (target, source))
+        raise nx.NetworkXNoPath("Node %s not reachable from %s" % (target, source))
 
 def problem83(fn = "euler83.txt"):
     matrix2 = [int(row) for row in open(fn).read().split()]
