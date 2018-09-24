@@ -197,7 +197,7 @@ private:
     uint32_t _findNext();
 public:
     Sieve(uint32_t limit);
-    ~Sieve() { delete[] _sieve; }
+    virtual ~Sieve() { delete[] _sieve; }
     bool hasNext() { return _next > 0; }
     uint32_t next() { uint32_t ret = _next; _next = _findNext(); return ret; }
 };
@@ -4345,9 +4345,38 @@ of the first one hundred decimal digits for all the irrational square roots.
 Antwoord: 40,886
 */
 
+static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
+{   LongNumber25 buf, tmp1, tmp2;
+    for (uint8_t digit = 0; digit < digits; digit++)
+    {   buf.shiftup();
+        for (uint8_t n = 0; n < 10; n++)
+        {
+            tmp1.set(buf);
+            tmp1.mod(10);
+            buf.dec(tmp1);
+            buf.add(9 - n);
+            tmp1.set(buf);
+            tmp1.mul2(buf);
+            tmp2.set(square);
+            tmp2.shiftup(digit * 2);
+            if (tmp1.lt(tmp2)) break;
+        }
+    }
+    uint16_t xsum = 0;
+    for (uint8_t *it = buf.begin(); it != buf.end(); it++)
+        xsum += *it;
+    return xsum;
+}
+
 static string problem80()
-{
-    return twostring<uint32_t>(0);
+{   uint32_t xsum = 0;
+    for (uint8_t n = 2; n < 100; n++)
+    {   if (issquare3(n) == false)
+        {   uint16_t tmp = squaredigits(n, 100);
+            xsum += tmp;
+        }
+    }
+    return twostring<uint32_t>(xsum);
 }
 
 /*

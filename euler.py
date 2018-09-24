@@ -30,6 +30,7 @@ def digits(n):
     while n: yield n % 10; n = n // 10;
 
 def decimals(n):
+    if n == 0: return 1
     i = 0
     while n: n = n // 10; i += 1
     return i
@@ -347,7 +348,7 @@ def ways(target, coins):
 def concat2(lst):
     ret = 0
     for n in lst:
-        e = decimals(n) if n else 1
+        e = decimals(n)
         ret *= 10**e
         ret += n
     return ret
@@ -3168,16 +3169,18 @@ dsums = {2: 475, 3: 441, 5: 473, 6: 471, 7: 398, 8: 465, 10: 459, 11: 484, 12: 4
 """
 
 def squaredigits(square, digits = 100):
-    buf = [0] * 100
+    buf = 0
     for digit in range(digits):
+        buf *= 10
         for n in range(10):
-            buf[digit] = 9 - n
-            if concat2(buf[:(digit + 1)])**2 < (square * 10**(digit*2)):
+            buf -= buf % 10
+            buf += 9 - n
+            if buf * buf < square * 10**(digit * 2):
                 break
-    return sum(buf)
+        yield buf % 10
 
 def problem80():
-    return sum(squaredigits(n, 100) for n in range(2, 100) if issquare(n) == False)
+    return sum(sum(squaredigits(n, 100)) for n in range(2, 100) if issquare(n) == False)
 
 """
 #81: Path sum: two ways
