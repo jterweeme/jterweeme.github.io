@@ -4382,7 +4382,9 @@ static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
 }
 
 static string problem80()
-{   uint32_t xsum = 0;
+{
+    //return twostring<uint32_t>(0);
+    uint32_t xsum = 0;
     for (uint8_t n = 2; n < 100; n++)
     {   if (issquare3(n) == false)
         {   uint16_t tmp = squaredigits(n, 100);
@@ -4567,6 +4569,89 @@ static string problem83()
     return twostring<uint32_t>(search(matrix));
 }
 
+/*
+#84: Monopoly odds
+
+In the game, Monopoly, the standard board is set up in the following way:
+
+A player starts on the GO square and adds the scores on two 6-sided dice
+to determine the number of squares they advance in a clockwise direction.
+Without any further rules we would expect to visit each square with equal
+probability: 2.5%. However, landing on G2J (Go To Jail), CC (community
+chest), and CH (chance) changes this distribution.
+
+In addition to G2J, and one card from each of CC and CH, that orders the
+player to go directly to jail, if a player rolls three consecutive
+doubles, they do not advance the result of their 3rd roll. Instead they
+proceed directly to jail.
+
+At the beginning of the game, the CC and CH cards are shuffled. When a
+player lands on CC or CH they take a card from the top of the respective
+pile and, after following the instructions, it is returned to the bottom
+of the pile. There are sixteen cards in each pile, but for the purpose of
+this problem we are only concerned with cards that order a movement; any
+instruction not concerned with movement will be ignored and the player
+will remain on the CC/CH square.
+
+    Community Chest (2/16 cards):
+        Advance to GO
+        Go to JAIL
+    Chance (10/16 cards):
+        Advance to GO
+        Go to JAIL
+        Go to C1
+        Go to E3
+        Go to H2
+        Go to R1
+        Go to next R (railway company)
+        Go to next R
+        Go to next U (utility company)
+        Go back 3 squares.
+
+The heart of this problem concerns the likelihood of visiting a particular
+square. That is, the probability of finishing at that square after a roll.
+For this reason it should be clear that, with the exception of G2J for
+which the probability of finishing on it is zero, the CH squares will have
+the lowest probabilities, as 5/8 request a movement to another square, and
+it is the final square that the player finishes at on each roll that we are
+interested in. We shall make no distinction between "Just Visiting" and
+being sent to JAIL, and we shall also ignore the rule about requiring a
+double to "get out of jail", assuming that they pay to get out on their
+next turn.
+
+By starting at GO and numbering the squares sequentially from 00 to 39 we
+can concatenate these two-digit numbers to produce strings that correspond
+with sets of squares.
+
+Statistically it can be shown that the three most popular squares, in
+order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and
+GO (3.09%) = Square 00. So these three most popular squares can be listed
+with the six-digit modal string: 102400.
+
+If, instead of using two 6-sided dice, two 4-sided
+dice are used, find the six-digit modal string.
+
+Antwoord: 101,524
+*/
+
+class Mersenne
+{
+private:
+    uint32_t f = 1812433253;
+    uint32_t m = 397;
+    uint32_t u = 11;
+    uint32_t s = 7;
+    uint32_t b = 0x9D2C5680;
+    uint32_t t = 15;
+    uint32_t c = 0xEFC60000;
+    uint32_t l = 18;
+    uint32_t index = 624;
+    uint32_t lower_mask = (1UL<<31)-1;
+    uint32_t upper_mask = 1<<31;
+public:
+    Mersenne(uint32_t seed) { }
+};
+
 static string problem84()
 {
     return twostring<uint32_t>(0);
@@ -4649,8 +4734,23 @@ Antwoord: 1,097,343
 */
 
 static string problem87()
-{
-    return twostring<uint32_t>(0);
+{   set<uint32_t> P;
+    Sieve sa(7072);
+    while (sa.hasNext())
+    {   uint32_t a = sa.next();
+        Sieve sb(369);
+        while (sb.hasNext())
+        {   uint32_t b = sb.next();
+            Sieve sc(85);
+            while (sc.hasNext())
+            {   uint32_t c = sc.next();
+                uint32_t q = a*a + b*b*b + c*c*c*c;
+                if (q >= 50000000) break;
+                P.insert(q);
+            }
+        }
+    }
+    return twostring<uint32_t>(P.size());
 }
 
 /*
