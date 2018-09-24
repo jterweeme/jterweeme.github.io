@@ -271,6 +271,18 @@ private:
 public:
     uint8_t *begin() { return _buf; }
     uint8_t *end() { return _buf + 1500; } // moet eigenlijk echte einde aangeven
+    void set(uint64_t n)
+    {   xmemset(_buf, 0, sizeof(_buf));
+        for (uint16_t i = 0; n > 0; i++)
+            _buf[i] = n % 10, n = n / 10;
+    }
+    void set(const LongNumber25 n)
+    {   for (uint16_t i = 0; i < 1500; i++)
+            _buf[i] = n.decimal(i);
+    }
+    void setdig(uint8_t pos, uint8_t n)
+    {   _buf[pos] = n;
+    }
     LongNumber25() { set(0); }
     LongNumber25(uint64_t n) { set(n); }
     LongNumber25(const LongNumber25 &n)
@@ -311,15 +323,6 @@ public:
                 carry = 1;
             }
         }
-    }
-    void set(uint64_t n)
-    {   xmemset(_buf, 0, sizeof(_buf));
-        for (uint16_t i = 0; n > 0; i++)
-            _buf[i] = n % 10, n = n / 10;
-    }
-    void set(const LongNumber25 n)
-    {   for (uint16_t i = 0; i < 1500; i++)
-            _buf[i] = n.decimal(i);
     }
     void dump(ostream &os) const
     {   for (uint16_t i = digits(); i > 0; i--)
@@ -4350,11 +4353,7 @@ static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
     for (uint8_t digit = 0; digit < digits; digit++)
     {   buf.shiftup();
         for (uint8_t n = 0; n < 10; n++)
-        {
-            tmp1.set(buf);
-            tmp1.mod(10);
-            buf.dec(tmp1);
-            buf.add(9 - n);
+        {   buf.setdig(0, 9 - n);
             tmp1.set(buf);
             tmp1.mul2(buf);
             tmp2.set(square);
