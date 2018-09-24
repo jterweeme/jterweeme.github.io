@@ -4478,9 +4478,93 @@ static string problem82()
     return twostring<uint32_t>(xmin);
 }
 
+/*
+#83: Path sum: four ways
+
+NOTE: This problem is a significantly more challenging version of Problem 81.
+
+In the 5 by 5 matrix below, the minimal path sum from the top left to the
+bottom right, by moving left, right, up, and down, is indicated in bold
+red and is equal to 2297.
+
+131  673  234  103  18
+201  96   342  965  150
+630  803  746  422  111
+537  699  497  121  956
+805  732  524  37   331
+
+Find the minimal path sum, in matrix.txt (right click and "Save
+Link/Target As..."), a 31K text file containing a 80 by 80 matrix,
+from the top left to the bottom right by moving left, right, up, and down.
+
+Antwoord: 425,185
+*/
+
+/*
+https://euler.stephan-brumme.com/83/
+*/
+
+#include <queue>
+#include <vector>
+
+typedef std::vector<std::vector<unsigned int>> Matrix;
+
+struct Cell
+{   uint32_t x, y;
+    uint64_t weight;
+    Cell(uint32_t x_, uint32_t y_, uint64_t weight_) : x(x_), y(y_), weight(weight_) {}
+    bool operator<(const Cell& cell) const { return weight > cell.weight; }
+};
+
+static uint64_t search(const Matrix& matrix)
+{   const auto size = matrix.size();
+    vector<std::vector<bool>> processed(matrix.size());
+    for (auto& row : processed)
+        row.resize(matrix.size(), false);
+    std::priority_queue<Cell> next;
+    next.push(Cell(0, 0, matrix[0][0]));
+    while (!next.empty())
+    {   Cell cell = next.top();
+        next.pop();
+        if (processed[cell.y][cell.x])
+            continue;
+        processed[cell.y][cell.x] = true;
+        if (cell.x == size - 1 && cell.y == size - 1)
+            return cell.weight;
+        if (cell.x + 1 < size)
+            next.push(Cell(cell.x + 1, cell.y, cell.weight + matrix[cell.y][cell.x + 1]));
+        if (cell.y + 1 < size)
+            next.push(Cell(cell.x, cell.y + 1, cell.weight + matrix[cell.y + 1][cell.x]));
+        if (cell.y > 0)
+            next.push(Cell(cell.x, cell.y - 1, cell.weight + matrix[cell.y - 1][cell.x]));
+        if (cell.x > 0)
+            next.push(Cell(cell.x - 1, cell.y, cell.weight + matrix[cell.y][cell.x - 1]));
+    }
+    return -1; // failed
+}
+
 static string problem83()
-{
-    return twostring<uint32_t>(0);
+{   ifstream ifs;
+    ifs.open("euler83.txt");
+    const uint16_t size = 80;
+    uint16_t x = 0, n = 0;
+    char c;
+    uint32_t arr[80*80];
+    while ((ifs.get(c)))
+    {   if (isdigit(c))
+            x = x * 10 + (c - '0');
+        else if (x > 0)
+            arr[n++] = x, x = 0;
+    }
+    ifs.close();
+    Matrix matrix(size);
+    uint16_t i = 0;
+    for (auto &row : matrix)
+    {   row.resize(size);
+        for (auto &cell : row)
+            cell = arr[i++];
+    }
+    return twostring<uint32_t>(search(matrix));
 }
 
 static string problem84()

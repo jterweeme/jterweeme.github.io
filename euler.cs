@@ -707,6 +707,25 @@ solved by brute force, and requires a clever method! ;o)
 Antwoord: 1,074
 */
 
+/*
+byte[][] triangle18 = new byte[][] {
+    {75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {17,47,82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {18,35,87,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {20, 4,82,47,65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {19, 1,23,75, 3,34, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {88, 2,77,73, 7,63,67, 0, 0, 0, 0, 0, 0, 0, 0},
+    {99,65, 4,28, 6,16,70,92, 0, 0, 0, 0, 0, 0, 0},
+    {41,41,26,56,83,40,80,70,33, 0, 0, 0, 0, 0, 0},
+    {41,48,72,33,47,32,37,16,94,29, 0, 0, 0, 0, 0},
+    {53,71,44,65,25,43,91,52,97,51,14, 0, 0, 0, 0},
+    {70,11,33,28,77,73,17,78,39,68,17,57, 0, 0, 0},
+    {91,71,52,38,17,14,91,43,58,50,27,29,48, 0, 0},
+    {63,66, 4,68,89,53,67,30,73,16,69,87,40,31, 0},
+    { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}};
+*/
+
 static UInt32 problem18()
 {
     return 0;
@@ -789,6 +808,31 @@ static UInt32 problem20(int f = 100)
     for (int i = 0; i < 200; i++) sum += buf[i];
     return (UInt32)sum;
 }
+
+/*
+#21 Amicable numbers
+
+Let d(n) be defined as the sum of proper divisors of
+n (numbers less than n which divide evenly into n).
+If d(a) = b and d(b) = a, where a ≠ b, then a and b are an
+amicable pair and each of a and b are called amicable numbers.
+
+For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22,
+44, 55 and 110; therefore d(220) = 284. The proper divisors
+of 284 are 1, 2, 4, 71 and 142; so d(284) = 220.
+
+Evaluate the sum of all the amicable numbers under 10000.
+
+Antwoord: 31,626
+*/
+
+/*
+220 & 284
+1184 & 1210
+2620 & 2924
+5020 & 5564
+6232 & 6368
+*/
 
 static UInt32 problem21()
 {
@@ -1119,6 +1163,12 @@ static UInt32 problem47()
 
 /*
 #48: Self powers
+
+The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+
+Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+
+Antwoord: 9,110,846,700
 */
 
 static UInt64 problem48()
@@ -1133,7 +1183,83 @@ static UInt64 problem48()
     return result;
 }
 
+/*
+#49: Prime permutations
+
+The arithmetic sequence, 1487, 4817, 8147, in which each of the terms
+increases by 3330, is unusual in two ways: (i) each of the three terms
+are prime, and, (ii) each of the 4-digit numbers are permutations of one another.
+
+There are no arithmetic sequences made up of three 1-, 2-, or 3-digit
+primes, exhibiting this property, but there is one other 4-digit
+increasing sequence.
+
+What 12-digit number do you form by concatenating the three terms in this sequence?
+
+Antwoord: 296,962,999,629
+*/
+
 static UInt32 problem49()
+{
+    return 0;
+}
+
+static UInt32 problem50()
+{
+    return 0;
+}
+
+static UInt32 problem51()
+{
+    return 0;
+}
+
+static UInt32 problem52()
+{
+    return 0;
+}
+
+static UInt32 problem53()
+{
+    return 0;
+}
+
+static UInt32 problem54()
+{
+    return 0;
+}
+
+static UInt32 problem55()
+{
+    return 0;
+}
+
+static UInt32 problem56()
+{
+    return 0;
+}
+
+static UInt32 problem57()
+{
+    return 0;
+}
+
+static UInt32 problem58()
+{
+    return 0;
+}
+
+static UInt32 problem59()
+{
+    return 0;
+}
+
+static UInt32 problem60()
+{
+    return 0;
+}
+
+static UInt32 problem61()
 {
     return 0;
 }
@@ -1175,7 +1301,7 @@ public static long makeSmallestPerm(long n)
     return retVal;
 }
 
-public static long problem62() {
+public static UInt64 problem62() {
     Cube result = null;
     long n = 345;
     bool found = false;
@@ -1194,7 +1320,7 @@ public static long problem62() {
             result = cubes[smallestPerm];
         }
     }
-    return result.N*result.N*result.N;
+    return (UInt64)(result.N * result.N * result.N);
 }
 
 
@@ -1465,7 +1591,12 @@ static private void chance()
         871198282, 4179871, 2783915460, 4782, 983, 0, 669171001, 9183, 443839,
         73682, 45228, 100, 40730, 55, 872187, 748317, 932718654, 840, 210,
         7652413, 162, 16695334890, 5482660, 1533776805, 5777, 134043,
-        9110846700, 296962999629};
+        9110846700, 296962999629, 997651, 121313, 142857, 4075, 376, 249, 972,
+        153, 26241, 107359, 26033, 28684, 127035954683, 49, 1322, 272, 661, 7273,
+        6531031914842725, 510510, 8319823, 428570, 303963552391, 7295372, 402, 161667,
+        190569291, 71, 55374, 73162890, 40886, 427337, 260324, 425185, 101524, 2772, 1818,
+        1097343, 7587457, 743, 1217, 14234, 8581146, 1258, 518408346, 14316, 24702,
+        8739992577, 18769, 709, 756872327473, 37076114526, 228};
 
     static UInt64 run(UInt32 p)
     {
@@ -1520,6 +1651,19 @@ static private void chance()
         case 47: return problem47();
         case 48: return problem48();
         case 49: return problem49();
+        case 50: return problem50();
+        case 51: return problem51();
+        case 52: return problem52();
+        case 53: return problem53();
+        case 54: return problem54();
+        case 55: return problem55();
+        case 56: return problem56();
+        case 57: return problem57();
+        case 58: return problem58();
+        case 59: return problem59();
+        case 60: return problem60();
+        case 61: return problem61();
+        case 62: return problem62();
         }
         return 0;
     }
@@ -1536,9 +1680,8 @@ static private void chance()
 
     static void Main()
     {
-        for (UInt32 i = 1; i <= 49; i++)
+        for (UInt32 i = 1; i <= 62; i++)
             runjob(i);
-        Console.WriteLine(problem62());
         Console.WriteLine(problem83());
         Console.WriteLine(problem84());
     }
