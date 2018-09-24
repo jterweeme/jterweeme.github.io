@@ -4348,6 +4348,20 @@ of the first one hundred decimal digits for all the irrational square roots.
 Antwoord: 40,886
 */
 
+/*
+dsums = {2: 475, 3: 441, 5: 473, 6: 471, 7: 398, 8: 465, 10: 459, 11: 484, 12: 406,
+13: 418, 14: 485, 15: 500, 17: 450, 18: 401, 19: 472, 20: 488, 21: 484,
+22: 407, 23: 453, 24: 484, 26: 455, 27: 398, 28: 401, 29: 459, 30: 467,
+31: 473, 32: 471, 33: 472, 34: 459, 35: 440, 37: 457, 38: 462, 39: 465,
+40: 486, 41: 451, 42: 445, 43: 503, 44: 483, 45: 440, 46: 451, 47: 423,
+48: 398, 50: 470, 51: 468, 52: 432, 53: 477, 54: 461, 55: 432, 56: 467,
+57: 453, 58: 409, 59: 499, 60: 479, 61: 436, 62: 450, 63: 439, 65: 440,
+66: 464, 67: 498, 68: 451, 69: 438, 70: 464, 71: 417, 72: 424, 73: 427,
+74: 427, 75: 435, 76: 459, 77: 484, 78: 456, 79: 461, 80: 500, 82: 455,
+83: 474, 84: 456, 85: 426, 86: 459, 87: 459, 88: 409, 89: 408, 90: 477,
+91: 412, 92: 502, 93: 452, 94: 502, 95: 459, 96: 483, 97: 440, 98: 477, 99: 446}
+*/
+
 static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
 {   LongNumber25 buf, tmp1, tmp2;
     for (uint8_t digit = 0; digit < digits; digit++)
@@ -4422,9 +4436,46 @@ static string problem81()
     return twostring<uint32_t>(arr[n - 1]);
 }
 
+/*
+#82: Path sum: three ways
+
+NOTE: This problem is a more challenging version of Problem 81.
+
+Antwoord: 260,324
+*/
+
 static string problem82()
 {
-    return twostring<uint32_t>(0);
+    ifstream ifs;
+    ifs.open("euler82.txt");
+    uint16_t x = 0, n = 0;
+    char c;
+    uint32_t arr[80*80];
+    while ((ifs.get(c)))
+    {   if (isdigit(c))
+            x = x * 10 + (c - '0');
+        else if (x > 0)
+            arr[n++] = x, x = 0;
+    }
+    ifs.close();
+    uint32_t grid[80][80];
+    uint32_t sol[80];
+    for (uint16_t i = 0; i < 80*80; i++)
+        grid[i / 80][i % 80] = arr[i];
+    for (uint16_t i = 0; i < 80; i++)
+        sol[i] = grid[i][79];
+    for (uint16_t i = 79; i > 0; i--)
+    {
+        sol[0] += grid[0][i - 1];
+        for (uint16_t j = 1; j < 80; j++)
+            sol[j] = std::min(sol[j - 1] + grid[j][i - 1], sol[j] + grid[j][i - 1]);
+        for (uint16_t j = 79; j > 0; j--)
+            sol[j - 1] = std::min(sol[j - 1], sol[j] + grid[j - 1][i - 1]);
+    }
+    uint32_t xmin = 0xffffffff;
+    for (uint8_t i = 0; i < 80; i++)
+        xmin = std::min(xmin, sol[i]);
+    return twostring<uint32_t>(xmin);
 }
 
 static string problem83()
