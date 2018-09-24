@@ -4362,6 +4362,7 @@ dsums = {2: 475, 3: 441, 5: 473, 6: 471, 7: 398, 8: 465, 10: 459, 11: 484, 12: 4
 91: 412, 92: 502, 93: 452, 94: 502, 95: 459, 96: 483, 97: 440, 98: 477, 99: 446}
 */
 
+#if 0
 static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
 {   LongNumber25 buf, tmp1, tmp2;
     for (uint8_t digit = 0; digit < digits; digit++)
@@ -4381,10 +4382,8 @@ static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
     return xsum;
 }
 
-static string problem80()
-{
-    //return twostring<uint32_t>(0);
-    uint32_t xsum = 0;
+static string problem80b()
+{   uint32_t xsum = 0;
     for (uint8_t n = 2; n < 100; n++)
     {   if (issquare3(n) == false)
         {   uint16_t tmp = squaredigits(n, 100);
@@ -4392,6 +4391,296 @@ static string problem80()
         }
     }
     return twostring<uint32_t>(xsum);
+}
+#endif
+
+/*
+https://euler.stephan-brumme.com/80/
+*/
+
+#include <queue>
+#include <vector>
+
+struct BigNum : public std::vector<unsigned int>
+{
+  static const uint32_t MaxDigit = 1000000000;
+  BigNum(uint64_t x = 0)
+  {
+    do
+    {
+      push_back(x % MaxDigit);
+      x /= MaxDigit;
+    } while (x > 0);
+  }
+
+  void operator+=(unsigned int other)
+  {
+    unsigned int carry = other;
+    for (size_t i = 0; i < size(); i++)
+    {
+      carry += operator[](i);
+      if (carry == 0)
+            return;
+
+      if (carry < MaxDigit)
+      {
+        operator[](i) = carry;
+        carry         = 0;
+      }
+      else
+      {
+        operator[](i) = carry % MaxDigit;
+        carry         = carry / MaxDigit;
+      }
+    }
+
+    while (carry > 0)
+    {
+      push_back(carry % MaxDigit);
+      carry /= MaxDigit;
+    }
+  }
+
+  void operator+=(const BigNum& other)
+  {
+    if (size() < other.size())
+      resize(other.size(), 0);
+
+    unsigned int carry = 0;
+    for (size_t i = 0; i < size(); i++)
+    {
+      carry += operator[](i);
+      if (i < other.size())
+        carry += other[i];
+      else
+        if (carry == 0)
+          return;
+
+      if (carry < MaxDigit)
+      {
+        // no overflow
+        operator[](i) = carry;
+        carry     = 0;
+      }
+      else
+      {
+        // yes, we have an overflow
+        operator[](i) = carry - MaxDigit;
+        carry = 1;
+      }
+    }
+
+    if (carry > 0)
+      push_back(carry);
+  }
+
+  void operator-=(const BigNum& other)
+  {
+    int borrow = 0;
+    for (size_t i = 0; i < size(); i++)
+    {
+      int diff = (int)operator[](i) - borrow;
+      if (i < other.size())
+        diff -= other[i];
+      else
+        if (borrow == 0)
+          break;
+
+      if (diff < 0)
+      {
+        borrow = 1;
+        diff += MaxDigit;
+      }
+      else
+        borrow = 0;
+
+      operator[](i) = diff;
+    }
+
+    // no high zeros
+    while (size() > 1 && back() == 0)
+      pop_back();
+  }
+
+  void operator*=(unsigned int factor)
+  {
+    // nulled
+    if (factor == 0)
+    {
+      clear();
+      push_back(0);
+      return;
+    }
+    // unchanged
+    if (factor == 1)
+      return;
+
+    // append an empty block
+    if (factor == MaxDigit)
+    {
+      if (size() > 1 || operator[](0) > 0)
+        insert(begin(), 0);
+      return;
+    }
+
+    // multiply all blocks with the factor
+    unsigned long long carry = 0;
+    for (auto& i : *this)
+    {
+      carry += i * (unsigned long long)factor;
+      i      = carry % MaxDigit;
+      carry /= MaxDigit;
+    }
+    // store remaining carry in new digits
+    while (carry > 0)
+    {
+      push_back(carry % MaxDigit);
+      carry /= MaxDigit;
+    }
+  }
+
+  // multiply two big numbers
+  BigNum operator*(const BigNum& other) const
+  {
+    if (size() < other.size())
+      return other * *this;
+
+    // multiply single digits of "other" with the current object
+    BigNum result = 0;
+    result.reserve(size() + other.size());
+    for (int i = (int)other.size() - 1; i >= 0; i--)
+    {
+      BigNum temp = *this;
+      temp   *= other[i];
+
+      result *= MaxDigit;
+      result += temp;
+    }
+
+    return result;
+  }
+
+  bool operator<(const BigNum& other) const
+  {
+    // different number of digits/buckets ?
+    if (size() < other.size())
+      return true;
+    if (size() > other.size())
+      return false;
+    // compare all digits/buckets, beginning with the most significant
+    for (int i = (int)size() - 1; i >= 0; i--)
+    {
+      if (operator[](i) < other[i])
+        return true;
+      if (operator[](i) > other[i])
+        return false;
+    }
+    return false;
+  }
+
+  // convert to string, MaxDigit must be power of 10
+  std::string toString() const
+  {
+    std::string result;
+    for (auto x : *this)
+    {
+      // process a bucket
+      for (unsigned int shift = 1; shift < MaxDigit; shift *= 10)
+      {
+        auto digit = (x / shift) % 10;
+        result.insert(0, 1, (char)digit + '0');
+      }
+    }
+
+    // remove leading zeros
+    while (result.size() > 1 && result.front() == '0')
+      result.erase(0, 1);
+
+    return result;
+  }
+};
+
+BigNum jarvis(unsigned int x, const BigNum& precision)
+{
+  static const BigNum Fortyfive = 45;
+
+  BigNum a = x * 5;
+  BigNum b = 5;
+
+  // avoid re-allocations when growing (plus a few bytes when exceeding target)
+  a.reserve(precision.size());
+  b.reserve(precision.size());
+
+  // until we have enough digits
+  while (b < precision)
+  {
+    if (!(a < b)) // same as a >= b but currently there is no operator >= in my BigNum class
+    {
+      a -=   b;
+      b +=  10;
+    }
+    else
+    {
+      a *= 100;
+      b *=  10;
+      b -= Fortyfive;
+    }
+  }
+
+  return b;
+}
+
+unsigned int countDigits(const BigNum& x, unsigned int numDigits)
+{
+  unsigned int sum = 0;
+  for (auto i : x.toString().substr(0, numDigits))
+    sum += i - '0';
+  return sum;
+}
+
+static string problem80()
+{
+    unsigned int maxNumber = 100;
+    unsigned int digits    = 100;
+    const unsigned int ExtraDigits = 15;
+    BigNum precision = 10;
+    for (unsigned int i = 1; i < digits + ExtraDigits; i++)
+        precision *= 10;
+
+    vector<BigNum> roots(maxNumber + 1, 0);
+    unsigned int sum = 0;
+    for (unsigned int i = 1; i <= maxNumber; i++)
+    {
+        uint32_t intSqrt = 1;
+        while (intSqrt * intSqrt < i)
+            intSqrt++;
+        if (intSqrt * intSqrt == i)
+        {
+            roots[i] = precision * intSqrt;
+            continue;
+        }
+
+        auto factor = intSqrt - 1;
+        while (i % factor != 0)
+            factor--;
+
+    if (factor > 1)
+    {
+      auto& current = roots[i] = roots[i / factor] * roots[factor];
+
+      if (current.size() > roots[i - 1].size())
+        current.erase(current.begin(), current.begin() + (current.size() - roots[i - 1].size()));
+      while (current < roots[i - 1])
+        current *= 10;
+    }
+    else
+    {
+      roots[i] = jarvis(i, precision);
+    }
+    sum += countDigits(roots[i], digits);
+  }
+
+  return twostring<uint32_t>(sum);
 }
 
 /*
@@ -4505,9 +4794,6 @@ Antwoord: 425,185
 /*
 https://euler.stephan-brumme.com/83/
 */
-
-#include <queue>
-#include <vector>
 
 typedef std::vector<std::vector<unsigned int>> Matrix;
 
