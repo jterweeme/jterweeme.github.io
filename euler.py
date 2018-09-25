@@ -3578,6 +3578,11 @@ class Monopoly:
         self.hits[self._pos] += 1
 
 def problem84():
+    test = mersenne_rng(1131464071)
+    print(test.get_random_number())
+    print(test.get_random_number())
+    print(test.get_random_number())
+    print(test.get_random_number())
     game = Monopoly()
     for i in range(10**6):
         game.roll()

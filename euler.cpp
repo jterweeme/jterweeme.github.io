@@ -4920,9 +4920,10 @@ dice are used, find the six-digit modal string.
 Antwoord: 101,524
 */
 
-class Mersenne
+class Mersenne : public Generator<uint32_t>
 {
 private:
+    uint32_t state[624];
     uint32_t f = 1812433253;
     uint32_t m = 397;
     uint32_t u = 11;
@@ -4935,12 +4936,195 @@ private:
     uint32_t lower_mask = (1UL<<31)-1;
     uint32_t upper_mask = 1<<31;
 public:
-    Mersenne(uint32_t seed) { }
+    Mersenne(uint32_t seed)
+    {
+        state[0] = seed;
+        for (uint16_t i = 1; i < 624; i++)
+            state[i] = f * (state[i - 1] ^ (state[i - 1] >> 30)) + i;
+    }
+    void twist()
+    {   for (uint16_t i = 0; i < 624; i++)
+        {   uint32_t tmp = (state[i] & upper_mask) + (state[(i + 1) % 624] & lower_mask);
+            uint32_t tmp_shift = tmp >> 1;
+            if (tmp % 2 != 0)
+                tmp_shift = tmp_shift ^ 0x9908b0df;
+            state[i] = state[(i + m) % 624] ^ tmp_shift;
+        }
+        index = 0;
+    }
+    bool hasNext() { return true; }
+    uint32_t next()
+    {   if (index >= 624) twist();
+        uint32_t y = state[index];
+        y = y ^ (y >> u);
+        y = y ^ ((y << s) & b);
+        y = y ^ ((y << t) & c);
+        y = y ^ (y >> l);
+        index++;
+        return y;
+    }
 };
 
-static string problem84()
+class CC : public Generator<uint32_t>
 {
-    return twostring<uint32_t>(0);
+private:
+    uint32_t _i = 0;
+public:
+    static const uint32_t GO = 0, JAIL = 1;
+    bool hasNext() { return true; }
+    uint32_t next()
+    {
+        uint32_t ret = _i;
+        _i = (_i + 1) % 16;
+        return ret;
+    }
+};
+
+class CH : public Generator<uint32_t>
+{
+private:
+    uint32_t _i = 0;
+public:
+    static const uint32_t GO = 0, JAIL = 1, C1 = 2, E3 = 3, H2 = 4, R1 = 5, NR1 = 6;
+    static const uint32_t NR2 = 7, U = 8, BACK3 = 9;
+    bool hasNext() { return true; }
+    uint32_t next()
+    {
+        uint32_t ret = _i;
+        _i = (_i + 1) % 16;
+        return ret;
+    }
+};
+
+class Monopoly
+{
+private:
+    uint32_t _pos = 0;
+    uint32_t _doubles = 0;
+    uint32_t hits[40];
+    Mersenne _rng;
+    CC _ccgen;
+    CH _chgen;
+public:
+    static const uint32_t GO = 0;
+    static const uint32_t A1 = 1;
+    static const uint32_t CC1 = 2;
+    static const uint32_t R1 = 5;
+    static const uint32_t CH1 = 7;
+    static const uint32_t JAIL = 10;
+    static const uint32_t C1 = 11;
+    static const uint32_t U1 = 12;
+    static const uint32_t R2 = 15;
+    static const uint32_t D1 = 16;
+    static const uint32_t CC2 = 17;
+    static const uint32_t CH2 = 22;
+    static const uint32_t E2 = 23;
+    static const uint32_t E3 = 24;
+    static const uint32_t R3 = 25;
+    static const uint32_t U2 = 28;
+    static const uint32_t G2J = 30;
+    static const uint32_t G1 = 31;
+    static const uint32_t G2 = 32;
+    static const uint32_t CC3 = 33;
+    static const uint32_t G3 = 34;
+    static const uint32_t R4 = 35;
+    static const uint32_t CH3 = 36;
+    static const uint32_t H1 = 37;
+    static const uint32_t T2 = 38;
+    static const uint32_t H2 = 39;
+    Monopoly() : _rng(1131464071)
+    {
+        for (uint8_t i = 0; i < 40; i++) hits[i] = 0;
+    }
+    void roll();
+    uint32_t *begin() { return hits; }
+    uint32_t *end() { return hits + 40; }
+};
+
+void Monopoly::roll()
+{
+    uint32_t dice1 = _rng.next() % 4 + 1;
+    uint32_t dice2 = _rng.next() % 4 + 1;
+    uint32_t dice = dice1 + dice2;
+    _pos = (_pos + dice) % 40;
+    _doubles = dice1 == dice2 ? _doubles + 1 : 0;
+    if (_doubles == 3)
+    {   _doubles = 0;
+        _pos = JAIL;
+    }
+    switch (_pos)
+    {
+    case CH1:
+    case CH2:
+    case CH3:
+        switch (_chgen.next())
+        {
+        case CH::GO:
+            _pos = GO;
+            break;
+        case CH::JAIL:
+            _pos = JAIL;
+            break;
+        case CH::C1:
+            _pos = C1;
+            break;
+        case CH::E3:
+            _pos = E3;
+            break;
+        case CH::H2:
+            _pos = H2;
+            break;
+        case CH::R1:
+            _pos = R1;
+            break;
+        case CH::NR1:
+        case CH::NR2:
+            if (_pos == CH1) _pos = R2;
+            if (_pos == CH2) _pos = R3;
+            if (_pos == CH3) _pos = R1;
+            break;
+        case CH::U:
+            if (_pos < U1 || _pos > U2) _pos = U1;
+            if (_pos < U2 || _pos > U1) _pos = U2;
+            break;
+        case CH::BACK3:
+            _pos -= 3;
+            break;
+        }
+        break;
+    case CC1:
+    case CC2:
+    case CC3:
+        switch (_ccgen.next())
+        {
+        case CC::GO:
+            _pos = GO;
+            break;
+        case CC::JAIL:
+            _pos = JAIL;
+            break;
+        }
+        break;
+    case G2J:
+        _pos = JAIL;
+        break;
+    }
+    hits[_pos] += 1;
+}
+
+static string problem84()
+{   Monopoly game;
+    for (uint32_t i = 0; i < 999999; i++)
+        game.roll();
+    uint32_t sorted[40];
+    for (uint32_t *it = game.begin(), i = 0; it != game.end(); it++)
+        sorted[i++] = *it;
+    bubbleSort(sorted, sorted + 40);
+    uint32_t first = linSearch(game.begin(), game.end(), sorted[39]) - 1;
+    uint32_t second = linSearch(game.begin(), game.end(), sorted[38]) - 1;
+    uint32_t third = linSearch(game.begin(), game.end(), sorted[37]) - 1;
+    uint32_t ret = first * 10000 + second * 100 + third;
+    return twostring<uint32_t>(ret);
 }
 
 /*
