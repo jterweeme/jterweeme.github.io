@@ -3578,11 +3578,6 @@ class Monopoly:
         self.hits[self._pos] += 1
 
 def problem84():
-    test = mersenne_rng(1131464071)
-    print(test.get_random_number())
-    print(test.get_random_number())
-    print(test.get_random_number())
-    print(test.get_random_number())
     game = Monopoly()
     for i in range(10**6):
         game.roll()
@@ -3860,14 +3855,6 @@ def problem92():
         solutions = list(t)
     return sum(solutions[i] for i in range(1, Lc) if unhappy(i))
 
-def endchain(n):
-    while n != 89 and n != 1:
-        n = sum(d**2 for d in digits(n))
-    return n
-
-def problem92b():
-    return sum(endchain(n) == 89 for n in range(1, 10**7))
-
 """
 #93: Arithmetic expressions
 
@@ -4128,9 +4115,9 @@ def problem97():
 #98: Anagramic squares
 
 By replacing each of the letters in the word CARE with 1, 2, 9, and 6
-respectively, we form a square number: 1296 = 362. What is remarkable
+respectively, we form a square number: 1296 = 36^2. What is remarkable
 is that, by using the same digital substitutions, the anagram, RACE,
-also forms a square number: 9216 = 962. We shall call CARE (and RACE)
+also forms a square number: 9216 = 96^2. We shall call CARE (and RACE)
 a square anagram word pair and specify further that leading zeroes are
 not permitted, neither may a different letter have the same digital
 value as another letter.
@@ -4155,7 +4142,7 @@ def problem98(fn = "euler98.txt"):
     def sq(n):
         x = int(''.join(y[letter_set[i]] for i in n))
         return x if int(x**0.5)**2 == x else False
-    words = [(w[1:-1], sorted(w[1:-1]))  for w in open(fn).read().split(',') if len(w)>6]
+    words = [(w[1:-1], sorted(w[1:-1])) for w in open(fn).read().split(',') if len(w)>6]
     word_pairs = []
     while words:
         w = words.pop()

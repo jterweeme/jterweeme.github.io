@@ -5368,8 +5368,38 @@ How many starting numbers below ten million will arrive at 89?
 Antwoord: 8,581,146
 */
 
+#if 0
+static uint64_t sos_digits(uint64_t n)
+{   uint64_t s = 0;
+    while (n > 0)
+        s = s + (n % 10)*(n % 10), n = n / 10;
+    return s;
+}
+
+static bool unhapy(uint64_t n)
+{   while (n > 1 && n != 89 && n != 4)
+        n = sos_digits(n);
+    return n > 1;
+}
+#endif
+
 static string problem92()
 {
+    uint64_t L = 7;
+    uint64_t Lc = 9*9 * L + 1;
+    uint64_t *solutions = new uint64_t[Lc];
+    for (uint64_t i = 0; i < 10; i++)
+        solutions[i * i] = 1;
+    for (uint64_t i = 2; i <= L; i++)
+    {   for (uint64_t j = 0; j < Lc; j++)
+        {
+            //uint64_t xsum = 0;
+            for (uint64_t k = 0; k < 10; k++)
+            {
+            }
+        }
+    }
+    delete[] solutions;
     return twostring<uint32_t>(0);
 }
 
@@ -5460,9 +5490,91 @@ chain with no element exceeding one million.
 Antwoord: 14,316
 */
 
+/*
+https://euler.stephan-brumme.com/95/
+*/
+
 static string problem95()
 {
-    return twostring<uint32_t>(0);
+    uint32_t limit = 1000000;
+    vector<uint32_t> primes;
+    primes.push_back(2);
+    for (uint32_t i = 3; i <= limit; i += 2)
+    {
+        bool isPrime = true;
+        for (auto p : primes)
+        {
+            if (p*p > i) break;
+            if (i % p == 0)
+            {
+                isPrime = false;
+                break;
+            }
+        }
+        if (isPrime)
+            primes.push_back(i);
+    }
+    vector<uint32_t> divsum(limit + 1, 0);
+    for (uint32_t i = 2; i <= limit; i++)
+    {   uint32_t sum = 1, reduce = i;
+        for (auto p : primes)
+        {   if (p*p > reduce) break;
+            uint32_t factor = 1;
+            while (reduce % p == 0)
+            {   reduce /= p;
+                factor *= p;
+                factor++;
+            }
+            sum *= factor;
+        }
+        if (reduce > 1 && reduce < i) sum *= reduce + 1;
+        if (sum > 1) sum -= i;
+        divsum[i] = sum;
+    }
+
+    uint32_t longestChain = 0, smallestMember = limit;
+    for (uint32_t i = 1; i <= limit; i++)
+    {
+    static vector<uint32_t> chain;
+    chain.clear();
+    chain.push_back(i);
+    while (true)
+    {
+      uint32_t add = divsum[chain.back()];
+      chain.push_back(add);
+
+      if (add == i)
+        break;
+
+      if (add < i)
+        break;
+
+      if (add > limit)
+        break;
+      bool isLoop = false;
+      for (size_t j = 1; j < chain.size() - 1; j++) // except last element
+        if (add == chain[j])
+        {
+          isLoop = true;
+          break;
+        }
+      if (isLoop)
+        break;
+    }
+
+    if (chain.back() != i)
+      continue;
+
+    if (chain.size() < longestChain)
+      continue;
+
+    if (longestChain < chain.size())
+    {
+      longestChain = chain.size();
+      smallestMember = chain.front();
+    }
+  }
+    return twostring<uint32_t>(smallestMember);
 }
 
 /*
