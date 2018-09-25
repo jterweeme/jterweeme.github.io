@@ -704,6 +704,15 @@ static bool isPandigital41(uint32_t n)
     return ret;
 }
 
+template <typename T> static T gcd(T a, T b)
+{   while (b)
+    {   T c = b;
+        b = a % b;
+        a = c;
+    }
+    return a;
+}
+#if 0
 static uint32_t gcd(uint32_t a, uint32_t b)
 {   while (b)
     {   uint32_t c = b;
@@ -712,6 +721,7 @@ static uint32_t gcd(uint32_t a, uint32_t b)
     }
     return a;
 }
+#endif
 
 static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
 {
@@ -4140,7 +4150,7 @@ static string problem75()
     uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
     {   for (int64_t n = m - 1; n > 0; n -= 2)
-        {   if (gcd(m, n) == 1)
+        {   if (gcd<uint64_t>(m, n) == 1)
             {   uint64_t s = 2 * (m * m + m * n);
                 for (uint64_t k = 1; k <= L / s; k++)
                 {   if (maybe.count(k * s))
@@ -4795,7 +4805,7 @@ Antwoord: 425,185
 https://euler.stephan-brumme.com/83/
 */
 
-typedef std::vector<std::vector<unsigned int>> Matrix;
+typedef std::vector<vector<uint32_t>> Matrix;
 
 struct Cell
 {   uint32_t x, y;
@@ -5294,8 +5304,19 @@ file contain no more than four consecutive identical units.
 Antwoord: 743
 */
 
+class Processor
+{
+private:
+    char _buf[5];
+public:
+    void push(char c) { }
+};
+
 static string problem89()
 {
+    ifstream ifs;
+    ifs.open("euler89.txt");
+    ifs.close();
     return twostring<uint32_t>(0);
 }
 
@@ -5317,8 +5338,14 @@ Antwoord: 14,234
 */
 
 static string problem91()
-{
-    return twostring<uint32_t>(0);
+{   uint32_t n = 50, t = 0;
+    for (uint32_t x = 1; x <= n; x++)
+    {   for (uint32_t y = 1; y < n; y++)
+        {   uint32_t m = gcd<uint32_t>(x, y);
+            t += std::min(x * m / y, m * (n - y) / x);
+        }
+    }
+    return twostring<uint32_t>(t * 2 + n * n * 3);
 }
 
 /*
