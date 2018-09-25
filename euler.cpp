@@ -5513,6 +5513,96 @@ static string problem97()
 }
 
 /*
+#98: Anagramic squares
+
+By replacing each of the letters in the word CARE with 1, 2, 9, and 6
+respectively, we form a square number: 1296 = 362. What is remarkable
+is that, by using the same digital substitutions, the anagram, RACE,
+also forms a square number: 9216 = 962. We shall call CARE (and RACE)
+a square anagram word pair and specify further that leading zeroes are
+not permitted, neither may a different letter have the same digital
+value as another letter.
+
+Using words.txt (right click and 'Save Link/Target As...'), a 16K text
+file containing nearly two-thousand common English words, find all the
+square anagram word pairs (a palindromic word is NOT considered to be
+an anagram of itself).
+
+What is the largest square number formed by any member of such a pair?
+
+NOTE: All anagrams formed must be contained in the given text file.
+
+Antwoord: 18,769
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-98-solution/
+*/
+
+static string problem98()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#99: Largest exponential
+
+Comparing two numbers written in index form like 211 and 37 is not
+difficult, as any calculator would confirm that 211 = 2048 < 37 = 2187.
+
+However, confirming that 632382518061 > 519432525806 would be much
+more difficult, as both numbers contain over three million digits.
+
+Using base_exp.txt (right click and 'Save Link/Target As...'), a 22K text
+file containing one thousand lines with a base/exponent pair on each line,
+determine which line number has the greatest numerical value.
+
+NOTE: The first two lines in the file represent the numbers in the example given above.
+
+Antwoord: 709
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-99-solution/
+*/
+
+static string problem99()
+{
+    return twostring<uint32_t>(0);
+}
+
+/*
+#100: Arranged probability
+
+If a box contains twenty-one coloured discs, composed of fifteen blue discs
+and six red discs, and two discs were taken at random, it can be seen that
+the probability of taking two blue discs, P(BB) = (15/21)×(14/20) = 1/2.
+
+The next such arrangement, for which there is exactly 50% chance of taking
+two blue discs at random, is a box containing eighty-five blue discs and
+thirty-five red discs.
+
+By finding the first arrangement to contain over 1012 = 1,000,000,000,000
+discs in total, determine the number of blue discs that the box would contain.
+
+Antwoord: 756,872,327,473
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-100-solution/
+*/
+
+static string problem100()
+{   uint64_t b = 3, n = 4, L = 1000000000000ULL;
+    while (n <= L)
+    {   uint64_t tmp = 3 * b + 2 * n - 2;
+        n = 4 * b + 3 * n - 3;
+        b = tmp;
+    }
+    return twostring<uint64_t>(b);
+}
+
+/*
 Einde opdrachten
 */
 
@@ -5617,6 +5707,9 @@ static string run2(uint32_t p)
     case 95: return problem95();
     case 96: return problem96();
     case 97: return problem97();
+    case 98: return problem98();
+    case 99: return problem99();
+    case 100: return problem100();
     }
     return 0;
 }
@@ -5750,9 +5843,9 @@ int main()
     testLongNum();
     time_t begin = time(0);
 #ifdef MULTITHREAD
-    multithread(59);
+    multithread(100);
 #else
-    singlethread(97);
+    singlethread(100);
 #endif
     time_t end = time(0);
     cout << "Total: " << end - begin << "s\r\n";
