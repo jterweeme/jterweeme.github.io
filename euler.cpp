@@ -5751,12 +5751,24 @@ Antwoord: 709
 */
 
 /*
-https://blog.dreamshire.com/project-euler-99-solution/
+https://euler.stephan-brumme.com/99/
 */
 
+#include <map>
+#include <cmath>
+
 static string problem99()
-{
-    return twostring<uint32_t>(0);
+{   ifstream ifs;
+    ifs.open("euler99.txt");
+    map<double, uint32_t> data;
+    for (uint32_t i = 1; i <= 1000; i++) // first line has index 1 (not 0)
+    {   uint32_t base, exponent;
+        char comma; // skip commas in input file
+        ifs >> base >> comma >> exponent;
+        data[exponent * log(base)] = i;
+    }
+    ifs.close();
+    return twostring<uint32_t>(data.rbegin()->second);
 }
 
 /*
