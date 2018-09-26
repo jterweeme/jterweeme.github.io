@@ -5263,9 +5263,32 @@ What is the sum of all the minimal product-sum numbers for 2<=k<=12000?
 Antwoord: 7,587,457
 */
 
-static string problem88()
+static void prodsum(uint64_t p, uint64_t s, uint64_t c,
+    uint64_t start, uint64_t kmax, uint64_t *n)
 {
-    return twostring<uint32_t>(0);
+    uint64_t k = p - s + c;
+    if (k < kmax)
+    {   if (p < n[k]) n[k] = p;
+        for (uint64_t i = start; i <= kmax / p * 2; i++)
+            prodsum(p * i, s + i, c + 1, i, kmax, n);
+    }
+}
+
+static string problem88()
+{   uint64_t kmax = 12001;
+    uint64_t n[12001];
+    for (uint64_t i = 0; i < 12001; i++)
+        n[i] = 2 * kmax;
+    prodsum(1, 1, 1, 2, kmax, n);
+    n[0] = 0;
+    n[1] = 0;
+    bubbleSort(n, n + 12001);
+    uint64_t xsum = 0, prev = 0;
+    for (uint64_t i = 0; i < 12001; i++)
+    {   if (n[i] != prev) xsum += n[i];
+        prev = n[i];
+    }
+    return twostring<uint64_t>(xsum);
 }
 
 /*

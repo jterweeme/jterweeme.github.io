@@ -3711,16 +3711,17 @@ Antwoord: 7,587,457
 https://blog.dreamshire.com/project-euler-88-solution/
 """
 
+def prodsum(p, s, c, start, kmax, n):
+    k = p - s + c     # product - sum + number of factors
+    if k < kmax:
+        if p < n[k]: n[k] = p
+        for i in range(start, kmax//p*2 + 1):
+            prodsum(p*i, s+i, c+1, i, kmax, n)
+
 def problem88(kmax = 12000):
-    def prodsum(p, s, c, start):
-        k = p - s + c     # product - sum + number of factors
-        if k < kmax:
-            if p < n[k]: n[k] = p
-            for i in range(start, kmax//p*2 + 1):
-                prodsum(p*i, s+i, c+1, i)
     if kmax > 12: kmax+= 1
     n = [2*kmax] * kmax
-    prodsum(1, 1, 1, 2)
+    prodsum(1, 1, 1, 2, kmax, n)
     return sum(set(n[2:]))
 
 """
