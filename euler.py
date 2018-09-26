@@ -4033,6 +4033,14 @@ Antwoord: 24,702
 """
 
 """
+483 + 245 + 462 + 137 + 523 + 176 + 143 + 487 + 814 + 761 + 976 +
+962 + 397 + 639 + 697 + 361 + 359 + 786 + 743 + 782 + 428 + 425 +
+348 + 124 + 361 + 581 + 387 + 345 + 235 + 298 + 761 + 132 + 698 +
+852 + 453 + 516 + 945 + 365 + 134 + 193 + 814 + 384 + 469 + 316 +
+586 + 954 + 159 + 861 + 294 + 351 = 24,702
+"""
+
+"""
 http://norvig.com/sudoku.html
 """
 
@@ -4087,7 +4095,9 @@ def problem96(fn = "euler96.txt"):
         for grid in grids:
             values = search(parse_grid(grid))
             values2 = [int(n) for n in values.values()]
-            ret += concat2(values2[:3])
+            sub = concat2(values2[:3])
+            #print(sub)
+            ret += sub
         return ret
     puzzles = open(fn).read().strip().split()
     return solve_all(puzzles)

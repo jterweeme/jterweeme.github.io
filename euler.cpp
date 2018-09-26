@@ -5618,9 +5618,58 @@ number found in the top left corner of the solution grid above.
 Antwoord: 24,702
 */
 
+typedef uint32_t Board[9][9];
+
+bool solve(Board &board)
+{   for (uint32_t y = 0; y < 9; y++)
+    {   for (uint32_t x = 0; x < 9; x++)
+        {   if (board[x][y] != 0) continue;
+            bool available[9+1] = {false, true, true, true, true, true, true, true, true, true};
+            for (uint32_t i = 0; i < 9; i++)
+            {   if (board[i][y] != 0) available[board[i][y]] = false;
+                if (board[x][i] != 0) available[board[x][i]] = false;
+            }
+            uint32_t rx = (x / 3) * 3, ry = (y / 3) * 3;
+            for (uint32_t i = 0; i < 3; i++)
+                for (uint32_t j = 0; j < 3; j++)
+                    if (board[i + rx][j + ry] != 0)
+                        available[board[i + rx][j + ry]] = false;
+            for (uint32_t i = 1; i <= 9; i++)
+            {   if (available[i])
+                {   board[x][y] = i;
+                    if (solve(board))
+                        return true;
+                }
+            }
+            board[x][y] = 0;
+            return false;
+        }
+    }
+    return true;
+}
+
 static string problem96()
-{
-    return twostring<uint32_t>(0);
+{   ifstream ifs;
+    ifs.open("euler96.txt");
+    uint8_t tmp[81];
+    uint32_t board[9][9], i = 0;
+    char c;
+    uint32_t xsum = 0;
+    while (ifs.get(c))
+    {   if (isdigit(c))
+        {   tmp[i++] = c - '0';
+            continue;
+        }
+        if (i == 0) continue;
+        i = 0;
+        for (uint8_t j = 0; j < 81; j++)
+            board[j / 9][j % 9] = tmp[j];
+        solve(board);
+        uint32_t subsum = board[0][0] * 100 + board[0][1] * 10 + board[0][2];
+        xsum += subsum;
+    }
+    ifs.close();
+    return twostring<uint32_t>(xsum);
 }
 
 /*
