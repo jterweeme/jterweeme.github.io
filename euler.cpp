@@ -5304,20 +5304,57 @@ file contain no more than four consecutive identical units.
 Antwoord: 743
 */
 
-class Processor
+#include <cstring>
+
+class Text
 {
 private:
-    char _buf[5];
+    char *_buf;
+    uint32_t _i = 0;
 public:
-    void push(char c) { }
+    Text(uint32_t size) { _buf = new char[size]; }
+    ~Text() { delete[] _buf; }
+    void push(char c) { _buf[_i++] = c; _buf[_i] = 0; }
+    void replace(const char *a, const char *b)
+    {
+        size_t lena = strlen(a);
+        size_t lenb = strlen(b);
+        while (true)
+        {
+            char *beg = strstr(_buf, a);
+            if (beg == 0) break;
+            for (size_t i = 0; i < lenb; i++)
+                *beg++ = b[i];
+            while (true)
+            {
+                beg[0] = beg[lena - lenb];
+                if (beg[lena - lenb] == 0)
+                    break;
+                beg++;
+            }
+        }
+    }
+    uint32_t length() { return strlen(_buf); }
 };
 
 static string problem89()
 {
     ifstream ifs;
     ifs.open("euler89.txt");
+    char c;
+    Text t(9999);
+    while (ifs.get(c))
+        t.push(c);
     ifs.close();
-    return twostring<uint32_t>(0);
+    uint32_t in = t.length();
+    t.replace("DCCCC", "  ");
+    t.replace("LXXXX", "  ");
+    t.replace("VIIII", "  ");
+    t.replace("CCCC", "  ");
+    t.replace("XXXX", "  ");
+    t.replace("IIII", "  ");
+    uint32_t out = t.length();
+    return twostring<uint32_t>(in - out);
 }
 
 /*
