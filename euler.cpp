@@ -5934,8 +5934,180 @@ Antwoord: 18,769
 
 /*
 https://blog.dreamshire.com/project-euler-98-solution/
+https://euler.stephan-brumme.com/98/
 */
 
+#include <map>
+#include <algorithm>
+
+static uint64_t fingerprint(uint64_t x)
+{   uint64_t result = 0;
+    while (x > 0)
+    {   auto digit = x % 10;
+        x /= 10;
+        result += 1ULL << (4 * digit);
+    }
+    return result;
+}
+
+string readWord(istream &is)
+{   string result;
+    while (true)
+    {   char c = is.get();
+        if (!is) break;
+        if (c == '"') continue;
+        if (c == ',') break;
+        result += c;
+    }
+    return result;
+}
+
+uint64_t match(const string &a, const string &b, const vector<unsigned long long> &squares)
+{
+  uint64_t result = 0;
+  // try all combinations
+  for (auto i : squares)
+    for (auto j : squares)
+    {
+      // don't match a word with itself
+      if (i == j)
+        continue;
+
+      // convert squares to strings
+      auto replaceA = std::to_string(i);
+      auto replaceB = std::to_string(j);
+
+
+      std::map<char, char> replaceTable;
+      bool valid = true;
+      for (size_t k = 0; k < replaceA.size(); k++)
+      {
+        char original = replaceA[k];
+        // no replacement rule found ? => abort
+        if (replaceTable.count(original) != 0 && replaceTable[original] != a[k])
+          valid = false;
+
+        // replacement successful
+        replaceTable[original] = a[k];
+      }
+
+      // two digits must not map to the same letter, though
+      std::set<char> used;
+      for (auto x : replaceTable)
+      {
+        // already used ?
+        if (used.count(x.second) != 0)
+          valid = false;
+        // mark as used
+        used.insert(x.second);
+      }
+
+      // any constraint violation ?
+      if (!valid)
+        continue;
+
+      // using that mapping, can "a" be constructed ?
+      std::string aa;
+      for (auto x : replaceA)
+        aa += replaceTable[x];
+      if (aa != a)
+        continue;
+
+      // using that mapping, can "b" be constructed ?
+      std::string bb;
+      for (auto x : replaceB)
+        bb += replaceTable[x];
+      if (bb != b)
+        continue;
+
+      // new bigger square ?
+      if (result < i)
+        result = i;
+      if (result < j)
+        result = j;
+    }
+
+  return result;
+}
+
+static string problem98()
+{
+    map<std::string, std::vector<std::string>> anagrams;
+    ifstream ifs;
+    ifs.open("p098_words.txt");
+
+    while (true)
+    {
+        auto word = readWord(ifs);
+        if (word.empty())
+            break;
+
+        auto sorted = word;
+        std::sort(sorted.begin(), sorted.end());
+        anagrams[sorted].push_back(word);
+    }
+
+    ifs.close();
+
+  // find longest anagram
+  size_t maxDigits = 0;
+  for (auto i : anagrams)
+    if (i.second.size() > 1) // at least two words share the same letters ?
+      if (maxDigits < i.second.front().size())
+        maxDigits = i.second.front().size();
+  // maxDigits will be 9 for the given input ("INTRODUCE", "REDUCTION")
+
+  unsigned long long maxNumber = 1;
+  for (size_t i = 0; i < maxDigits; i++)
+    maxNumber *= 10;
+
+  // generate all squares
+  // for each square, compute its fingerprint
+  std::map<unsigned long long, std::vector<unsigned long long>> permutations;
+  std::map<unsigned int,       std::set   <unsigned long long>> fingerprintLength;
+  // walk through all square numbers (base^2)
+  unsigned long long base = 1;
+  while (base*base <= maxNumber)
+  {
+    auto square = base*base;
+    auto id     = fingerprint(square);
+    permutations[id].push_back(square);
+
+    auto numDigits = log10(square - 1) + 1;
+    fingerprintLength[numDigits].insert(id);
+
+    base++;
+  }
+
+    uint64_t result = 0;
+    for (auto i : anagrams)
+    {
+    auto pairs = i.second;
+    // no other word with the same letters ?
+    if (pairs.size() == 1)
+      continue;
+
+    auto length = pairs.front().size();
+    // compare each word with each other
+    for (size_t i = 0; i < pairs.size(); i++)
+      for (size_t j = i + 1; j < pairs.size(); j++)
+      {
+        // extract all relevant squares
+        for (auto id : fingerprintLength[length])
+        {
+          // and perform the matching process ...
+          auto best = match(pairs[i], pairs[j], permutations[id]);
+          // bigger square found ?
+          if (result < best)
+            result = best;
+        }
+      }
+    }
+
+    return twostring<uint64_t>(result);
+}
+
+#if 0
 static string problem98()
 {
     char *words = new char[2000*50];
@@ -5961,6 +6133,7 @@ static string problem98()
     delete[] words;
     return twostring<uint32_t>(0);
 }
+#endif
 
 /*
 #99: Largest exponential
@@ -5983,8 +6156,6 @@ Antwoord: 709
 /*
 https://euler.stephan-brumme.com/99/
 */
-
-#include <map>
 
 static string problem99()
 {   ifstream ifs;
