@@ -11,18 +11,50 @@
 #endif
 using namespace std;
 
+/*
+https://clc-wiki.net/wiki/C_standard_library:string.h:strlen
+*/
 size_t xstrlen(const char *s)
 {   size_t i;
     for (i = 0; s[i] != '\0'; i++);
     return i;
 }
 
+/*
+https://clc-wiki.net/wiki/C_standard_library:string.h:strcmp
+*/
 int xstrcmp(const char* s1, const char* s2)
-{   while(*s1 && (*s1==*s2))
-        s1++,s2++;
-    return *(const uint8_t*)s1-*(const uint8_t*)s2;
+{   while (*s1 && (*s1 == *s2)) s1++, s2++;
+    return *(const uint8_t *)s1 - *(const uint8_t*)s2;
 }
 
+/*
+https://clc-wiki.net/wiki/C_standard_library:string.h:memcmp
+*/
+int xmemcmp(const void *s1, const void *s2, size_t n)
+{   const uint8_t *p1 = (uint8_t *)s1, *p2 = (uint8_t *)s2;
+    while (n--)
+        if( *p1 != *p2 )
+            return *p1 - *p2;
+        else
+            p1++, p2++;
+    return 0;
+}
+
+/*
+https://clc-wiki.net/wiki/strstr
+*/
+static char *xstrstr(const char *s1, const char *s2)
+{   size_t n = xstrlen(s2);
+    while (*s1)
+        if (!xmemcmp(s1++, s2,n))
+            return (char *)s1 - 1;
+    return 0;
+}
+
+/*
+https://clc-wiki.net/wiki/C_standard_library:string.h:memcpy
+*/
 void xmemcpy(const void *dest, const void *src, size_t n)
 {   char *csrc = (char *)src;
     char *cdest = (char *)dest;
@@ -30,6 +62,9 @@ void xmemcpy(const void *dest, const void *src, size_t n)
     for (i = 0; i<n; i++) cdest[i] = csrc[i];
 }
 
+/*
+https://clc-wiki.net/wiki/C_standard_library:string.h:memset
+*/
 void *xmemset(void *s, int c, size_t n)
 {   uint8_t *p = (uint8_t *)s;
     while (n--) *p++ = (uint8_t)c;
@@ -37,8 +72,7 @@ void *xmemset(void *s, int c, size_t n)
 }
 
 template <typename T> void xswap(T &a, T &b)
-{
-    T c = a; a=b; b=c;
+{   T c = a; a=b; b=c;
 }
 
 template <typename T> static T myPow(T base, T e)
@@ -830,6 +864,32 @@ public:
 template <typename T> class Combination
 {
 private:
+};
+
+template <typename T> class MySet
+{
+private:
+    T *_buf;
+    T *_end;
+public:
+    MySet(uint32_t size)
+    {
+        _buf = new T[size];
+        _end = _buf;
+    }
+    ~MySet() { delete[] _buf; }
+    void insert(T item)
+    {
+        // TODO: check overflow
+        if (binSearch(_buf, _end - 1, item))
+            return; // item already exists
+        *_end++ = item;
+        bubbleSort(_buf, _end);
+    }
+    uint32_t count(T item)
+    {   return binSearch(_buf, _end - 1, item) ? 1 : 0;
+    }
+    uint32_t size() const { return _end - _buf; }
 };
 
 template <class T> class Polygonizer2 : public Generator<T>
@@ -4092,16 +4152,14 @@ million, contain exactly sixty non-repeating terms?
 Antwoord: 402
 */
 
-#include <set>
-
 static uint64_t dfccnt(uint64_t *cache, uint64_t n)
-{   set<uint64_t> previous;
+{   MySet<uint64_t> previous2(99999);
     uint64_t count = 0;
     while (true)
     {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
         count++;
-        if (previous.count(n)) return count;
-        previous.insert(n);
+        if (previous2.count(n)) return count;
+        previous2.insert(n);
         uint64_t xsum = 0;
         while (n > 0) xsum += factorial<uint64_t>(n % 10), n = n / 10;
         n = xsum;
@@ -4147,11 +4205,13 @@ L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
 Antwoord: 161,667
 */
 
+#include <set>
+
 static string problem75()
 {
     uint64_t L = 1500001;
-    set<uint64_t> maybe;
-    set<uint64_t> nope;
+    set<uint64_t> maybe, nope;
+    //MySet<uint64_t> maybe(99999), nope(99999);
     uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
     {   for (int64_t n = m - 1; n > 0; n -= 2)
@@ -5332,8 +5392,6 @@ file contain no more than four consecutive identical units.
 Antwoord: 743
 */
 
-#include <cstring>
-
 class Text
 {
 private:
@@ -5344,10 +5402,9 @@ public:
     ~Text() { delete[] _buf; }
     void push(char c) { _buf[_i++] = c; _buf[_i] = 0; }
     void replace(const char *a, const char *b)
-    {   size_t lena = strlen(a);
-        size_t lenb = strlen(b);
+    {   size_t lena = xstrlen(a), lenb = xstrlen(b);
         while (true)
-        {   char *beg = strstr(_buf, a);
+        {   char *beg = xstrstr(_buf, a);
             if (beg == 0) break;
             for (size_t i = 0; i < lenb; i++)
                 *beg++ = b[i];
@@ -5358,7 +5415,7 @@ public:
             }
         }
     }
-    uint32_t length() { return strlen(_buf); }
+    uint32_t length() { return xstrlen(_buf); }
 };
 
 static string problem89()
