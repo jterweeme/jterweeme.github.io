@@ -5554,9 +5554,94 @@ answer as a string: abcd.
 Antwoord: 1,258
 */
 
-static string problem93()
+/*
+https://euler.stephan-brumme.com/93/
+*/
+
+#include <cmath>
+
+const double Epsilon = 0.00001;
+
+void eval(const std::vector<double>& numbers, std::vector<bool>& used)
 {
-    return twostring<uint32_t>(0);
+    if (numbers.size() == 1)
+    {
+        auto result = numbers.front() + Epsilon;
+        if (fmod(result, 1) > 10*Epsilon)
+            return;
+
+        int index = int(result + Epsilon);
+        // reject negative and very large results
+        if (index >= 0 && index < (int)used.size())
+            used[index] = true;
+
+        return;
+    }
+    // step 2
+    auto next = numbers;
+    for (size_t i = 0; i < numbers.size(); i++)
+    for (size_t j = i + 1; j < numbers.size(); j++)
+    {
+      // fetch two numbers
+      double a = numbers[i];
+      double b = numbers[j];
+
+      // prepare for next recursive step
+      next = numbers;
+      next.erase(next.begin() + j); // delete the higher index first
+      next.erase(next.begin() + i);
+
+      // steps 3 and 4 (unrolled)
+      next.push_back(a + b); // add
+      eval(next, used);
+      next.back() = a - b;   // subtract (I)
+      eval(next, used);
+      next.back() = b - a;   // subtract (II)
+      eval(next, used);
+      next.back() = a * b;   // multiply
+      eval(next, used);
+      if (b != 0)
+      {
+        next.back() = a / b; // divide (I)
+        eval(next, used);
+      }
+      if (a != 0)
+      {
+        next.back() = b / a; // divide (II)
+        eval(next, used);
+      }
+    }
+}
+
+unsigned int getSequenceLength(const std::vector<double>& numbers)
+{   vector<bool> used(1000, false);
+    eval(numbers, used);
+    unsigned int result = 0;
+    while (used[result + 1])
+        result++;
+    return result;
+}
+
+static string problem93()
+{   unsigned int longestSequence = 0;
+    unsigned int longestDigits   = 0;
+
+    for (unsigned int a =   1; a <= 6; a++)
+        for (unsigned int b = a+1; b <= 7; b++)
+            for (unsigned int c = b+1; c <= 8; c++)
+                for (unsigned int d = c+1; d <= 9; d++)
+                {
+                    auto sequenceLength = getSequenceLength({ double(a), double(b),
+                        double(c), double(d) });
+
+                    if (longestSequence < sequenceLength)
+                    {
+                        longestSequence = sequenceLength;
+                        longestDigits = a * 1000 + b * 100 + c * 10 + d;
+                    }
+                }
+
+    return twostring<uint32_t>(longestDigits);
 }
 
 /*
@@ -5900,7 +5985,6 @@ https://euler.stephan-brumme.com/99/
 */
 
 #include <map>
-#include <cmath>
 
 static string problem99()
 {   ifstream ifs;
