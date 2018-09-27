@@ -5488,7 +5488,6 @@ How many starting numbers below ten million will arrive at 89?
 Antwoord: 8,581,146
 */
 
-#if 0
 static uint64_t sos_digits(uint64_t n)
 {   uint64_t s = 0;
     while (n > 0)
@@ -5496,31 +5495,36 @@ static uint64_t sos_digits(uint64_t n)
     return s;
 }
 
-static bool unhapy(uint64_t n)
+static bool unhappy(uint64_t n)
 {   while (n > 1 && n != 89 && n != 4)
         n = sos_digits(n);
     return n > 1;
 }
-#endif
 
 static string problem92()
-{
-    uint64_t L = 7;
+{   uint64_t L = 7;
     uint64_t Lc = 9*9 * L + 1;
+    uint64_t *t = new uint64_t[Lc];
     uint64_t *solutions = new uint64_t[Lc];
+    for (uint64_t i = 0; i < Lc; i++)
+        t[i] = 0, solutions[i] = 0;
     for (uint64_t i = 0; i < 10; i++)
         solutions[i * i] = 1;
     for (uint64_t i = 2; i <= L; i++)
     {   for (uint64_t j = 0; j < Lc; j++)
-        {
-            //uint64_t xsum = 0;
+        {   t[j] = 0;
             for (uint64_t k = 0; k < 10; k++)
-            {
-            }
+                t[j] += k * k <= j ? solutions[j - k*k] : 0;
         }
+        for (uint64_t j = 0; j < Lc; j++)
+            solutions[j] = t[j];
     }
+    uint64_t ret = 0;
+    for (uint64_t i = 1; i < Lc; i++)
+        ret += unhappy(i) ? solutions[i] : 0;
     delete[] solutions;
-    return twostring<uint32_t>(0);
+    delete[] t;
+    return twostring<uint64_t>(ret);
 }
 
 /*
