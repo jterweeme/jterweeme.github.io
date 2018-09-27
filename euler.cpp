@@ -871,8 +871,9 @@ template <typename T> class MySet
 private:
     T *_buf;
     T *_end;
+    uint32_t _size;
 public:
-    MySet(uint32_t size)
+    MySet(uint32_t size) : _size(size)
     {
         _buf = new T[size];
         _end = _buf;
@@ -880,9 +881,9 @@ public:
     ~MySet() { delete[] _buf; }
     void insert(T item)
     {
-        // TODO: check overflow
         if (binSearch(_buf, _end - 1, item))
             return; // item already exists
+        if (_end > _buf + _size) throw "overflow";
         *_end++ = item;
         bubbleSort(_buf, _end);
     }
@@ -4210,8 +4211,10 @@ Antwoord: 161,667
 static string problem75()
 {
     uint64_t L = 1500001;
-    set<uint64_t> maybe, nope;
-    //MySet<uint64_t> maybe(99999), nope(99999);
+    set<uint64_t> maybe;
+    set<uint64_t> nope;
+    //MySet<uint64_t> maybe(99999);
+    //MySet<uint64_t> nope(99999);
     uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
     {   for (int64_t n = m - 1; n > 0; n -= 2)
@@ -4473,55 +4476,46 @@ static string problem80b()
 https://euler.stephan-brumme.com/80/
 */
 
-#include <queue>
 #include <vector>
 
-struct BigNum : public std::vector<unsigned int>
-{
-  static const uint32_t MaxDigit = 1000000000;
-  BigNum(uint64_t x = 0)
-  {
-    do
-    {
-      push_back(x % MaxDigit);
-      x /= MaxDigit;
-    } while (x > 0);
-  }
-
-  void operator+=(unsigned int other)
-  {
-    unsigned int carry = other;
-    for (size_t i = 0; i < size(); i++)
-    {
-      carry += operator[](i);
-      if (carry == 0)
-            return;
-
-      if (carry < MaxDigit)
-      {
-        operator[](i) = carry;
-        carry         = 0;
-      }
-      else
-      {
-        operator[](i) = carry % MaxDigit;
-        carry         = carry / MaxDigit;
-      }
+struct BigNum : public vector<uint32_t>
+{   static const uint32_t MaxDigit = 1000000000;
+    BigNum(uint64_t x = 0)
+    {   do
+        {   push_back(x % MaxDigit);
+            x /= MaxDigit;
+        } while (x > 0);
     }
-
-    while (carry > 0)
+    void operator+=(uint32_t other)
     {
-      push_back(carry % MaxDigit);
-      carry /= MaxDigit;
+        uint32_t carry = other;
+        for (size_t i = 0; i < size(); i++)
+        {   carry += operator[](i);
+            if (carry == 0) return;
+            if (carry < MaxDigit)
+            {
+                operator[](i) = carry;
+                carry = 0;
+            }
+            else
+            {
+            operator[](i) = carry % MaxDigit;
+            carry = carry / MaxDigit;
+            }
+        }
+    
+        while (carry > 0)
+        {
+            push_back(carry % MaxDigit);
+            carry /= MaxDigit;
+        }
     }
-  }
+    void operator+=(const BigNum &other)
+    {
+        if (size() < other.size())
+            resize(other.size(), 0);
 
-  void operator+=(const BigNum& other)
-  {
-    if (size() < other.size())
-      resize(other.size(), 0);
-
-    unsigned int carry = 0;
+    uint32_t carry = 0;
     for (size_t i = 0; i < size(); i++)
     {
       carry += operator[](i);
@@ -4675,56 +4669,49 @@ struct BigNum : public std::vector<unsigned int>
   }
 };
 
-BigNum jarvis(unsigned int x, const BigNum& precision)
+BigNum jarvis(uint32_t x, const BigNum &precision)
 {
-  static const BigNum Fortyfive = 45;
+    static const BigNum Fortyfive = 45;
+    BigNum a = x * 5;
+    BigNum b = 5;
+    // avoid re-allocations when growing (plus a few bytes when exceeding target)
+    a.reserve(precision.size());
+    b.reserve(precision.size());
 
-  BigNum a = x * 5;
-  BigNum b = 5;
-
-  // avoid re-allocations when growing (plus a few bytes when exceeding target)
-  a.reserve(precision.size());
-  b.reserve(precision.size());
-
-  // until we have enough digits
-  while (b < precision)
-  {
-    if (!(a < b)) // same as a >= b but currently there is no operator >= in my BigNum class
+    // until we have enough digits
+    while (b < precision)
     {
-      a -=   b;
-      b +=  10;
+        if (!(a < b)) // same as a >= b but currently there is no operator >= in my BigNum class
+        {
+            a -= b;
+            b += 10;
+        }
+        else
+        {
+            a *= 100;
+            b *=  10;
+            b -= Fortyfive;
+        }
     }
-    else
-    {
-      a *= 100;
-      b *=  10;
-      b -= Fortyfive;
-    }
-  }
-
-  return b;
+    return b;
 }
 
-unsigned int countDigits(const BigNum& x, unsigned int numDigits)
-{
-  unsigned int sum = 0;
-  for (auto i : x.toString().substr(0, numDigits))
-    sum += i - '0';
-  return sum;
+static uint32_t countDigits(const BigNum &x, uint32_t numDigits)
+{   uint32_t sum = 0;
+    for (auto i : x.toString().substr(0, numDigits))
+        sum += i - '0';
+    return sum;
 }
 
 static string problem80()
-{
-    unsigned int maxNumber = 100;
-    unsigned int digits    = 100;
-    const unsigned int ExtraDigits = 15;
+{   uint32_t maxNumber = 100, digits = 100;
+    const uint32_t ExtraDigits = 15;
     BigNum precision = 10;
-    for (unsigned int i = 1; i < digits + ExtraDigits; i++)
+    for (uint32_t i = 1; i < digits + ExtraDigits; i++)
         precision *= 10;
-
     vector<BigNum> roots(maxNumber + 1, 0);
-    unsigned int sum = 0;
-    for (unsigned int i = 1; i <= maxNumber; i++)
+    uint32_t sum = 0;
+    for (uint32_t i = 1; i <= maxNumber; i++)
     {
         uint32_t intSqrt = 1;
         while (intSqrt * intSqrt < i)
@@ -4734,28 +4721,26 @@ static string problem80()
             roots[i] = precision * intSqrt;
             continue;
         }
-
         auto factor = intSqrt - 1;
         while (i % factor != 0)
             factor--;
 
-    if (factor > 1)
-    {
-      auto& current = roots[i] = roots[i / factor] * roots[factor];
+        if (factor > 1)
+        {
+            auto &current = roots[i] = roots[i / factor] * roots[factor];
 
       if (current.size() > roots[i - 1].size())
         current.erase(current.begin(), current.begin() + (current.size() - roots[i - 1].size()));
       while (current < roots[i - 1])
         current *= 10;
+        }
+        else
+        {
+            roots[i] = jarvis(i, precision);
+        }
+        sum += countDigits(roots[i], digits);
     }
-    else
-    {
-      roots[i] = jarvis(i, precision);
-    }
-    sum += countDigits(roots[i], digits);
-  }
-
-  return twostring<uint32_t>(sum);
+    return twostring<uint32_t>(sum);
 }
 
 /*
@@ -4870,7 +4855,9 @@ Antwoord: 425,185
 https://euler.stephan-brumme.com/83/
 */
 
-typedef std::vector<vector<uint32_t>> Matrix;
+#include <queue>
+
+typedef vector<vector<uint32_t>> Matrix;
 
 struct Cell
 {   uint32_t x, y;
@@ -5615,89 +5602,76 @@ Antwoord: 1,258
 https://euler.stephan-brumme.com/93/
 */
 
-#include <cmath>
-
 const double Epsilon = 0.00001;
 
-void eval(const std::vector<double>& numbers, std::vector<bool>& used)
-{
-    if (numbers.size() == 1)
-    {
-        auto result = numbers.front() + Epsilon;
-        if (fmod(result, 1) > 10*Epsilon)
-            return;
+static double xfmod(double a, double b)
+{   return a - b * (uint64_t)(a / b);
+}
 
+static void eval(const vector<double> &numbers, vector<bool> &used)
+{   if (numbers.size() == 1)
+    {   double result = numbers.front() + Epsilon;
+        if (xfmod(result, 1) > 10*Epsilon) return;
         int index = int(result + Epsilon);
-        // reject negative and very large results
         if (index >= 0 && index < (int)used.size())
             used[index] = true;
-
         return;
     }
-    // step 2
     auto next = numbers;
     for (size_t i = 0; i < numbers.size(); i++)
-    for (size_t j = i + 1; j < numbers.size(); j++)
-    {
-      // fetch two numbers
-      double a = numbers[i];
-      double b = numbers[j];
-
-      // prepare for next recursive step
-      next = numbers;
-      next.erase(next.begin() + j); // delete the higher index first
-      next.erase(next.begin() + i);
-
-      // steps 3 and 4 (unrolled)
-      next.push_back(a + b); // add
-      eval(next, used);
-      next.back() = a - b;   // subtract (I)
-      eval(next, used);
-      next.back() = b - a;   // subtract (II)
-      eval(next, used);
-      next.back() = a * b;   // multiply
-      eval(next, used);
-      if (b != 0)
-      {
-        next.back() = a / b; // divide (I)
-        eval(next, used);
-      }
-      if (a != 0)
-      {
-        next.back() = b / a; // divide (II)
-        eval(next, used);
-      }
+    {   for (size_t j = i + 1; j < numbers.size(); j++)
+        {   double a = numbers[i], b = numbers[j];
+            next = numbers;
+            next.erase(next.begin() + j); // delete the higher index first
+            next.erase(next.begin() + i);
+            next.push_back(a + b); // add
+            eval(next, used);
+            next.back() = a - b;   // subtract (I)
+            eval(next, used);
+            next.back() = b - a;   // subtract (II)
+            eval(next, used);
+            next.back() = a * b;   // multiply
+            eval(next, used);
+            if (b != 0)
+            {
+                next.back() = a / b; // divide (I)
+                eval(next, used);
+            }
+            if (a != 0)
+            {
+                next.back() = b / a; // divide (II)
+                eval(next, used);
+            }
+        }
     }
 }
 
-unsigned int getSequenceLength(const std::vector<double>& numbers)
+static uint32_t getSequenceLength(const vector<double> &numbers)
 {   vector<bool> used(1000, false);
     eval(numbers, used);
-    unsigned int result = 0;
-    while (used[result + 1])
-        result++;
+    uint32_t result = 0;
+    while (used[result + 1]) result++;
     return result;
 }
 
 static string problem93()
-{   unsigned int longestSequence = 0;
-    unsigned int longestDigits   = 0;
-
-    for (unsigned int a =   1; a <= 6; a++)
-        for (unsigned int b = a+1; b <= 7; b++)
-            for (unsigned int c = b+1; c <= 8; c++)
-                for (unsigned int d = c+1; d <= 9; d++)
+{   uint32_t longestSequence = 0, longestDigits = 0;
+    for (uint32_t a = 1; a <= 6; a++)
+    {   for (uint32_t b = a+1; b <= 7; b++)
+        {   for (uint32_t c = b+1; c <= 8; c++)
+            {   for (uint32_t d = c+1; d <= 9; d++)
                 {
-                    auto sequenceLength = getSequenceLength({ double(a), double(b),
+                    uint32_t sequenceLength = getSequenceLength({ double(a), double(b),
                         double(c), double(d) });
 
                     if (longestSequence < sequenceLength)
-                    {
-                        longestSequence = sequenceLength;
+                    {   longestSequence = sequenceLength;
                         longestDigits = a * 1000 + b * 100 + c * 10 + d;
                     }
                 }
-
+            }
+        }
+    }
     return twostring<uint32_t>(longestDigits);
 }
 
@@ -5761,19 +5735,15 @@ https://euler.stephan-brumme.com/95/
 */
 
 static string problem95()
-{
-    uint32_t limit = 1000000;
+{   uint32_t limit = 1000000;
     vector<uint32_t> primes;
     primes.push_back(2);
     for (uint32_t i = 3; i <= limit; i += 2)
-    {
-        bool isPrime = true;
-        for (auto p : primes)
-        {
-            if (p*p > i) break;
+    {   bool isPrime = true;
+        for (uint32_t p : primes)
+        {   if (p*p > i) break;
             if (i % p == 0)
-            {
-                isPrime = false;
+            {   isPrime = false;
                 break;
             }
         }
@@ -5801,45 +5771,37 @@ static string problem95()
     uint32_t longestChain = 0, smallestMember = limit;
     for (uint32_t i = 1; i <= limit; i++)
     {
-    static vector<uint32_t> chain;
-    chain.clear();
-    chain.push_back(i);
-    while (true)
-    {
-      uint32_t add = divsum[chain.back()];
-      chain.push_back(add);
-
-      if (add == i)
-        break;
-
-      if (add < i)
-        break;
-
-      if (add > limit)
-        break;
-      bool isLoop = false;
-      for (size_t j = 1; j < chain.size() - 1; j++) // except last element
-        if (add == chain[j])
+        static vector<uint32_t> chain;
+        chain.clear();
+        chain.push_back(i);
+        while (true)
         {
-          isLoop = true;
-          break;
+            uint32_t add = divsum[chain.back()];
+            chain.push_back(add);
+            if (add == i) break;
+            if (add < i) break;
+            if (add > limit) break;
+            bool isLoop = false;
+            for (size_t j = 1; j < chain.size() - 1; j++) // except last element
+            {
+                if (add == chain[j])
+                {
+                    isLoop = true;
+                    break;
+                }
+            }
+            if (isLoop)
+                break;
         }
-      if (isLoop)
-        break;
+
+        if (chain.back() != i) continue;
+        if (chain.size() < longestChain) continue;
+        if (longestChain < chain.size())
+        {
+            longestChain = chain.size();
+            smallestMember = chain.front();
+        }
     }
-
-    if (chain.back() != i)
-      continue;
-
-    if (chain.size() < longestChain)
-      continue;
-
-    if (longestChain < chain.size())
-    {
-      longestChain = chain.size();
-      smallestMember = chain.front();
-    }
-  }
     return twostring<uint32_t>(smallestMember);
 }
 
@@ -5995,7 +5957,6 @@ https://euler.stephan-brumme.com/98/
 */
 
 #include <map>
-#include <algorithm>
 
 static uint64_t fingerprint(uint64_t x)
 {   uint64_t result = 0;
@@ -6007,7 +5968,8 @@ static uint64_t fingerprint(uint64_t x)
     return result;
 }
 
-string readWord(istream &is)
+#if 1
+static string readWord(istream &is)
 {   string result;
     while (true)
     {   char c = is.get();
@@ -6018,147 +5980,99 @@ string readWord(istream &is)
     }
     return result;
 }
-
-uint64_t match(const string &a, const string &b, const vector<unsigned long long> &squares)
-{
-  uint64_t result = 0;
-  // try all combinations
-  for (auto i : squares)
-    for (auto j : squares)
-    {
-      // don't match a word with itself
-      if (i == j)
-        continue;
-
-      // convert squares to strings
-      auto replaceA = std::to_string(i);
-      auto replaceB = std::to_string(j);
-
-
-      std::map<char, char> replaceTable;
-      bool valid = true;
-      for (size_t k = 0; k < replaceA.size(); k++)
-      {
-        char original = replaceA[k];
-        // no replacement rule found ? => abort
-        if (replaceTable.count(original) != 0 && replaceTable[original] != a[k])
-          valid = false;
-
-        // replacement successful
-        replaceTable[original] = a[k];
-      }
-
-      // two digits must not map to the same letter, though
-      std::set<char> used;
-      for (auto x : replaceTable)
-      {
-        // already used ?
-        if (used.count(x.second) != 0)
-          valid = false;
-        // mark as used
-        used.insert(x.second);
-      }
-
-      // any constraint violation ?
-      if (!valid)
-        continue;
-
-      // using that mapping, can "a" be constructed ?
-      std::string aa;
-      for (auto x : replaceA)
-        aa += replaceTable[x];
-      if (aa != a)
-        continue;
-
-      // using that mapping, can "b" be constructed ?
-      std::string bb;
-      for (auto x : replaceB)
-        bb += replaceTable[x];
-      if (bb != b)
-        continue;
-
-      // new bigger square ?
-      if (result < i)
-        result = i;
-      if (result < j)
-        result = j;
+#else
+static string readWord(istream &is)
+{   string result;
+    while (true)
+    {   char c = is.get();
+        if (!is) break;
+        result += c;
     }
-
-  return result;
+    return result;
+}
+#endif
+static uint64_t match(const string &a, const string &b, const vector<uint64_t> &squares)
+{   uint64_t result = 0;
+    for (uint64_t i : squares)
+    {   for (uint64_t j : squares)
+        {   if (i == j) continue;
+            string replaceA = to_string(i), replaceB = to_string(j);
+            map<char, char> replaceTable;
+            bool valid = true;
+            for (size_t k = 0; k < replaceA.size(); k++)
+            {   char original = replaceA[k];
+                if (replaceTable.count(original) != 0 && replaceTable[original] != a[k])
+                    valid = false;
+                replaceTable[original] = a[k];
+            }
+            set<char> used;
+            for (auto x : replaceTable)
+            {   if (used.count(x.second) != 0) valid = false;
+                used.insert(x.second);
+            }
+            if (!valid) continue;
+            string aa;
+            for (auto x : replaceA) aa += replaceTable[x];
+            if (aa != a) continue;
+            string bb;
+            for (auto x : replaceB) bb += replaceTable[x];
+            if (bb != b) continue;
+            if (result < i) result = i;
+            if (result < j) result = j;
+        }
+    }
+    return result;
 }
 
 static string problem98()
-{
-    map<std::string, std::vector<std::string>> anagrams;
+{   map<string, vector<string>> anagrams;
     ifstream ifs;
+#if 1
     ifs.open("p098_words.txt");
-
+#else
+    ifs.open("euler98.txt");
+#endif
     while (true)
-    {
-        auto word = readWord(ifs);
-        if (word.empty())
-            break;
-
-        auto sorted = word;
-        std::sort(sorted.begin(), sorted.end());
+    {   string word = readWord(ifs);
+        if (word.empty()) break;
+        string sorted = word;
+        bubbleSort(sorted.begin(), sorted.end());
         anagrams[sorted].push_back(word);
     }
-
     ifs.close();
-
-  // find longest anagram
-  size_t maxDigits = 0;
-  for (auto i : anagrams)
-    if (i.second.size() > 1) // at least two words share the same letters ?
-      if (maxDigits < i.second.front().size())
-        maxDigits = i.second.front().size();
-  // maxDigits will be 9 for the given input ("INTRODUCE", "REDUCTION")
-
-  unsigned long long maxNumber = 1;
-  for (size_t i = 0; i < maxDigits; i++)
-    maxNumber *= 10;
-
-  // generate all squares
-  // for each square, compute its fingerprint
-  std::map<unsigned long long, std::vector<unsigned long long>> permutations;
-  std::map<unsigned int,       std::set   <unsigned long long>> fingerprintLength;
-  // walk through all square numbers (base^2)
-  unsigned long long base = 1;
-  while (base*base <= maxNumber)
-  {
-    auto square = base*base;
-    auto id     = fingerprint(square);
-    permutations[id].push_back(square);
-
-    auto numDigits = log10(square - 1) + 1;
-    fingerprintLength[numDigits].insert(id);
-
-    base++;
-  }
-
+    size_t maxDigits = 0;
+    for (auto i : anagrams)
+        if (i.second.size() > 1) // at least two words share the same letters ?
+            if (maxDigits < i.second.front().size())
+                maxDigits = i.second.front().size();
+    uint64_t maxNumber = 1;
+    for (size_t i = 0; i < maxDigits; i++) maxNumber *= 10;
+    map<uint64_t, vector<uint64_t>> permutations;
+    map<uint32_t, set<uint64_t>> fingerprintLength;
+    uint64_t base = 1;
+    while (base * base <= maxNumber)
+    {   uint64_t square = base * base;
+        uint64_t id = fingerprint(square);
+        permutations[id].push_back(square);
+        uint32_t numDigits = decimals<uint64_t>(square - 1);
+        fingerprintLength[numDigits].insert(id);
+        base++;
+    }
     uint64_t result = 0;
     for (auto i : anagrams)
-    {
-    auto pairs = i.second;
-    // no other word with the same letters ?
-    if (pairs.size() == 1)
-      continue;
-
-    auto length = pairs.front().size();
-    // compare each word with each other
-    for (size_t i = 0; i < pairs.size(); i++)
-      for (size_t j = i + 1; j < pairs.size(); j++)
-      {
-        // extract all relevant squares
-        for (auto id : fingerprintLength[length])
-        {
-          // and perform the matching process ...
-          auto best = match(pairs[i], pairs[j], permutations[id]);
-          // bigger square found ?
-          if (result < best)
-            result = best;
+    {   auto pairs = i.second;
+        if (pairs.size() == 1) continue;
+        auto length = pairs.front().size();
+        for (size_t i = 0; i < pairs.size(); i++)
+        {   for (size_t j = i + 1; j < pairs.size(); j++)
+            {
+                for (auto id : fingerprintLength[length])
+                {
+                    auto best = match(pairs[i], pairs[j], permutations[id]);
+                    if (result < best) result = best;
+                }
+            }
         }
-      }
     }
 
     return twostring<uint64_t>(result);
@@ -6222,7 +6136,7 @@ static string problem99()
     {   uint32_t base, exponent;
         char comma; // skip commas in input file
         ifs >> base >> comma >> exponent;
-        data[exponent * log(base)] = i;
+        data[exponent * xln(base)] = i; // xln takes longer than math.h log
     }
     ifs.close();
     return twostring<uint32_t>(data.rbegin()->second);
