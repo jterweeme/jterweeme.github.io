@@ -3,6 +3,17 @@ Project Euler
 """
 
 """
+Usage:
+
+import euler
+euler.runs()    # for singlethread
+
+or
+
+euler.runm()    # for multithread
+"""
+
+"""
 Common functions
 """
 
@@ -3796,6 +3807,24 @@ def problem90():
     valid = lambda c1, c2: all(x in c1 and y in c2 or x in c2 and y in c1 for x, y in squares)
     return sum(1 for i,c1 in enumerate(cube) for c2 in cube[:i] if valid(c1, c2))
 
+def valid(c1, c2, squares):
+    for x, y in squares:
+        tmp = x in c1 and y in c2 or x in c2 and y in c1
+        if tmp == False: return False
+    return True
+
+def problem90():
+    squares = ((0,1), (0,4), (0,6), (1,6), (2,5), (3,6), (4,6), (8,1))
+    cube = list(combinations2((0,1,2,3,4,5,6,7,8,6), 6))
+    xsum = 0
+    for i, c1 in enumerate(cube):
+        for c2 in cube[:i]:
+            if (valid(c1, c2, squares)):
+                xsum += 1
+    return xsum
+
+
+
 """
 #91: Right triangles with integer coordinates
 
@@ -4149,11 +4178,12 @@ Antwoord: 18,769
 https://blog.dreamshire.com/project-euler-98-solution/
 """
 
+def sq(n, y, letter_set):
+    x = int(''.join(y[letter_set[i]] for i in n))
+    return x if issquare3(x) else False
+
 def problem98(fn = "euler98.txt"):
-    def sq(n):
-        x = int(''.join(y[letter_set[i]] for i in n))
-        return x if int(x**0.5)**2 == x else False
-    words = [(w[1:-1], sorted(w[1:-1])) for w in open(fn).read().split(',') if len(w)>6]
+    words = [(w, sorted(w)) for w in open(fn).read().split() if len(w)>4]
     word_pairs = []
     while words:
         w = words.pop()
@@ -4162,7 +4192,8 @@ def problem98(fn = "euler98.txt"):
     for w, a in word_pairs:
         letter_set = {x:y for y, x in enumerate(set(w))}
         for y in permutations2('123456789', len(letter_set)):
-            if sq(w) and sq(a): max_sq = max(sq(w), sq(a), max_sq)
+            if sq(w, y, letter_set) and sq(a, y, letter_set):
+                max_sq = max(sq(w, y, letter_set), sq(a, y, letter_set), max_sq)
     return max_sq
 
 """
