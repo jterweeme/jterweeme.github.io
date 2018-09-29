@@ -3779,6 +3779,7 @@ five permutations of its digits are cube.
 Antwoord: 127,035,954,683
 */
 
+#if 0
 static string problem62()
 {   uint64_t lst[9000];
     for (uint64_t n = 0; n < 9000; n++)
@@ -3795,6 +3796,37 @@ static string problem62()
     }
     return twostring<uint64_t>(0);
 }
+#else
+
+/*
+https://euler.stephan-brumme.com/62/
+*/
+static uint64_t fingerprint2(uint64_t x)
+{   uint64_t result = 0;
+    while (x > 0)
+    {   uint64_t digit = x % 10;
+        x /= 10;
+        result += 1ULL << (6 * digit);
+    }
+    return result;
+}
+
+static string problem62()
+{   uint32_t maxCube = 9000, numPermutations = 5;
+    map<uint64_t, vector<uint32_t> > matches;
+    for (uint64_t i = 1; i < maxCube; i++)
+    {   uint64_t cube = i * i * i;
+        matches[fingerprint2(cube)].push_back(i);
+    }
+    set<uint64_t> smallest;
+    for (map<uint64_t, vector<uint32_t> >::iterator m = matches.begin(); m != matches.end(); m++)
+        if (m->second.size() == numPermutations)
+            smallest.insert(m->second.front());
+    for (set<uint64_t>::iterator s = smallest.begin(); s != smallest.end(); s++)
+        return twostring<uint64_t>(*s * *s * *s);
+    return twostring<uint64_t>(0);
+}
+#endif
 
 /*
 #63: Powerful digit counts
