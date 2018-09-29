@@ -3526,7 +3526,13 @@ the sum of the ASCII values in the original text.
 Antwoord: 107,359
 */
 
-template <typename T, typename U> static void decipher(T inbeg, T inend, U outbeg, uint32_t key2)
+/*
+volatile is nodig voor een vreemd probleem waarbij op de 32bit g++ met optimalisatie
+het woord "world" veranderd in "worlo" in het gedecodeerde bericht
+*/
+
+template <typename T, typename U> static void
+decipher(T inbeg, T inend, U outbeg, uint32_t key2)
 {   uint8_t key[3];
     key[0] = (key2 & 0xff000000) >> 24;
     key[1] = (key2 & 0xff0000) >> 16;
@@ -3563,7 +3569,7 @@ static string problem59()
     ifs.open("euler59.txt");
     char c;
     uint8_t n = 0;
-    uint32_t end = 0;
+    volatile uint32_t end = 0;
     while (ifs.get(c))
     {   if (isdigit(c) == false)
         {   msg[end++] = n;
@@ -3600,6 +3606,7 @@ static string problem59()
     uint32_t xsum = 0;
     decipher(msg, msg + end, output, best_key);
     for (char *it = output; it != output + end; it++) xsum += *it;
+    //cout << output << "\r\n";
     return twostring<uint32_t>(xsum);
 }
 
