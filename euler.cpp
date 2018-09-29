@@ -3,9 +3,12 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#ifdef MULTITHREAD
 #include <vector>
 #include <queue>
+#include <map>
+#include <set>
+#include <cmath>
+#ifdef MULTITHREAD
 #include <functional>
 #include <future>
 #endif
@@ -561,6 +564,160 @@ static void testLongNum()
     myAssert(x.equals(998001), true, "Error mul 2");
 }
 
+struct BigNum : public vector<uint32_t>
+{   static const uint32_t MaxDigit = 1000000000;
+    BigNum(uint64_t x = 0)
+    {   do
+        {   push_back(x % MaxDigit);
+            x /= MaxDigit;
+        } while (x > 0);
+    }
+    void set(const BigNum &n)
+    {   *this = n;
+    }
+    void add(uint32_t other)
+    {   uint32_t carry = other;
+        for (size_t i = 0; i < size(); i++)
+        {   carry += at(i);
+            if (carry == 0) return;
+            if (carry < MaxDigit)
+                at(i) = carry, carry = 0;
+            else
+                at(i) = carry % MaxDigit, carry = carry / MaxDigit;
+        }
+        while (carry > 0)
+        {   push_back(carry % MaxDigit);
+            carry /= MaxDigit;
+        }
+    }
+    void add(const BigNum &other)
+    {   if (size() < other.size())
+            resize(other.size(), 0);
+        uint32_t carry = 0;
+        for (size_t i = 0; i < size(); i++)
+        {   carry += at(i);
+            if (i < other.size())
+                carry += other[i];
+            else if (carry == 0)
+                return;
+            if (carry < MaxDigit) // no overflow
+                at(i) = carry, carry = 0;
+            else  // overflow
+                at(i) = carry - MaxDigit, carry = 1;
+        }
+        if (carry > 0)
+            push_back(carry);
+    }
+    void dec(const BigNum& other)
+    {   int borrow = 0;
+        for (size_t i = 0; i < size(); i++)
+        {   int diff = (int)at(i) - borrow;
+            if (i < other.size())
+                diff -= other[i];
+            else if (borrow == 0)
+                break;
+            if (diff < 0)
+                borrow = 1, diff += MaxDigit;
+            else
+                borrow = 0;
+            at(i) = diff;
+        }
+        while (size() > 1 && back() == 0)
+            pop_back();
+    }
+    void mul(uint32_t factor)
+    {
+        // nulled
+        if (factor == 0)
+        {
+            clear();
+            push_back(0);
+            return;
+        }
+        // unchanged
+        if (factor == 1)
+            return;
+
+        // append an empty block
+        if (factor == MaxDigit)
+        {   if (size() > 1 || at(0) > 0)
+                insert(begin(), 0);
+            return;
+        }
+
+        // multiply all blocks with the factor
+        uint64_t carry = 0;
+        for (vector<uint32_t>::iterator it = begin(); it != end(); it++)
+        {
+            carry += *it * (uint64_t)factor;
+            *it = carry % MaxDigit;
+            carry /= MaxDigit;
+        }
+        // store remaining carry in new digits
+        while (carry > 0)
+            push_back(carry % MaxDigit), carry /= MaxDigit;
+    }
+    void mul(const BigNum &other)
+    {
+        BigNum result = 0;
+        result.reserve(size() + other.size());
+        for (int i = (int)other.size() - 1; i >= 0; i--)
+        {   BigNum temp = *this;
+            temp.mul(other[i]);
+            result.mul(MaxDigit);
+            result.add(temp);
+        }
+        *this = result;
+    }
+    bool lt(const BigNum &other) const
+    {
+        // different number of digits/buckets ?
+        if (size() < other.size())
+            return true;
+        if (size() > other.size())
+            return false;
+        // compare all digits/buckets, beginning with the most significant
+        for (int i = (int)size() - 1; i >= 0; i--)
+        {   if (at(i) < other[i]) return true;
+            if (at(i) > other[i]) return false;
+        }
+        return false;
+    }
+    bool operator<(const BigNum &other) const
+    {   return lt(other);
+    }
+private:
+    // convert to string, MaxDigit must be power of 10
+    string toString()
+    {
+        string result;
+        for (vector<uint32_t>::iterator it = begin(); it != end(); it++)
+        {
+            // process a bucket
+            for (uint32_t shift = 1; shift < MaxDigit; shift *= 10)
+            {
+                uint32_t digit = (*it / shift) % 10;
+                result.insert(0, 1, (char)digit + '0');
+            }
+        }
+
+        // remove leading zeros
+        while (result.size() > 1 && result[0] == '0')
+            result.erase(0, 1);
+
+        return result;
+    }
+public:
+    uint32_t digitSum(uint32_t numDigits)
+    {
+        uint32_t sum = 0;
+        string s = toString().substr(0, numDigits);
+        for (string::iterator it = s.begin(); it != s.end(); it++)
+            sum += *it - '0';
+        return sum;
+    }
+};
+
 template <typename T> uint16_t decimals(T n)
 {   uint16_t i = 0;
     while (n) n /= 10, i++;
@@ -892,8 +1049,6 @@ public:
             *(it + 1) = *it;
         *ptr = item;
         _end++;
-        //*_end++ = item;
-        //bubbleSort(_buf, _end);
     }
     uint32_t count(T item)
     {   return binSearch(_buf, _end - 1, item) ? 1 : 0;
@@ -2400,16 +2555,12 @@ the concatenated product of an integer with (1,2, ... , n) where n > 1?
 Antwoord: 932,718,654
 */
 
-static uint32_t opdracht38()
+static string problem38()
 {   for (uint32_t i = 9387; i > 9234; i--)
     {   uint32_t result = 2 * i + i * 100000;
-        if (isPandigital41(result)) return result;
+        if (isPandigital41(result)) return twostring(result);
     }
-    return 0;
-}
-
-static string problem38()
-{   return twostring(opdracht38());
+    return twostring(0);
 }
 
 /*
@@ -2628,19 +2779,15 @@ is minimised; what is the value of D?
 Antwoord: 5,482,660
 */
 
-static uint32_t opdracht44()
+static string problem44()
 {   uint32_t lpgs[9998];
     for (uint32_t i = 1; i <= 9998; i++) lpgs[i - 1] = pentagon32(i);
     for (uint32_t i = 0; i < 9998; i++)
         for (uint32_t j = i; j < 9998; j++)
             if (binSearch(lpgs + j, lpgs + 9997, lpgs[i] + lpgs[j]) &&
                 binSearch(lpgs, lpgs + 9997, lpgs[j] - lpgs[i]))
-                return lpgs[j] - lpgs[i];
-    return 0;
-}
-
-static string problem44()
-{   return twostring(opdracht44());
+                return twostring(lpgs[j] - lpgs[i]);
+    return twostring(0);
 }
 
 /*
@@ -3766,11 +3913,11 @@ in positive integers when D is square.
 By finding minimal solutions in x for
 D = {2, 3, 5, 6, 7}, we obtain the following:
 
-32 - 2x22 = 1
-22 - 3x12 = 1
-92 - 5x42 = 1
-52 - 6x22 = 1
-82 - 7x32 = 1
+3^2 - 2x2^2 = 1
+2^2 - 3x1^2 = 1
+9^2 - 5x4^2 = 1
+5^2 - 6x2^2 = 1
+8^2 - 7x3^2 = 1
 
 Hence, by considering minimal solutions in x for
 D <= 7, the largest x is obtained when D=5.
@@ -3781,6 +3928,7 @@ of x for which the largest value of x is obtained.
 Antwoord: 661
 */
 
+#if 0
 static string problem66()
 {   LongNumber25 x[3], y[3], tmp, tmp2, best_x;
     uint64_t a2, numerator2, denominator2;
@@ -3828,6 +3976,57 @@ static string problem66()
     }
     return twostring<uint64_t>(best_d);
 }
+#else
+static string problem66()
+{
+    uint32_t limit = 1000, bestD = 2;
+    BigNum bestX = 3;
+
+    for (uint32_t d = 3; d <= limit; d++)
+    {
+        uint32_t root = floorsqrt<uint32_t>(d);
+
+        if (root * root == d)
+            continue;
+
+        uint32_t a = root, numerator = 0, denominator = 1;
+        BigNum x[3] = { 0, 1, root }; // numerators
+        BigNum y[3] = { 0, 0, 1 };    // denominators
+
+        while (true)
+        {
+            numerator = denominator * a - numerator;
+            denominator = (d - numerator * numerator) / denominator;
+            a = (root + numerator) / denominator;
+            x[0].set(x[1]);
+            x[1].set(x[2]);
+            x[2].set(x[1]);
+            x[2].mul(a);
+            x[2].add(x[0]);
+            y[0].set(y[1]);
+            y[1].set(y[2]);
+            y[2].set(y[1]);
+            y[2].mul(a);
+            y[2].add(y[0]);
+            BigNum left(x[2]);
+            left.mul(x[2]);
+            BigNum right(y[2]);
+            right.mul(y[2]);
+            right.mul(d);
+            right.add(1);
+            if (left == right)
+                break;
+        }
+
+        if (bestX < x[2])
+        {
+             bestX.set(x[2]);
+             bestD = d;
+        }
+    }
+    return twostring<uint32_t>(bestD);
+}
+#endif
 
 /*
 #67: Maximum path sum II
@@ -4164,7 +4363,8 @@ Antwoord: 402
 */
 
 static uint64_t dfccnt(uint64_t *cache, uint64_t n)
-{   MySet2<uint64_t> previous2(99999);
+{   //MySet2<uint64_t> previous2(99999);
+    set<uint64_t> previous2;
     uint64_t count = 0;
     while (true)
     {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
@@ -4216,9 +4416,49 @@ L <= 1,500,000 can exactly one integer sided right angle triangle be formed?
 Antwoord: 161,667
 */
 
-#include <cstdlib>
+/*
+https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Quicksort#C
+*/
+#if 0
+static void wikiswap(void *x, void *y, size_t l)
+{   char *a = (char *)x, *b = (char *)y, c;
+    while(l--)
+    {
+        c = *a;
+        *a++ = *b;
+        *b++ = c;
+   }
+}
 
-// from stackoverflow
+static void
+sort(char *array, size_t size, int (*cmp)(const void *, const void *), int begin, int end)
+{   if (end > begin)
+    {
+      void *pivot = array + begin;
+      int l = begin + size;
+      int r = end;
+      while(l < r) {
+         if (cmp(array+l,pivot) <= 0) {
+            l += size;
+         } else if ( cmp(array+r, pivot) > 0 )  {
+            r -= size;
+         } else if ( l < r ) {
+            wikiswap(array+l, array+r, size);
+         }
+      }
+      l -= size;
+      wikiswap(array+begin, array+l, size);
+      sort(array, size, cmp, begin, l);
+      sort(array, size, cmp, r, end);
+    }
+}
+
+static void
+wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, const void *))
+{   sort((char *)array, size, cmp, 0, nitems*size);
+}
+#endif
+
 static int comp_uint64(const void *a, const void *b)
 {   if (*((uint64_t *)a) > *((uint64_t *)b)) return 1;
     if (*((uint64_t *)a) < *((uint64_t *)b)) return -1;
@@ -4227,7 +4467,8 @@ static int comp_uint64(const void *a, const void *b)
 
 static string problem75()
 {   uint32_t L = 1500001;
-    MySet2<uint64_t> maybe(999999);
+    //MySet2<uint64_t> maybe(999999);
+    set<uint64_t> maybe;
     uint64_t *nope = new uint64_t[999999], nope_end = 0, nope_cnt = 0;
     uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
     for (uint64_t m = 2; m < fsqrt; m++)
@@ -4244,7 +4485,6 @@ static string problem75()
         }
     }
     qsort(nope, nope_end, sizeof(uint64_t), comp_uint64);
-    //std::sort(nope, nope + nope_end);
     uint64_t previous = 0;
     for (uint64_t i = 0; i < nope_end; i++)
     {   if (nope[i] != previous) nope_cnt++;
@@ -4398,7 +4638,8 @@ bool test79(uint8_t *perm, uint16_t *attempts)
 }
 
 static string problem79()
-{   MySet2<uint8_t> digs(100);
+{   //MySet2<uint8_t> digs(100);
+    set<uint8_t> digs;
     uint8_t i;
     for (i = 0; i < 50; i++)
     {   uint16_t attempt = attempts[i];
@@ -4410,7 +4651,7 @@ static string problem79()
     uint8_t size = digs.size(), tmp = 0;
     i = 0;
     uint8_t *pool = new uint8_t[size];
-    for (uint8_t *it = digs.begin(); it != digs.end(); it++)
+    for (set<uint8_t>::iterator it = digs.begin(); it != digs.end(); it++)
         pool[i++] = *it;
     uint8_t *c = new uint8_t[size];
     for (i = 0; i < size; i++) c[i] = 0;
@@ -4462,309 +4703,106 @@ dsums = {2: 475, 3: 441, 5: 473, 6: 471, 7: 398, 8: 465, 10: 459, 11: 484, 12: 4
 91: 412, 92: 502, 93: 452, 94: 502, 95: 459, 96: 483, 97: 440, 98: 477, 99: 446}
 */
 
-#if 0
-static uint16_t squaredigits(uint8_t square, uint8_t digits = 100)
-{   LongNumber25 buf, tmp1, tmp2;
-    for (uint8_t digit = 0; digit < digits; digit++)
-    {   buf.shiftup();
-        for (uint8_t n = 0; n < 10; n++)
-        {   buf.setdig(0, 9 - n);
-            tmp1.set(buf);
-            tmp1.mul2(buf);
-            tmp2.set(square);
-            tmp2.shiftup(digit * 2);
-            if (tmp1.lt(tmp2)) break;
-        }
-    }
-    uint16_t xsum = 0;
-    for (uint8_t *it = buf.begin(); it != buf.end(); it++)
-        xsum += *it;
-    return xsum;
-}
-
-static string problem80b()
-{   uint32_t xsum = 0;
-    for (uint8_t n = 2; n < 100; n++)
-    {   if (issquare3(n) == false)
-        {   uint16_t tmp = squaredigits(n, 100);
-            xsum += tmp;
-        }
-    }
-    return twostring<uint32_t>(xsum);
-}
-#else
-
 /*
 https://euler.stephan-brumme.com/80/
 */
 
-#include <vector>
-
-struct BigNum : public vector<uint32_t>
-{   static const uint32_t MaxDigit = 1000000000;
-    BigNum(uint64_t x = 0)
-    {   do
-        {   push_back(x % MaxDigit);
-            x /= MaxDigit;
-        } while (x > 0);
-    }
-    void operator+=(uint32_t other)
-    {
-        uint32_t carry = other;
-        for (size_t i = 0; i < size(); i++)
-        {   carry += operator[](i);
-            if (carry == 0) return;
-            if (carry < MaxDigit)
-            {   operator[](i) = carry;
-                carry = 0;
-            }
-            else
-            {   operator[](i) = carry % MaxDigit;
-                carry = carry / MaxDigit;
-            }
-        }
-    
-        while (carry > 0)
-        {
-            push_back(carry % MaxDigit);
-            carry /= MaxDigit;
-        }
-    }
-    void operator+=(const BigNum &other)
-    {
-        if (size() < other.size())
-            resize(other.size(), 0);
-
-    uint32_t carry = 0;
-    for (size_t i = 0; i < size(); i++)
-    {
-      carry += operator[](i);
-      if (i < other.size())
-        carry += other[i];
-      else
-        if (carry == 0)
-          return;
-
-      if (carry < MaxDigit)
-      {
-        // no overflow
-        operator[](i) = carry;
-        carry     = 0;
-      }
-      else
-      {
-        // yes, we have an overflow
-        operator[](i) = carry - MaxDigit;
-        carry = 1;
-      }
-    }
-
-        if (carry > 0)
-            push_back(carry);
-    }
-
-    void operator-=(const BigNum& other)
-    {
-        int borrow = 0;
-        for (size_t i = 0; i < size(); i++)
-        {
-            int diff = (int)operator[](i) - borrow;
-            if (i < other.size())
-                diff -= other[i];
-            else if (borrow == 0)
-                break;
-
-            if (diff < 0)
-            {
-                borrow = 1;
-                diff += MaxDigit;
-            }
-            else
-            {
-                borrow = 0;
-            }
-
-            operator[](i) = diff;
-        }
-        while (size() > 1 && back() == 0)
-            pop_back();
-    }
-
-    void operator*=(uint32_t factor)
-    {
-        // nulled
-        if (factor == 0)
-        {
-            clear();
-            push_back(0);
-            return;
-        }
-        // unchanged
-        if (factor == 1)
-            return;
-
-        // append an empty block
-        if (factor == MaxDigit)
-        {
-            if (size() > 1 || operator[](0) > 0)
-                insert(begin(), 0);
-            return;
-        }
-
-        // multiply all blocks with the factor
-        uint64_t carry = 0;
-        for (vector<uint32_t>::iterator it = begin(); it != end(); it++)
-        {
-            carry += *it * (uint64_t)factor;
-            *it = carry % MaxDigit;
-            carry /= MaxDigit;
-        }
-        // store remaining carry in new digits
-        while (carry > 0)
-        {
-            push_back(carry % MaxDigit);
-            carry /= MaxDigit;
-        }
-    }
-
-    // multiply two big numbers
-    BigNum operator*(const BigNum &other) const
-    {
-        if (size() < other.size())
-            return other * *this;
-
-        // multiply single digits of "other" with the current object
-        BigNum result = 0;
-        result.reserve(size() + other.size());
-        for (int i = (int)other.size() - 1; i >= 0; i--)
-        {
-            BigNum temp = *this;
-            temp *= other[i];
-            result *= MaxDigit;
-            result += temp;
-        }
-
-        return result;
-    }
-
-    bool operator<(const BigNum& other) const
-    {
-        // different number of digits/buckets ?
-        if (size() < other.size())
-            return true;
-        if (size() > other.size())
-            return false;
-        // compare all digits/buckets, beginning with the most significant
-        for (int i = (int)size() - 1; i >= 0; i--)
-        {
-            if (operator[](i) < other[i])
-                return true;
-            if (operator[](i) > other[i])
-                return false;
-        }
-        return false;
-    }
-    // convert to string, MaxDigit must be power of 10
-    string toString()
-    {
-        string result;
-        for (vector<uint32_t>::iterator it = begin(); it != end(); it++)
-        {
-            // process a bucket
-            for (uint32_t shift = 1; shift < MaxDigit; shift *= 10)
-            {
-                uint32_t digit = (*it / shift) % 10;
-                result.insert(0, 1, (char)digit + '0');
-            }
-        }
-
-        // remove leading zeros
-        //while (result.size() > 1 && result.front() == '0')
-        while (result.size() > 1 && result[0] == '0')
-            result.erase(0, 1);
-
-        return result;
-    }
-};
-
-BigNum jarvis(uint32_t x, const BigNum &precision)
-{
-    BigNum Fortyfive = 45;
-    BigNum a = x * 5;
-    BigNum b = 5;
-    // avoid re-allocations when growing (plus a few bytes when exceeding target)
+#if 1
+static BigNum jarvis(uint32_t x, const BigNum &precision)
+{   BigNum Fortyfive(45), a(x * 5), b(5);
     a.reserve(precision.size());
     b.reserve(precision.size());
-
-    // until we have enough digits
-    while (b < precision)
-    {
-        if (!(a < b)) // same as a >= b but currently there is no operator >= in my BigNum class
-        {
-            a -= b;
-            b += 10;
-        }
+    while (b.lt(precision))
+    {   if (!(a < b))
+            a.dec(b), b.add(10);
         else
-        {
-            a *= 100;
-            b *=  10;
-            b -= Fortyfive;
-        }
+            a.mul(100), b.mul(10), b.dec(Fortyfive);
     }
     return b;
 }
-#if 1
-static uint32_t countDigits(BigNum x, uint32_t numDigits)
-{   uint32_t sum = 0;
-    string s = x.toString().substr(0, numDigits);
-    for (string::iterator it = s.begin(); it != s.end(); it++)
-        sum += *it - '0';
-    return sum;
-}
-#else
-static uint32_t countDigits(BigNum x, uint32_t numDigits)
-{   uint32_t sum = 0;
-    for (vector<uint32_t>::iterator it = x.begin(); it != x.begin() + numDigits; it++)
-        sum += *it;
-    return sum;
-}
-#endif
+
 static string problem80()
 {   uint32_t maxNumber = 100, digits = 100;
     const uint32_t ExtraDigits = 15;
-    BigNum precision = 10;
+    BigNum precision(10), current;
     for (uint32_t i = 1; i < digits + ExtraDigits; i++)
-        precision *= 10;
+        precision.mul(10);
     vector<BigNum> roots(maxNumber + 1, 0);
     uint32_t sum = 0;
     for (uint32_t i = 1; i <= maxNumber; i++)
-    {
-        uint32_t intSqrt = 1;
-        while (intSqrt * intSqrt < i)
-            intSqrt++;
+    {   uint32_t intSqrt = 1;
+        while (intSqrt * intSqrt < i) intSqrt++;
         if (intSqrt * intSqrt == i)
         {
-            roots[i] = precision * intSqrt;
+            roots[i].set(precision);
+            roots[i].mul(intSqrt);
             continue;
         }
         uint32_t factor = intSqrt - 1;
-        while (i % factor != 0)
-            factor--;
-
+        while (i % factor != 0) factor--;
         if (factor > 1)
         {
-            BigNum current = roots[i] = roots[i / factor] * roots[factor];
+            current.set(roots[i / factor]);
+            current.mul(roots[factor]);
+            roots[i].set(current);
+#if 0
             if (current.size() > roots[i - 1].size())
                 current.erase(current.begin(), current.begin() +
                         (current.size() - roots[i - 1].size()));
-            while (current < roots[i - 1])
-                current *= 10;
+#endif
+            while (current.lt(roots[i - 1]))
+                current.mul(10);
         }
         else
-        {
-            roots[i] = jarvis(i, precision);
+        {   roots[i].set(jarvis(i, precision));
         }
-        sum += countDigits(roots[i], digits);
+        sum += roots[i].digitSum(digits);
+    }
+    return twostring<uint32_t>(sum);
+}
+#else
+static LongNumber25 jarvis2(uint32_t x, LongNumber25 precision)
+{   LongNumber25 fortyfive(45), a(x * 5), b(5);
+    while (b.lt(precision))
+    {   if (!(a.lt(b)))
+            a.dec(b), b.add(10);
+        else
+            a.mul3(100), b.mul3(10), b.dec(fortyfive);
+    }
+    return b;
+}
+
+static string problem80()
+{   uint32_t maxNumber = 100, digits = 100;
+    LongNumber25 precision(10), current;
+    for (uint32_t i = 1; i < digits + 15; i++)
+        precision.mul2(10);
+    vector<LongNumber25> roots(maxNumber + 1);
+    for (uint32_t i = 0; i <= maxNumber; i++) roots[i].set(0);
+    uint32_t sum = 0;
+    for (uint32_t i = 1; i <= maxNumber; i++)
+    {   uint32_t intSqrt = 1;
+        while (intSqrt * intSqrt < i) intSqrt++;
+        if (intSqrt * intSqrt == i)
+        {   roots[i].set(precision);
+            roots[i].mul3(intSqrt);
+            continue;
+        }
+        uint32_t factor = intSqrt - 1;
+        while (i % factor != 0) factor--;
+        if (factor > 1)
+        {   current.set(roots[i / factor]);
+            current.mul2(roots[factor]);
+            roots[i].set(current);
+            while (current.lt(roots[i - 1])) current.mul3(10);
+        }
+        else
+        {   roots[i].set(jarvis2(i, precision));
+        }
+        uint32_t xsum = 0;
+        for (uint8_t *it = roots[i].begin(); it != roots[i].end(); it++)
+            xsum += *it;
+        sum += xsum;
     }
     return twostring<uint32_t>(sum);
 }
@@ -4882,8 +4920,6 @@ Antwoord: 425,185
 https://euler.stephan-brumme.com/83/
 */
 
-#include <queue>
-
 typedef vector<vector<uint32_t> > Matrix;
 
 struct Cell
@@ -4896,13 +4932,8 @@ struct Cell
 static uint64_t search(const Matrix &matrix)
 {   const uint32_t size = matrix.size();
     vector<std::vector<bool> > processed(matrix.size());
-#if 0
-    for (auto& row : processed)
-        row.resize(matrix.size(), false);
-#else
     for (vector<vector<bool> >::iterator it = processed.begin(); it != processed.end(); it++)
         it->resize(matrix.size(), false);
-#endif
     priority_queue<Cell> next;
     next.push(Cell(0, 0, matrix[0][0]));
     while (!next.empty())
@@ -5321,7 +5352,6 @@ static string problem87()
         }
     }
     qsort(P, end, sizeof(uint32_t), comp_uint32);
-    //std::sort(P, P + end);
     uint32_t cnt = 0, previous = 0;
     for (uint32_t i = 0; i < end; i++)
     {
@@ -6013,9 +6043,6 @@ https://blog.dreamshire.com/project-euler-98-solution/
 https://euler.stephan-brumme.com/98/
 */
 
-#include <map>
-#include <set>
-
 static uint64_t fingerprint(uint64_t x)
 {   uint64_t result = 0;
     while (x > 0)
@@ -6223,8 +6250,6 @@ Antwoord: 709
 /*
 https://euler.stephan-brumme.com/99/
 */
-
-#include <cmath>
 
 static string problem99()
 {   ifstream ifs;
