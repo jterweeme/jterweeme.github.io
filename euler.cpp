@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <cmath>
+#include <algorithm>
 #ifdef MULTITHREAD
 #include <functional>
 #include <future>
@@ -1898,7 +1899,7 @@ Antwoord: 871,198,282
 static uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
-
+#if 0
 static void swap22(char *a, char *b)
 {   char tmp = *a;
     *a = *b;
@@ -1936,6 +1937,29 @@ static string problem22()
     delete[] names;
     return twostring(total);
 }
+#else
+static string problem22()
+{   ifstream ifs;
+    ifs.open("euler22.txt");
+    vector<string> vec;
+    string tmp;
+    while (getline(ifs, tmp))
+        if (tmp.size() > 0)
+            vec.push_back(tmp);
+    ifs.close();
+    sort(vec.begin(), vec.end());
+    uint32_t total = 0;
+    for (uint32_t i = 0; i < vec.size(); i++)
+    {   uint32_t score = 0;
+        string tmp = vec.at(i);
+        for (uint32_t j = 0; j < tmp.size(); j++)
+            score += letterwaarde(tmp.at(j));
+        score = score * (i + 1);
+        total += score;
+    }
+    return twostring<uint32_t>(total);
+}
+#endif
 
 /*
 #23 Non-abundant sums
