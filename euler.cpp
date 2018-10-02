@@ -8,7 +8,6 @@
 #include <map>
 #include <set>
 #include <cmath>
-#include <algorithm>
 #ifdef MULTITHREAD
 #include <functional>
 #include <future>
@@ -1896,45 +1895,46 @@ What is the total of all the name scores in the file?
 Antwoord: 871,198,282
 */
 
+static int comp_words(const void *a, const void *b)
+{   const char *aa = *(const char **)a;
+    const char *bb = *(const char **)b;
+    return xstrcmp(aa, bb);
+}
+
 static uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
 }
-#if 0
-static void swap22(char *a, char *b)
-{   char tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
 
+#if 1
 static string problem22()
 {   FILE *fp;
     fp = fopen("euler22.txt", "r");
     char *names = new char[30*6000];
     xmemset(names, 0, 30*6000);
     int c;
-    uint16_t a = 0, b = 0;
+    uint16_t n_words = 0, b = 0;
     while ((c = fgetc(fp)) != EOF)
     {   if (c == 0x0a)
-        {   a++, b = 0;
+        {   n_words += b > 0 ? 1 : 0, b = 0;
             continue;
         }
-        names[a * 30 + b++] = c;
+        names[n_words * 30 + b++] = c;
     }
     fclose(fp);
-    uint8_t i;
-    for (a = 0; a < 5162; a++)
-        for (b = 0; b < 5162; b++)
-            if (xstrcmp(names + b * 30, names + (b + 1) * 30) > 0)
-                for (i = 0; i < 30; i++)
-                    swap22(names + b * 30 + i, names + (b + 1) * 30 + i);
+    char **table = new char *[n_words];
+    for (uint16_t i = 0; i < n_words; i++)
+        table[i] = names + i * 30;
+    qsort(table, n_words, sizeof(char *), comp_words);
     uint32_t total = 0;
-    for (a = 0; a < 5163; a++)
+    for (uint16_t d = 0; d < n_words; d++)
     {   uint32_t score = 0;
-        for (i = 0; i < 30; i++) score += letterwaarde(names[a * 30 + i]);
-        score = score * (a + 1);
+        for (uint8_t i = 0; i < 30; i++)
+            score += letterwaarde(table[d][i]);
+        score = score * (d + 1);
         total += score;
     }
     delete[] names;
+    delete[] table;
     return twostring(total);
 }
 #else
@@ -3873,6 +3873,7 @@ Antwoord: 49
 //trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
 static const double LN10 = 2.3025850929940456840179914546844;
 
+#if 0
 static double xln(double x)
 {   double old_sum = 0.0, xmlxpl = (x - 1) / (x + 1);
     double xmlxpl_2 = xmlxpl * xmlxpl, denom = 1.0;
@@ -3883,6 +3884,31 @@ static double xln(double x)
         old_sum = sum, denom += 2.0, frac *= xmlxpl_2, sum += frac / denom;
     return 2.0 * sum;
 }
+#else
+static int msb(unsigned int v) {
+  static const int pos[32] = {0, 1, 28, 2, 29, 14, 24, 3,
+    30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19,
+    16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
+  v |= v >> 1;
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+  v = (v >> 1) + 1;
+  return pos[(v * 0x077CB531UL) >> 27];
+}
+
+static double xln(double y) {
+    int log2;
+    double divisor, x, result;
+    log2 = msb((int)y); // See: https://stackoverflow.com/a/4970859/6630230
+    divisor = (double)(1 << log2);
+    x = y / divisor;    // normalized value between [1.0, 2.0]
+    result = -1.7417939 + (2.8212026 + (-1.4699568 + (0.44717955 - 0.056570851 * x) * x) * x) * x;
+    result += ((double)log2) * 0.69314718; // ln(2) = 0.69314718
+    return result;
+}
+#endif
 
 static double xlog10(double x)
 {   return xln(x) / LN10;    
@@ -3903,6 +3929,8 @@ static string problem63()
     }
     return twostring<uint32_t>(xsum);
 }
+
+//https://stackoverflow.com/questions/9799041/efficient-implementation-of-natural-logarithm-ln-and-exponentiation
 
 /*
 #64: Odd period square roots
@@ -5036,19 +5064,11 @@ static string problem83()
     ifs.close();
     Matrix matrix(size);
     uint16_t i = 0;
-#if 0
-    for (auto &row : matrix)
-    {   row.resize(size);
-        for (auto &cell : row)
-            cell = arr[i++];
-    }
-#else
     for (vector<vector<uint32_t> >::iterator row = matrix.begin(); row != matrix.end(); row++)
     {   row->resize(size);
         for (vector<uint32_t>::iterator cell = row->begin(); cell != row->end(); cell++)
             *cell = arr[i++];
     }
-#endif
     return twostring<uint32_t>(search(matrix));
 }
 
@@ -5801,17 +5821,12 @@ static string problem93()
         {   for (uint32_t c = b+1; c <= 8; c++)
             {   for (uint32_t d = c+1; d <= 9; d++)
                 {
-#if 1
                     vector<double> tmp;
                     tmp.push_back((double)a);
                     tmp.push_back((double)b);
                     tmp.push_back((double)c);
                     tmp.push_back((double)d);
                     uint32_t sequenceLength = getSequenceLength(tmp);
-#else
-                    uint32_t sequenceLength = getSequenceLength({ double(a), double(b),
-                        double(c), double(d) });
-#endif
                     if (longestSequence < sequenceLength)
                     {   longestSequence = sequenceLength;
                         longestDigits = a * 1000 + b * 100 + c * 10 + d;
@@ -5889,7 +5904,6 @@ static string problem95()
     for (uint32_t i = 3; i <= limit; i += 2)
     {   bool isPrime = true;
         for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
-        //for (uint32_t p : primes)
         {   if (*it * *it > i) break;
             if (i % *it == 0)
             {   isPrime = false;
@@ -5902,7 +5916,6 @@ static string problem95()
     vector<uint32_t> divsum(limit + 1, 0);
     for (uint32_t i = 2; i <= limit; i++)
     {   uint32_t sum = 1, reduce = i;
-        //for (auto p : primes)
         for (vector<uint32_t>::iterator it = primes.begin(); it != primes.end(); it++)
         {   if (*it * *it > reduce) break;
             uint32_t factor = 1;
@@ -6158,8 +6171,7 @@ static string xto_string(uint64_t n)
 static uint64_t match(const string &a, const string &b, vector<uint64_t> &squares)
 {   uint64_t result = 0;
     for (vector<uint64_t>::iterator i = squares.begin(); i != squares.end(); i++)
-    //for (uint64_t i : squares)
-    {   //for (uint64_t j : squares)
+    {
         for (vector<uint64_t>::iterator j = squares.begin(); j != squares.end(); j++)
         {   if (*i == *j) continue;
             string replaceA = xto_string(*i), replaceB = xto_string(*j);
@@ -6178,12 +6190,6 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
                 if (used.count(it->second) != 0) valid = false;
                 used.insert(it->second);
             }
-#if 0
-            for (auto x : replaceTable)
-            {   if (used.count(x.second) != 0) valid = false;
-                used.insert(x.second);
-            }
-#endif
             if (!valid) continue;
             string aa;
             for (string::iterator it = replaceA.begin(); it != replaceA.end(); it++)
@@ -6218,7 +6224,6 @@ static string problem98()
     ifs.close();
     size_t maxDigits = 0;
     for (map<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
-    //for (auto i : anagrams)
         if (it->second.size() > 1) // at least two words share the same letters ?
             if (maxDigits < it->second.front().size())
                 maxDigits = it->second.front().size();
@@ -6236,7 +6241,6 @@ static string problem98()
         base++;
     }
     uint64_t result = 0;
-    //for (auto i : anagrams)
     for (map<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
     {   vector<string> pairs = it->second;
         if (pairs.size() == 1) continue;
