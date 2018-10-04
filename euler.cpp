@@ -7,7 +7,6 @@
 #include <queue>
 #include <map>
 #include <set>
-#include <cmath>
 #ifdef MULTITHREAD
 #include <functional>
 #include <future>
@@ -1007,6 +1006,56 @@ public:
         return ret;
     }
 };
+
+/*
+http://www.cplusplus.com/reference/algorithm/reverse/
+*/
+template <class BidirectionalIterator>
+void areverse(BidirectionalIterator first, BidirectionalIterator last)
+{
+    while ((first!=last)&&(first!=--last))
+    {
+        iter_swap(first,last);
+        ++first;
+    }
+}
+
+/*
+https://stackoverflow.com/questions/11483060/
+*/
+template <typename It> bool xnext_permutation(It begin, It end)
+{
+    if (begin == end)
+        return false;
+
+    It i = begin;
+    ++i;
+    if (i == end)
+        return false;
+    i = end;
+    --i;
+
+    while (true)
+    {
+        It j = i;
+        --i;
+
+        if (*i < *j)
+        {
+            It k = end;
+            while (!(*i < *--k));
+            iter_swap(i, k);
+            areverse(j, end);
+            return true;
+        }
+
+        if (i == begin)
+        {
+            areverse(begin, end);
+            return false;
+        }
+    }
+}
 
 template <typename T> class Combination
 {
@@ -2323,8 +2372,7 @@ Antwoord: 73,682
 */
 
 static string problem31()
-{
-    uint32_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
+{   uint32_t target = 200, coins[] = {1,2,5,10,20,50,100,200};
     return twostring<uint32_t>(ways32(target, coins, coins + 8));
 }
 
@@ -2835,17 +2883,13 @@ T55,385 = P31,977 = H27,693 = 1,533,776,805
 
 // T65,535 = H32768 = 2,147,450,880
 
-static uint32_t opdracht45()
+static string problem45()
 {   uint32_t vp[31834], vh[45856];
     for (uint32_t i = 166; i < 32000; i++) vp[i - 166] = pentagon32(i);
     for (uint32_t i = 144; i < 46000; i++) vh[i - 144] = hexagon32(i);
     for (uint32_t *it = vh; it != vh + 45856; it++)
-        if (binSearch(vp, vp + 31834, *it)) return *it;
-    return 0;
-}
-
-static string problem45()
-{   return twostring(opdracht45());
+        if (binSearch(vp, vp + 31834, *it)) return twostring(*it);
+    return twostring(0);
 }
 
 /*
@@ -2879,7 +2923,7 @@ pair46(uint32_t *primbeg, uint32_t *primend, uint32_t *sqbeg, uint32_t *sqend, u
     return 0;
 }
 
-static uint32_t opdracht46()
+static string problem46()
 {   uint32_t squares[100], *primes = new uint32_t[80000], end = 0;
     Sieve sieve(999999);
     while (sieve.hasNext()) primes[end++] = sieve.next();
@@ -2892,11 +2936,7 @@ static uint32_t opdracht46()
         if (pr == 0) break;
     }
     delete[] primes;
-    return i;
-}
-
-static string problem46()
-{   return twostring(opdracht46());
+    return twostring(i);
 }
 
 /*
@@ -2923,18 +2963,14 @@ Antwoord: 134,043
 interpreted from https://blog.dreamshire.com/project-euler-47/
 */
 
-static uint32_t opdracht47(uint32_t L = 300000, uint32_t nf = 4, uint32_t ns = 4)
+static string problem47(uint32_t L = 300000, uint32_t nf = 4, uint32_t ns = 4)
 {   uint32_t f[L], c = 0;
     xmemset(f, 0, 4*L);
     for (uint32_t n = 2; n < L - ns; n++)
-    {   if (f[n] == nf) { if (++c == ns) return n - ns + 1; }
+    {   if (f[n] == nf) { if (++c == ns) return twostring(n - ns + 1); }
         else { c = 0; if (f[n] == 0) for (uint32_t i = n; i < L; i += n) f[i]++; }
     }
-    return 0;
-}
-
-static string problem47()
-{   return twostring<uint32_t>(opdracht47());
+    return twostring(0);
 }
 
 /*
@@ -2974,8 +3010,7 @@ Antwoord: 296,962,999,629
 */
 
 static uint64_t check(uint32_t *begin, uint32_t *end)
-{
-    for (uint32_t *it = begin; it != end; it++)
+{   for (uint32_t *it = begin; it != end; it++)
     {   if (binSearch(begin, end, *it + 3330) &&
             binSearch(begin, end, *it + 6660) &&
             sameDigs<uint32_t>(*it, *it + 3330) && sameDigs<uint32_t>(*it, *it + 6660))
@@ -2986,8 +3021,7 @@ static uint64_t check(uint32_t *begin, uint32_t *end)
 }
 
 static string problem49()
-{
-    uint32_t primes[8000], begin = 0, end = 0;
+{   uint32_t primes[8000], begin = 0, end = 0;
     Sieve sieve(9999);
     while (sieve.hasNext()) primes[end++] = sieve.next();
     while (primes[begin++] < 1487);
@@ -3506,7 +3540,7 @@ https://www.mathblog.dk/project-euler-58-primes-diagonals-spiral/
 
 static string problem58()
 {   uint32_t sl = 2, cnt = 3, c = 9;
-    while ((double)cnt / (2*sl+1) >= 0.10)
+    while ((float)cnt / (2*sl+1) >= 0.10)
     {   sl += 2;
         for (uint8_t i = 0; i < 3; i++)
         {   c += sl;
@@ -3567,7 +3601,7 @@ decipher(T inbeg, T inend, U outbeg, uint32_t key2)
     outbeg[i] = 0;
 }
 
-static double english[] = {0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
+static float english[] = {0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
     0.06094, 0.06966, 0.0153, 0.0772, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095,
     0.05987, 0.06327, 0.09056, 0.02758, 0.00978, 0.02360, 0.00150, 0.01974, 0.00074};
 
@@ -3612,15 +3646,15 @@ static string problem59()
                 keys[i * 26 * 26 + j * 26 + k] = (i + 97) << 24 | (j + 97) << 16 | (k + 97) << 8;
 
     char output[1400];
-    double best_sumdif = 999999.9;
+    float best_sumdif = 999999.9;
     uint32_t best_key = 0;
     for (uint32_t *it = keys; it != keys + 26 * 26 * 26; it++)
     {   decipher(msg, msg + end, output, *it);
         uint32_t letters[26];
         uint32_t total = analysis(output, output + end, letters);
-        double sumdif = 0;
+        float sumdif = 0;
         for (uint8_t i = 0; i < 26; i++)
-        {   double relative = (double)letters[i] / (double)total;
+        {   float relative = (float)letters[i] / (float)total;
             sumdif += xabs(relative - english[i]);
         }
         if (sumdif < best_sumdif)
@@ -3727,20 +3761,12 @@ Antwoord: 28,684
 */
 
 static uint32_t opdracht61()
-{   uint8_t perms[4320], pool[] = {0,1,2,3,4,5}, c[6] = {0};
-    uint16_t i16 = 6;
-    xmemset(perms, 0, 4320);
-    xmemcpy(perms, pool, 6);
-    for (uint8_t i = 0, size = 6, tmp = 0; i < size;)
-    {   if (c[i] < i)
-        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
-            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
-            c[i]++, i = 0;
-            xmemcpy(perms + i16, pool, 6);
-            i16 += 6;
-        }
-        else c[i++] = 0;
-    }
+{   uint8_t perms[4320], pool[] = {0,1,2,3,4,5};
+    uint16_t i16 = 0;
+    do {
+        xmemcpy(perms + i16, pool, 6);
+        i16 += 6;
+    } while (xnext_permutation(pool, pool + 6));
     for (uint16_t i = 0; i < 720; i++)
     {   Polygonizer2<uint32_t> p0(9999, perms[i * 6] + 1, 1000);
         while (p0.hasNext())
@@ -3828,10 +3854,7 @@ https://euler.stephan-brumme.com/62/
 static uint64_t fingerprint2(uint64_t x)
 {   uint64_t result = 0;
     while (x > 0)
-    {   uint64_t digit = x % 10;
-        x /= 10;
-        result += 1ULL << (6 * digit);
-    }
+        result += 1ULL << (6 * (x % 10)), x /= 10;
     return result;
 }
 
@@ -3839,9 +3862,7 @@ static string problem62()
 {   uint32_t maxCube = 9000, numPermutations = 5;
     map<uint64_t, vector<uint32_t> > matches;
     for (uint64_t i = 1; i < maxCube; i++)
-    {   uint64_t cube = i * i * i;
-        matches[fingerprint2(cube)].push_back(i);
-    }
+        matches[fingerprint2(i*i*i)].push_back(i);
     set<uint64_t> smallest;
     for (map<uint64_t, vector<uint32_t> >::iterator m = matches.begin(); m != matches.end(); m++)
         if (m->second.size() == numPermutations)
@@ -3869,53 +3890,74 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 */
 
+/*
+ln(100) = log2(100)*ln(2)
+ln(100) = log10(100)*ln(10)
+
+log2(100)
+
+2^6 = 64
+2^(6+x) = 100
+2^6*2^x=100
+2^x = 1.5625
+
+https://stackoverflow.com/questions/8970101/
+*/
+
 //https://stackoverflow.com/questions/35968963/
 //trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
+static const double N_E = 2.718281828459045;
 static const double LN10 = 2.3025850929940456840179914546844;
+static const double LN2 = 0.6931471805599453;
+static const double LOG2E = 1.4426950408889634074;
+static const double LOG10_2 = 0.3010299956639812;
 
-#if 0
-static double xln(double x)
-{   double old_sum = 0.0, xmlxpl = (x - 1) / (x + 1);
-    double xmlxpl_2 = xmlxpl * xmlxpl, denom = 1.0;
-    double frac = xmlxpl;
-    double term = frac;                 // denom start from 1.0
-    double sum = term;
-    while (sum != old_sum)
-        old_sum = sum, denom += 2.0, frac *= xmlxpl_2, sum += frac / denom;
-    return 2.0 * sum;
-}
-#else
-static int msb(unsigned int v) {
-  static const int pos[32] = {0, 1, 28, 2, 29, 14, 24, 3,
-    30, 22, 20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19,
-    16, 7, 26, 12, 18, 6, 11, 5, 10, 9};
-  v |= v >> 1;
-  v |= v >> 2;
-  v |= v >> 4;
-  v |= v >> 8;
-  v |= v >> 16;
-  v = (v >> 1) + 1;
-  return pos[(v * 0x077CB531UL) >> 27];
+static const uint64_t tab64[64] = {
+    63,  0, 58,  1, 59, 47, 53,  2,
+    60, 39, 48, 27, 54, 33, 42,  3,
+    61, 51, 37, 40, 49, 18, 28, 20,
+    55, 30, 34, 11, 43, 14, 22,  4,
+    62, 57, 46, 52, 38, 26, 32, 41,
+    50, 36, 17, 19, 29, 10, 13, 21,
+    56, 45, 25, 31, 35, 16,  9, 12,
+    44, 24, 15,  8, 23,  7,  6,  5};
+
+static uint64_t log2_64(uint64_t value)
+{   value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    value |= value >> 32;
+    return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2)) >> 58];
 }
 
-static double xln(double y) {
-    int log2;
-    double divisor, x, result;
-    log2 = msb((int)y); // See: https://stackoverflow.com/a/4970859/6630230
-    divisor = (double)(1 << log2);
-    x = y / divisor;    // normalized value between [1.0, 2.0]
-    result = -1.7417939 + (2.8212026 + (-1.4699568 + (0.44717955 - 0.056570851 * x) * x) * x) * x;
-    result += ((double)log2) * 0.69314718; // ln(2) = 0.69314718
-    return result;
+static double xloge_small(double x) 
+{   if (x < 1.0 || x > 2.0) throw "out of range";
+    return -1.941064442 + (3.529305004 + (-2.461222103 + (1.130626154 +
+        (-0.2887399372 + 0.03110401492 * x) * x) * x) * x) * x;
 }
-#endif
 
-static double xlog10(double x)
-{   return xln(x) / LN10;    
+static double xlog2_small(double x)
+{   return xloge_small(x) * LOG2E;
+}
+
+static double xlog2_int(uint64_t x)
+{   uint64_t a = log2_64(x);
+    double y = x / (double)(1<<a);
+    return xlog2_small(y) + a;
+}
+
+static double xloge_int(uint64_t x)
+{   return xlog2_int(x) * LN2;
+}
+
+static double xlog10_int(uint64_t x)
+{   return xlog2_int(x) * LOG10_2;
 }
 
 static uint32_t decipow(uint32_t base, uint32_t e)
-{   return (uint32_t)(e * xlog10(base)) + 1;
+{   return (uint32_t)(e * xlog10_int(base)) + 1;
 }
 
 static string problem63()
@@ -3923,14 +3965,12 @@ static string problem63()
     for (uint32_t e = 1; e < 99; e++)
     {   uint32_t subsum = 0;
         for (uint32_t base = 1; base < 10; base++)
-            subsum += decipow(base, e) == e;
+            subsum += decipow(base, e) == e ? 1 : 0;
         xsum += subsum;
         if (subsum == 0) break;
     }
     return twostring<uint32_t>(xsum);
 }
-
-//https://stackoverflow.com/questions/9799041/efficient-implementation-of-natural-logarithm-ln-and-exponentiation
 
 /*
 #64: Odd period square roots
@@ -4250,23 +4290,16 @@ and relatively prime to nine, phi(9)=6.
 Antwoord: 510,510
 */
 
-static uint32_t opdracht69()
-{
-    uint32_t lprimes[100], nprimes = 0;
+static string problem69()
+{   uint32_t lprimes[100], nprimes = 0;
     Sieve sieve(100);
     while (sieve.hasNext()) lprimes[nprimes++] = sieve.next();
     uint32_t maxn = 1, L = 1000000;
     for (uint32_t i = 0; i < nprimes; i++)
-    {
-        if (maxn * lprimes[i] > L) return maxn;
+    {   if (maxn * lprimes[i] > L) return twostring(maxn);
         maxn *= lprimes[i];
     }
-    return 0;
-}
-
-static string problem69()
-{
-    return twostring(opdracht69());
+    return twostring(0);
 }
 
 /*
@@ -4818,7 +4851,7 @@ static string problem80()
     BigNum precision(10), current;
     for (uint32_t i = 1; i < digits + ExtraDigits; i++)
         precision.mul(10);
-    vector<BigNum> roots(maxNumber + 1, 0);
+    BigNum roots[maxNumber + 1];
     uint32_t sum = 0;
     for (uint32_t i = 1; i <= maxNumber; i++)
     {   uint32_t intSqrt = 1;
@@ -5140,12 +5173,12 @@ Antwoord: 101,524
 class Mersenne : public Generator<uint32_t>
 {
 private:
-    uint32_t state[624];
-    uint32_t f;
-    uint32_t m;
-    uint32_t u;
-    uint32_t s;
-    uint32_t b;
+    uint32_t _state[624];
+    const uint32_t _f;
+    const uint32_t _m;
+    const uint32_t _u;
+    uint32_t _s;
+    uint32_t _b;
     uint32_t t;
     uint32_t c;
     uint32_t l;
@@ -5153,29 +5186,29 @@ private:
     uint32_t lower_mask;
     uint32_t upper_mask;
 public:
-    Mersenne(uint32_t seed) : f(1812433253), m(397), u(11), s(7), b(0x9D2C5680), t(15),
+    Mersenne(uint32_t seed) : _f(1812433253), _m(397), _u(11), _s(7), _b(0x9D2C5680), t(15),
         c(0xEFC60000), l(18), index(624), lower_mask((1UL<<31)-1), upper_mask(1<<31)
     {
-        state[0] = seed;
+        _state[0] = seed;
         for (uint16_t i = 1; i < 624; i++)
-            state[i] = f * (state[i - 1] ^ (state[i - 1] >> 30)) + i;
+            _state[i] = _f * (_state[i - 1] ^ (_state[i - 1] >> 30)) + i;
     }
     void twist()
     {   for (uint16_t i = 0; i < 624; i++)
-        {   uint32_t tmp = (state[i] & upper_mask) + (state[(i + 1) % 624] & lower_mask);
+        {   uint32_t tmp = (_state[i] & upper_mask) + (_state[(i + 1) % 624] & lower_mask);
             uint32_t tmp_shift = tmp >> 1;
             if (tmp % 2 != 0)
                 tmp_shift = tmp_shift ^ 0x9908b0df;
-            state[i] = state[(i + m) % 624] ^ tmp_shift;
+            _state[i] = _state[(i + _m) % 624] ^ tmp_shift;
         }
         index = 0;
     }
     bool hasNext() { return true; }
     uint32_t next()
     {   if (index >= 624) twist();
-        uint32_t y = state[index];
-        y = y ^ (y >> u);
-        y = y ^ ((y << s) & b);
+        uint32_t y = _state[index];
+        y = y ^ (y >> _u);
+        y = y ^ ((y << _s) & _b);
         y = y ^ ((y << t) & c);
         y = y ^ (y >> l);
         index++;
@@ -5226,23 +5259,11 @@ private:
     CC _ccgen;
     CH _chgen;
 public:
-    static const uint32_t GO = 0, A1 = 1, CC1 = 2, R1 = 5, CH1 = 7, JAIL = 10;
-    static const uint32_t C1 = 11, U1 = 12, R2 = 15, D1 = 16, CC2 = 17;
-    static const uint32_t CH2 = 22;
-    static const uint32_t E2 = 23;
-    static const uint32_t E3 = 24;
-    static const uint32_t R3 = 25;
-    static const uint32_t U2 = 28;
-    static const uint32_t G2J = 30;
-    static const uint32_t G1 = 31;
-    static const uint32_t G2 = 32;
-    static const uint32_t CC3 = 33;
-    static const uint32_t G3 = 34;
-    static const uint32_t R4 = 35;
-    static const uint32_t CH3 = 36;
-    static const uint32_t H1 = 37;
-    static const uint32_t T2 = 38;
-    static const uint32_t H2 = 39;
+    static const uint32_t GO = 0, A1 = 1, CC1 = 2, R1 = 5, CH1 = 7, JAIL = 10,
+        C1 = 11, U1 = 12, R2 = 15, D1 = 16, CC2 = 17,
+        CH2 = 22, E2 = 23, E3 = 24, R3 = 25, U2 = 28,
+        G2J = 30, G1 = 31, G2 = 32, CC3 = 33, G3 = 34,
+        R4 = 35, CH3 = 36, H1 = 37, T2 = 38, H2 = 39;
     Monopoly() : _pos(0), _doubles(0), _rng(1131464071)
     {
         for (uint8_t i = 0; i < 40; i++) hits[i] = 0;
@@ -5856,14 +5877,11 @@ Antwoord: 518,408,346
 */
 
 static string problem94()
-{   int64_t side0 = 1, side = 1, s = 0, p = 0, m = 1, L = 1000000000;
+{   int64_t side0 = 1, side = 1, s = 0, p = 0, m = 1, L = 1000000000, tmp;
     while (p <= L)
-    {   int64_t tmp = 4 * side - side0 + 2 * m;
-        side0 = side;
-        side = tmp;
-        m = -m;
-        s += p;
-        p = 3 * side - m;
+    {
+        tmp = 4 * side - side0 + 2 * m, side0 = side, side = tmp;
+        m = -m, s += p, p = 3 * side - m;
     }
     return twostring<uint64_t>(s);
 }
@@ -6225,8 +6243,8 @@ static string problem98()
     size_t maxDigits = 0;
     for (map<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
         if (it->second.size() > 1) // at least two words share the same letters ?
-            if (maxDigits < it->second.front().size())
-                maxDigits = it->second.front().size();
+            if (maxDigits < it->second[0].size())
+                maxDigits = it->second[0].size();
     uint64_t maxNumber = 1;
     for (size_t i = 0; i < maxDigits; i++) maxNumber *= 10;
     map<uint64_t, vector<uint64_t> > permutations;
@@ -6254,13 +6272,6 @@ static string problem98()
                     uint64_t best = match(pairs[i], pairs[j], permutations[*id]);
                     if (result < best) result = best;
                 }
-#if 0
-                for (auto id : fingerprintLength[length])
-                {
-                    uint64_t best = match(pairs[i], pairs[j], permutations[id]);
-                    if (result < best) result = best;
-                }
-#endif
             }
         }
     }
@@ -6321,15 +6332,18 @@ https://euler.stephan-brumme.com/99/
 static string problem99()
 {   ifstream ifs;
     ifs.open("euler99.txt");
-    map<double, uint32_t> data;
+    float best_value = 0;
+    uint32_t best_line = 0;
     for (uint32_t i = 1; i <= 1000; i++) // first line has index 1 (not 0)
     {   uint32_t base, exponent;
         char comma; // skip commas in input file
         ifs >> base >> comma >> exponent;
-        data[exponent * log(base)] = i; // xln takes longer than math.h log
+        float value = exponent * xloge_int(base);
+        if (value > best_value)
+            best_value = value, best_line = i;
     }
     ifs.close();
-    return twostring<uint32_t>(data.rbegin()->second);
+    return twostring<uint32_t>(best_line);
 }
 
 /*
@@ -6356,9 +6370,9 @@ https://blog.dreamshire.com/project-euler-100-solution/
 static string problem100()
 {   uint64_t b = 3, n = 4, L = 1000000000000ULL;
     while (n <= L)
-    {   uint64_t tmp = 3 * b + 2 * n - 2;
-        n = 4 * b + 3 * n - 3;
-        b = tmp;
+    {   uint64_t c = b;
+        b = 3 * c + 2 * n - 2;
+        n = 4 * c + 3 * n - 3;
     }
     return twostring<uint64_t>(b);
 }

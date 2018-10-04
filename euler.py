@@ -370,6 +370,50 @@ def ceildiv(a, b):
     return ret if ret * b == a else ret + 1
     return -(-a // b)
 
+N_E = 2.718281828459045
+LN10 = 2.3025850929940456840179914546844
+LN2 = 0.6931471805599453
+LOG2E = 1.4426950408889634074
+LOG10_2 = 0.3010299956639812
+
+tab64 = [63,  0, 58,  1, 59, 47, 53,  2,
+    60, 39, 48, 27, 54, 33, 42,  3,
+    61, 51, 37, 40, 49, 18, 28, 20,
+    55, 30, 34, 11, 43, 14, 22,  4,
+    62, 57, 46, 52, 38, 26, 32, 41,
+    50, 36, 17, 19, 29, 10, 13, 21,
+    56, 45, 25, 31, 35, 16,  9, 12,
+    44, 24, 15,  8, 23,  7,  6,  5];
+
+def log2_64(v):
+    if not isinstance(v, int): raise("only int allowed")
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v |= v >> 32;
+    p = ((v - (v >> 1)) * 0x07EDD5E59A4E28C2 & (2**64-1)) >> 58
+    return tab64[p];
+
+def xloge_small(x):
+    if x < 1 or x > 2: raise("Range error")
+    return -1.941064442 + (3.529305004 + (-2.461222103 + (1.130626154 +
+        (-0.2887399372 + 0.03110401492 * x) * x) * x) * x) * x
+
+def xlog2_small(x):
+    return xloge_small(x) * LOG2E
+
+def xlog2_int(x):
+    a = log2_64(x)
+    return xlog2_small(x / (1<<a)) + a
+
+def xloge_int(x):
+    return xlog2_int(x) * LN2
+
+def xlog10_int(x):
+    return xlog2_int(x) * LOG10_2
+
 def testSuite():
     lprimes1 = list(sieve(500))
     lprimes2 = list()
@@ -2528,9 +2572,8 @@ Antwoord: 49
 the number of decimal digits of n is 1 + floor((log_10(n))), and log_10(9^21) = 21 * log_10(9) = 21 * (.954242509...) = 20.04..., and 1 + floor(that) = 21.
 """
 
-import math
 def decipow(base, e):
-    return math.floor(e * math.log10(base)) + 1
+    return math.floor(e * xlog10_int(base)) + 1
 
 def problem63():
     xsum = 0
@@ -4199,10 +4242,10 @@ def problem98(fn = "euler98.txt"):
 """
 #99: Largest exponential
 
-Comparing two numbers written in index form like 211 and 37 is not
-difficult, as any calculator would confirm that 211 = 2048 < 37 = 2187.
+Comparing two numbers written in index form like 2^11 and 3^7 is not
+difficult, as any calculator would confirm that 2^11 = 2048 < 3^7 = 2187.
 
-However, confirming that 632382518061 > 519432525806 would be much
+However, confirming that 632382^518061 > 519432^525806 would be much
 more difficult, as both numbers contain over three million digits.
 
 Using base_exp.txt (right click and 'Save Link/Target As...'), a 22K text
@@ -4218,18 +4261,14 @@ Antwoord: 709
 https://blog.dreamshire.com/project-euler-99-solution/
 """
 
-def ln2(x):
-    n = 99000.0
-    return n * ((x ** (1/n)) - 1)
-
 def problem99():
     pairs = open("euler99.txt").read().split('\n')
     mv, ml = 0, 0 
-    for ln, line in enumerate(pairs, start=1):
+    for ln, line in enumerate(pairs):
         b, e = line.split(',') 
-        v = int(e) * ln2(int(b)) 
+        v = int(e) * xloge_int(int(b)) 
         if v > mv: mv, ml = v, ln 
-    return ml
+    return ml + 1
 
 """
 #100: Arranged probability
