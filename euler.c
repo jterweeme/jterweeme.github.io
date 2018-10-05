@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 
 #define bool int
 #define true 1
@@ -380,6 +381,66 @@ static bool sameDigs64(uint64_t a, uint64_t b)
     return ret;
 }
 
+static uint32_t ways32(uint32_t target, uint32_t *begin, uint32_t *end)
+{
+    uint32_t *lst = calloc(target + 1, sizeof(uint32_t));
+    uint32_t i, *it;
+    for (i = 0; i <= target; i++) lst[i] = 0;
+    lst[0] = 1;
+    for (it = begin; it != end; it++)
+        for (i = *it; i < target + 1; i++)
+            lst[i] += lst[i - *it];
+    uint32_t ret = lst[target];
+    free(lst);
+    return ret;
+}
+
+#define N_E 2.718281828459045
+#define LN10 2.3025850929940456840179914546844
+#define LN2 0.6931471805599453
+#define LOG2E 1.4426950408889634074
+#define LOG10_2 0.3010299956639812
+
+static const uint64_t tab64[64] = {
+    63,  0, 58,  1, 59, 47, 53,  2,
+    60, 39, 48, 27, 54, 33, 42,  3,
+    61, 51, 37, 40, 49, 18, 28, 20,
+    55, 30, 34, 11, 43, 14, 22,  4,
+    62, 57, 46, 52, 38, 26, 32, 41,
+    50, 36, 17, 19, 29, 10, 13, 21,
+    56, 45, 25, 31, 35, 16,  9, 12,
+    44, 24, 15,  8, 23,  7,  6,  5};
+
+static uint64_t log2_64(uint64_t value)
+{   value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    value |= value >> 32;
+    return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2ULL)) >> 58];
+}
+
+static double xlog2_small(double x)
+{
+    return -2.800364018 + (5.091710749 + (-3.550792832 + (1.631148695 +
+        (-0.4165636616 + 0.04487360666 * x) * x) * x) * x) * x;
+}
+
+static double xlog2_uint64(uint64_t x)
+{   uint64_t a = log2_64(x);
+    double y = x / (double)(1<<a);
+    return xlog2_small(y) + a;
+}
+
+static double xloge_uint64(uint64_t x)
+{   return xlog2_uint64(x) * LN2;
+}
+
+static double xlog10_uint64(uint64_t x)
+{   return xlog2_uint64(x) * LOG10_2;
+}
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -662,7 +723,7 @@ Antwoord: 142,913,828,922
 #define LIMIT10 2000000
 
 static char *problem10()
-{   uint32_t *primes = malloc(150000*4);
+{   uint32_t *primes = calloc(150000, sizeof(uint32_t));
     uint32_t n = sieve232(primes, 2000000), i;
     uint64_t sum = 0;
     for (i = 0; i <= n; i++)
@@ -3357,27 +3418,8 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 */
 
-//https://stackoverflow.com/questions/35968963/
-//trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
-#define LN10 2.3025850929940456840179914546844
-
-static double xln(double x)
-{   double old_sum = 0.0, xmlxpl = (x - 1) / (x + 1);
-    double xmlxpl_2 = xmlxpl * xmlxpl, denom = 1.0;
-    double frac = xmlxpl;
-    double term = frac;                 // denom start from 1.0
-    double sum = term;
-    while (sum != old_sum)
-        old_sum = sum, denom += 2.0, frac *= xmlxpl_2, sum += frac / denom;
-    return 2.0 * sum;
-}
-
-static double xlog10(double x)
-{   return xln(x) / LN10;
-}
-
 static uint32_t decipow(uint32_t base, uint32_t e)
-{   return (uint32_t)(e * xlog10(base)) + 1;
+{   return (uint32_t)(e * xlog10_uint64(base)) + 1;
 }
 
 static char *problem63()
@@ -3478,6 +3520,351 @@ static char *problem71()
     return ret;
 }
 
+static char *problem72()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem73()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem74()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem75()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#76: Counting summations
+
+It is possible to write five as a sum in exactly six different ways:
+
+4 + 1
+3 + 2
+3 + 1 + 1
+2 + 2 + 1
+2 + 1 + 1 + 1
+1 + 1 + 1 + 1 + 1
+
+How many different ways can one hundred be written
+as a sum of at least two positive integers?
+
+Antwoord: 190,569,291
+*/
+
+static char *problem76()
+{   uint32_t target = 100, coins[100], i;
+    for (i = 1; i < 100; i++) coins[i - 1] = i;
+    char *sret = malloc(50);
+    xstring32(sret, ways32(target, coins, coins + 99));
+    return sret;
+}
+
+static char *problem77()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem78()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem79()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem80()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem81()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem82()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem83()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem84()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem85()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem86()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem87()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#88: Product-sum numbers
+
+A natural number, N, that can be written as the sum and product of a
+given set of at least two natural numbers, {a1, a2, ... , ak} is called
+a product-sum number: N = a1 + a2 + ... + ak = a1 x a2 x ... x ak.
+
+For example, 6 = 1 + 2 + 3 = 1 x 2 x 3.
+
+For a given set of size, k, we shall call the smallest N with this
+property a minimal product-sum number. The minimal product-sum numbers
+for sets of size, k = 2, 3, 4, 5, and 6 are as follows.
+
+k=2: 4 = 2 x 2 = 2 + 2
+k=3: 6 = 1 x 2 x 3 = 1 + 2 + 3
+k=4: 8 = 1 x 1 x 2 x 4 = 1 + 1 + 2 + 4
+k=5: 8 = 1 x 1 x 2 x 2 x 2 = 1 + 1 + 2 + 2 + 2
+k=6: 12 = 1 x 1 x 1 x 1 x 2 x 6 = 1 + 1 + 1 + 1 + 2 + 6
+
+Hence for 2<=k<=6, the sum of all the minimal product-sum numbers is
+4+6+8+12 = 30; note that 8 is only counted once in the sum.
+
+In fact, as the complete set of minimal product-sum numbers
+for 2<=k<=12 is {4, 6, 8, 12, 15, 16}, the sum is 61.
+
+What is the sum of all the minimal product-sum numbers for 2<=k<=12000?
+
+Antwoord: 7,587,457
+*/
+
+static void prodsum(uint32_t p, uint32_t s, uint32_t c,
+    uint32_t start, uint32_t kmax, uint32_t *n)
+{
+    uint32_t k = p - s + c, i;
+    if (k < kmax)
+    {   if (p < n[k]) n[k] = p;
+        for (i = start; i <= kmax / p * 2; i++)
+            prodsum(p * i, s + i, c + 1, i, kmax, n);
+    }
+}
+
+static char *problem88()
+{
+    uint32_t kmax = 12001, i;
+    uint32_t n[12001];
+    for (i = 0; i < kmax; i++) n[i] = 2 * kmax;
+    prodsum(1, 1, 1, 2, kmax, n);
+    n[0] = n[1] = 0;
+    sort29(n, n + kmax);
+    uint32_t xsum = 0, prev = 0;
+    for (i = 0; i < kmax; i++)
+    {   if (n[i] != prev) xsum += n[i];
+        prev = n[i];
+    }
+    char *ret = malloc(50);
+    xstring32(ret, xsum);
+    return ret;
+}
+
+static char *problem89()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem90()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem91()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem92()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem93()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem94()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem95()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem96()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem97()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+static char *problem98()
+{
+    char *ret = malloc(50);
+    xstring32(ret, 0);
+    return ret;
+}
+
+/*
+#99: Largest exponential
+
+Comparing two numbers written in index form like 211 and 37 is not
+difficult, as any calculator would confirm that 211 = 2048 < 37 = 2187.
+
+However, confirming that 632382518061 > 519432525806 would be much
+more difficult, as both numbers contain over three million digits.
+
+Using base_exp.txt (right click and 'Save Link/Target As...'), a 22K text
+file containing one thousand lines with a base/exponent pair on each line,
+determine which line number has the greatest numerical value.
+
+NOTE: The first two lines in the file represent the numbers in the example given above.
+
+Antwoord: 709
+*/
+
+/*
+https://euler.stephan-brumme.com/99/
+*/
+
+static char *problem99()
+{   uint32_t *arr = calloc(2000, sizeof(uint32_t)), tmp = 0, i = 0;
+    FILE *fp = fopen("euler99.txt", "ro");
+    int c;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        if (isdigit(c))
+        {   tmp *= 10, tmp += c - '0';
+            continue;
+        }
+        if (c == ',' || c == 0x0a)
+        {   arr[i++] = tmp;
+            tmp = 0;
+            continue;
+        }
+    }
+    fclose(fp);
+    double best_value = 0;
+    uint32_t best_line = 0;
+    for (i = 0; i < 2000; i += 2)
+    {   double value = arr[i + 1] * xloge_uint64(arr[i]);
+        if (value > best_value) best_value = value, best_line = i / 2;
+    }
+    char *ret = malloc(50);
+    xstring32(ret, best_line + 1);
+    free(arr);
+    return ret;
+}
+
+/*
+#100: Arranged probability
+
+If a box contains twenty-one coloured discs, composed of fifteen blue discs
+and six red discs, and two discs were taken at random, it can be seen that
+the probability of taking two blue discs, P(BB) = (15/21)×(14/20) = 1/2.
+
+The next such arrangement, for which there is exactly 50% chance of taking
+two blue discs at random, is a box containing eighty-five blue discs and
+thirty-five red discs.
+
+By finding the first arrangement to contain over 1012 = 1,000,000,000,000
+discs in total, determine the number of blue discs that the box would contain.
+
+Antwoord: 756,872,327,473
+*/
+
+/*
+https://blog.dreamshire.com/project-euler-100-solution/
+*/
+
+static char *problem100()
+{
+    uint64_t b = 3, n = 4, L = 1000000000000ULL;
+    while (n <= L)
+    {   uint64_t c = b;
+        b = 3 * c + 2 * n - 2;
+        n = 4 * c + 3 * n - 3;
+    }
+    char *ret = malloc(50);
+    xstring64(ret, b);
+    return ret;
+}
+
 static char answers2[][50] = {"233168", "4613732", "6857",
     "906609", "232792560", "25164150", "104743", "23514624000",
     "31875000", "142913828922", "70600674", "76576500", "5537376230", "837799", "137846528820",
@@ -3487,10 +3874,12 @@ static char answers2[][50] = {"233168", "4613732", "6857",
     "932718654", "840", "210", "7652413", "162", "16695334890", "5482660", "1533776805", "5777",
     "134043", "9110846700", "296962999629", "997651",
     "121313", "142857", "4075", "376", "249", "972", "153", "26241",
-    "107359", "26033", "28684",
-    "127035954683", "49", "1322", "272", "661", "7273",
+    "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
     "6531031914842725", "510510", "8319823", "428570", "303963552391", "7295372", "402", "161667",
-    "381138582", "71", "55374", "73162890", "40886", "427337", "260324", "425185"};
+    "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
+    "101524", "2772", "1818", "1097343", "7587457", "743", "1217", "14234", "8581146",
+    "1258", "518408346", "14316", "24702", "8739992577", "18769", "709", "756872327473",
+    "37076114526", "228"};
 
 static char *run(uint32_t p)
 {
@@ -3567,6 +3956,35 @@ static char *run(uint32_t p)
     case 69: return problem69();
     case 70: return problem70();
     case 71: return problem71();
+    case 72: return problem72();
+    case 73: return problem73();
+    case 74: return problem74();
+    case 75: return problem75();
+    case 76: return problem76();
+    case 77: return problem77();
+    case 78: return problem78();
+    case 79: return problem79();
+    case 80: return problem80();
+    case 81: return problem81();
+    case 82: return problem82();
+    case 83: return problem83();
+    case 84: return problem84();
+    case 85: return problem85();
+    case 86: return problem86();
+    case 87: return problem87();
+    case 88: return problem88();
+    case 89: return problem89();
+    case 90: return problem90();
+    case 91: return problem91();
+    case 92: return problem92();
+    case 93: return problem93();
+    case 94: return problem94();
+    case 95: return problem95();
+    case 96: return problem96();
+    case 97: return problem97();
+    case 98: return problem98();
+    case 99: return problem99();
+    case 100: return problem100();
     }
     return 0;
 }
@@ -3586,7 +4004,7 @@ int main()
 {
     time_t begin = time(0);
     uint8_t i;
-    for (i = 1; i <= 71; i++)
+    for (i = 1; i <= 100; i++)
         runjob(i);
     time_t end = time(0);
     printf("Total: %lus\r\n", end - begin);

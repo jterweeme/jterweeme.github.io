@@ -3890,22 +3890,6 @@ Antwoord: 49
 9^15, 9^16, 9^17, 9^18, 9^19, 9^20, 9^21
 */
 
-/*
-ln(100) = log2(100)*ln(2)
-ln(100) = log10(100)*ln(10)
-
-log2(100)
-
-2^6 = 64
-2^(6+x) = 100
-2^6*2^x=100
-2^x = 1.5625
-
-https://stackoverflow.com/questions/8970101/
-*/
-
-//https://stackoverflow.com/questions/35968963/
-//trying-to-calculate-logarithm-base-10-without-math-h-really-close-just-having
 static const double N_E = 2.718281828459045;
 static const double LN10 = 2.3025850929940456840179914546844;
 static const double LN2 = 0.6931471805599453;
@@ -3929,31 +3913,28 @@ static uint64_t log2_64(uint64_t value)
     value |= value >> 8;
     value |= value >> 16;
     value |= value >> 32;
-    return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2)) >> 58];
-}
-
-static double xloge_small(double x) 
-{   if (x < 1.0 || x > 2.0) throw "out of range";
-    return -1.941064442 + (3.529305004 + (-2.461222103 + (1.130626154 +
-        (-0.2887399372 + 0.03110401492 * x) * x) * x) * x) * x;
+    return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2ULL)) >> 58];
 }
 
 static double xlog2_small(double x)
-{   return xloge_small(x) * LOG2E;
+{
+    if (x < 1.0 || x > 2.0) throw "out of range";
+    return -2.800364018 + (5.091710749 + (-3.550792832 + (1.631148695 +
+        (-0.4165636616 + 0.04487360666 * x) * x) * x) * x) * x;
 }
 
-static double xlog2_int(uint64_t x)
+static double xlog2_uint64(uint64_t x)
 {   uint64_t a = log2_64(x);
     double y = x / (double)(1<<a);
     return xlog2_small(y) + a;
 }
 
 static double xloge_int(uint64_t x)
-{   return xlog2_int(x) * LN2;
+{   return xlog2_uint64(x) * LN2;
 }
 
 static double xlog10_int(uint64_t x)
-{   return xlog2_int(x) * LOG10_2;
+{   return xlog2_uint64(x) * LOG10_2;
 }
 
 static uint32_t decipow(uint32_t base, uint32_t e)

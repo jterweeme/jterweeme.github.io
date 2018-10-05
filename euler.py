@@ -396,13 +396,10 @@ def log2_64(v):
     p = ((v - (v >> 1)) * 0x07EDD5E59A4E28C2 & (2**64-1)) >> 58
     return tab64[p];
 
-def xloge_small(x):
-    if x < 1 or x > 2: raise("Range error")
-    return -1.941064442 + (3.529305004 + (-2.461222103 + (1.130626154 +
-        (-0.2887399372 + 0.03110401492 * x) * x) * x) * x) * x
-
 def xlog2_small(x):
-    return xloge_small(x) * LOG2E
+    if x < 1 or x > 2: raise("Range error")
+    return -2.800364018 + (5.091710749 + (-3.550792832 + (1.631148695 +
+        (-0.4165636616 + 0.04487360666 * x) * x) * x) * x) * x
 
 def xlog2_int(x):
     a = log2_64(x)
