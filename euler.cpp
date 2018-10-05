@@ -4,7 +4,6 @@
 #include <fstream>
 #include <ctime>
 #include <vector>
-#include <queue>
 #include <map>
 #include <set>
 #ifdef MULTITHREAD
@@ -28,6 +27,24 @@ https://clc-wiki.net/wiki/C_standard_library:string.h:strcmp
 int xstrcmp(const char* s1, const char* s2)
 {   while (*s1 && (*s1 == *s2)) s1++, s2++;
     return *(const uint8_t *)s1 - *(const uint8_t*)s2;
+}
+
+static int comp_uint32(const void *a, const void *b)
+{   if (*((uint32_t *)a) > *((uint32_t *)b)) return 1;
+    if (*((uint32_t *)a) < *((uint32_t *)b)) return -1;
+    return(0);
+}
+
+static int comp_uint64(const void *a, const void *b)
+{   if (*((uint64_t *)a) > *((uint64_t *)b)) return 1;
+    if (*((uint64_t *)a) < *((uint64_t *)b)) return -1;
+    return(0);
+}
+
+static int comp_words(const void *a, const void *b)
+{   const char *aa = *(const char **)a;
+    const char *bb = *(const char **)b;
+    return xstrcmp(aa, bb);
 }
 
 /*
@@ -1191,6 +1208,172 @@ template <typename T> static T floorsqrt(T n)
     return ret - 1;
 }
 
+template<typename _RandomAccessIterator, typename _Distance, typename _Tp, typename _Compare>
+void __xpush_heap(_RandomAccessIterator __first,
+        _Distance __holeIndex, _Distance __topIndex, _Tp __value,
+        _Compare& __comp)
+{
+      _Distance __parent = (__holeIndex - 1) / 2;
+      while (__holeIndex > __topIndex && __comp(__first + __parent, __value))
+    {
+      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first + __parent));
+      __holeIndex = __parent;
+      __parent = (__holeIndex - 1) / 2;
+    }
+      *(__first + __holeIndex) = _GLIBCXX_MOVE(__value);
+}
+
+template<typename _RandomAccessIterator, typename _Distance,
+typename _Tp, typename _Compare> void
+    __xadjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
+          _Distance __len, _Tp __value, _Compare __comp)
+{
+      const _Distance __topIndex = __holeIndex;
+      _Distance __secondChild = __holeIndex;
+      while (__secondChild < (__len - 1) / 2)
+    {
+      __secondChild = 2 * (__secondChild + 1);
+      if (__comp(__first + __secondChild,
+             __first + (__secondChild - 1)))
+        __secondChild--;
+      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first + __secondChild));
+      __holeIndex = __secondChild;
+    }
+      if ((__len & 1) == 0 && __secondChild == (__len - 2) / 2)
+    {
+      __secondChild = 2 * (__secondChild + 1);
+      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first
+                             + (__secondChild - 1)));
+      __holeIndex = __secondChild - 1;
+    }
+      __decltype(__gnu_cxx::__ops::__iter_comp_val(_GLIBCXX_MOVE(__comp)))
+    __cmp(_GLIBCXX_MOVE(__comp));
+      __xpush_heap(__first, __holeIndex, __topIndex,
+               _GLIBCXX_MOVE(__value), __cmp);
+}
+
+template<typename _RandomAccessIterator, typename _Compare> void
+    __xmake_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare& __comp)
+{
+    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
+    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
+
+    if (__last - __first < 2)
+        return;
+
+    const _DistanceType __len = __last - __first;
+    _DistanceType __parent = (__len - 2) / 2;
+    while (true)
+    {
+        _ValueType __value = _GLIBCXX_MOVE(*(__first + __parent));
+        __xadjust_heap(__first, __parent, __len, _GLIBCXX_MOVE(__value), __comp);
+        if (__parent == 0) return;
+        __parent--;
+    }
+}
+
+template<typename _RandomAccessIterator, typename _Compare> inline void
+xmake_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
+{
+      // concept requirements
+      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
+        _RandomAccessIterator>)
+      __glibcxx_requires_valid_range(__first, __last);
+      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
+      typedef __decltype(__comp) _Cmp;
+      __gnu_cxx::__ops::_Iter_comp_iter<_Cmp> __cmp(_GLIBCXX_MOVE(__comp));
+      __xmake_heap(__first, __last, __cmp);
+}
+
+template<typename _RandomAccessIterator, typename _Compare> inline void
+xpush_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
+{
+    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
+    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
+
+    // concept requirements
+    __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
+      _RandomAccessIterator>)
+    __glibcxx_requires_valid_range(__first, __last);
+    __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
+    __glibcxx_requires_heap_pred(__first, __last - 1, __comp);
+
+    __decltype(__gnu_cxx::__ops::__iter_comp_val(_GLIBCXX_MOVE(__comp)))
+        __cmp(_GLIBCXX_MOVE(__comp));
+    _ValueType __value = _GLIBCXX_MOVE(*(__last - 1));
+    __xpush_heap(__first, _DistanceType((__last - __first) - 1),
+               _DistanceType(0), _GLIBCXX_MOVE(__value), __cmp);
+}
+
+template<typename _RandomAccessIterator, typename _Compare>
+inline void
+    __xpop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+           _RandomAccessIterator __result, _Compare& __comp)
+{
+      typedef typename iterator_traits<_RandomAccessIterator>::value_type
+    _ValueType;
+      typedef typename iterator_traits<_RandomAccessIterator>::difference_type
+    _DistanceType;
+
+      _ValueType __value = _GLIBCXX_MOVE(*__result);
+      *__result = _GLIBCXX_MOVE(*__first);
+      __xadjust_heap(__first, _DistanceType(0),
+             _DistanceType(__last - __first),
+             _GLIBCXX_MOVE(__value), __comp);
+}
+
+
+template<typename _RandomAccessIterator, typename _Compare> inline void
+xpop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
+    {
+      // concept requirements
+      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
+        _RandomAccessIterator>)
+      __glibcxx_requires_valid_range(__first, __last);
+      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
+      __glibcxx_requires_non_empty_range(__first, __last);
+      __glibcxx_requires_heap_pred(__first, __last, __comp);
+
+      if (__last - __first > 1)
+    {
+      typedef __decltype(__comp) _Cmp;
+      __gnu_cxx::__ops::_Iter_comp_iter<_Cmp> __cmp(_GLIBCXX_MOVE(__comp));
+      --__last;
+      __xpop_heap(__first, __last, __last, __cmp);
+    }
+}
+
+
+// https://www.quora.com/How-is-priority-queue-implemented-in-C++-How-is-it-done-using-STL
+template <class T, class Container = vector<T>, class Compare = less<T> >
+class xpriority_queue
+{
+protected:
+    Container c;
+    Compare comp;
+public:
+    explicit xpriority_queue(const Container& c_ = Container(),
+        const Compare& comp_ = Compare())
+      : c(c_), comp(comp_)
+    {
+        xmake_heap(c.begin(), c.end(), comp);
+    }
+ 
+    bool empty() const { return c.empty(); }
+    size_t size() const { return c.size(); }
+    const T& top() const { return c.front(); }
+ 
+    void push(const T& x)
+    {   c.push_back(x);
+        xpush_heap(c.begin(), c.end(), comp);
+    }
+    
+    void pop()
+    {   xpop_heap(c.begin(), c.end(), comp);
+        c.pop_back();
+    }
+};
+
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
 we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -1624,6 +1807,7 @@ NOTE: Once the chain starts the terms are allowed to go above one million.
 Antwoord: 837,799
 */
 
+// mogelijk snelheidswinst te behalen
 static uint32_t collatz(uint32_t n)
 {   uint32_t count = 1;
     while (n > 1) n = n % 2 == 0 ? n >> 1 : n * 3 + 1, count++;
@@ -1860,9 +2044,9 @@ static string problem19()
 /*
 #20 Factorial digit sum
 
-n! means n × (n − 1) × ... × 3 × 2 × 1
+n! means n x (n - 1) x ... x 3 x 2 x 1
 
-For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+For example, 10! = 10 x 9 x ... x 3 x 2 x 1 = 3628800,
 and the sum of the digits in the number 10! is 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
 
 Find the sum of the digits in the number 100!
@@ -1943,12 +2127,6 @@ What is the total of all the name scores in the file?
 
 Antwoord: 871,198,282
 */
-
-static int comp_words(const void *a, const void *b)
-{   const char *aa = *(const char **)a;
-    const char *bb = *(const char **)b;
-    return xstrcmp(aa, bb);
-}
 
 static uint8_t letterwaarde(uint8_t c)
 {   return c > 64 ? c - 64 : c;
@@ -2196,32 +2374,26 @@ static string problem26()
 
 Euler discovered the remarkable quadratic formula:
 
-n^2+n+41
+n^2 + n + 41
 
 It turns out that the formula will produce 40 primes for the consecutive
-integer values 0≤n≤39. However, when n=40,402+40+41=40(40+1)+41 is
-divisible by 41, and certainly when n=41,412+41+41
+integer values 0 <= n <= 39. However, when n = 40, 40^2 + 40 + 41 = 40(40 + 1) + 41 is
+divisible by 41, and certainly when n = 41, 41^2 + 41 + 41 is clearly divisible by 41.
 
-is clearly divisible by 41.
-
-The incredible formula n2−79n+1601
-was discovered, which produces 80 primes for the consecutive values 0≤n≤79
-
-. The product of the coefficients, −79 and 1601, is −126479.
+The incredible formula n^2 - 79n + 1601 was discovered, which produces 80
+primes for the consecutive values 0 <= n <= 79. The product of the
+coefficients, −79 and 1601, is −126479.
 
 Considering quadratics of the form:
 
-    n^2+an+b
+n^2 + an + b, where |a| < 1000 and |b| <= 1000
 
-, where |a|<1000 and |b|≤1000
+where |n| is the modulus/absolute value of n
+e.g. |11| = 11 and |−4| = 4
 
-where |n|
-is the modulus/absolute value of n
-e.g. |11|=11 and |−4|=4
-
-Find the product of the coefficients, a
-and b, for the quadratic expression that produces the maximum
-number of primes for consecutive values of n, starting with n=0.
+Find the product of the coefficients, a and b, for the quadratic expression
+that produces the maximum number of primes for consecutive values of n,
+starting with n = 0.
 
 Antwoord: -59231
 */
@@ -2268,7 +2440,7 @@ static string problem28(uint32_t root = 1001)
 /*
 #29: Distinct powers
 
-Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
+Consider all integer combinations of a^b for 2 <= a <= 5 and 2 <= b <= 5:
 
 2^2=4, 2^3=8, 2^4=16, 2^5=32
 3^2=9, 3^3=27, 3^4=81, 3^5=243
@@ -2610,9 +2782,9 @@ static string problem37()
 
 Take the number 192 and multiply it by each of 1, 2, and 3:
 
-    192 × 1 = 192
-    192 × 2 = 384
-    192 × 3 = 576
+    192 x 1 = 192
+    192 x 2 = 384
+    192 x 3 = 576
 
 By concatenating each product we get the 1 to 9 pandigital, 192384576. We
 will call 192384576 the concatenated product of 192 and (1,2,3)
@@ -2690,7 +2862,7 @@ It can be seen that the 12th digit of the fractional part is 1.
 If dn represents the nth digit of the fractional
 part, find the value of the following expression.
 
-d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+d1 x d10 x d100 x d1000 x d10000 x d100000 x d1000000
 
 Antwoord: 210
 */
@@ -2944,14 +3116,14 @@ static string problem46()
 
 The first two consecutive numbers to have two distinct prime factors are:
 
-14 = 2 × 7
-15 = 3 × 5
+14 = 2 x 7
+15 = 3 x 5
 
 The first three consecutive numbers to have three distinct prime factors are:
 
-644 = 2^2 × 7 × 23
-645 = 3 × 5 × 43
-646 = 2 × 17 × 19.
+644 = 2^2 x 7 x 23
+645 = 3 x 5 x 43
+646 = 2 x 17 x 19.
 
 Find the first four consecutive integers to have four distinct
 prime factors each. What is the first of these numbers?
@@ -3408,6 +3580,7 @@ emphasise the theoretical nature of Lychrel numbers.
 Antwoord: 249
 */
 
+// mogelijk snelheidswinst te behalen
 static uint8_t isLychrel(LongNumber25 n, uint8_t it = 50)
 {   while (it--)
     {
@@ -3445,6 +3618,7 @@ Antwoord: 972
 http://euler.stephan-brumme.com/56/
 */
 
+// mogelijk snelheidswinst te behalen
 static string problem56()
 {   uint32_t maximum = 100, maxSum = 1;
     for (uint32_t base = 1; base <= maximum; base++)
@@ -3466,7 +3640,7 @@ static string problem56()
 It is possible to show that the square root of two
 can be expressed as an infinite continued fraction.
 
-√ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+sqrt(2) = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
 
 By expanding this for the first four iterations, we get:
 
@@ -3692,6 +3866,7 @@ static bool comb(uint32_t a, uint32_t b)
         isPrime(b * myPow<uint32_t>(10, decimals(a)) + a);
 }
 
+// recursion?
 static uint32_t opdracht60()
 {   uint32_t lprimes[10000], end = 0;
     Sieve sieve(10000);
@@ -3760,6 +3935,7 @@ Antwoord: 28,684
 8128 (Hex) + 2882 (Pent) + 8256 (Tri) + 5625 (Sq) + 2512 (Hept) + 1281 (Oct) = 28,684
 */
 
+// recursion?
 static uint32_t opdracht61()
 {   uint8_t perms[4320], pool[] = {0,1,2,3,4,5};
     uint16_t i16 = 0;
@@ -4564,23 +4740,17 @@ wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, cons
 }
 #endif
 
-static int comp_uint64(const void *a, const void *b)
-{   if (*((uint64_t *)a) > *((uint64_t *)b)) return 1;
-    if (*((uint64_t *)a) < *((uint64_t *)b)) return -1;
-    return(0);
-}
-
 static string problem75()
 {   uint32_t L = 1500001;
-    //MySet2<uint64_t> maybe(999999);
-    set<uint64_t> maybe;
-    uint64_t *nope = new uint64_t[999999], nope_end = 0, nope_cnt = 0;
-    uint64_t fsqrt = floorsqrt<uint64_t>(L/2);
-    for (uint64_t m = 2; m < fsqrt; m++)
-    {   for (int64_t n = m - 1; n > 0; n -= 2)
-        {   if (gcd<uint64_t>(m, n) == 1)
-            {   uint64_t s = 2 * (m * m + m * n);
-                for (uint64_t k = 1; k <= L / s; k++)
+    //MySet2<uint32_t> maybe(999999);
+    set<uint32_t> maybe;
+    uint32_t *nope = new uint32_t[999999], nope_end = 0, nope_cnt = 0;
+    uint32_t fsqrt = floorsqrt<uint32_t>(L/2);
+    for (uint32_t m = 2; m < fsqrt; m++)
+    {   for (int32_t n = m - 1; n > 0; n -= 2)
+        {   if (gcd<uint32_t>(m, n) == 1)
+            {   uint32_t s = 2 * (m * m + m * n);
+                for (uint32_t k = 1; k <= L / s; k++)
                 {   if (maybe.count(k * s))
                         nope[nope_end++] = k * s;
                     else
@@ -4589,9 +4759,9 @@ static string problem75()
             }
         }
     }
-    qsort(nope, nope_end, sizeof(uint64_t), comp_uint64);
-    uint64_t previous = 0;
-    for (uint64_t i = 0; i < nope_end; i++)
+    qsort(nope, nope_end, sizeof(uint32_t), comp_uint32);
+    uint32_t previous = 0;
+    for (uint32_t i = 0; i < nope_end; i++)
     {   if (nope[i] != previous) nope_cnt++;
         previous = nope[i];
     }
@@ -5036,16 +5206,15 @@ struct Cell
 
 static uint64_t search(const Matrix &matrix)
 {   const uint32_t size = matrix.size();
-    vector<std::vector<bool> > processed(matrix.size());
+    vector<vector<bool> > processed(matrix.size());
     for (vector<vector<bool> >::iterator it = processed.begin(); it != processed.end(); it++)
         it->resize(matrix.size(), false);
-    priority_queue<Cell> next;
+    xpriority_queue<Cell> next;
     next.push(Cell(0, 0, matrix[0][0]));
     while (!next.empty())
     {   Cell cell = next.top();
         next.pop();
-        if (processed[cell.y][cell.x])
-            continue;
+        if (processed[cell.y][cell.x]) continue;
         processed[cell.y][cell.x] = true;
         if (cell.x == size - 1 && cell.y == size - 1)
             return cell.weight;
@@ -5413,12 +5582,6 @@ sum of a prime square, prime cube, and prime fourth power?
 Antwoord: 1,097,343
 */
 
-static int comp_uint32(const void *a, const void *b)
-{   if (*((uint32_t *)a) > *((uint32_t *)b)) return 1;
-    if (*((uint32_t *)a) < *((uint32_t *)b)) return -1;
-    return(0);
-}
-
 static string problem87()
 {   uint32_t *P = new uint32_t[2000000], end = 0;
     Sieve sa(7072);
@@ -5494,9 +5657,8 @@ static string problem88()
     for (uint64_t i = 0; i < 12001; i++)
         n[i] = 2 * kmax;
     prodsum(1, 1, 1, 2, kmax, n);
-    n[0] = 0;
-    n[1] = 0;
-    bubbleSort(n, n + 12001);
+    n[0] = n[1] = 0;
+    qsort(n, 12001, sizeof(uint64_t), comp_uint64);
     uint64_t xsum = 0, prev = 0;
     for (uint64_t i = 0; i < 12001; i++)
     {   if (n[i] != prev) xsum += n[i];
