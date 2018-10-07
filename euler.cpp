@@ -518,68 +518,6 @@ static void myAssert(bool a, bool b, const char *msg)
         cout << "Error: " << msg << "\r\n";
 }
 
-static void testLongNum()
-{
-    LongNumber25 x(123456789);
-    x.dec(30000000);
-    myAssert(x.digits() == 8, true, "Error digits 1");
-    myAssert(x.equals(93456789), true, "Error Decrement 1");
-    x.set(10);
-    x.shiftup();
-    myAssert(x.equals(100), true, "Error shiftup 1");
-    x.set(123);
-    x.shiftup(3);
-    myAssert(x.equals(123000), true, "Error shiftup 2");
-    x.set(11);
-    myAssert(x.gt(10), true, "Error GreaterThan 1");
-    myAssert(x.gt(11), false, "Error Greater Than 2");
-    myAssert(x.gt(12), false, "Error Greater Than 3");
-    x.dec(11);
-    myAssert(x.equals(0), true, "Error Decrement 2");
-    x.set(20);
-    x.mod(10);
-    myAssert(x.equals(0), true, "Error Mod 1");
-    x.set(19);
-    myAssert(x.gt(20), false, "Error GreaterThan 4");
-    myAssert(x.gteq(20), false, "Error GreaterEqual 1");
-    myAssert(x.lt(20), true, "Error LesserThan 1");
-    x.dec(20);
-    myAssert(x.equals(0), true, "Error Decrement 3");
-    x.set(50);
-    x.dec(6);
-    myAssert(x.equals(44), true, "Error Decrement 4");
-    x.set(123456789);
-    x.mod(100);
-    myAssert(x.equals(89), true, "Error Mod 2");
-    x.set(123456789);
-    x.longdiv(100);
-    myAssert(x.equals(1234567), true, "Error Div 1");
-    x.set(150);
-    x.longdiv(140);
-    myAssert(x.equals(1), true, "Error LongDiv 1");
-    x.set(300);
-    x.longdiv(140);
-    myAssert(x.equals(2), true, "Error LongDiv 2");
-    x.set(3000);
-    x.longdiv(140);
-    myAssert(x.equals(21), true, "Error LongDiv 3");
-    x.set(404);
-    x.longdiv(2);
-    myAssert(x.equals(202), true, "Error LongDiv 4");
-    x.set(123456789);
-    x.reverse2();
-    myAssert(x.equals(987654321), true, "Error reverse 1");
-    x.set(8118);
-    x.reverse2();
-    myAssert(x.equals(8118), true, "Error reverse 2");
-    x.set(123456789);
-    x.mul2(123456789);
-    myAssert(x.equals(15241578750190521ULL), true, "Error mul 1");
-    x.set(999);
-    x.mul2(999);
-    myAssert(x.equals(998001), true, "Error mul 2");
-}
-
 struct BigNum : public vector<uint32_t>
 {   static const uint32_t MaxDigit = 1000000000;
     BigNum(uint64_t x = 0)
@@ -1094,16 +1032,22 @@ template <typename T> class MySet2
 private:
     T *_buf;
     T *_end;
-    uint32_t _size;
+    uint32_t _reserveSize;
 public:
-    MySet2(uint32_t size) : _size(size)
+    MySet2(uint32_t reserveSize) : _reserveSize(reserveSize)
     {
-        _buf = new T[size];
+        _buf = new T[reserveSize];
         _end = _buf;
     }
     ~MySet2() { delete[] _buf; }
     void insert(T item)
     {
+        if (size() == 0)
+        {
+            *_buf = item;
+            _end++;
+            return;
+        }
         T *ptr = binSearch2(_buf, _end - 1, item);
         if (*ptr == item)
             return;
@@ -1205,27 +1149,22 @@ template <typename T> static T floorsqrt(T n)
     return ret - 1;
 }
 
-#include <algorithm>
-
-template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
-    void
-    __push_heap(_RandomAccessIterator __first,
-        _Distance __holeIndex, _Distance __topIndex, _Tp __value)
+template <typename It, typename _Distance, typename _Tp> void
+__xpush_heap(It first, _Distance __holeIndex, _Distance __topIndex, _Tp __value)
 {
-      _Distance __parent = (__holeIndex - 1) / 2;
-      while (__holeIndex > __topIndex && *(__first + __parent) < __value)
+    _Distance parent = (__holeIndex - 1) / 2;
+    while (__holeIndex > __topIndex && *(first + parent) < __value)
     {
-      *(__first + __holeIndex) = *(__first + __parent);
-      __holeIndex = __parent;
-      __parent = (__holeIndex - 1) / 2;
+        *(first + __holeIndex) = *(first + parent);
+        __holeIndex = parent;
+        parent = (__holeIndex - 1) / 2;
     }
-      *(__first + __holeIndex) = __value;
+    *(first + __holeIndex) = __value;
 }
 
-
 template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
     void
-    __adjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
+    __xadjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
           _Distance __len, _Tp __value)
 {
       const _Distance __topIndex = __holeIndex;
@@ -1243,9 +1182,8 @@ template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
       *(__first + __holeIndex) = *(__first + (__secondChild - 1));
       __holeIndex = __secondChild - 1;
     }
-    __push_heap(__first, __holeIndex, __topIndex, __value);
+    __xpush_heap(__first, __holeIndex, __topIndex, __value);
 }
-
 
 template <typename It> void xmake_heap(It first, It last)
 {
@@ -1256,11 +1194,35 @@ template <typename It> void xmake_heap(It first, It last)
     _DistanceType __parent = (__len - 2) / 2;
     while (true)
     {
-        __adjust_heap(first, __parent, __len, _ValueType(*(first + __parent)));
+        __xadjust_heap(first, __parent, __len, _ValueType(*(first + __parent)));
         if (__parent == 0)
             return;
         __parent--;
     }
+}
+
+template <typename _RandomAccessIterator> inline void
+    xpush_heap(_RandomAccessIterator __first, _RandomAccessIterator __last)
+{
+    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
+    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
+
+    __xpush_heap(__first, _DistanceType((__last - __first) - 1),
+               _DistanceType(0), _ValueType(*(__last - 1)));
+}
+
+template <typename It, typename _Tp> inline void __xpop_heap(It first, It last,
+           It __result, _Tp __value)
+{
+    typedef typename iterator_traits<It>::difference_type _Distance;
+    *__result = *first;
+    __xadjust_heap(first, _Distance(0), _Distance(last - first), __value);
+}
+
+
+template <typename It> inline void xpop_heap(It first, It last)
+{   typedef typename iterator_traits<It>::value_type _ValueType;
+    __xpop_heap(first, last - 1, last - 1, _ValueType(*(last - 1)));
 }
 
 // https://www.quora.com/How-is-priority-queue-implemented-in-C++-How-is-it-done-using-STL
@@ -1273,10 +1235,11 @@ public:
     bool empty() const { return c.empty(); }
     size_t size() const { return c.size(); }
     const T& top() const { return c.front(); }
-    void push(const T& x) { c.push_back(x), push_heap(c.begin(), c.end()); }
-    void pop() { pop_heap(c.begin(), c.end()), c.pop_back(); }
+    void push(const T& x) { c.push_back(x), xpush_heap(c.begin(), c.end()); }
+    void pop() { xpop_heap(c.begin(), c.end()), c.pop_back(); }
 };
 
+#if 0
 template <typename _Key, typename _Compare = less<_Key>,
 typename _Alloc = allocator<_Key> >
 class xset
@@ -1369,37 +1332,112 @@ template<typename _Key, typename _Compare, typename _Alloc>
     swap(xset<_Key, _Compare, _Alloc>& __x, xset<_Key, _Compare, _Alloc>& __y)
     _GLIBCXX_NOEXCEPT_IF(noexcept(__x.swap(__y)))
     { __x.swap(__y); }
+#endif
+#include <set>
 
-#if 0
-template <typename It, typename _BinaryPredicate>
-    It __adjacent_find(It first, It last, _BinaryPredicate __binary_pred)
+template <typename It> It __adjacent_find(It first, It last)
 {
     if (first == last) return last;
     It __next = first;
     while (++__next != last)
-    {   if (__binary_pred(first, __next))
+    {   if (*first == *__next)
             return first;
         first = __next;
     }
     return last;
 }
-#endif
 
-template <typename It, typename _BinaryPredicate> It __xunique(It __first, It __last,
-         _BinaryPredicate __binary_pred)
+template <typename It> It __xunique(It __first, It __last)
 {
-    __first = __adjacent_find(__first, __last, __binary_pred);
+    __first = __adjacent_find(__first, __last);
     if (__first == __last) return __last;
     It __dest = __first;
     ++__first;
     while (++__first != __last)
-        if (!__binary_pred(__dest, __first))
-            *++__dest = _GLIBCXX_MOVE(*__first);
+        if (*__dest != *__first)
+            *++__dest = *__first;
     return ++__dest;
 }
 
-template <typename It> inline It xunique(It __first, It __last)
-{   return __xunique(__first, __last, __gnu_cxx::__ops::__iter_equal_to_iter());
+template <typename It> inline It xunique(It first, It last)
+{
+    return __xunique(first, last);
+}
+
+static void testUnique()
+{
+    uint8_t arr1[] = {1,2,3,4,5,6,7,8};
+    uint8_t arr2[] = {1,2,3,4,5,6,7,8};
+    xunique(arr1, arr1 + 8);
+    myAssert(xmemcmp(arr1, arr2, 8) == 0, true, "Error xunique 1");
+}
+
+static void testLongNum()
+{
+    LongNumber25 x(123456789);
+    x.dec(30000000);
+    myAssert(x.digits() == 8, true, "Error digits 1");
+    myAssert(x.equals(93456789), true, "Error Decrement 1");
+    x.set(10);
+    x.shiftup();
+    myAssert(x.equals(100), true, "Error shiftup 1");
+    x.set(123);
+    x.shiftup(3);
+    myAssert(x.equals(123000), true, "Error shiftup 2");
+    x.set(11);
+    myAssert(x.gt(10), true, "Error GreaterThan 1");
+    myAssert(x.gt(11), false, "Error Greater Than 2");
+    myAssert(x.gt(12), false, "Error Greater Than 3");
+    x.dec(11);
+    myAssert(x.equals(0), true, "Error Decrement 2");
+    x.set(20);
+    x.mod(10);
+    myAssert(x.equals(0), true, "Error Mod 1");
+    x.set(19);
+    myAssert(x.gt(20), false, "Error GreaterThan 4");
+    myAssert(x.gteq(20), false, "Error GreaterEqual 1");
+    myAssert(x.lt(20), true, "Error LesserThan 1");
+    x.dec(20);
+    myAssert(x.equals(0), true, "Error Decrement 3");
+    x.set(50);
+    x.dec(6);
+    myAssert(x.equals(44), true, "Error Decrement 4");
+    x.set(123456789);
+    x.mod(100);
+    myAssert(x.equals(89), true, "Error Mod 2");
+    x.set(123456789);
+    x.longdiv(100);
+    myAssert(x.equals(1234567), true, "Error Div 1");
+    x.set(150);
+    x.longdiv(140);
+    myAssert(x.equals(1), true, "Error LongDiv 1");
+    x.set(300);
+    x.longdiv(140);
+    myAssert(x.equals(2), true, "Error LongDiv 2");
+    x.set(3000);
+    x.longdiv(140);
+    myAssert(x.equals(21), true, "Error LongDiv 3");
+    x.set(404);
+    x.longdiv(2);
+    myAssert(x.equals(202), true, "Error LongDiv 4");
+    x.set(123456789);
+    x.reverse2();
+    myAssert(x.equals(987654321), true, "Error reverse 1");
+    x.set(8118);
+    x.reverse2();
+    myAssert(x.equals(8118), true, "Error reverse 2");
+    x.set(123456789);
+    x.mul2(123456789);
+    myAssert(x.equals(15241578750190521ULL), true, "Error mul 1");
+    x.set(999);
+    x.mul2(999);
+    myAssert(x.equals(998001), true, "Error mul 2");
+}
+
+static void testSuite()
+{
+    testUnique();
+    testLongNum();
 }
 
 /*
@@ -4653,7 +4691,7 @@ Antwoord: 402
 */
 
 static uint64_t dfccnt(uint64_t *cache, uint64_t n)
-{   xset<uint64_t> previous2;
+{   set<uint64_t> previous2;
     uint64_t count = 0;
     while (true)
     {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
@@ -4750,7 +4788,7 @@ wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, cons
 
 static string problem75()
 {   uint32_t L = 1500001;
-    xset<uint32_t> maybe;
+    set<uint32_t> maybe;
     uint32_t *nope = new uint32_t[999999], nope_end = 0, nope_cnt = 0;
     uint32_t fsqrt = floorsqrt<uint32_t>(L/2);
     for (uint32_t m = 2; m < fsqrt; m++)
@@ -6282,29 +6320,17 @@ static uint64_t fingerprint(uint64_t x)
     return result;
 }
 
-#if 1
 static string readWord(istream &is)
 {   string result;
     while (true)
     {   char c = is.get();
         if (!is) break;
-        if (c == '"') continue;
-        if (c == ',') break;
+        if (c == 0x0a) break;
         result += c;
     }
     return result;
 }
-#else
-static string readWord(istream &is)
-{   string result;
-    while (true)
-    {   char c = is.get();
-        if (!is) break;
-        result += c;
-    }
-    return result;
-}
-#endif
+
 static string xto_string(uint64_t n)
 {
     char tmp[50];
@@ -6336,7 +6362,7 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
                     valid = false;
                 replaceTable[original] = a[k];
             }
-            xset<char> used;
+            MySet2<char> used(999);
             for (map<char, char>::iterator it = replaceTable.begin(); it != replaceTable.end();
                 it++)
             {
@@ -6362,11 +6388,7 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
 static string problem98()
 {   map<string, vector<string> > anagrams;
     ifstream ifs;
-#if 1
-    ifs.open("p098_words.txt");
-#else
     ifs.open("euler98.txt");
-#endif
     while (true)
     {   string word = readWord(ifs);
         if (word.empty()) break;
@@ -6383,7 +6405,8 @@ static string problem98()
     uint64_t maxNumber = 1;
     for (size_t i = 0; i < maxDigits; i++) maxNumber *= 10;
     map<uint64_t, vector<uint64_t> > permutations;
-    map<uint32_t, xset<uint64_t> > fingerprintLength;
+    //map<uint32_t, vector<uint64_t> > fingerprintLength;
+    map<uint32_t, set<uint64_t> > fingerprintLength;
     uint64_t base = 1;
     while (base * base <= maxNumber)
     {   uint64_t square = base * base;
@@ -6401,7 +6424,7 @@ static string problem98()
         for (size_t i = 0; i < pairs.size(); i++)
         {   for (size_t j = i + 1; j < pairs.size(); j++)
             {
-                for (xset<uint64_t>::iterator id = fingerprintLength[length].begin();
+                for (set<uint64_t>::iterator id = fingerprintLength[length].begin();
                     id != fingerprintLength[length].end(); id++)
                 {
                     uint64_t best = match(pairs[i], pairs[j], permutations[*id]);
@@ -6750,7 +6773,7 @@ static void singlethread(uint8_t max)
 
 int main()
 {
-    testLongNum();
+    testSuite();
     time_t begin = time(0);
 #ifdef MULTITHREAD
     multithread(100);
