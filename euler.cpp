@@ -5,9 +5,9 @@
 #include <ctime>
 #include <vector>
 #include <map>
-#include <set>
 #ifdef MULTITHREAD
 #include <functional>
+#include <queue>
 #include <future>
 #endif
 using namespace std;
@@ -1027,12 +1027,9 @@ public:
 /*
 http://www.cplusplus.com/reference/algorithm/reverse/
 */
-template <class BidirectionalIterator>
-void areverse(BidirectionalIterator first, BidirectionalIterator last)
-{
-    while ((first!=last)&&(first!=--last))
-    {
-        iter_swap(first,last);
+template <class It> void areverse(It first, It last)
+{   while ((first!=last)&&(first!=--last))
+    {   iter_swap(first,last);
         ++first;
     }
 }
@@ -1208,171 +1205,202 @@ template <typename T> static T floorsqrt(T n)
     return ret - 1;
 }
 
-template<typename _RandomAccessIterator, typename _Distance, typename _Tp, typename _Compare>
-void __xpush_heap(_RandomAccessIterator __first,
-        _Distance __holeIndex, _Distance __topIndex, _Tp __value,
-        _Compare& __comp)
+#include <algorithm>
+
+template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
+    void
+    __push_heap(_RandomAccessIterator __first,
+        _Distance __holeIndex, _Distance __topIndex, _Tp __value)
 {
       _Distance __parent = (__holeIndex - 1) / 2;
-      while (__holeIndex > __topIndex && __comp(__first + __parent, __value))
+      while (__holeIndex > __topIndex && *(__first + __parent) < __value)
     {
-      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first + __parent));
+      *(__first + __holeIndex) = *(__first + __parent);
       __holeIndex = __parent;
       __parent = (__holeIndex - 1) / 2;
     }
-      *(__first + __holeIndex) = _GLIBCXX_MOVE(__value);
+      *(__first + __holeIndex) = __value;
 }
 
-template<typename _RandomAccessIterator, typename _Distance,
-typename _Tp, typename _Compare> void
-    __xadjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
-          _Distance __len, _Tp __value, _Compare __comp)
+
+template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
+    void
+    __adjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
+          _Distance __len, _Tp __value)
 {
       const _Distance __topIndex = __holeIndex;
-      _Distance __secondChild = __holeIndex;
-      while (__secondChild < (__len - 1) / 2)
+      _Distance __secondChild = 2 * __holeIndex + 2;
+      while (__secondChild < __len)
     {
-      __secondChild = 2 * (__secondChild + 1);
-      if (__comp(__first + __secondChild,
-             __first + (__secondChild - 1)))
+      if (*(__first + __secondChild) < *(__first + (__secondChild - 1)))
         __secondChild--;
-      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first + __secondChild));
+      *(__first + __holeIndex) = *(__first + __secondChild);
       __holeIndex = __secondChild;
-    }
-      if ((__len & 1) == 0 && __secondChild == (__len - 2) / 2)
-    {
       __secondChild = 2 * (__secondChild + 1);
-      *(__first + __holeIndex) = _GLIBCXX_MOVE(*(__first
-                             + (__secondChild - 1)));
+    }
+      if (__secondChild == __len)
+    {
+      *(__first + __holeIndex) = *(__first + (__secondChild - 1));
       __holeIndex = __secondChild - 1;
     }
-      __decltype(__gnu_cxx::__ops::__iter_comp_val(_GLIBCXX_MOVE(__comp)))
-    __cmp(_GLIBCXX_MOVE(__comp));
-      __xpush_heap(__first, __holeIndex, __topIndex,
-               _GLIBCXX_MOVE(__value), __cmp);
+    __push_heap(__first, __holeIndex, __topIndex, __value);
 }
 
-template<typename _RandomAccessIterator, typename _Compare> void
-    __xmake_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare& __comp)
+
+template <typename It> void xmake_heap(It first, It last)
 {
-    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
-    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
-
-    if (__last - __first < 2)
-        return;
-
-    const _DistanceType __len = __last - __first;
+    typedef typename iterator_traits<It>::value_type _ValueType;
+    typedef typename iterator_traits<It>::difference_type _DistanceType;
+    if (last - first < 2) return;
+    const _DistanceType __len = last - first;
     _DistanceType __parent = (__len - 2) / 2;
     while (true)
     {
-        _ValueType __value = _GLIBCXX_MOVE(*(__first + __parent));
-        __xadjust_heap(__first, __parent, __len, _GLIBCXX_MOVE(__value), __comp);
-        if (__parent == 0) return;
+        __adjust_heap(first, __parent, __len, _ValueType(*(first + __parent)));
+        if (__parent == 0)
+            return;
         __parent--;
     }
 }
 
-template<typename _RandomAccessIterator, typename _Compare> inline void
-xmake_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
-{
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
-        _RandomAccessIterator>)
-      __glibcxx_requires_valid_range(__first, __last);
-      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
-      typedef __decltype(__comp) _Cmp;
-      __gnu_cxx::__ops::_Iter_comp_iter<_Cmp> __cmp(_GLIBCXX_MOVE(__comp));
-      __xmake_heap(__first, __last, __cmp);
-}
-
-template<typename _RandomAccessIterator, typename _Compare> inline void
-xpush_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
-{
-    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
-    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
-
-    // concept requirements
-    __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
-      _RandomAccessIterator>)
-    __glibcxx_requires_valid_range(__first, __last);
-    __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
-    __glibcxx_requires_heap_pred(__first, __last - 1, __comp);
-
-    __decltype(__gnu_cxx::__ops::__iter_comp_val(_GLIBCXX_MOVE(__comp)))
-        __cmp(_GLIBCXX_MOVE(__comp));
-    _ValueType __value = _GLIBCXX_MOVE(*(__last - 1));
-    __xpush_heap(__first, _DistanceType((__last - __first) - 1),
-               _DistanceType(0), _GLIBCXX_MOVE(__value), __cmp);
-}
-
-template<typename _RandomAccessIterator, typename _Compare>
-inline void
-    __xpop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
-           _RandomAccessIterator __result, _Compare& __comp)
-{
-      typedef typename iterator_traits<_RandomAccessIterator>::value_type
-    _ValueType;
-      typedef typename iterator_traits<_RandomAccessIterator>::difference_type
-    _DistanceType;
-
-      _ValueType __value = _GLIBCXX_MOVE(*__result);
-      *__result = _GLIBCXX_MOVE(*__first);
-      __xadjust_heap(__first, _DistanceType(0),
-             _DistanceType(__last - __first),
-             _GLIBCXX_MOVE(__value), __comp);
-}
-
-
-template<typename _RandomAccessIterator, typename _Compare> inline void
-xpop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last, _Compare __comp)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
-        _RandomAccessIterator>)
-      __glibcxx_requires_valid_range(__first, __last);
-      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
-      __glibcxx_requires_non_empty_range(__first, __last);
-      __glibcxx_requires_heap_pred(__first, __last, __comp);
-
-      if (__last - __first > 1)
-    {
-      typedef __decltype(__comp) _Cmp;
-      __gnu_cxx::__ops::_Iter_comp_iter<_Cmp> __cmp(_GLIBCXX_MOVE(__comp));
-      --__last;
-      __xpop_heap(__first, __last, __last, __cmp);
-    }
-}
-
-
 // https://www.quora.com/How-is-priority-queue-implemented-in-C++-How-is-it-done-using-STL
-template <class T, class Container = vector<T>, class Compare = less<T> >
-class xpriority_queue
+template <class T> class xpriority_queue
 {
 protected:
-    Container c;
-    Compare comp;
+    vector<T> c;
 public:
-    explicit xpriority_queue(const Container& c_ = Container(),
-        const Compare& comp_ = Compare())
-      : c(c_), comp(comp_)
-    {
-        xmake_heap(c.begin(), c.end(), comp);
-    }
- 
+    xpriority_queue() { xmake_heap(c.begin(), c.end()); }
     bool empty() const { return c.empty(); }
     size_t size() const { return c.size(); }
     const T& top() const { return c.front(); }
- 
-    void push(const T& x)
-    {   c.push_back(x);
-        xpush_heap(c.begin(), c.end(), comp);
-    }
-    
-    void pop()
-    {   xpop_heap(c.begin(), c.end(), comp);
-        c.pop_back();
-    }
+    void push(const T& x) { c.push_back(x), push_heap(c.begin(), c.end()); }
+    void pop() { pop_heap(c.begin(), c.end()), c.pop_back(); }
 };
+
+template <typename _Key, typename _Compare = less<_Key>,
+typename _Alloc = allocator<_Key> >
+class xset
+{
+public:
+    typedef _Key key_type;
+    typedef _Key value_type;
+    typedef _Compare key_compare;
+    typedef _Compare value_compare;
+    typedef _Alloc allocator_type;
+private:
+    typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+        rebind<_Key>::other _Key_alloc_type;
+
+    typedef _Rb_tree<key_type, value_type, _Identity<value_type>,
+               key_compare, _Key_alloc_type> _Rep_type;
+    _Rep_type _M_t;  // Red-black tree representing set.
+    typedef __gnu_cxx::__alloc_traits<_Key_alloc_type> _Alloc_traits;
+public:
+    typedef typename _Alloc_traits::pointer        pointer;
+    typedef typename _Alloc_traits::const_pointer  const_pointer;
+    typedef typename _Alloc_traits::reference      reference;
+    typedef typename _Alloc_traits::const_reference    const_reference;
+    typedef typename _Rep_type::const_iterator     iterator;
+    typedef typename _Rep_type::const_iterator     const_iterator;
+    typedef typename _Rep_type::const_reverse_iterator reverse_iterator;
+    typedef typename _Rep_type::const_reverse_iterator const_reverse_iterator;
+    typedef typename _Rep_type::size_type      size_type;
+    typedef typename _Rep_type::difference_type    difference_type;
+    xset() : _M_t() { }
+    explicit xset(const _Compare& __comp, const allocator_type& __a = allocator_type())
+        : _M_t(__comp, _Key_alloc_type(__a)) { }
+
+    template <typename It> xset(It first, It last) : _M_t()
+    { _M_t._M_insert_unique(first, last); }
+
+    template <typename It> xset(It __first, It __last, const _Compare& __comp,
+        const allocator_type& __a = allocator_type())
+    : _M_t(__comp, _Key_alloc_type(__a))
+    { _M_t._M_insert_unique(__first, __last); }
+
+    xset(const xset& __x) : _M_t(__x._M_t) { }
+    xset& operator=(const xset& x) { _M_t = x._M_t; return *this; }
+    key_compare key_comp() const { return _M_t.key_comp(); }
+    value_compare value_comp() const { return _M_t.key_comp(); }
+    allocator_type get_allocator() const { return allocator_type(_M_t.get_allocator()); }
+    iterator begin() const { return _M_t.begin(); }
+    iterator end() const { return _M_t.end(); }
+    reverse_iterator rbegin() const { return _M_t.rbegin(); }
+    reverse_iterator rend() const { return _M_t.rend(); }
+    bool empty() const { return _M_t.empty(); }
+    size_type size() const { return _M_t.size(); }
+    size_type max_size() const { return _M_t.max_size(); }
+
+    void swap(xset& __x) _GLIBCXX_NOEXCEPT_IF(__is_nothrow_swappable<_Compare>::value)
+    { _M_t.swap(__x._M_t); }
+
+    pair<iterator, bool> insert(const value_type &x)
+    {
+        pair<typename _Rep_type::iterator, bool> __p = _M_t._M_insert_unique(x);
+        return pair<iterator, bool>(__p.first, __p.second);
+    }
+
+    iterator insert(const_iterator __position, const value_type& __x)
+    { return _M_t._M_insert_unique_(__position, __x); }
+
+    template <typename It> void insert(It first, It last)
+    { _M_t._M_insert_unique(first, last); }
+
+    void erase(iterator __position) { _M_t.erase(__position); }
+    size_type erase(const key_type& x) { return _M_t.erase(x); }
+    void clear() { _M_t.clear(); }
+    size_type count(const key_type& __x) const { return _M_t.find(__x) == _M_t.end() ? 0 : 1; }
+    iterator find(const key_type& __x) { return _M_t.find(__x); }
+    const_iterator find(const key_type& __x) const { return _M_t.find(__x); }
+    iterator lower_bound(const key_type& __x) { return _M_t.lower_bound(__x); }
+    const_iterator lower_bound(const key_type& __x) const { return _M_t.lower_bound(__x); }
+    iterator upper_bound(const key_type& __x) { return _M_t.upper_bound(__x); }
+    const_iterator upper_bound(const key_type& __x) const { return _M_t.upper_bound(__x); }
+
+    template<typename _K1, typename _C1, typename _A1>
+    friend bool operator==(const xset<_K1, _C1, _A1>&, const xset<_K1, _C1, _A1>&);
+
+    template<typename _K1, typename _C1, typename _A1>
+    friend bool operator<(const xset<_K1, _C1, _A1>&, const xset<_K1, _C1, _A1>&);
+};
+
+template<typename _Key, typename _Compare, typename _Alloc>
+    inline void
+    swap(xset<_Key, _Compare, _Alloc>& __x, xset<_Key, _Compare, _Alloc>& __y)
+    _GLIBCXX_NOEXCEPT_IF(noexcept(__x.swap(__y)))
+    { __x.swap(__y); }
+
+#if 0
+template <typename It, typename _BinaryPredicate>
+    It __adjacent_find(It first, It last, _BinaryPredicate __binary_pred)
+{
+    if (first == last) return last;
+    It __next = first;
+    while (++__next != last)
+    {   if (__binary_pred(first, __next))
+            return first;
+        first = __next;
+    }
+    return last;
+}
+#endif
+
+template <typename It, typename _BinaryPredicate> It __xunique(It __first, It __last,
+         _BinaryPredicate __binary_pred)
+{
+    __first = __adjacent_find(__first, __last, __binary_pred);
+    if (__first == __last) return __last;
+    It __dest = __first;
+    ++__first;
+    while (++__first != __last)
+        if (!__binary_pred(__dest, __first))
+            *++__dest = _GLIBCXX_MOVE(*__first);
+    return ++__dest;
+}
+
+template <typename It> inline It xunique(It __first, It __last)
+{   return __xunique(__first, __last, __gnu_cxx::__ops::__iter_equal_to_iter());
+}
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -4005,25 +4033,6 @@ five permutations of its digits are cube.
 Antwoord: 127,035,954,683
 */
 
-#if 0
-static string problem62()
-{   uint64_t lst[9000];
-    for (uint64_t n = 0; n < 9000; n++)
-        lst[n] = n * n * n;
-    for (uint32_t i = 0; i < 9000; i++)
-    {   uint32_t cnt = 0;
-        uint8_t ln = decimals<uint64_t>(lst[i]);
-        for (uint32_t b = i; b < 9000; b++)
-        {   if (decimals(lst[b]) > ln) break;
-            if (sameDigs<uint64_t>(lst[i], lst[b])) cnt++;
-        }
-        if (cnt == 5)
-            return twostring<uint64_t>(lst[i]);
-    }
-    return twostring<uint64_t>(0);
-}
-#else
-
 /*
 https://euler.stephan-brumme.com/62/
 */
@@ -4034,19 +4043,19 @@ static uint64_t fingerprint2(uint64_t x)
     return result;
 }
 
+#if 1
 static string problem62()
 {   uint32_t maxCube = 9000, numPermutations = 5;
     map<uint64_t, vector<uint32_t> > matches;
     for (uint64_t i = 1; i < maxCube; i++)
         matches[fingerprint2(i*i*i)].push_back(i);
-    set<uint64_t> smallest;
+    uint64_t smallest = 0;
     for (map<uint64_t, vector<uint32_t> >::iterator m = matches.begin(); m != matches.end(); m++)
         if (m->second.size() == numPermutations)
-            smallest.insert(m->second.front());
-    for (set<uint64_t>::iterator s = smallest.begin(); s != smallest.end(); s++)
-        return twostring<uint64_t>(*s * *s * *s);
-    return twostring<uint64_t>(0);
+            smallest = m->second.front();   // maar een match
+    return twostring<uint64_t>(smallest * smallest * smallest);
 }
+#else
 #endif
 
 /*
@@ -4644,8 +4653,7 @@ Antwoord: 402
 */
 
 static uint64_t dfccnt(uint64_t *cache, uint64_t n)
-{   //MySet2<uint64_t> previous2(99999);
-    set<uint64_t> previous2;
+{   xset<uint64_t> previous2;
     uint64_t count = 0;
     while (true)
     {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
@@ -4742,8 +4750,7 @@ wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, cons
 
 static string problem75()
 {   uint32_t L = 1500001;
-    //MySet2<uint32_t> maybe(999999);
-    set<uint32_t> maybe;
+    xset<uint32_t> maybe;
     uint32_t *nope = new uint32_t[999999], nope_end = 0, nope_cnt = 0;
     uint32_t fsqrt = floorsqrt<uint32_t>(L/2);
     for (uint32_t m = 2; m < fsqrt; m++)
@@ -4898,53 +4905,38 @@ static uint16_t attempts[] = { 319, 680, 180, 690, 129, 620, 762, 689, 762, 318,
     680, 318, 389, 162, 289, 162, 718, 729, 319, 790, 680, 680, 362, 319, 760, 316, 729,
     380, 319, 728, 716};
 
-bool login79(uint8_t *passcode, uint16_t attempt)
+bool login79(uint8_t *start, uint8_t *end, uint16_t attempt)
 {   uint8_t arr[3];
-    arr[0] = linSearch(passcode, passcode + 8, attempt / 100);
-    arr[1] = linSearch(passcode, passcode + 8, (attempt / 10) % 10);
-    arr[2] = linSearch(passcode, passcode + 8, attempt % 10);
+    arr[0] = linSearch(start, end, attempt / 100);
+    arr[1] = linSearch(start, end, (attempt / 10) % 10);
+    arr[2] = linSearch(start, end, attempt % 10);
     return arr[1] > arr[0] && arr[2] > arr[1];  // is arr in ascending order?
 }
 
-bool test79(uint8_t *perm, uint16_t *attempts)
+bool test79(uint8_t *start, uint8_t *end, uint16_t *attempts)
 {   for (uint8_t i = 0; i < 50; i++)
-        if (login79(perm, attempts[i]) == false) return false;
+        if (login79(start, end, attempts[i]) == false) return false;
     return true;
 }
 
 static string problem79()
-{   //MySet2<uint8_t> digs(100);
-    set<uint8_t> digs;
-    uint8_t i;
-    for (i = 0; i < 50; i++)
+{
+    uint8_t digs[256], j = 0;
+    for (uint8_t i = 0; i < 50; i++)
     {   uint16_t attempt = attempts[i];
         while (attempt)
-        {   digs.insert(attempt % 10);
-            attempt = attempt / 10;
-        }
+            digs[j++] = attempt % 10, attempt = attempt / 10;
     }
-    uint8_t size = digs.size(), tmp = 0;
-    i = 0;
-    uint8_t *pool = new uint8_t[size];
-    for (set<uint8_t>::iterator it = digs.begin(); it != digs.end(); it++)
-        pool[i++] = *it;
-    uint8_t *c = new uint8_t[size];
-    for (i = 0; i < size; i++) c[i] = 0;
-    for (i = 0; i < size; )
-    {   if (c[i] < i)
-        {   if (i % 2 == 0) tmp = pool[0], pool[0] = pool[i], pool[i] = tmp;
-            else tmp = pool[c[i]], pool[c[i]] = pool[i], pool[i] = tmp;
-            c[i]++, i = 0;
-            if (test79(pool, attempts)) break;
-        }
-        else c[i++] = 0;
-    }
-    delete[] c;
+    bubbleSort(digs, digs + j);
+    uint8_t *uend = xunique(digs, digs + j);
+    do
+    {
+        if (test79(digs, uend, attempts)) break;
+    } while (xnext_permutation(digs, uend));
     char ret[9];
     for (uint8_t i = 0; i < 8; i++)
-        ret[i] = pool[i] + '0';
+        ret[i] = digs[i] + '0';
     ret[8] = 0;
-    delete[] pool;
     return string(ret);
 }
 
@@ -6344,7 +6336,7 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
                     valid = false;
                 replaceTable[original] = a[k];
             }
-            set<char> used;
+            xset<char> used;
             for (map<char, char>::iterator it = replaceTable.begin(); it != replaceTable.end();
                 it++)
             {
@@ -6391,7 +6383,7 @@ static string problem98()
     uint64_t maxNumber = 1;
     for (size_t i = 0; i < maxDigits; i++) maxNumber *= 10;
     map<uint64_t, vector<uint64_t> > permutations;
-    map<uint32_t, set<uint64_t> > fingerprintLength;
+    map<uint32_t, xset<uint64_t> > fingerprintLength;
     uint64_t base = 1;
     while (base * base <= maxNumber)
     {   uint64_t square = base * base;
@@ -6409,7 +6401,7 @@ static string problem98()
         for (size_t i = 0; i < pairs.size(); i++)
         {   for (size_t j = i + 1; j < pairs.size(); j++)
             {
-                for (set<uint64_t>::iterator id = fingerprintLength[length].begin();
+                for (xset<uint64_t>::iterator id = fingerprintLength[length].begin();
                     id != fingerprintLength[length].end(); id++)
                 {
                     uint64_t best = match(pairs[i], pairs[j], permutations[*id]);
