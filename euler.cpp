@@ -4,7 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include <vector>
-#include <map>
+#include <bits/stl_tree.h>
 #ifdef MULTITHREAD
 #include <functional>
 #include <queue>
@@ -1027,44 +1027,6 @@ Inp binSearch2(Inp first, Inp last, const T& n)
     return middle;
 }
 
-template <typename T> class MySet2
-{
-private:
-    T *_buf;
-    T *_end;
-    uint32_t _reserveSize;
-public:
-    MySet2(uint32_t reserveSize) : _reserveSize(reserveSize)
-    {
-        _buf = new T[reserveSize];
-        _end = _buf;
-    }
-    ~MySet2() { delete[] _buf; }
-    void insert(T item)
-    {
-        if (size() == 0)
-        {
-            *_buf = item;
-            _end++;
-            return;
-        }
-        T *ptr = binSearch2(_buf, _end - 1, item);
-        if (*ptr == item)
-            return;
-        //if (_end > _buf + _size) throw "overflow";
-        for (T *it = _end; it != ptr - 1; it--)
-            *(it + 1) = *it;
-        *ptr = item;
-        _end++;
-    }
-    uint32_t count(T item)
-    {   return binSearch(_buf, _end - 1, item) ? 1 : 0;
-    }
-    uint32_t size() const { return _end - _buf; }
-    T *begin() { return _buf; }
-    T *end() { return _end; }
-};
-
 template <class T> class Polygonizer2 : public Generator<T>
 {
 private:
@@ -1149,80 +1111,71 @@ template <typename T> static T floorsqrt(T n)
     return ret - 1;
 }
 
-template <typename It, typename _Distance, typename _Tp> void
-__xpush_heap(It first, _Distance __holeIndex, _Distance __topIndex, _Tp __value)
+template <typename It, typename _Distance, typename T> void
+_xpush_heap(It first, _Distance holeIndex, _Distance __topIndex, T __value)
 {
-    _Distance parent = (__holeIndex - 1) / 2;
-    while (__holeIndex > __topIndex && *(first + parent) < __value)
+    _Distance parent = (holeIndex - 1) / 2;
+    while (holeIndex > __topIndex && *(first + parent) < __value)
     {
-        *(first + __holeIndex) = *(first + parent);
-        __holeIndex = parent;
-        parent = (__holeIndex - 1) / 2;
+        *(first + holeIndex) = *(first + parent);
+        holeIndex = parent;
+        parent = (holeIndex - 1) / 2;
     }
-    *(first + __holeIndex) = __value;
+    *(first + holeIndex) = __value;
 }
 
-template<typename _RandomAccessIterator, typename _Distance, typename _Tp>
-    void
-    __xadjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
-          _Distance __len, _Tp __value)
+template <typename It, typename _Distance, typename T> void
+_xadjust_heap(It first, _Distance holeIndex, _Distance len, T value)
 {
-      const _Distance __topIndex = __holeIndex;
-      _Distance __secondChild = 2 * __holeIndex + 2;
-      while (__secondChild < __len)
+    const _Distance topIndex = holeIndex;
+    _Distance secondChild = 2 * holeIndex + 2;
+    while (secondChild < len)
     {
-      if (*(__first + __secondChild) < *(__first + (__secondChild - 1)))
-        __secondChild--;
-      *(__first + __holeIndex) = *(__first + __secondChild);
-      __holeIndex = __secondChild;
-      __secondChild = 2 * (__secondChild + 1);
+        if (*(first + secondChild) < *(first + (secondChild - 1)))
+            secondChild--;
+        *(first + holeIndex) = *(first + secondChild);
+        holeIndex = secondChild;
+        secondChild = 2 * (secondChild + 1);
     }
-      if (__secondChild == __len)
+    if (secondChild == len)
     {
-      *(__first + __holeIndex) = *(__first + (__secondChild - 1));
-      __holeIndex = __secondChild - 1;
+        *(first + holeIndex) = *(first + (secondChild - 1));
+        holeIndex = secondChild - 1;
     }
-    __xpush_heap(__first, __holeIndex, __topIndex, __value);
+    _xpush_heap(first, holeIndex, topIndex, value);
 }
 
 template <typename It> void xmake_heap(It first, It last)
 {
-    typedef typename iterator_traits<It>::value_type _ValueType;
-    typedef typename iterator_traits<It>::difference_type _DistanceType;
+    typedef typename iterator_traits<It>::value_type ValueType;
+    typedef typename iterator_traits<It>::difference_type DistanceType;
     if (last - first < 2) return;
-    const _DistanceType __len = last - first;
-    _DistanceType __parent = (__len - 2) / 2;
+    const DistanceType len = last - first;
+    DistanceType parent = (len - 2) / 2;
     while (true)
     {
-        __xadjust_heap(first, __parent, __len, _ValueType(*(first + __parent)));
-        if (__parent == 0)
+        _xadjust_heap(first, parent, len, ValueType(*(first + parent)));
+        if (parent == 0)
             return;
-        __parent--;
+        parent--;
     }
 }
 
-template <typename _RandomAccessIterator> inline void
-    xpush_heap(_RandomAccessIterator __first, _RandomAccessIterator __last)
-{
-    typedef typename iterator_traits<_RandomAccessIterator>::value_type _ValueType;
-    typedef typename iterator_traits<_RandomAccessIterator>::difference_type _DistanceType;
-
-    __xpush_heap(__first, _DistanceType((__last - __first) - 1),
-               _DistanceType(0), _ValueType(*(__last - 1)));
+template <typename It> inline void xpush_heap(It first, It last)
+{   typedef typename iterator_traits<It>::value_type ValueType;
+    typedef typename iterator_traits<It>::difference_type DistType;
+    _xpush_heap(first, DistType((last - first) - 1), DistType(0), ValueType(*(last - 1)));
 }
 
-template <typename It, typename _Tp> inline void __xpop_heap(It first, It last,
-           It __result, _Tp __value)
-{
-    typedef typename iterator_traits<It>::difference_type _Distance;
-    *__result = *first;
-    __xadjust_heap(first, _Distance(0), _Distance(last - first), __value);
+template <typename It, typename T> inline void _xpop_heap(It first, It last, It result, T value)
+{   typedef typename iterator_traits<It>::difference_type Distance;
+    *result = *first;
+    _xadjust_heap(first, Distance(0), Distance(last - first), value);
 }
-
 
 template <typename It> inline void xpop_heap(It first, It last)
 {   typedef typename iterator_traits<It>::value_type _ValueType;
-    __xpop_heap(first, last - 1, last - 1, _ValueType(*(last - 1)));
+    _xpop_heap(first, last - 1, last - 1, _ValueType(*(last - 1)));
 }
 
 // https://www.quora.com/How-is-priority-queue-implemented-in-C++-How-is-it-done-using-STL
@@ -1239,30 +1192,24 @@ public:
     void pop() { xpop_heap(c.begin(), c.end()), c.pop_back(); }
 };
 
-#if 0
-template <typename _Key, typename _Compare = less<_Key>,
-typename _Alloc = allocator<_Key> >
-class xset
+template <typename _Key> class xset
 {
 public:
     typedef _Key key_type;
     typedef _Key value_type;
-    typedef _Compare key_compare;
-    typedef _Compare value_compare;
-    typedef _Alloc allocator_type;
+    typedef less<_Key> key_compare;
+    typedef less<_Key> value_compare;
+    typedef allocator<_Key> allocator_type;
 private:
-    typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
-        rebind<_Key>::other _Key_alloc_type;
+    typedef _Rb_tree<key_type, value_type, _Identity<value_type>, key_compare,
+        allocator<_Key> > _Rep_type;
 
-    typedef _Rb_tree<key_type, value_type, _Identity<value_type>,
-               key_compare, _Key_alloc_type> _Rep_type;
     _Rep_type _M_t;  // Red-black tree representing set.
-    typedef __gnu_cxx::__alloc_traits<_Key_alloc_type> _Alloc_traits;
 public:
-    typedef typename _Alloc_traits::pointer        pointer;
-    typedef typename _Alloc_traits::const_pointer  const_pointer;
-    typedef typename _Alloc_traits::reference      reference;
-    typedef typename _Alloc_traits::const_reference    const_reference;
+    typedef _Key* pointer;
+    typedef const _Key* const_pointer;
+    typedef _Key& reference;
+    typedef const _Key& const_reference;
     typedef typename _Rep_type::const_iterator     iterator;
     typedef typename _Rep_type::const_iterator     const_iterator;
     typedef typename _Rep_type::const_reverse_iterator reverse_iterator;
@@ -1270,72 +1217,26 @@ public:
     typedef typename _Rep_type::size_type      size_type;
     typedef typename _Rep_type::difference_type    difference_type;
     xset() : _M_t() { }
-    explicit xset(const _Compare& __comp, const allocator_type& __a = allocator_type())
-        : _M_t(__comp, _Key_alloc_type(__a)) { }
-
-    template <typename It> xset(It first, It last) : _M_t()
-    { _M_t._M_insert_unique(first, last); }
-
-    template <typename It> xset(It __first, It __last, const _Compare& __comp,
-        const allocator_type& __a = allocator_type())
-    : _M_t(__comp, _Key_alloc_type(__a))
-    { _M_t._M_insert_unique(__first, __last); }
-
-    xset(const xset& __x) : _M_t(__x._M_t) { }
-    xset& operator=(const xset& x) { _M_t = x._M_t; return *this; }
     key_compare key_comp() const { return _M_t.key_comp(); }
     value_compare value_comp() const { return _M_t.key_comp(); }
     allocator_type get_allocator() const { return allocator_type(_M_t.get_allocator()); }
     iterator begin() const { return _M_t.begin(); }
     iterator end() const { return _M_t.end(); }
-    reverse_iterator rbegin() const { return _M_t.rbegin(); }
-    reverse_iterator rend() const { return _M_t.rend(); }
     bool empty() const { return _M_t.empty(); }
     size_type size() const { return _M_t.size(); }
     size_type max_size() const { return _M_t.max_size(); }
-
-    void swap(xset& __x) _GLIBCXX_NOEXCEPT_IF(__is_nothrow_swappable<_Compare>::value)
-    { _M_t.swap(__x._M_t); }
-
-    pair<iterator, bool> insert(const value_type &x)
-    {
-        pair<typename _Rep_type::iterator, bool> __p = _M_t._M_insert_unique(x);
-        return pair<iterator, bool>(__p.first, __p.second);
-    }
-
-    iterator insert(const_iterator __position, const value_type& __x)
-    { return _M_t._M_insert_unique_(__position, __x); }
-
-    template <typename It> void insert(It first, It last)
-    { _M_t._M_insert_unique(first, last); }
-
-    void erase(iterator __position) { _M_t.erase(__position); }
+#if __cplusplus >= 201103L
+    void insert(const value_type &x) { _M_t._M_insert_unique(x); }
+#else
+    void insert(const value_type &x) { _M_t.insert_unique(x); }
+#endif
+    void erase(iterator position) { _M_t.erase(position); }
     size_type erase(const key_type& x) { return _M_t.erase(x); }
     void clear() { _M_t.clear(); }
-    size_type count(const key_type& __x) const { return _M_t.find(__x) == _M_t.end() ? 0 : 1; }
-    iterator find(const key_type& __x) { return _M_t.find(__x); }
-    const_iterator find(const key_type& __x) const { return _M_t.find(__x); }
-    iterator lower_bound(const key_type& __x) { return _M_t.lower_bound(__x); }
-    const_iterator lower_bound(const key_type& __x) const { return _M_t.lower_bound(__x); }
-    iterator upper_bound(const key_type& __x) { return _M_t.upper_bound(__x); }
-    const_iterator upper_bound(const key_type& __x) const { return _M_t.upper_bound(__x); }
-
-    template<typename _K1, typename _C1, typename _A1>
-    friend bool operator==(const xset<_K1, _C1, _A1>&, const xset<_K1, _C1, _A1>&);
-
-    template<typename _K1, typename _C1, typename _A1>
-    friend bool operator<(const xset<_K1, _C1, _A1>&, const xset<_K1, _C1, _A1>&);
+    size_type count(const key_type &x) const { return _M_t.find(x) == _M_t.end() ? 0 : 1; }
 };
 
-template<typename _Key, typename _Compare, typename _Alloc>
-    inline void
-    swap(xset<_Key, _Compare, _Alloc>& __x, xset<_Key, _Compare, _Alloc>& __y)
-    _GLIBCXX_NOEXCEPT_IF(noexcept(__x.swap(__y)))
-    { __x.swap(__y); }
-#endif
-#include <set>
-
-template <typename It> It __adjacent_find(It first, It last)
+template <typename It> It _adjacent_find(It first, It last)
 {
     if (first == last) return last;
     It __next = first;
@@ -1347,22 +1248,550 @@ template <typename It> It __adjacent_find(It first, It last)
     return last;
 }
 
-template <typename It> It __xunique(It __first, It __last)
-{
-    __first = __adjacent_find(__first, __last);
-    if (__first == __last) return __last;
-    It __dest = __first;
-    ++__first;
-    while (++__first != __last)
-        if (*__dest != *__first)
-            *++__dest = *__first;
-    return ++__dest;
+template <typename It> It xunique(It first, It last)
+{   first = _adjacent_find(first, last);
+    if (first == last) return last;
+    It dest = first;
+    ++first;
+    while (++first != last)
+        if (*dest != *first)
+            *++dest = *first;
+    return ++dest;
 }
 
-template <typename It> inline It xunique(It first, It last)
+#if 1
+template <class T> class Node_Iterator;
+
+template<class T> struct Node_Set
+{   T _value;
+    Node_Set *_left;
+    Node_Set *_right;
+    Node_Set *_friend; // in-order traversal
+    Node_Set(const T& data) : _value(data), _left(NULL), _right(NULL), _friend(NULL) { }
+    ~Node_Set() { delete _left; delete _right; }
+};
+
+template <typename T> static void remove_imp(Node_Set<T> *&root)
 {
-    return __xunique(first, last);
+    if(root == NULL)
+        return;
+
+    if(root->_left == NULL && root->_right == NULL)
+    {
+        delete root;
+        root = NULL;
+        return;
+    }
+
+    if(root->_left != NULL && root->_right == NULL)
+    {
+        Node_Set<T> *leftNode = root->_left;
+        root->_left = NULL;
+        delete root;
+        root = leftNode;
+        return;
+    }
+
+    if(root->_left == NULL && root->_right != NULL)
+    {
+        Node_Set<T> *rightNode = root->_right;
+        root->_right = NULL;
+        delete root;
+        root = rightNode;
+        return;
+    }
+
+    if(root->_left != NULL && root->_right != NULL)
+    {
+        Node_Set<T> **nodeLeftMost = NULL;
+        Node_Set<T> **nodeRightMost = NULL;
+        Node_Set<T> *leftChild = root->_left;
+        Node_Set<T> *rightChild = root->_right;
+
+        travel_leftmost(root->_right, nodeRightMost);
+
+        if(nodeRightMost != NULL && (*nodeRightMost)->_left == NULL && (*nodeRightMost)->_right == NULL)
+        {
+                root->_value = (*nodeRightMost)->_value;
+                delete *nodeRightMost;
+                *nodeRightMost = NULL;
+                return;
+        }
+        else if(leftChild->_right == NULL)
+        {
+                root->_left = NULL;
+                root->_right = NULL;
+                delete root;
+                root = leftChild;
+                root->_right = rightChild;
+        }
+        else if(rightChild->_left == NULL)
+        {
+                root->_left = NULL;
+                root->_right = NULL;
+                delete root;
+                root = rightChild;
+                root->_left = leftChild;
+        }
+    }
 }
+#endif
+
+template <typename T> struct BNode
+{
+    T value;
+    BNode *left;
+    BNode *right;
+};
+
+template <class T> class BTree
+{
+private:
+    BNode<T> *root;
+    uint32_t _size;
+public:
+    BTree() : root(NULL), _size(0) { }
+    void destroy_tree(BNode<T> *leaf)
+    {
+        if (leaf != NULL)
+        {
+            destroy_tree(leaf->left);
+            destroy_tree(leaf->right);
+            delete leaf;
+        }
+    }
+    ~BTree() { destroy_tree(root); }
+    void insert(T value, BNode<T> *leaf)
+    {
+        if (value < leaf->value)
+        {
+            if (leaf->left != NULL)
+            {
+                insert(value, leaf->left);
+            }
+            else
+            {   leaf->left = new BNode<T>;
+                _size++;
+                leaf->left->value = value;
+                leaf->left->left = NULL;
+                leaf->left->right = NULL;
+            }
+        }
+        else if (value >= leaf->value)
+        {
+            if (leaf->right != NULL)
+            {
+                insert(value, leaf->right);
+            }
+            else
+            {
+                leaf->right = new BNode<T>;
+                _size++;
+                leaf->right->value = value;
+                leaf->right->left = NULL;
+                leaf->right->right = NULL;
+            }
+        }
+    }
+    void insert(T value)
+    {
+        if (find(value)) return;
+        //cout << value << "\r\n";
+        if (root == NULL)
+        {
+            root = new BNode<T>;
+            _size++;
+            root->value = value;
+            root->left = NULL;
+            root->right = NULL;
+            return;
+        }
+        insert(value, root);
+    }
+    BNode<T> *search(T value, BNode<T> *leaf)
+    {
+        if (leaf!=NULL)
+        {
+            if (value == leaf->value)
+                return leaf;
+            if (value < leaf->value)
+                return search(value, leaf->left);
+            return search(value, leaf->right);
+        }
+        else return NULL;
+    }
+    BNode<T> *search(T value)
+    {
+        return search(value, root);
+    }
+    bool find(T value)
+    {
+        return search(value) == NULL ? false : true;
+    }
+    uint32_t count(T value)
+    {
+        return find(value) ? 1 : 0;
+    }
+    uint32_t size(BNode<T> *leaf)
+    {
+        if (leaf == NULL)
+            return 0;
+        if (leaf->left == NULL && leaf->right == NULL)
+            return 1;
+        return size(leaf->left) + size(leaf->right);
+    }
+    uint32_t size()
+    {   return _size;
+    }
+};
+
+#if 0
+template <class T> class Set
+{
+private:
+    size_t _size;
+    Node_Set<T> *_root;
+    Node_Set<T> *startIterator;
+public :
+    Set() : _size(0), _root(NULL) { }
+    ~Set() { clear(); }
+    using iterator = Node_Iterator<T>;
+
+    Set(Set &s)
+    {
+        _size = 0;
+        _root = NULL;
+        for (iterator it = s.begin(); it != s.end(); it++)
+            insert(*it);
+    }
+
+    Set& operator =(const Set &s)
+    {
+        if(&s == this) return *this;
+        clear();
+        for(iterator it = s.begin(); it != s.end(); it++)
+            insert(*it);
+        return *this;
+    }
+
+    void clear()
+    {   if (_root)
+        {   delete _root;
+            _root = NULL, _size = 0;
+        }
+    }
+
+    size_t size() const { return _size; }
+    bool empty() const { return _size == 0; }
+    T& insert(const T& t) { return insert_imp(t, _root, _size); }
+    bool find(const T& t, T*& result) { return (find_imp(t, result, _root) != NULL); }
+    size_t count(const T& t)
+    {   T *x;
+        return find(t, x) ? 1 : 0;
+    }
+
+    bool remove(const T& t)
+    {   T *result;
+        Node_Set<T> **nodeRemove = find_imp(t, result, _root);
+        if (nodeRemove == NULL) return false;
+        _size--;
+        remove_imp(*nodeRemove);
+        return true;
+    }
+
+    iterator begin()
+    {
+        build_iterators(_root);
+        return iterator(startIterator);
+    }
+
+    iterator end() const { return iterator(0); }
+private:
+    void build_iterators(const Node_Set<T> *root)
+    {
+        size_t i;
+        vector<Node_Set<T>*> iterators;
+        build_iterators_imp(iterators, root);
+
+        if (empty())
+        {
+            startIterator = NULL;
+            return;
+        }
+
+        startIterator = iterators[0];
+        for (i = 0; i < iterators.size() - 1; i++)
+            iterators[i]->_friend = iterators[i + 1];
+        iterators[i]->_friend = NULL;
+    }
+
+    static void build_iterators_imp(vector<Node_Set<T>*> &iterators, const Node_Set<T> *root)
+    {
+        if (root == NULL)
+            return;
+
+        build_iterators_imp(iterators, root->_left);
+        iterators.push_back((Node_Set<T>*)root);
+        build_iterators_imp(iterators, root->_right);
+    }
+
+    static T& insert_imp(const T& t, Node_Set<T> *&root, size_t &_size)
+    {
+        if(!root)
+        {
+            _size++;
+            root = new Node_Set<T>(t);
+            return root->_value;
+        }
+
+        if (t == root->_value)
+            return root->_value;
+        if (t < root->_value)
+            return insert_imp(t, root->_left, _size);
+        return insert_imp(t, root->_right, _size);
+    }
+
+    static Node_Set<T>** find_imp(const T& t, T*& result, Node_Set<T> *&root)
+    {   if (!root)
+        {   result = NULL;
+            return NULL;
+        }
+        if(t == root->_value)
+        {
+            result = &root->_value;
+            return &root;
+        }
+        if(t < root->_value)
+            return find_imp(t, result, root->_left);
+        return find_imp(t, result, root->_right);
+    }
+
+    static void travel_rightmost(Node_Set<T> *&_this, Node_Set<T> **&nodeResult)
+    {
+        if(!_this) return;
+        if(_this->_right) {
+            nodeResult = &_this;
+            return travel_rightmost(_this->_right, nodeResult);
+        }
+    }
+    static void travel_leftmost(Node_Set<T> *&_this, Node_Set<T> **&nodeResult)
+    {
+        if(!_this) return;
+        if(_this->_left) {
+            nodeResult = &_this;
+            return travel_leftmost(_this->_left, nodeResult);
+        }
+    }
+};
+
+template <class T> class Node_Iterator
+{
+private:
+    Node_Set<T> * n;
+public:
+    Node_Iterator() : n(0) {}
+    Node_Iterator(Node_Set<T> * newNode) : n(newNode) { }
+    bool operator == (Node_Iterator it) const { return n == it.n; }
+    bool operator != (Node_Iterator it) const { return n != it.n; }
+    Node_Iterator & operator++();
+    Node_Iterator operator++(int);
+    T & operator*() { return n->_value; }
+    T * operator->() { return &n->_value; }
+    Node_Iterator & operator=(Node_Iterator<T> it) { n = it.n; return *this; }
+    friend class Set<T>;
+};
+
+template <class T> Node_Iterator<T>& Node_Iterator<T>::operator ++()
+{   n = n->_friend;
+    return *this;
+}
+
+template <class T> Node_Iterator<T> Node_Iterator<T>::operator ++(int)
+{   Node_Iterator<T> it(*this); ++(*this);
+    return it;
+}
+#endif
+
+//template <typename T> using set = xset<T>;
+
+template <typename _Key, typename _Tp> class xmap
+{
+public:
+    typedef less<_Key> _Compare;
+    typedef allocator<pair<const _Key, _Tp> > _Alloc;
+    typedef _Key key_type;
+    typedef _Tp mapped_type;
+    typedef pair<const _Key, _Tp> value_type;
+    typedef _Compare key_compare;
+    typedef _Alloc allocator_type;
+public:
+    class value_compare : public std::binary_function<value_type, value_type, bool>
+    {
+        friend class xmap<_Key, _Tp>;
+    protected:
+        _Compare comp;
+        value_compare(_Compare __c) : comp(__c) { }
+    public:
+        bool operator()(const value_type& __x, const value_type& __y) const
+        { return comp(__x.first, __y.first); }
+    };
+
+private:
+    typedef allocator<pair<_Key, _Tp> > _Pair_alloc_type;
+
+    typedef _Rb_tree<key_type, value_type, _Select1st<value_type>,
+               key_compare, _Pair_alloc_type> _Rep_type;
+
+    _Rep_type _M_t;
+public:
+    typedef _Pair_alloc_type * pointer;
+    typedef const _Pair_alloc_type * const_pointer;
+    typedef _Pair_alloc_type & reference;
+    typedef const _Pair_alloc_type & const_reference;
+    typedef typename _Rep_type::iterator       iterator;
+    typedef typename _Rep_type::const_iterator     const_iterator;
+    typedef typename _Rep_type::size_type      size_type;
+    typedef typename _Rep_type::difference_type    difference_type;
+    typedef typename _Rep_type::reverse_iterator   reverse_iterator;
+    typedef typename _Rep_type::const_reverse_iterator const_reverse_iterator;
+    xmap() : _M_t() { }
+
+    explicit xmap(const _Compare& __comp, const allocator_type& __a = allocator_type())
+        : _M_t(__comp, _Pair_alloc_type(__a)) { }
+
+    xmap(const xmap& __x) : _M_t(__x._M_t) { }
+
+    template <typename It> xmap(It __first, It __last) : _M_t()
+    { _M_t._M_insert_unique(__first, __last); }
+
+    template <typename It> xmap(It __first, It __last, const _Compare& __comp,
+        const allocator_type& __a = allocator_type())
+    : _M_t(__comp, _Pair_alloc_type(__a))
+    { _M_t._M_insert_unique(__first, __last); }
+
+    xmap& operator=(const xmap &x) { _M_t = x._M_t; return *this; }
+    allocator_type get_allocator() const { return allocator_type(_M_t.get_allocator()); }
+    iterator begin() { return _M_t.begin(); }
+    const_iterator begin() const { return _M_t.begin(); }
+    iterator end() { return _M_t.end(); }
+    const_iterator end() const { return _M_t.end(); }
+    reverse_iterator rbegin() { return _M_t.rbegin(); }
+    const_reverse_iterator rbegin() const { return _M_t.rbegin(); }
+    reverse_iterator rend() { return _M_t.rend(); }
+    const_reverse_iterator rend() const { return _M_t.rend(); }
+    bool empty() const { return _M_t.empty(); }
+    size_type size() const { return _M_t.size(); }
+    size_type max_size() const { return _M_t.max_size(); }
+
+    mapped_type& operator[](const key_type& __k)
+    {
+        __glibcxx_function_requires(_DefaultConstructibleConcept<mapped_type>)
+        iterator __i = lower_bound(__k);
+        // __i->first is greater than or equivalent to __k.
+        if (__i == end() || key_comp()(__k, (*__i).first))
+            __i = insert(__i, value_type(__k, mapped_type()));
+        return (*__i).second;
+    }
+
+    mapped_type& at(const key_type& __k)
+    {
+        iterator __i = lower_bound(__k);
+        if (__i == end() || key_comp()(__k, (*__i).first))
+            __throw_out_of_range(__N("map::at"));
+        return (*__i).second;
+    }
+
+    const mapped_type& at(const key_type& __k) const
+    {
+        const_iterator __i = lower_bound(__k);
+        if (__i == end() || key_comp()(__k, (*__i).first))
+            __throw_out_of_range(__N("map::at"));
+        return (*__i).second;
+    }
+
+    pair<iterator, bool> insert(const value_type& x)
+    { return _M_t._M_insert_unique(x); }
+
+#if __cplusplus >= 201103L
+    iterator insert(iterator pos, const value_type &x) { return _M_t._M_insert_unique_(pos, x); }
+#else
+    iterator insert(iterator pos, const value_type &x) { return _M_t.insert_unique(pos, x); }
+#endif
+    template <typename It> void insert(It first, It last)
+    { _M_t._M_insert_unique(first, last); }
+
+    void erase(iterator __position) { _M_t.erase(__position); }
+    size_type erase(const key_type& __x) { return _M_t.erase(__x); }
+    void erase(iterator first, iterator last) { _M_t.erase(first, last); }
+    void clear() { _M_t.clear(); }
+    key_compare key_comp() const { return _M_t.key_comp(); }
+    value_compare value_comp() const { return value_compare(_M_t.key_comp()); }
+    iterator find(const key_type& __x) { return _M_t.find(__x); }
+    const_iterator find(const key_type& __x) const { return _M_t.find(__x); }
+    size_type count(const key_type& __x) const { return _M_t.find(__x) == _M_t.end() ? 0 : 1; }
+    iterator lower_bound(const key_type& __x) { return _M_t.lower_bound(__x); }
+    const_iterator lower_bound(const key_type& __x) const { return _M_t.lower_bound(__x); }
+    iterator upper_bound(const key_type& __x) { return _M_t.upper_bound(__x); }
+    const_iterator upper_bound(const key_type &x) const { return _M_t.upper_bound(x); }
+    pair<iterator, iterator> equal_range(const key_type &x) { return _M_t.equal_range(x); }
+
+    pair<const_iterator, const_iterator> equal_range(const key_type& __x) const
+    { return _M_t.equal_range(__x); }
+
+    template<typename _K1, typename _T1>
+    friend bool operator==(const xmap<_K1, _T1>&, const xmap<_K1, _T1>&);
+
+    template<typename _K1, typename _T1>
+    friend bool operator< (const xmap<_K1, _T1>&, const xmap<_K1, _T1>&);
+};
+
+  template<typename _Key, typename _Tp>
+    inline bool
+    operator==(const xmap<_Key, _Tp>& __x,
+           const xmap<_Key, _Tp>& __y)
+    { return __x._M_t == __y._M_t; }
+
+    template<typename _Key, typename _Tp>
+    inline bool
+    operator<(const xmap<_Key, _Tp>& __x,
+          const xmap<_Key, _Tp>& __y)
+    { return __x._M_t < __y._M_t; }
+
+    template<typename _Key, typename _Tp>
+    inline bool
+    operator!=(const xmap<_Key, _Tp>& __x,
+           const xmap<_Key, _Tp> &__y)
+    { return !(__x == __y); }
+
+  /// Based on operator<
+  template<typename _Key, typename _Tp>
+    inline bool
+    operator>(const xmap<_Key, _Tp> &__x,
+          const xmap<_Key, _Tp> &__y)
+    { return __y < __x; }
+
+  /// Based on operator<
+  template<typename _Key, typename _Tp>
+    inline bool
+    operator<=(const xmap<_Key, _Tp> &__x,
+           const xmap<_Key, _Tp> &__y)
+    { return !(__y < __x); }
+
+  /// Based on operator<
+  template<typename _Key, typename _Tp>
+    inline bool
+    operator>=(const xmap<_Key, _Tp> &__x,
+           const xmap<_Key, _Tp> &__y)
+    { return !(__x < __y); }
+
+#if 0
+  template<typename _Key, typename _Tp>
+    inline void
+    swap(xmap<_Key, _Tp> &__x,
+     xmap<_Key, _Tp> &__y)
+    _GLIBCXX_NOEXCEPT_IF(noexcept(__x.swap(__y)))
+    { __x.swap(__y); }
+#endif
 
 static void testUnique()
 {
@@ -1434,10 +1863,23 @@ static void testLongNum()
     myAssert(x.equals(998001), true, "Error mul 2");
 }
 
+static void testBTree()
+{
+    BTree<uint32_t> bt;
+    bt.insert(900);
+    bt.insert(910);
+#if 0
+    cout << bt.find(900) << "\r\n";
+    cout << bt.find(910) << "\r\n";
+    cout << bt.size() << "\r\n";
+#endif
+}
+
 static void testSuite()
 {
     testUnique();
     testLongNum();
+    testBTree();
 }
 
 /*
@@ -3731,8 +4173,7 @@ http://euler.stephan-brumme.com/57/
 
 static string problem57()
 {   uint32_t iterations = 1000;
-    LongNumber25 a(1);
-    LongNumber25 b(1);
+    LongNumber25 a(1), b(1);
     uint32_t count = 0;
     for (uint32_t i = 0; i <= iterations; i++)
     {   if (a.digits() > b.digits()) count++;
@@ -4081,20 +4522,17 @@ static uint64_t fingerprint2(uint64_t x)
     return result;
 }
 
-#if 1
 static string problem62()
 {   uint32_t maxCube = 9000, numPermutations = 5;
-    map<uint64_t, vector<uint32_t> > matches;
+    xmap<uint64_t, vector<uint32_t> > matches;
     for (uint64_t i = 1; i < maxCube; i++)
         matches[fingerprint2(i*i*i)].push_back(i);
     uint64_t smallest = 0;
-    for (map<uint64_t, vector<uint32_t> >::iterator m = matches.begin(); m != matches.end(); m++)
+    for (xmap<uint64_t, vector<uint32_t> >::iterator m = matches.begin(); m != matches.end(); m++)
         if (m->second.size() == numPermutations)
             smallest = m->second.front();   // maar een match
     return twostring<uint64_t>(smallest * smallest * smallest);
 }
-#else
-#endif
 
 /*
 #63: Powerful digit counts
@@ -4263,55 +4701,6 @@ of x for which the largest value of x is obtained.
 Antwoord: 661
 */
 
-#if 0
-static string problem66()
-{   LongNumber25 x[3], y[3], tmp, tmp2, best_x;
-    uint64_t a2, numerator2, denominator2;
-    best_x.set(0);
-    uint64_t best_d = 0;
-    for (uint64_t d = 2; d <= 1000; d++)
-    {   uint64_t root = floorsqrt<uint64_t>(d);
-        if (root * root == d) continue;
-        a2 = root;
-        numerator2 = 0;
-        denominator2 = 1;
-        x[0].set(0);
-        x[1].set(1);
-        x[2].set(root);
-        y[0].set(0);
-        y[1].set(0);
-        y[2].set(1);
-        while (true)
-        {   numerator2 = denominator2 * a2 - numerator2;
-            denominator2 = (d - numerator2 * numerator2) / denominator2;
-            a2 = (root + numerator2) / denominator2;
-            x[0].set(x[1]);
-            x[1].set(x[2]);
-            x[2].set(x[1]);
-            x[2].mul3(a2);
-            x[2].add(x[0]);
-            y[0].set(y[1]);
-            y[1].set(y[2]);
-            y[2].set(y[1]);
-            y[2].mul3(a2);
-            y[2].add(y[0]);
-            tmp.set(x[2]);
-            tmp.mul2(x[2]);
-            tmp2.set(y[2]);
-            tmp2.mul2(y[2]);
-            tmp2.mul3(d);
-            tmp2.add(1);
-            if (tmp.equals(tmp2))
-                break;
-        }
-        if (best_x.lt(x[2]))
-        {   best_x.set(x[2]);
-            best_d = d;
-        }
-    }
-    return twostring<uint64_t>(best_d);
-}
-#else
 static string problem66()
 {
     uint32_t limit = 1000, bestD = 2;
@@ -4361,7 +4750,6 @@ static string problem66()
     }
     return twostring<uint32_t>(bestD);
 }
-#endif
 
 /*
 #67: Maximum path sum II
@@ -4690,13 +5078,39 @@ million, contain exactly sixty non-repeating terms?
 Antwoord: 402
 */
 
+template <class T> class SmallSet
+{
+private:
+    T *_buf;
+    uint32_t _reserve;
+    uint32_t _size;
+public:
+    SmallSet(uint32_t reserve) : _reserve(reserve), _size(0) { _buf = new T[reserve]; }
+    ~SmallSet() { delete[] _buf; }
+    bool find(T value)
+    {   return linSearch(_buf, _buf + _size, value) > 0;
+    }
+    uint32_t count(T value)
+    {   return find(value) ? 1 : 0;
+    }
+    void insert(T value)
+    {   if (find(value)) return;
+        _buf[_size++] = value;
+    }
+    uint32_t size() { return _size; }
+};
+
 static uint64_t dfccnt(uint64_t *cache, uint64_t n)
-{   set<uint64_t> previous2;
+{   //SmallSet<uint64_t> previous2(64);
+    BTree<uint64_t> previous2;
     uint64_t count = 0;
     while (true)
     {   if (n < 1000000 && cache[n] > 0) return count + cache[n];
         count++;
-        if (previous2.count(n)) return count;
+        if (previous2.count(n))
+        {
+            return count;
+        }
         previous2.insert(n);
         uint64_t xsum = 0;
         while (n > 0) xsum += factorial<uint64_t>(n % 10), n = n / 10;
@@ -4788,7 +5202,8 @@ wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, cons
 
 static string problem75()
 {   uint32_t L = 1500001;
-    set<uint32_t> maybe;
+    xset<uint32_t> maybe;
+    vector<uint32_t> maybe2;
     uint32_t *nope = new uint32_t[999999], nope_end = 0, nope_cnt = 0;
     uint32_t fsqrt = floorsqrt<uint32_t>(L/2);
     for (uint32_t m = 2; m < fsqrt; m++)
@@ -4799,7 +5214,10 @@ static string problem75()
                 {   if (maybe.count(k * s))
                         nope[nope_end++] = k * s;
                     else
+                    {
                         maybe.insert(k * s);
+                        maybe2.push_back(k * s);
+                    }
                 }
             }
         }
@@ -4811,7 +5229,7 @@ static string problem75()
         previous = nope[i];
     }
     delete[] nope;
-    return twostring<uint32_t>(maybe.size() - nope_cnt);
+    return twostring<uint32_t>(maybe2.size() - nope_cnt);
 }
 
 /*
@@ -6354,7 +6772,7 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
         for (vector<uint64_t>::iterator j = squares.begin(); j != squares.end(); j++)
         {   if (*i == *j) continue;
             string replaceA = xto_string(*i), replaceB = xto_string(*j);
-            map<char, char> replaceTable;
+            xmap<char, char> replaceTable;
             bool valid = true;
             for (size_t k = 0; k < replaceA.size(); k++)
             {   char original = replaceA[k];
@@ -6362,8 +6780,8 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
                     valid = false;
                 replaceTable[original] = a[k];
             }
-            MySet2<char> used(999);
-            for (map<char, char>::iterator it = replaceTable.begin(); it != replaceTable.end();
+            BTree<char> used;
+            for (xmap<char, char>::iterator it = replaceTable.begin(); it != replaceTable.end();
                 it++)
             {
                 if (used.count(it->second) != 0) valid = false;
@@ -6386,7 +6804,7 @@ static uint64_t match(const string &a, const string &b, vector<uint64_t> &square
 }
 
 static string problem98()
-{   map<string, vector<string> > anagrams;
+{   xmap<string, vector<string> > anagrams;
     ifstream ifs;
     ifs.open("euler98.txt");
     while (true)
@@ -6398,15 +6816,15 @@ static string problem98()
     }
     ifs.close();
     size_t maxDigits = 0;
-    for (map<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
+    for (xmap<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
         if (it->second.size() > 1) // at least two words share the same letters ?
             if (maxDigits < it->second[0].size())
                 maxDigits = it->second[0].size();
     uint64_t maxNumber = 1;
     for (size_t i = 0; i < maxDigits; i++) maxNumber *= 10;
-    map<uint64_t, vector<uint64_t> > permutations;
+    xmap<uint64_t, vector<uint64_t> > permutations;
     //map<uint32_t, vector<uint64_t> > fingerprintLength;
-    map<uint32_t, set<uint64_t> > fingerprintLength;
+    xmap<uint32_t, xset<uint64_t> > fingerprintLength;
     uint64_t base = 1;
     while (base * base <= maxNumber)
     {   uint64_t square = base * base;
@@ -6417,14 +6835,14 @@ static string problem98()
         base++;
     }
     uint64_t result = 0;
-    for (map<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
+    for (xmap<string, vector<string> >::iterator it = anagrams.begin(); it != anagrams.end(); it++)
     {   vector<string> pairs = it->second;
         if (pairs.size() == 1) continue;
         uint32_t length = pairs.front().size();
         for (size_t i = 0; i < pairs.size(); i++)
         {   for (size_t j = i + 1; j < pairs.size(); j++)
             {
-                for (set<uint64_t>::iterator id = fingerprintLength[length].begin();
+                for (xset<uint64_t>::iterator id = fingerprintLength[length].begin();
                     id != fingerprintLength[length].end(); id++)
                 {
                     uint64_t best = match(pairs[i], pairs[j], permutations[*id]);
@@ -6436,34 +6854,6 @@ static string problem98()
 
     return twostring<uint64_t>(result);
 }
-
-#if 0
-static string problem98()
-{
-    char *words = new char[2000*50];
-    ifstream ifs;
-    ifs.open("euler98.txt");
-    char c;
-    uint32_t word = 0, letter = 0;
-    while (ifs.get(c))
-    {   if (isalpha(c))
-        {   words[word * 50 + letter] = c;
-            letter++;
-            continue;
-        }
-        words[word * 50 + letter] = 0;
-        letter = 0;
-        word++;
-    }
-    ifs.close();
-#if 0
-    for (uint32_t i = 0; i < word - 1; i++)
-        cout << (words + i * 50) << "\r\n";
-#endif
-    delete[] words;
-    return twostring<uint32_t>(0);
-}
-#endif
 
 /*
 #99: Largest exponential
