@@ -23,8 +23,6 @@ template<typename _Tp> struct __aligned_membuf
     const _Tp* _M_ptr() const noexcept { return static_cast<const _Tp*>(_M_addr()); }
 };
 
-namespace std
-{
 enum _Rb_tree_color { _S_red = false, _S_black = true };
 
 struct _Rb_tree_node_base
@@ -110,17 +108,100 @@ template<typename _Val> struct _Rb_tree_node : public _Rb_tree_node_base
     const _Val *_M_valptr() const { return _M_storage._M_ptr(); }
 };
 
-_GLIBCXX_PURE _Rb_tree_node_base*
-_Rb_tree_increment(_Rb_tree_node_base* __x) throw ();
+_Rb_tree_node_base* _Rb_tree_increment2(_Rb_tree_node_base* __x) throw ()
+{
+    if (__x->_M_right != 0) 
+      {
+        __x = __x->_M_right;
+        while (__x->_M_left != 0)
+          __x = __x->_M_left;
+      }
+    else 
+      {
+        _Rb_tree_node_base* __y = __x->_M_parent;
+        while (__x == __y->_M_right) 
+          {
+            __x = __y;
+            __y = __y->_M_parent;
+          }
+        if (__x->_M_right != __y)
+          __x = __y;
+      }
+    return __x;
+}
 
-_GLIBCXX_PURE const _Rb_tree_node_base*
-_Rb_tree_increment(const _Rb_tree_node_base* __x) throw ();
+const _Rb_tree_node_base* _Rb_tree_increment2(const _Rb_tree_node_base* __x) throw ()
+{
+    if (__x->_M_right != 0) 
+      {
+        __x = __x->_M_right;
+        while (__x->_M_left != 0)
+          __x = __x->_M_left;
+      }
+    else 
+      {
+        _Rb_tree_node_base* __y = __x->_M_parent;
+        while (__x == __y->_M_right) 
+          {
+            __x = __y;
+            __y = __y->_M_parent;
+          }
+        if (__x->_M_right != __y)
+          __x = __y;
+      }
+    return __x;
+}
 
-_GLIBCXX_PURE _Rb_tree_node_base*
-_Rb_tree_decrement(_Rb_tree_node_base* __x) throw ();
+_Rb_tree_node_base* _Rb_tree_decrement2(_Rb_tree_node_base* __x) throw ()
+{
+    if (__x->_M_color == _S_red
+        && __x->_M_parent->_M_parent == __x)
+      __x = __x->_M_right;
+    else if (__x->_M_left != 0)
+      {
+        _Rb_tree_node_base* __y = __x->_M_left;
+        while (__y->_M_right != 0)
+          __y = __y->_M_right;
+        __x = __y;
+      }
+    else
+      {
+        _Rb_tree_node_base* __y = __x->_M_parent;
+        while (__x == __y->_M_left)
+          {
+            __x = __y;
+            __y = __y->_M_parent;
+          }
+        __x = __y;
+      }
+return __x;
+}
 
-_GLIBCXX_PURE const _Rb_tree_node_base*
-_Rb_tree_decrement(const _Rb_tree_node_base* __x) throw ();
+
+const _Rb_tree_node_base* _Rb_tree_decrement2(const _Rb_tree_node_base* __x) throw ()
+{
+    if (__x->_M_color == _S_red
+        && __x->_M_parent->_M_parent == __x)
+      __x = __x->_M_right;
+    else if (__x->_M_left != 0)
+      {
+        _Rb_tree_node_base* __y = __x->_M_left;
+        while (__y->_M_right != 0)
+          __y = __y->_M_right;
+        __x = __y;
+      }
+    else
+      {
+        _Rb_tree_node_base* __y = __x->_M_parent;
+        while (__x == __y->_M_left)
+          {
+            __x = __y;
+            __y = __y->_M_parent;
+          }
+        __x = __y;
+      }
+return __x;
+}
 
 template<typename _Tp> struct _Rb_tree_iterator
 {
@@ -139,27 +220,27 @@ template<typename _Tp> struct _Rb_tree_iterator
 
     _Self& operator++()
     {
-        _M_node = _Rb_tree_increment(_M_node);
+        _M_node = _Rb_tree_increment2(_M_node);
         return *this;
     }
 
     _Self operator++(int)
     {
         _Self __tmp = *this;
-        _M_node = _Rb_tree_increment(_M_node);
+        _M_node = _Rb_tree_increment2(_M_node);
         return __tmp;
     }
 
     _Self& operator--()
     {
-        _M_node = _Rb_tree_decrement(_M_node);
+        _M_node = _Rb_tree_decrement2(_M_node);
         return *this;
     }
 
     _Self operator--(int)
     {
         _Self __tmp = *this;
-        _M_node = _Rb_tree_decrement(_M_node);
+        _M_node = _Rb_tree_decrement2(_M_node);
         return __tmp;
     }
 
@@ -168,6 +249,7 @@ template<typename _Tp> struct _Rb_tree_iterator
     _Base_ptr _M_node;
 };
 
+#if 1
 template<typename _Tp> struct _Rb_tree_const_iterator
 {
     typedef _Tp value_type;
@@ -194,27 +276,27 @@ template<typename _Tp> struct _Rb_tree_const_iterator
 
     _Self& operator++()
     {
-        _M_node = _Rb_tree_increment(_M_node);
+        _M_node = _Rb_tree_increment2(_M_node);
         return *this;
     }
 
     _Self operator++(int)
     {
         _Self __tmp = *this;
-        _M_node = _Rb_tree_increment(_M_node);
+        _M_node = _Rb_tree_increment2(_M_node);
         return __tmp;
     }
 
     _Self& operator--()
     {
-        _M_node = _Rb_tree_decrement(_M_node);
+        _M_node = _Rb_tree_decrement2(_M_node);
         return *this;
     }
 
     _Self operator--(int)
     {
         _Self __tmp = *this;
-        _M_node = _Rb_tree_decrement(_M_node);
+        _M_node = _Rb_tree_decrement2(_M_node);
         return __tmp;
     }
 
@@ -222,12 +304,140 @@ template<typename _Tp> struct _Rb_tree_const_iterator
     bool operator!=(const _Self& __x) const { return _M_node != __x._M_node; }
     _Base_ptr _M_node;
 };
+#endif
+
+  static void
+  local_Rb_tree_rotate_left(_Rb_tree_node_base* const __x,
+               _Rb_tree_node_base*& __root)
+  {
+    _Rb_tree_node_base* const __y = __x->_M_right;
+
+    __x->_M_right = __y->_M_left;
+    if (__y->_M_left !=0)
+      __y->_M_left->_M_parent = __x;
+    __y->_M_parent = __x->_M_parent;
+
+    if (__x == __root)
+      __root = __y;
+    else if (__x == __x->_M_parent->_M_left)
+      __x->_M_parent->_M_left = __y;
+    else
+      __x->_M_parent->_M_right = __y;
+    __y->_M_left = __x;
+    __x->_M_parent = __y;
+}
+
+  static void
+  local_Rb_tree_rotate_right(_Rb_tree_node_base* const __x,
+        _Rb_tree_node_base*& __root)
+  {
+    _Rb_tree_node_base* const __y = __x->_M_left;
+
+    __x->_M_left = __y->_M_right;
+    if (__y->_M_right != 0)
+      __y->_M_right->_M_parent = __x;
+    __y->_M_parent = __x->_M_parent;
+
+    if (__x == __root)
+      __root = __y;
+    else if (__x == __x->_M_parent->_M_right)
+      __x->_M_parent->_M_right = __y;
+    else
+      __x->_M_parent->_M_left = __y;
+    __y->_M_right = __x;
+    __x->_M_parent = __y;
+}
 
 void
 _Rb_tree_insert_and_rebalance(const bool __insert_left,
     _Rb_tree_node_base* __x,
     _Rb_tree_node_base* __p,
-    _Rb_tree_node_base& __header) throw ();
+    _Rb_tree_node_base& __header) throw ()
+{
+  _Rb_tree_node_base *& __root = __header._M_parent;
+
+    // Initialize fields in new node to insert.
+    __x->_M_parent = __p;
+    __x->_M_left = 0;
+    __x->_M_right = 0;
+    __x->_M_color = _S_red;
+
+    // Insert.
+    // Make new node child of parent and maintain root, leftmost and
+    // rightmost nodes.
+    // N.B. First node is always inserted left.
+    if (__insert_left)
+      {
+        __p->_M_left = __x; // also makes leftmost = __x when __p == &__header
+
+        if (__p == &__header)
+        {
+            __header._M_parent = __x;
+            __header._M_right = __x;
+        }
+        else if (__p == __header._M_left)
+          __header._M_left = __x; // maintain leftmost pointing to min node
+      }
+    else
+      {
+        __p->_M_right = __x;
+
+        if (__p == __header._M_right)
+          __header._M_right = __x; // maintain rightmost pointing to max node
+      }
+    // Rebalance.
+    while (__x != __root
+    && __x->_M_parent->_M_color == _S_red)
+      {
+ _Rb_tree_node_base* const __xpp = __x->_M_parent->_M_parent;
+
+ if (__x->_M_parent == __xpp->_M_left)
+   {
+     _Rb_tree_node_base* const __y = __xpp->_M_right;
+     if (__y && __y->_M_color == _S_red)
+       {
+  __x->_M_parent->_M_color = _S_black;
+  __y->_M_color = _S_black;
+  __xpp->_M_color = _S_red;
+  __x = __xpp;
+       }
+     else
+       {
+  if (__x == __x->_M_parent->_M_right)
+    {
+      __x = __x->_M_parent;
+      local_Rb_tree_rotate_left(__x, __root);
+    }
+  __x->_M_parent->_M_color = _S_black;
+  __xpp->_M_color = _S_red;
+  local_Rb_tree_rotate_right(__xpp, __root);
+       }
+   }
+ else
+   {
+     _Rb_tree_node_base* const __y = __xpp->_M_left;
+     if (__y && __y->_M_color == _S_red)
+       {
+  __x->_M_parent->_M_color = _S_black;
+  __y->_M_color = _S_black;
+  __xpp->_M_color = _S_red;
+  __x = __xpp;
+       }
+     else
+       {
+  if (__x == __x->_M_parent->_M_left)
+    {
+      __x = __x->_M_parent;
+      local_Rb_tree_rotate_right(__x, __root);
+    }
+  __x->_M_parent->_M_color = _S_black;
+  __xpp->_M_color = _S_red;
+  local_Rb_tree_rotate_left(__xpp, __root);
+       }
+   }
+      }
+__root->_M_color = _S_black;
+}
 
   _Rb_tree_node_base*
   _Rb_tree_rebalance_for_erase(_Rb_tree_node_base* const __z,
@@ -242,9 +452,10 @@ struct __has_is_transparent<_Cmp, _SfinaeType, __void_t<typename _Cmp::is_transp
 { typedef void type; };
 
 template<typename _Key, typename _Val, typename _KeyOfValue,
-    typename _Compare, typename _Alloc = allocator<_Val> >
+    typename _Compare>
 class _Rb_tree
 {
+    typedef allocator<_Val> _Alloc;
     typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
         rebind<_Rb_tree_node<_Val> >::other _Node_allocator;
 
@@ -323,9 +534,9 @@ private:
         _Rb_tree& _M_t;
     };
 public:
-    typedef _Key     key_type;
-    typedef _Val     value_type;
-    typedef value_type*    pointer;
+    typedef _Key key_type;
+    typedef _Val value_type;
+    typedef value_type* pointer;
     typedef const value_type*   const_pointer;
     typedef value_type&    reference;
     typedef const value_type&   const_reference;
@@ -387,22 +598,12 @@ protected:
         return __tmp;
     }
 protected:
-#if _GLIBCXX_INLINE_VERSION
-    template<typename _Key_compare>
-#else
     template<typename _Key_compare, bool /* _Is_pod_comparator */ = __is_pod(_Key_compare)>
-#endif
     struct _Rb_tree_impl : public _Node_allocator,
         public _Rb_tree_key_compare<_Key_compare>, public _Rb_tree_header
     {
         typedef _Rb_tree_key_compare<_Key_compare> _Base_key_compare;
-
-        _Rb_tree_impl()
-            _GLIBCXX_NOEXCEPT_IF(
-            is_nothrow_default_constructible<_Node_allocator>::value
-            && is_nothrow_default_constructible<_Base_key_compare>::value )
-            : _Node_allocator()
-        { }
+        _Rb_tree_impl() : _Node_allocator() { }
 
         _Rb_tree_impl(const _Rb_tree_impl& __x)
             : _Node_allocator(_Alloc_traits::_S_select_on_copy(__x)),
@@ -464,55 +665,50 @@ protected:
 public:
     typedef _Rb_tree_iterator<value_type>       iterator;
     typedef _Rb_tree_const_iterator<value_type> const_iterator;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
-    typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
     pair<_Base_ptr, _Base_ptr> _M_get_insert_unique_pos(const key_type& __k)
     {
-      typedef pair<_Base_ptr, _Base_ptr> _Res;
-      _Link_type __x = _M_begin();
-      _Base_ptr __y = _M_end();
-      bool __comp = true;
-      while (__x != 0)
- {
-   __y = __x;
-   __comp = _M_impl._M_key_compare(__k, _S_key(__x));
-   __x = __comp ? _S_left(__x) : _S_right(__x);
- }
-      iterator __j = iterator(__y);
-      if (__comp)
- {
-   if (__j == begin())
-     return _Res(__x, __y);
-   else
-     --__j;
- }
-      if (_M_impl._M_key_compare(_S_key(__j._M_node), __k))
- return _Res(__x, __y);
-      return _Res(__j._M_node, 0);
+        typedef pair<_Base_ptr, _Base_ptr> _Res;
+        _Link_type __x = _M_begin();
+        _Base_ptr __y = _M_end();
+        bool comp = true;
+        while (__x != 0)
+        {
+            __y = __x;
+            comp = _M_impl._M_key_compare(__k, _S_key(__x));
+            __x = comp ? _S_left(__x) : _S_right(__x);
+        }
+        iterator j = iterator(__y);
+        if (comp)
+        {
+            if (j == begin())
+                return _Res(__x, __y);
+            --j;
+        }
+        if (_M_impl._M_key_compare(_S_key(j._M_node), __k))
+            return _Res(__x, __y);
+        return _Res(j._M_node, 0);
     }
 
     pair<_Base_ptr, _Base_ptr> _M_get_insert_equal_pos(const key_type& __k)
     {
-      typedef pair<_Base_ptr, _Base_ptr> _Res;
-      _Link_type __x = _M_begin();
-      _Base_ptr __y = _M_end();
-      while (__x != 0)
- {
-   __y = __x;
-   __x = _M_impl._M_key_compare(__k, _S_key(__x)) ?
-  _S_left(__x) : _S_right(__x);
- }
-      return _Res(__x, __y);
+        typedef pair<_Base_ptr, _Base_ptr> _Res;
+        _Link_type __x = _M_begin();
+        _Base_ptr __y = _M_end();
+        while (__x != 0)
+        {
+            __y = __x;
+            __x = _M_impl._M_key_compare(__k, _S_key(__x)) ?
+            _S_left(__x) : _S_right(__x);
+        }
+        return _Res(__x, __y);
     }
-
+#if 1
     pair<_Base_ptr, _Base_ptr> _M_get_insert_hint_unique_pos(const_iterator __position,
         const key_type& __k)
     {
       iterator __pos = __position._M_const_cast();
       typedef pair<_Base_ptr, _Base_ptr> _Res;
-
-      // end()
       if (__pos._M_node == _M_end())
  {
    if (size() > 0
@@ -558,7 +754,7 @@ public:
  return _Res(__pos._M_node, 0);
 
     }
-
+#endif
     pair<_Base_ptr, _Base_ptr> _M_get_insert_hint_equal_pos(const_iterator __position,
         const key_type& __k)
     {
@@ -652,15 +848,15 @@ private:
 
     template<typename _Arg> iterator _M_insert_equal_lower(_Arg&& __v)
     {
-      _Link_type __x = _M_begin();
-      _Base_ptr __y = _M_end();
-      while (__x != 0)
- {
-   __y = __x;
-   __x = !_M_impl._M_key_compare(_S_key(__x), _KeyOfValue()(__v)) ?
-  _S_left(__x) : _S_right(__x);
- }
-      return _M_insert_lower(__y, _GLIBCXX_FORWARD(_Arg, __v));
+        _Link_type __x = _M_begin();
+        _Base_ptr __y = _M_end();
+        while (__x != 0)
+        {
+            __y = __x;
+            __x = !_M_impl._M_key_compare(_S_key(__x), _KeyOfValue()(__v)) ?
+            _S_left(__x) : _S_right(__x);
+        }
+        return _M_insert_lower(__y, _GLIBCXX_FORWARD(_Arg, __v));
     }
 
     iterator _M_insert_lower_node(_Base_ptr __p, _Link_type __z)
@@ -829,10 +1025,6 @@ public:
     const_iterator begin() const { return const_iterator(this->_M_impl._M_header._M_left); }
     iterator end() { return iterator(&this->_M_impl._M_header); }
     const_iterator end() const { return const_iterator(&this->_M_impl._M_header); }
-    reverse_iterator rbegin() { return reverse_iterator(end()); }
-    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
-    reverse_iterator rend() { return reverse_iterator(begin()); }
-    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
     bool empty() const { return _M_impl._M_node_count == 0; }
     size_type size() const { return _M_impl._M_node_count; }
     size_type max_size() const { return _Alloc_traits::max_size(_M_get_Node_allocator()); }
@@ -998,31 +1190,29 @@ private:
                 _M_erase_aux(__first++);
     }
 public:
-      iterator
-      erase(const_iterator __position)
-      {
- __glibcxx_assert(__position != end());
- const_iterator __result = __position;
- ++__result;
- _M_erase_aux(__position);
- return __result._M_const_cast();
-      }
-
-      iterator
-      erase(iterator __position)
-      {
- __glibcxx_assert(__position != end());
- iterator __result = __position;
- ++__result;
- _M_erase_aux(__position);
- return __result;
-      }
-      size_type erase(const key_type& __x)
+    iterator erase(const_iterator __position)
     {
-      pair<iterator, iterator> __p = equal_range(__x);
-      const size_type __old_size = size();
-      _M_erase_aux(__p.first, __p.second);
-      return __old_size - size();
+        __glibcxx_assert(__position != end());
+        const_iterator __result = __position;
+        ++__result;
+        _M_erase_aux(__position);
+        return __result._M_const_cast();
+    }
+
+    iterator erase(iterator __position)
+    {
+        __glibcxx_assert(__position != end());
+        iterator __result = __position;
+        ++__result;
+        _M_erase_aux(__position);
+        return __result;
+    }
+    size_type erase(const key_type& __x)
+    {
+        pair<iterator, iterator> __p = equal_range(__x);
+        const size_type __old_size = size();
+        _M_erase_aux(__p.first, __p.second);
+        return __old_size - size();
     }
 
     iterator erase(const_iterator __first, const_iterator __last)
@@ -1035,7 +1225,7 @@ public:
         while (__first != __last) erase(*__first++);
     }
 
-      void clear() { _M_erase(_M_begin()); _M_impl._M_reset(); }
+    void clear() { _M_erase(_M_begin()); _M_impl._M_reset(); }
 
     iterator find(const key_type& __k)
     {
@@ -1189,8 +1379,6 @@ private:
  }
     }
 };
-}
-
 
 /*
 https://clc-wiki.net/wiki/C_standard_library:string.h:strlen
@@ -1817,8 +2005,8 @@ public:
     const_iterator begin() const { return const_iterator(_M_impl.start); }
     const_iterator cbegin() const { return const_iterator(_M_impl.start); }
     iterator begin() { return iterator(_M_impl.start); }
-    //T &front() { return *begin(); }
-    const T &front() { return at(0); }
+    T &front() { return *begin(); }
+    //const T &front() { return at(0); }
     ~vector2() { udestroy(_M_impl.start, _M_impl.fin, _M_get_Tp_allocator()); }
     void assign(size_t n, const T &val) { _M_fill_assign(n, val); }
     iterator end() { return iterator(_M_impl.fin); }
@@ -2545,9 +2733,7 @@ public:
     typedef less<_Key> value_compare;
     typedef allocator<_Key> allocator_type;
 private:
-    typedef _Rb_tree<key_type, value_type, _Identity<value_type>, key_compare,
-        allocator<_Key> > _Rep_type;
-
+    typedef _Rb_tree<key_type, value_type, _Identity<value_type>, key_compare> _Rep_type;
     _Rep_type _M_t;  // Red-black tree representing set.
 public:
     typedef _Key* pointer;
@@ -2556,8 +2742,6 @@ public:
     typedef const _Key& const_reference;
     typedef typename _Rep_type::const_iterator     iterator;
     typedef typename _Rep_type::const_iterator     const_iterator;
-    typedef typename _Rep_type::const_reverse_iterator reverse_iterator;
-    typedef typename _Rep_type::const_reverse_iterator const_reverse_iterator;
     typedef typename _Rep_type::size_type      size_type;
     typedef typename _Rep_type::difference_type    difference_type;
     xset() : _M_t() { }
@@ -3146,10 +3330,7 @@ public:
 
 private:
     typedef allocator<pair<_Key, _Tp> > _Pair_alloc_type;
-
-    typedef _Rb_tree<key_type, value_type, _Select1st<value_type>,
-               key_compare, _Pair_alloc_type> _Rep_type;
-
+    typedef _Rb_tree<key_type, value_type, _Select1st<value_type>, key_compare> _Rep_type;
     _Rep_type _M_t;
 public:
     typedef _Pair_alloc_type * pointer;
@@ -3160,8 +3341,6 @@ public:
     typedef typename _Rep_type::const_iterator     const_iterator;
     typedef typename _Rep_type::size_type      size_type;
     typedef typename _Rep_type::difference_type    difference_type;
-    typedef typename _Rep_type::reverse_iterator   reverse_iterator;
-    typedef typename _Rep_type::const_reverse_iterator const_reverse_iterator;
     xmap() : _M_t() { }
 
     explicit xmap(const _Compare& __comp, const allocator_type& __a = allocator_type())
@@ -3183,10 +3362,6 @@ public:
     const_iterator begin() const { return _M_t.begin(); }
     iterator end() { return _M_t.end(); }
     const_iterator end() const { return _M_t.end(); }
-    reverse_iterator rbegin() { return _M_t.rbegin(); }
-    const_reverse_iterator rbegin() const { return _M_t.rbegin(); }
-    reverse_iterator rend() { return _M_t.rend(); }
-    const_reverse_iterator rend() const { return _M_t.rend(); }
     bool empty() const { return _M_t.empty(); }
     size_type size() const { return _M_t.size(); }
     size_type max_size() const { return _M_t.max_size(); }
@@ -3195,7 +3370,6 @@ public:
     {
         __glibcxx_function_requires(_DefaultConstructibleConcept<mapped_type>)
         iterator __i = lower_bound(__k);
-        // __i->first is greater than or equivalent to __k.
         if (__i == end() || key_comp()(__k, (*__i).first))
             __i = insert(__i, value_type(__k, mapped_type()));
         return (*__i).second;
@@ -6664,7 +6838,7 @@ wikiqsort(void *array, size_t nitems, size_t size, int (*cmp)(const void *, cons
 static string problem75()
 {   uint32_t L = 1500001;
     xset<uint32_t> maybe;
-    vector<uint32_t> maybe2;
+    //vector<uint32_t> maybe2;
     uint32_t *nope = new uint32_t[999999], nope_end = 0, nope_cnt = 0;
     uint32_t fsqrt = floorsqrt<uint32_t>(L/2);
     for (uint32_t m = 2; m < fsqrt; m++)
@@ -6677,7 +6851,7 @@ static string problem75()
                     else
                     {
                         maybe.insert(k * s);
-                        maybe2.push_back(k * s);
+                        //maybe2.push_back(k * s);
                     }
                 }
             }
@@ -6690,7 +6864,7 @@ static string problem75()
         previous = nope[i];
     }
     delete[] nope;
-    return twostring<uint32_t>(maybe2.size() - nope_cnt);
+    return twostring<uint32_t>(maybe.size() - nope_cnt);
 }
 
 /*
