@@ -11,17 +11,6 @@
 #endif
 using namespace std;
 
-template<typename _Tp> struct __aligned_membuf
-{
-    struct _Tp2 { _Tp _M_t; };
-    unsigned char _M_storage[sizeof(_Tp)];
-    __aligned_membuf() { }
-    void* _M_addr() { return static_cast<void*>(&_M_storage); }
-    const void* _M_addr() const { return static_cast<const void*>(&_M_storage); }
-    _Tp* _M_ptr() { return static_cast<_Tp*>(_M_addr()); }
-    const _Tp* _M_ptr() const { return static_cast<const _Tp*>(_M_addr()); }
-};
-
 enum _Rb_tree_color { _S_red = false, _S_black = true };
 
 struct _Rb_tree_node_base
@@ -29,16 +18,16 @@ struct _Rb_tree_node_base
     typedef _Rb_tree_node_base* _Base_ptr;
     typedef const _Rb_tree_node_base* _Const_Base_ptr;
     _Rb_tree_color _M_color;
-    _Base_ptr _M_parent;
-    _Base_ptr _M_left;
-    _Base_ptr _M_right;
+    _Rb_tree_node_base *_M_parent;
+    _Rb_tree_node_base *_M_left;
+    _Rb_tree_node_base *_M_right;
 
-    static _Base_ptr _S_minimum(_Base_ptr x)
+    static _Base_ptr _S_minimum(_Rb_tree_node_base *x)
     {   while (x->_M_left != 0) x = x->_M_left;
         return x;
     }
 
-    static _Const_Base_ptr _S_minimum(_Const_Base_ptr x)
+    static _Const_Base_ptr _S_minimum(const _Rb_tree_node_base *x)
     {   while (x->_M_left != 0) x = x->_M_left;
         return x;
     }
@@ -54,16 +43,11 @@ struct _Rb_tree_node_base
     }
 };
 
-template <typename _Key_compare> struct _Rb_tree_key_compare
+template <typename T> struct _Rb_tree_key_compare
 {
-    _Key_compare  _M_key_compare;
-    _Rb_tree_key_compare()
-      : _M_key_compare()
-      { }
-
-      _Rb_tree_key_compare(const _Key_compare& __comp)
-      : _M_key_compare(__comp)
-      { }
+    T _M_key_compare;
+    _Rb_tree_key_compare() : _M_key_compare() { }
+    _Rb_tree_key_compare(const T& comp) : _M_key_compare(comp) { }
 };
 
 struct _Rb_tree_header
@@ -313,18 +297,18 @@ const _Rb_tree_node_base* _Rb_tree_decrement2(const _Rb_tree_node_base* __x)
 }
 
 #if __cplusplus >= 201103L
-template <typename _Val> struct _Rb_tree_node : public _Rb_tree_node_base
+template <typename T> struct _Rb_tree_node : public _Rb_tree_node_base
 {
-    typedef _Rb_tree_node<_Val>* _Link_type;
-    __aligned_membuf<_Val> _M_storage;
-    _Val* _M_valptr() { return _M_storage._M_ptr(); }
-    const _Val *_M_valptr() const { return _M_storage._M_ptr(); }
+private:
+    uint8_t _M_storage[sizeof(T)];
+public:
+    T* _M_valptr() { return (T*)((void *)(&_M_storage)); }
+    const T* _M_valptr() const { return (const T*)((const void *)(&_M_storage)); }
 };
 #else
-template<typename _Val> struct _Rb_tree_node : public _Rb_tree_node_base
+template <typename T> struct _Rb_tree_node : public _Rb_tree_node_base
 {
-    typedef _Rb_tree_node<_Val>* _Link_type;
-    _Val _M_value_field;
+    T _M_value_field;
 };
 #endif
 
@@ -341,11 +325,11 @@ template<typename T> struct _Rb_tree_iterator
     _Rb_tree_iterator() : _M_node() { }
     _Rb_tree_iterator(_Base_ptr x) : _M_node(x) { }
 #if __cplusplus >= 201103L
-    reference operator*() const { return *static_cast<_Link_type>(_M_node)->_M_valptr(); }
-    pointer operator->() const { return static_cast<_Link_type> (_M_node)->_M_valptr(); }
+    T& operator*() const { return *static_cast<_Link_type>(_M_node)->_M_valptr(); }
+    T* operator->() const { return static_cast<_Link_type> (_M_node)->_M_valptr(); }
 #else
-    reference operator*() const { return static_cast<_Link_type>(_M_node)->_M_value_field; }
-    pointer operator->() const { return &static_cast<_Link_type>(_M_node)->_M_value_field; }
+    T& operator*() const { return static_cast<_Link_type>(_M_node)->_M_value_field; }
+    T* operator->() const { return &static_cast<_Link_type>(_M_node)->_M_value_field; }
 #endif
     _Self& operator++() { _M_node = _Rb_tree_increment2(_M_node); return *this; }
 
@@ -521,7 +505,7 @@ public:
     typedef _Alloc allocator_type;
     _Node_allocator& _M_get_Node_allocator() { return this->_M_impl; }
     const _Node_allocator& _M_get_Node_allocator() const { return this->_M_impl; }
-    allocator_type get_allocator() const { return allocator_type(_M_get_Node_allocator()); }
+    _Alloc get_allocator() const { return _Alloc(_M_get_Node_allocator()); }
 protected:
     _Link_type _M_get_node() { return _Alloc_traits::allocate(_M_get_Node_allocator(), 1); }
 
@@ -924,7 +908,7 @@ private:
 public:
     _Rb_tree() { }
 
-    _Rb_tree(const _Compare& __comp, const allocator_type& __a = allocator_type())
+    _Rb_tree(const _Compare& __comp, const _Alloc& __a = _Alloc())
       : _M_impl(__comp, _Node_allocator(__a)) { }
 
     _Rb_tree(const _Rb_tree& __x) : _M_impl(__x._M_impl)
@@ -933,10 +917,9 @@ public:
             _M_root() = _M_copy(__x);
     }
 
-    _Rb_tree(const allocator_type& __a) : _M_impl(_Compare(), _Node_allocator(__a))
-      { }
+    _Rb_tree(const _Alloc& __a) : _M_impl(_Compare(), _Node_allocator(__a)) { }
 
-    _Rb_tree(const _Rb_tree& __x, const allocator_type& __a)
+    _Rb_tree(const _Rb_tree& __x, const _Alloc& __a)
       : _M_impl(__x._M_impl._M_key_compare, _Node_allocator(__a))
     {
         if (__x._M_root() != nullptr)
@@ -945,7 +928,7 @@ public:
 
     _Rb_tree(_Rb_tree&&) = default;
 
-    _Rb_tree(_Rb_tree&& __x, const allocator_type& __a)
+    _Rb_tree(_Rb_tree&& __x, const _Alloc& __a)
       : _Rb_tree(move(__x), _Node_allocator(__a))
       { }
 
@@ -1062,8 +1045,7 @@ public:
     }
 
     template<typename... _Args>
-    iterator
-    _M_emplace_hint_unique(const_iterator __pos, _Args&&... __args)
+    iterator _M_emplace_hint_unique(const_iterator __pos, _Args&&... __args)
     {
  _Link_type __z = _M_create_node(forward<_Args>(__args)...);
 
@@ -1082,11 +1064,9 @@ public:
      _M_drop_node(__z);
      __throw_exception_again;
    }
-
     }
 
     template<typename It> void insert_unique(It __first, It __last)
-    //template<typename It> void _M_insert_unique(It __first, It __last)
     {
         _Alloc_node __an(*this);
         for (; __first != __last; ++__first)
@@ -1293,7 +1273,7 @@ public:
     typedef ptrdiff_t difference_type;
     typedef _Alloc allocator_type;
 
-    allocator_type get_allocator() const
+    _Alloc get_allocator() const
     { return *static_cast<const _Node_allocator*>(&this->_M_impl); }
 protected:
     _Rb_tree_node* _M_get_node() { return _M_impl._Node_allocator::allocate(1); }
@@ -1365,21 +1345,10 @@ protected:
 
     _Rb_tree_impl<_Compare> _M_impl;
 protected:
-      _Base_ptr&
-      _M_root()
-      { return this->_M_impl._M_header._M_parent; }
-
-      _Const_Base_ptr
-      _M_root() const
-      { return this->_M_impl._M_header._M_parent; }
-
-      _Base_ptr&
-      _M_leftmost()
-      { return this->_M_impl._M_header._M_left; }
-
-      _Const_Base_ptr
-      _M_leftmost() const
-      { return this->_M_impl._M_header._M_left; }
+    _Base_ptr& _M_root() { return this->_M_impl._M_header._M_parent; }
+    _Const_Base_ptr _M_root() const { return this->_M_impl._M_header._M_parent; }
+    _Base_ptr& _M_leftmost() { return this->_M_impl._M_header._M_left; }
+    _Const_Base_ptr _M_leftmost() const { return this->_M_impl._M_header._M_left; }
 
       _Base_ptr&
       _M_rightmost()
@@ -1470,40 +1439,38 @@ private:
         return iterator(__z);
     }
 
-      _Link_type
-      _M_copy(_Const_Link_type __x, _Link_type __p)
+    _Link_type _M_copy(_Const_Link_type __x, _Link_type __p)
     {
-      _Link_type __top = _M_clone_node(__x);
-      __top->_M_parent = __p;
+        _Link_type __top = _M_clone_node(__x);
+        __top->_M_parent = __p;
 
-      try
-    {
-      if (__x->_M_right)
-        __top->_M_right = _M_copy(_S_right(__x), __top);
-      __p = __top;
-      __x = _S_left(__x);
-
-      while (__x != 0)
+        try
         {
-          _Link_type __y = _M_clone_node(__x);
-          __p->_M_left = __y;
-          __y->_M_parent = __p;
-          if (__x->_M_right)
-        __y->_M_right = _M_copy(_S_right(__x), __y);
-          __p = __y;
-          __x = _S_left(__x);
+            if (__x->_M_right)
+                __top->_M_right = _M_copy(_S_right(__x), __top);
+            __p = __top;
+            __x = _S_left(__x);
+
+            while (__x != 0)
+            {
+                _Link_type __y = _M_clone_node(__x);
+                __p->_M_left = __y;
+                __y->_M_parent = __p;
+                if (__x->_M_right)
+                    __y->_M_right = _M_copy(_S_right(__x), __y);
+                __p = __y;
+                __x = _S_left(__x);
+            }
         }
-    }
-      catch(...)
-    {
-      _M_erase(__top);
-      __throw_exception_again;
-    }
-      return __top;
+        catch(...)
+        {
+            _M_erase(__top);
+            __throw_exception_again;
+        }
+        return __top;
     }
 
-      void
-      _M_erase(_Link_type __x)
+    void _M_erase(_Link_type __x)
     {
         while (__x != 0)
         {
@@ -1513,31 +1480,22 @@ private:
             __x = __y;
         }
     }
+public:
+    _Rb_tree() { }
+    _Rb_tree(const _Compare& __comp) : _M_impl(_Alloc(), __comp) { }
+    _Rb_tree(const _Compare& __comp, const _Alloc& __a) : _M_impl(__a, __comp) { }
 
-    public:
-      // allocation/deallocation
-      _Rb_tree()
-      { }
-
-      _Rb_tree(const _Compare& __comp)
-      : _M_impl(allocator_type(), __comp)
-      { }
-
-      _Rb_tree(const _Compare& __comp, const allocator_type& __a)
-      : _M_impl(__a, __comp)
-      { }
-
-      _Rb_tree(const _Rb_tree<_Key,_Val,_KeyOfValue,_Compare>& __x)
+    _Rb_tree(const _Rb_tree<_Key,_Val,_KeyOfValue,_Compare>& __x)
       : _M_impl(__x.get_allocator(), __x._M_impl._M_key_compare)
-      {
-    if (__x._M_root() != 0)
-      {
-        _M_root() = _M_copy(__x._M_begin(), _M_end());
-        _M_leftmost() = _S_minimum(_M_root());
-        _M_rightmost() = _S_maximum(_M_root());
-        _M_impl._M_node_count = __x._M_impl._M_node_count;
-      }
-      }
+    {
+        if (__x._M_root() != 0)
+        {
+            _M_root() = _M_copy(__x._M_begin(), _M_end());
+            _M_leftmost() = _S_minimum(_M_root());
+            _M_rightmost() = _S_maximum(_M_root());
+            _M_impl._M_node_count = __x._M_impl._M_node_count;
+        }
+    }
 
       ~_Rb_tree() { _M_erase(_M_begin()); }
 
@@ -1802,12 +1760,6 @@ private:
         }
         return const_iterator(__y);
     }
-
-    pair<iterator,iterator> equal_range(const key_type& __k)
-    { return pair<iterator, iterator>(lower_bound(__k), upper_bound(__k)); }
-
-    pair<const_iterator, const_iterator> equal_range(const key_type& __k) const
-    { return pair<const_iterator, const_iterator>(lower_bound(__k), upper_bound(__k)); }
 };
 #endif
 
@@ -3163,7 +3115,6 @@ public:
     typedef T value_type;
     typedef less<T> key_compare;
     typedef less<T> value_compare;
-    typedef allocator<T> allocator_type;
 private:
     typedef _Rb_tree<T, T, _Identity<value_type>, key_compare> _Rep_type;
     _Rep_type _M_t;  // Red-black tree representing set.
@@ -3347,22 +3298,7 @@ public:
     typedef typename _Rep_type::size_type      size_type;
     typedef typename _Rep_type::difference_type    difference_type;
     xmap() : _M_t() { }
-
-    explicit xmap(const _Compare& __comp, const allocator_type& __a = allocator_type())
-        : _M_t(__comp, _Pair_alloc_type(__a)) { }
-
-    xmap(const xmap& __x) : _M_t(__x._M_t) { }
-
-    template <typename It> xmap(It __first, It __last) : _M_t()
-    { _M_t.insert_unique(__first, __last); }
-
-    template <typename It> xmap(It __first, It __last, const _Compare& __comp,
-        const allocator_type& __a = allocator_type())
-    : _M_t(__comp, _Pair_alloc_type(__a))
-    { _M_t.insert_unique(__first, __last); }
-
-    xmap& operator=(const xmap &x) { _M_t = x._M_t; return *this; }
-    allocator_type get_allocator() const { return allocator_type(_M_t.get_allocator()); }
+    _Alloc get_allocator() const { return _Alloc(_M_t.get_allocator()); }
     iterator begin() { return _M_t.begin(); }
     const_iterator begin() const { return _M_t.begin(); }
     iterator end() { return _M_t.end(); }
@@ -3370,15 +3306,22 @@ public:
     bool empty() const { return _M_t.empty(); }
     size_type size() const { return _M_t.size(); }
     size_type max_size() const { return _M_t.max_size(); }
-#if 1
-    mapped_type& operator[](const key_type& __k)
-    {
-        iterator __i = lower_bound(__k);
-        if (__i == end() || key_comp()(__k, (*__i).first))
-            __i = insert(__i, value_type(__k, mapped_type()));
-        return (*__i).second;
-    }
-#endif
+    pair<iterator, bool> insert(const value_type& x) { return _M_t.insert_unique(x); }
+    iterator insert(iterator pos, const value_type &x) { return _M_t.insert_unique(pos, x); }
+    void erase(iterator __position) { _M_t.erase(__position); }
+    size_type erase(const key_type& __x) { return _M_t.erase(__x); }
+    void erase(iterator first, iterator last) { _M_t.erase(first, last); }
+    void clear() { _M_t.clear(); }
+    key_compare key_comp() const { return _M_t.key_comp(); }
+    value_compare value_comp() const { return value_compare(_M_t.key_comp()); }
+    iterator find(const key_type& __x) { return _M_t.find(__x); }
+    const_iterator find(const key_type& __x) const { return _M_t.find(__x); }
+    size_type count(const key_type& __x) const { return _M_t.find(__x) == _M_t.end() ? 0 : 1; }
+    iterator lower_bound(const key_type& __x) { return _M_t.lower_bound(__x); }
+    const_iterator lower_bound(const key_type& __x) const { return _M_t.lower_bound(__x); }
+    iterator upper_bound(const key_type& __x) { return _M_t.upper_bound(__x); }
+    const_iterator upper_bound(const key_type &x) const { return _M_t.upper_bound(x); }
+
     mapped_type& at(const key_type& __k)
     {
         iterator __i = lower_bound(__k);
@@ -3395,30 +3338,13 @@ public:
         return (*__i).second;
     }
 
-    pair<iterator, bool> insert(const value_type& x)
-    { return _M_t.insert_unique(x); }
-
-    iterator insert(iterator pos, const value_type &x) { return _M_t.insert_unique(pos, x); }
-    template <typename It> void insert(It first, It last)
-    { _M_t.insert_unique(first, last); }
-
-    void erase(iterator __position) { _M_t.erase(__position); }
-    size_type erase(const key_type& __x) { return _M_t.erase(__x); }
-    void erase(iterator first, iterator last) { _M_t.erase(first, last); }
-    void clear() { _M_t.clear(); }
-    key_compare key_comp() const { return _M_t.key_comp(); }
-    value_compare value_comp() const { return value_compare(_M_t.key_comp()); }
-    iterator find(const key_type& __x) { return _M_t.find(__x); }
-    const_iterator find(const key_type& __x) const { return _M_t.find(__x); }
-    size_type count(const key_type& __x) const { return _M_t.find(__x) == _M_t.end() ? 0 : 1; }
-    iterator lower_bound(const key_type& __x) { return _M_t.lower_bound(__x); }
-    const_iterator lower_bound(const key_type& __x) const { return _M_t.lower_bound(__x); }
-    iterator upper_bound(const key_type& __x) { return _M_t.upper_bound(__x); }
-    const_iterator upper_bound(const key_type &x) const { return _M_t.upper_bound(x); }
-    pair<iterator, iterator> equal_range(const key_type &x) { return _M_t.equal_range(x); }
-
-    pair<const_iterator, const_iterator> equal_range(const key_type& __x) const
-    { return _M_t.equal_range(__x); }
+    mapped_type& operator[](const key_type& __k)
+    {
+        iterator __i = lower_bound(__k);
+        if (__i == end() || key_comp()(__k, (*__i).first))
+            __i = insert(__i, value_type(__k, mapped_type()));
+        return (*__i).second;
+    }
 };
 
 static void testUnique()
