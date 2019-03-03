@@ -37,6 +37,7 @@ echo $mm;
 <main style="width: 900px;">
 <h1>TI 74xx series</h1>
 <h2>7400</h2>
+<p>quad 2-input NAND gate</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -55,6 +56,7 @@ end architecture;
 </code>
 
 <h2>7402</h2>
+<p>quad 2-input NOR gate</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -72,9 +74,31 @@ begin
 end architecture;
 </code>
 
-<img src="ti7402.svg" alt="ti7402"/>
+<img src="ti7402.svg" alt="ti7402" width="300px"/>
+
+<h2>7432</h2>
+<p>quad 2-input OR gate</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti7432 is
+    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
+end entity;
+
+architecture behavior of ti7432 is
+begin
+    y1 &lt;= a1 or b1;
+    y2 &lt;= a2 or b2;
+    y3 &lt;= a3 or b3;
+    y4 &lt;= a4 or b4;
+end architecture;
+</code>
+
+<img src="ti7432.svg" alt="ti7432" width="300px"/>
 
 <h2>7483</h2>
+<p>4-bit binary full adder</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -96,9 +120,10 @@ begin
     c4 &lt;= tmp(5);
 end architecture;
 </code>
-<img src="ti7483.svg" alt="ti7483"/>
+<img src="ti7483.svg" alt="ti7483" width="300px"/>
 
 <h2>74133</h2>
+<p>single 13-input NAND gate</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -116,6 +141,7 @@ end architecture;
 <img src="ti74133.svg" alt="ti74133"/>
 
 <h2>74139</h2>
+<p>dual 2 to 4-line decoder/demultiplexer, inverting outputs</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -140,7 +166,7 @@ begin
         when "01" =&gt; tmp0 &lt;= "1101";
         when "10" =&gt; tmp0 &lt;= "1011";
         when "11" =&gt; tmp0 &lt;= "0111";
-          end case;
+        end case;
     end process;
 
     process (sel1)
@@ -158,6 +184,7 @@ end architecture behavior;
 <img src="ti74139.svg" alt="ti74139"/>
 
 <h2>74150</h2>
+<p>16-line to 1-line data selector/multiplexer</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -199,8 +226,10 @@ begin
 end architecture;
 </code>
 
-<img src="ti74150.svg" alt="ti74150"/>
+<img src="ti74150.svg" alt="ti74150" width="400px"/>
 
+<h2>74151</h2>
+<p>8-line to 1-line data selector/multiplexer</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -235,7 +264,74 @@ begin
 end architecture;
 </code>
 
-<img src="ti74151.svg" alt="ti74151"/>
+<img src="ti74151.svg" alt="ti74151" width="400px"/>
+
+<h2>74153</h2>
+<p>dual 4-line to 1-line data selector/multiplexer, non-inverting outputs</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74153 is
+    port (sel: in std_logic_vector(1 downto 0);
+        g0_n, g1_n: in std_logic;
+        c0, c1: in std_logic_vector(3 downto 0);
+        y0, y1: out std_logic);
+end entity;
+
+architecture behavior of ti74153 is
+signal mux0_out, mux1_out: std_logic;
+begin
+    y0 &lt;= not g0_n and mux0_out;
+    y1 &lt;= not g1_n and mux1_out;
+
+    process (sel, c0, c1)
+    begin
+        case sel is
+            when "00" =&gt;
+                mux0_out &lt;= c0(0);
+                mux1_out &lt;= c1(0);
+            when "01" =&gt;
+                mux0_out &lt;= c0(1);
+                mux1_out &lt;= c1(1);
+            when "10" =&gt;
+                mux0_out &lt;= c0(2);
+                mux1_out &lt;= c1(2);
+            when "11" =&gt;
+                mux0_out &lt;= c0(3);
+                mux1_out &lt;= c1(3);
+        end case;
+    end process;
+end architecture;
+</code>
+<img src="ti74153.svg" alt="ti74153" width="400px"/>
+
+<h2>744040</h2>
+<p>12-stage binary ripple counter</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ti744040 is
+    port (clk, clr: in std_logic; q: out unsigned(11 downto 0));
+end entity;
+
+architecture behavior of ti744040 is
+signal tmp: unsigned(11 downto 0);
+begin
+    q &lt;= tmp;
+    process (clk, clr) begin
+        if clr='1' then
+            tmp &lt;= (others =&gt; '0');
+        elsif falling_edge(clk) then
+            tmp &lt;= tmp + 1;
+        end if;
+    end process;
+end architecture;
+</code>
+
+<img src="ti744040.svg" alt="ti744040" width="400px"/>
 
 </main>
 </body>

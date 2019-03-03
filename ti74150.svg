@@ -12,14 +12,14 @@
    version="1.1"
    id="svg2"
    xml:space="preserve"
-   width="816"
-   height="1056"
-   viewBox="0 0 816 1056"
-   sodipodi:docname="print.svg"
+   width="290.49225mm"
+   height="99.232452mm"
+   viewBox="0 0 1097.9235 375.05179"
+   sodipodi:docname="ti74150.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
      id="defs6"><clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath20"><path
@@ -69,19 +69,20 @@
      inkscape:window-height="971"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="1.7878788"
-     inkscape:cx="186.95569"
-     inkscape:cy="775.6956"
+     inkscape:zoom="0.4469697"
+     inkscape:cx="-330.23808"
+     inkscape:cy="319.36598"
      inkscape:window-x="0"
      inkscape:window-y="31"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g10" /><g
+     inkscape:current-layer="g10"
+     units="mm" /><g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="ink_ext_XXXXXX"
-     transform="matrix(1.3333333,0,0,-1.3333333,0,1056)"><g
+     transform="matrix(1.3333333,0,0,-1.3333333,-10.659264,781.03577)"><g
        id="g12"
-       transform="scale(0.1)"><g
+       transform="matrix(0.27002451,0,0,0.27002451,-308.10231,-1315.394)"><g
          id="g14"><g
            id="g16"
            clip-path="url(#clipPath20)"><g
@@ -117,52 +118,60 @@
            clip-path="url(#clipPath52)"><g
              id="g54"
              transform="scale(10)"><text
-               transform="matrix(0.999908,0,0,-1,214.099,663.619)"
-               style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text58"><tspan
-                 x="0 6.8545308 13.709062 19.429129 22.277039 27.997498 30.845407 33.693317 39.413776"
-                 y="0"
-                 sodipodi:role="line"
-                 id="tspan56">SEL[3..0]</tspan></text>
+   transform="matrix(0.999908,0,0,-1,214.099,663.619)"
+   style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   id="text58"><tspan
+     x="0 6.8545308 13.709062 19.429129 22.277039 27.997498 30.845407 33.693317 39.413776"
+     y="0"
+     sodipodi:role="line"
+     id="tspan56">SEL[3..0]</tspan></text>
+
+
 </g></g></g><g
          id="g60"><g
            id="g62"
            clip-path="url(#clipPath66)"><g
              id="g68"
              transform="scale(10)"><text
-               transform="matrix(0.999908,0,0,-1,214.099,651.261)"
-               style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text72"><tspan
-                 x="0 7.433279 14.2882 20.575491 27.430021 30.277933 35.99839 41.718456 44.566368 47.414669"
-                 y="0"
-                 sodipodi:role="line"
-                 id="tspan70">DATA[15..0</tspan></text>
+   transform="matrix(0.999908,0,0,-1,214.099,651.261)"
+   style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   id="text72"><tspan
+     x="0 7.433279 14.2882 20.575491 27.430021 30.277933 35.99839 41.718456 44.566368 47.414669"
+     y="0"
+     sodipodi:role="line"
+     id="tspan70">DATA[15..0</tspan></text>
+
+
 </g></g></g><g
          id="g74"><g
            id="g76"
            clip-path="url(#clipPath80)"><g
              id="g82"
              transform="scale(10)"><text
-               transform="matrix(0.999908,0,0,-1,251.072,657.44)"
-               style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text86"><tspan
-                 x="0 8.0011292 15.435019"
-                 y="0"
-                 sodipodi:role="line"
-                 id="tspan84">OUT</tspan></text>
+   transform="matrix(0.999908,0,0,-1,251.072,657.44)"
+   style="font-variant:normal;font-weight:normal;font-size:10.29539967px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   id="text86"><tspan
+     x="0 8.0011292 15.435019"
+     y="0"
+     sodipodi:role="line"
+     id="tspan84">OUT</tspan></text>
+
+
 </g></g></g><g
          id="g88"><g
            id="g90"
            clip-path="url(#clipPath94)"><g
              id="g96"
              transform="scale(10)"><text
-               transform="matrix(0.999908,0,0,-1,234.866,621.912)"
-               style="font-variant:normal;font-weight:normal;font-size:7.72348022px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#400000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text100"><tspan
-                 x="0 6.4322181 12.007741"
-                 y="0"
-                 sodipodi:role="line"
-                 id="tspan98">MUX</tspan></text>
+   transform="matrix(0.999908,0,0,-1,234.866,621.912)"
+   style="font-variant:normal;font-weight:normal;font-size:7.72348022px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#400000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   id="text100"><tspan
+     x="0 6.4322181 12.007741"
+     y="0"
+     sodipodi:role="line"
+     id="tspan98">MUX</tspan></text>
+
+
 </g></g></g><g
          id="g102"><g
            id="g104"
@@ -399,27 +408,29 @@
                inkscape:connector-curvature="0" /></g><g
              id="g258"
              transform="scale(10)"><text
-               transform="matrix(0.999908,0,0,-1,213.327,697.602)"
-               style="font-variant:normal;font-weight:normal;font-size:9.26817989px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#800080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               id="text270"><tspan
-                 x="0 7.7116528 12.864761 17.498852"
-                 y="0"
-                 sodipodi:role="line"
-                 id="tspan260">Mux0</tspan><tspan
-                 x="105.812 112.49738 117.65048"
-                 y="28.577"
-                 sodipodi:role="line"
-                 id="tspan262">w_n</tspan><tspan
-                 x="-79.564003 -74.410889 -69.257782"
-                 y="94.998901"
-                 sodipodi:role="line"
-                 id="tspan264">g_n</tspan><tspan
-                 x="192.314 198.99977 204.15288 -94.999001 -89.845894 -87.275345 -82.122238 -76.969131 -74.398582 -71.828033 -66.674927"
-                 y="45.568401"
-                 sodipodi:role="line"
-                 id="tspan266">w_ne[15..0]</tspan><tspan
-                 x="-96.531563 -91.897469 -86.744362 -84.692612 -82.122063 -76.968956 -74.398407 -71.827858 -66.674751"
-                 y="33.210999"
-                 sodipodi:role="line"
-                 id="tspan268">sel[3..0]</tspan></text>
+   transform="matrix(0.999908,0,0,-1,213.327,697.602)"
+   style="font-variant:normal;font-weight:normal;font-size:9.26817989px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#800080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   id="text270"><tspan
+     x="0 7.7116528 12.864761 17.498852"
+     y="0"
+     sodipodi:role="line"
+     id="tspan260">Mux0</tspan><tspan
+     x="105.812 112.49738 117.65048"
+     y="28.577"
+     sodipodi:role="line"
+     id="tspan262">w_n</tspan><tspan
+     x="-79.564003 -74.410889 -69.257782"
+     y="94.998901"
+     sodipodi:role="line"
+     id="tspan264">g_n</tspan><tspan
+     x="192.314 198.99977 204.15288 -94.999001 -89.845894 -87.275345 -82.122238 -76.969131 -74.398582 -71.828033 -66.674927"
+     y="45.568401"
+     sodipodi:role="line"
+     id="tspan266">w_ne[15..0]</tspan><tspan
+     x="-96.531563 -91.897469 -86.744362 -84.692612 -82.122063 -76.968956 -74.398407 -71.827858 -66.674751"
+     y="33.210999"
+     sodipodi:role="line"
+     id="tspan268">sel[3..0]</tspan></text>
+
+
 </g></g></g></g></g></svg>

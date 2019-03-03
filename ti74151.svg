@@ -12,10 +12,10 @@
    version="1.1"
    id="svg2"
    xml:space="preserve"
-   width="816"
-   height="1056"
-   viewBox="0 0 816 1056"
-   sodipodi:docname="print.svg"
+   width="291.38025mm"
+   height="95.680176mm"
+   viewBox="0 0 1101.2797 361.62587"
+   sodipodi:docname="ti74151.svg"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
@@ -69,43 +69,44 @@
      inkscape:window-height="971"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="1.7878788"
-     inkscape:cx="245.29088"
-     inkscape:cy="865.44342"
+     inkscape:zoom="0.8939394"
+     inkscape:cx="206.23855"
+     inkscape:cy="23.525929"
      inkscape:window-x="0"
      inkscape:window-y="31"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g10" /><g
+     inkscape:current-layer="g10"
+     units="mm" /><g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="ink_ext_XXXXXX"
-     transform="matrix(1.3333333,0,0,-1.3333333,0,1056)"><g
-       transform="scale(0.0999866,-0.100013)"
+     transform="matrix(1.3333333,0,0,-1.3333333,-9.1115673,782.69668)"><g
+       transform="matrix(0.2671387,0,0,-0.26720923,-302.8255,-1295.1686)"
        id="g30"><path
          inkscape:connector-curvature="0"
          id="path32"
          style="fill:none;stroke:#000000;stroke-width:7.52511978;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
          d="m 2089.67,-6928.13 v 602.01" /></g><g
-       transform="scale(0.0999866,-0.100013)"
+       transform="matrix(0.2671387,0,0,-0.26720923,-302.8255,-1295.1686)"
        id="g34"><path
          inkscape:connector-curvature="0"
          id="path36"
          style="fill:none;stroke:#000000;stroke-width:7.52511978;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
          d="m 2691.68,-6747.53 v 240.8" /></g><g
-       transform="scale(0.0999866,-0.100013)"
+       transform="matrix(0.2671387,0,0,-0.26720923,-302.8255,-1295.1686)"
        id="g38"><path
          inkscape:connector-curvature="0"
          id="path40"
          style="fill:none;stroke:#000000;stroke-width:7.52511978;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
          d="m 2089.67,-6928.13 602.01,180.6" /></g><g
-       transform="scale(0.0999866,-0.100013)"
+       transform="matrix(0.2671387,0,0,-0.26720923,-302.8255,-1295.1686)"
        id="g42"><path
          inkscape:connector-curvature="0"
          id="path44"
          style="fill:none;stroke:#000000;stroke-width:7.52511978;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
          d="m 2089.67,-6326.12 602.01,-180.61" /></g><g
        id="g46"
-       transform="scale(0.1)"><g
+       transform="matrix(0.2671745,0,0,0.2671745,-302.8255,-1295.1686)"><g
          clip-path="url(#clipPath52)"
          id="g48"><g
            transform="scale(10)"
@@ -118,9 +119,11 @@
      y="0"
      x="0 6.6795049 13.35901 18.932743 21.708096 27.282221 30.057573 32.832535 38.406662">SEL[2..0]</tspan></text>
 
+
+
 </g></g></g><g
        id="g60"
-       transform="scale(0.1)"><g
+       transform="matrix(0.2671745,0,0,0.2671745,-302.8255,-1295.1686)"><g
          clip-path="url(#clipPath66)"
          id="g62"><g
            transform="scale(10)"
@@ -133,9 +136,11 @@
      y="0"
      x="0 7.2433205 13.922826 20.049435 26.728939 29.504292 35.078419 37.853771 40.628731 46.202858">DATA[7..0]</tspan></text>
 
+
+
 </g></g></g><g
        id="g74"
-       transform="scale(0.1)"><g
+       transform="matrix(0.2671745,0,0,0.2671745,-302.8255,-1295.1686)"><g
          clip-path="url(#clipPath80)"
          id="g76"><g
            transform="scale(10)"
@@ -148,9 +153,11 @@
      y="0"
      x="0 7.7961917 15.040294">OUT</tspan></text>
 
+
+
 </g></g></g><g
        id="g88"
-       transform="scale(0.1)"><g
+       transform="matrix(0.2671745,0,0,0.2671745,-302.8255,-1295.1686)"><g
          clip-path="url(#clipPath94)"
          id="g90"><g
            transform="scale(10)"
@@ -163,9 +170,11 @@
      y="0"
      x="0 6.2677035 11.700788">MUX</tspan></text>
 
+
+
 </g></g></g><g
        id="g102"
-       transform="scale(0.1)"><g
+       transform="matrix(0.2671745,0,0,0.2671745,-302.8255,-1295.1686)"><g
          clip-path="url(#clipPath108)"
          id="g104"><g
            transform="scale(0.999866,-1.00013)"
@@ -480,5 +489,7 @@
      sodipodi:role="line"
      y="32.362499"
      x="-94.066032 -89.550346 -84.528915 -82.529541 -80.024971 -75.003532 -72.498955 -69.993988 -64.972549">sel[2..0]</tspan></text>
+
+
 
 </g></g></g></g></svg>
