@@ -58,13 +58,33 @@ begin
 end architecture;
 </code>
 
+<h2>7402</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti7402 is
+    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
+end entity;
+
+architecture behavior of ti7402 is
+begin
+    y1 &lt;= not (a1 or b1);
+    y2 &lt;= not (a2 or b2);
+    y3 &lt;= not (a3 or b3);
+    y4 &lt;= not (a4 or b4);
+end architecture;
+</code>
+
+<img src="ti7402.svg" alt="ti7402"/>
+
 <h2>7483</h2>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity x74283 is
+entity ti7483 is
     port(
         c0: in std_logic;
         c4: out std_logic;
@@ -72,7 +92,7 @@ entity x74283 is
         s: out unsigned(3 downto 0));
 end entity;
 
-architecture behavior of x74283 is
+architecture behavior of ti7483 is
 signal tmp: unsigned(5 downto 0);
 begin
     tmp &lt;= ('0' &amp; a &amp; '1') + ('0' &amp; b &amp; c0);
@@ -80,7 +100,7 @@ begin
     c4 &lt;= tmp(5);
 end architecture;
 </code>
-<img src="ti74283.svg" alt=""/>
+<img src="ti7483.svg" alt="ti7483"/>
 </main>
 </body>
 </html>
