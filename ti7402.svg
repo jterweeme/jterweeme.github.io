@@ -16,14 +16,14 @@
    height="1056"
    viewBox="0 0 816 1056"
    sodipodi:docname="print.svg"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"><defs
-     id="defs6"><clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath20"><path
-         d="M 720,7200 H 5400 V 720 H 720 Z"
-         id="path18"
-         inkscape:connector-curvature="0"
-         style="clip-rule:evenodd" /></clipPath></defs><sodipodi:namedview
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+<defs id="defs6">
+<clipPath clipPathUnits="userSpaceOnUse" id="clipPath20">
+<path d="M 720,7200 H 5400 V 720 H 720 Z" id="path18" inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" />
+</clipPath>
+</defs>
+<sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1"
@@ -31,30 +31,26 @@
      gridtolerance="10"
      guidetolerance="10"
      id="namedview4"
-     showgrid="false"
-     id="g10"
-     transform="matrix(1.3333333,0,0,-1.3333333,0,1056)"><g
-       id="g12"
-       transform="scale(0.1)"><g
-         id="g14"><g
-           id="g16"
-           clip-path="url(#clipPath20)"><g
-             id="g30"
-             transform="scale(0.999501,-1.0005)"><path
-               d="m 2374.6,-4336.54 h 42.06"
-               style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+     showgrid="false"/>
+<g id="g10" transform="matrix(1.3333333,0,0,-1.3333333,0,1056)">
+<g id="g12" transform="scale(0.1)">
+<g id="g14">
+<g id="g16" clip-path="url(#clipPath20)">
+<g id="g30" transform="scale(0.999501,-1.0005)">
+<path d="m 2374.6,-4336.54 h 42.06"
+    style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
                id="path32"
-               inkscape:connector-curvature="0" /></g><g
-             id="g34"
-             transform="scale(0.999501,-1.0005)"><path
-               d="m 2374.6,-4112.23 h 42.06"
-               style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-               id="path36"
-               inkscape:connector-curvature="0" /></g><g
-             id="g38"
-             transform="scale(0.999501,-1.0005)"><path
-               d="m 2374.6,-4056.16 h 126.17"
-               style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+               inkscape:connector-curvature="0" />
+</g>
+<g id="g34" transform="scale(0.999501,-1.0005)">
+<path d="m 2374.6,-4112.23 h 42.06"
+    style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+    id="path36"
+    inkscape:connector-curvature="0" />
+</g>
+<g id="g38" transform="scale(0.999501,-1.0005)">
+<path d="m 2374.6,-4056.16 h 126.17"
+    style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
                id="path40"
                inkscape:connector-curvature="0" /></g><g
              id="g42"
@@ -686,10 +682,10 @@
                d="M 1925.99,-6467.42 H 2150.3"
                style="fill:none;stroke:#000000;stroke-width:14.01900005;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
                id="path444"
-               inkscape:connector-curvature="0" /></g><g
-             id="g446"
-             transform="scale(10)"><text
-               transform="matrix(0.999002,0,0,-1,240.144,447.896)"
+               inkscape:connector-curvature="0" />
+</g>
+<g id="g446" transform="scale(10)">
+<text transform="matrix(0.999002,0,0,-1,240.144,447.896)"
                style="font-variant:normal;font-weight:normal;font-size:16.83119965px;font-family:'Liberation Sans';-inkscape-font-specification:LiberationSans;writing-mode:lr-tb;fill:#800080;fill-opacity:1;fill-rule:nonzero;stroke:none"
                id="text480">
 <tspan x="0 8.4155998" y="0" id="tspan448">y1</tspan>
@@ -697,35 +693,23 @@
 <tspan x="0 8.4155998" y="-157.091" id="tspan452">y3</tspan>
 <tspan x="0 8.4155998" y="-235.63631" id="tspan454">y4</tspan>
 <tspan x="-136.534 -127.17585" y="19.6367" id="tspan456">a1</tspan>
-<tspan x="-136.534 -127.17585" y="42.078098" id="tspan458">b1</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-58.908901"
-                 id="tspan460">a2</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-36.467499"
-                 id="tspan462">b2</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-137.4545"
-                 id="tspan464">a3</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-115.0131"
-                 id="tspan466">b3</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-216.00011"
-                 id="tspan468">a4</tspan><tspan
-                 x="-136.534 -127.17585"
-                 y="-193.5587"
-                 id="tspan470">b4</tspan><tspan
-                 x="157.091 165.50661"
-                 y="30.8573"
-                 id="tspan472">y1</tspan><tspan
-                 x="157.091 165.50661"
-                 y="-47.688"
-                 id="tspan474">y2</tspan><tspan
-                 x="157.091 165.50661"
-                 y="-126.2337"
-                 id="tspan476">y3</tspan><tspan
-                 x="157.091 165.50661"
-                 y="-204.77901"
-                 id="tspan478">y4</tspan></text>
-</g></g></g></g></g></svg>
+<tspan x="-136.534 -127.17585" y="42.078098" id="tspan458">b1</tspan>
+<tspan x="-136.534 -127.17585" y="-58.908901" id="tspan460">a2</tspan>
+<tspan x="-136.534 -127.17585" y="-36.467499" id="tspan462">b2</tspan>
+<tspan x="-136.534 -127.17585" y="-137.4545" id="tspan464">a3</tspan>
+<tspan x="-136.534 -127.17585" y="-115.0131" id="tspan466">b3</tspan>
+<tspan x="-136.534 -127.17585" y="-216.00011" id="tspan468">a4</tspan>
+<tspan x="-136.534 -127.17585" y="-193.5587" id="tspan470">b4</tspan>
+<tspan x="157.091 165.50661" y="30.8573" id="tspan472">y1</tspan>
+<tspan x="157.091 165.50661" y="-47.688" id="tspan474">y2</tspan>
+<tspan x="157.091 165.50661" y="-126.2337" id="tspan476">y3</tspan>
+<tspan x="157.091 165.50661" y="-204.77901" id="tspan478">y4</tspan>
+</text>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
+
+
