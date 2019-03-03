@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+  
+<!-- This file is auto-generated DO NOT EDIT -->
+
+
+<html>
+<head>
+<title>Spectrum FPGA</title>
+<link rel="stylesheet" type="text/css" href="common.css"/>
+<style>
+code, kbd, samp {
+    white-space: pre;
+}
+
+var {
+    font-family: monospace;
+    font-style: normal;
+}
+
+samp {
+    color: gray;
+}
+
+code em {
+    font-style: normal;
+    color: red;
+}
+</style>
+</head>
+<body>
+
+
+<nav class="mainmenu">
+<a href="index.html">Home</a>
+<a href="https://github.com/jterweeme">GitHub</a>
+<a href="yahtzee/index.html">Yahtzee</a>
+<a href="et/index.html">E.T.</a>
+<a href="madmanimation/index.html">MyMadManiMation</a>
+<a href="fotopuzzel/index.html">Puzzle</a>
+<a href="worst.html">WWW1</a>
+</nav><main style="width: 900px;">
+<h1>TI 74xx series</h1>
+<h2>7400</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity x7400 is
+    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
+end entity;
+
+architecture behavior of x7400 is
+begin
+    y1 &lt;= not (a1 and b1);
+    y2 &lt;= not (a2 and b2);
+    y3 &lt;= not (a3 and b3);
+    y4 &lt;= not (a4 and b4);
+end architecture;
+</code>
+
+<h2>7483</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity x74283 is
+    port(
+        c0: in std_logic;
+        c4: out std_logic;
+        a, b: in unsigned(3 downto 0);
+        s: out unsigned(3 downto 0));
+end entity;
+
+architecture behavior of x74283 is
+signal tmp: unsigned(5 downto 0);
+begin
+    tmp &lt;= ('0' &amp; a &amp; '1') + ('0' &amp; b &amp; c0);
+    s &lt;= tmp(4 downto 1);
+    c4 &lt;= tmp(5);
+end architecture;
+</code>
+<img src="ti74283.svg" alt=""/>
+</main>
+</body>
+</html>
+
+

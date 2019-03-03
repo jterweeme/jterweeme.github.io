@@ -84,19 +84,19 @@ struct _Rb_tree_header
 static void
 local_Rb_tree_rotate_left(_Rb_tree_node_base* const x, _Rb_tree_node_base*& __root)
 {
-    _Rb_tree_node_base* const __y = x->_M_right;
-    x->_M_right = __y->_M_left;
-    if (__y->_M_left !=0)
-        __y->_M_left->_M_parent = x;
-    __y->_M_parent = x->_M_parent;
+    _Rb_tree_node_base* const y = x->_M_right;
+    x->_M_right = y->_M_left;
+    if (y->_M_left !=0)
+        y->_M_left->_M_parent = x;
+    y->_M_parent = x->_M_parent;
     if (x == __root)
-        __root = __y;
+        __root = y;
     else if (x == x->_M_parent->_M_left)
-        x->_M_parent->_M_left = __y;
+        x->_M_parent->_M_left = y;
     else
-        x->_M_parent->_M_right = __y;
-    __y->_M_left = x;
-    x->_M_parent = __y;
+        x->_M_parent->_M_right = y;
+    y->_M_left = x;
+    x->_M_parent = y;
 }
 
 static void
@@ -395,7 +395,6 @@ protected:
     typedef _Rb_tree_node_base* _Base_ptr;
     typedef const _Rb_tree_node_base* _Const_Base_ptr;
     typedef _Rb_tree_node<_Val> _Rb_node_type;
-    //typedef _Rb_tree_node<_Val> _Rb_tree_node;
 public:
     typedef _Val value_type;
     typedef _Val* pointer;
@@ -469,52 +468,43 @@ protected:
     _Const_Link_type _M_end() const
     { return static_cast<_Const_Link_type>(&this->_M_impl._M_header); }
 
-      static const_reference
-      _S_value(_Const_Link_type __x)
-      { return __x->_M_value_field; }
+    static const_reference _S_value(_Const_Link_type __x)
+    { return __x->_M_value_field; }
 
-      static const _Key&
-      _S_key(_Const_Link_type __x)
-      { return _KeyOfValue()(_S_value(__x)); }
+    static const _Key& _S_key(_Const_Link_type __x)
+    { return _KeyOfValue()(_S_value(__x)); }
 
-      static _Link_type
-      _S_left(_Base_ptr __x)
-      { return static_cast<_Link_type>(__x->_M_left); }
+    static _Link_type _S_left(_Base_ptr __x)
+    { return static_cast<_Link_type>(__x->_M_left); }
 
-      static _Const_Link_type
-      _S_left(_Const_Base_ptr __x)
-      { return static_cast<_Const_Link_type>(__x->_M_left); }
+    static _Const_Link_type _S_left(_Const_Base_ptr __x)
+    { return static_cast<_Const_Link_type>(__x->_M_left); }
 
-      static _Link_type
-      _S_right(_Base_ptr __x)
-      { return static_cast<_Link_type>(__x->_M_right); }
+    static _Link_type _S_right(_Base_ptr __x)
+    { return static_cast<_Link_type>(__x->_M_right); }
 
-      static _Const_Link_type
-      _S_right(_Const_Base_ptr __x)
-      { return static_cast<_Const_Link_type>(__x->_M_right); }
+    static _Const_Link_type _S_right(_Const_Base_ptr __x)
+    { return static_cast<_Const_Link_type>(__x->_M_right); }
 
-      static const_reference
-      _S_value(_Const_Base_ptr __x)
-      { return static_cast<_Const_Link_type>(__x)->_M_value_field; }
+    static const_reference _S_value(_Const_Base_ptr __x)
+    { return static_cast<_Const_Link_type>(__x)->_M_value_field; }
 
-      static const _Key&
-      _S_key(_Const_Base_ptr __x)
-      { return _KeyOfValue()(_S_value(__x)); }
+    static const _Key& _S_key(_Const_Base_ptr __x)
+    { return _KeyOfValue()(_S_value(__x)); }
 
-      static _Base_ptr
-      _S_minimum(_Base_ptr __x)
-      { return _Rb_tree_node_base::_S_minimum(__x); }
+    static _Base_ptr
+    _S_minimum(_Base_ptr __x)
+    { return _Rb_tree_node_base::_S_minimum(__x); }
 
-      static _Const_Base_ptr
-      _S_minimum(_Const_Base_ptr __x)
-      { return _Rb_tree_node_base::_S_minimum(__x); }
+    static _Const_Base_ptr
+    _S_minimum(_Const_Base_ptr __x)
+    { return _Rb_tree_node_base::_S_minimum(__x); }
 
     static _Base_ptr _S_maximum(_Base_ptr __x)
     { return _Rb_tree_node_base::_S_maximum(__x); }
 
     static _Const_Base_ptr _S_maximum(_Const_Base_ptr __x)
     { return _Rb_tree_node_base::_S_maximum(__x); }
-
 public:
     typedef _Rb_tree_iterator<_Val> iterator;
     typedef _Rb_tree_const_iterator<_Val> const_iterator;
@@ -611,24 +601,24 @@ public:
 
     pair<iterator,bool> insert_unique(const _Val& __v)
     {
-        _Link_type __x = _M_begin();
+        _Link_type x = _M_begin();
         _Link_type __y = _M_end();
         bool __comp = true;
-        while (__x != 0)
+        while (x != 0)
         {
-            __y = __x;
-            __comp = _M_impl._M_key_compare(_KeyOfValue()(__v), _S_key(__x));
-            __x = __comp ? _S_left(__x) : _S_right(__x);
+            __y = x;
+            __comp = _M_impl._M_key_compare(_KeyOfValue()(__v), _S_key(x));
+            x = __comp ? _S_left(x) : _S_right(x);
         }
         iterator __j = iterator(__y);
         if (__comp)
         {
             if (__j == begin())
-                return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
+                return pair<iterator,bool>(_M_insert(x, __y, __v), true);
             --__j;
         }
         if (_M_impl._M_key_compare(_S_key(__j._M_node), _KeyOfValue()(__v)))
-            return pair<iterator,bool>(_M_insert(__x, __y, __v), true);
+            return pair<iterator,bool>(_M_insert(x, __y, __v), true);
         return pair<iterator,bool>(__j, false);
     }
 
@@ -645,47 +635,34 @@ public:
         return _M_insert(__x, __y, __v);
     }
 
-      iterator
-      insert_unique(iterator __position, const _Val& __v)
+    iterator insert_unique(iterator __position, const _Val& __v)
     {
-      if (__position._M_node == _M_leftmost())
-    {
-      // begin()
-      if (size() > 0
-          && _M_impl._M_key_compare(_KeyOfValue()(__v),
-                    _S_key(__position._M_node)))
-        return _M_insert(__position._M_node, __position._M_node, __v);
-      // First argument just needs to be non-null.
-      else
-        return insert_unique(__v).first;
-    }
-      else if (__position._M_node == _M_end())
-    {
-      // end()
-      if (_M_impl._M_key_compare(_S_key(_M_rightmost()),
-                     _KeyOfValue()(__v)))
-        return _M_insert(0, _M_rightmost(), __v);
-      else
-        return insert_unique(__v).first;
-    }
-      else
-    {
-      iterator __before = __position;
-      --__before;
-      if (_M_impl._M_key_compare(_S_key(__before._M_node),
-                     _KeyOfValue()(__v))
-          && _M_impl._M_key_compare(_KeyOfValue()(__v),
-                    _S_key(__position._M_node)))
+        if (__position._M_node == _M_leftmost())
         {
-          if (_S_right(__before._M_node) == 0)
-        return _M_insert(0, __before._M_node, __v);
-          else
-        return _M_insert(__position._M_node, __position._M_node, __v);
-          // First argument just needs to be non-null.
+            if (size() > 0 && _M_impl._M_key_compare(_KeyOfValue()(__v),
+                    _S_key(__position._M_node)))
+                return _M_insert(__position._M_node, __position._M_node, __v);
+            return insert_unique(__v).first;
         }
-      else
-        return insert_unique(__v).first;
-    }
+        else if (__position._M_node == _M_end())
+        {
+            if (_M_impl._M_key_compare(_S_key(_M_rightmost()), _KeyOfValue()(__v)))
+                return _M_insert(0, _M_rightmost(), __v);
+            return insert_unique(__v).first;
+        }
+        else
+        {
+            iterator __before = __position;
+            --__before;
+            if (_M_impl._M_key_compare(_S_key(__before._M_node), _KeyOfValue()(__v))
+                && _M_impl._M_key_compare(_KeyOfValue()(__v), _S_key(__position._M_node)))
+            {
+                if (_S_right(__before._M_node) == 0)
+                    return _M_insert(0, __before._M_node, __v);
+                return _M_insert(__position._M_node, __position._M_node, __v);
+            }
+            return insert_unique(__v).first;
+        }
     }
 
     iterator find(const _Key& k)
@@ -751,7 +728,7 @@ public:
                 __x = _S_right(__x);
         }
 
-      return const_iterator(__y);
+        return const_iterator(__y);
     }
 
     iterator upper_bound(const _Key& __k)

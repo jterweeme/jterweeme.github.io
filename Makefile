@@ -6,7 +6,7 @@
 .PHONY: all
 
 all: euler.html index.html md5sum.html kompakt.html ringtone.html \
-rm.html simpelweb.html verkeer.html worst.html
+rm.html simpelweb.html ti74xx.html verkeer.html worst.html
 	@make -C fotopuzzel all
 	@make -C madmanimation all
 	@make -C penny all
@@ -20,6 +20,7 @@ kompakt.html: kompakt.php omelet.php kompakt.uxf
 ringtone.html: ringtone.php
 rm.html: rm.php omelet.php rm.uxf
 simpelweb.html: simpelweb.php
+ti74xx.html: ti74xx.php
 verkeer.html: verkeer.php
 worst.html: worst.php
 
