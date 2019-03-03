@@ -114,6 +114,47 @@ begin
 end architecture;
 </code>
 <img src="ti74133.svg" alt="ti74133"/>
+
+<h2>74139</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74139 is
+    port(
+        en0_n, en1_n: in std_logic;
+        sel0, sel1: in std_logic_vector(1 downto 0);
+        y0, y1: out std_logic_vector(3 downto 0));
+end entity ti74139;
+
+architecture behavior of ti74139 is
+signal tmp0, tmp1: std_logic_vector(3 downto 0);
+begin
+    y0 &lt;= "1111" when en0_n='1' else tmp0;
+    y1 &lt;= "1111" when en1_n='1' else tmp1;
+
+    process (sel0)
+    begin
+        case sel0 is
+        when "00" =&gt; tmp0 &lt;= "1110";
+        when "01" =&gt; tmp0 &lt;= "1101";
+        when "10" =&gt; tmp0 &lt;= "1011";
+        when "11" =&gt; tmp0 &lt;= "0111";
+          end case;
+    end process;
+
+    process (sel1)
+    begin
+        case sel1 is
+        when "00" =&gt; tmp1 &lt;= "1110";
+        when "01" =&gt; tmp1 &lt;= "1101";
+        when "10" =&gt; tmp1 &lt;= "1011";
+        when "11" =&gt; tmp1 &lt;= "0111";
+        end case;
+    end process;
+end architecture behavior;
+</code>
+
 </main>
 </body>
 </html>
