@@ -155,6 +155,8 @@ begin
 end architecture behavior;
 </code>
 
+<img src="ti74139.svg" alt="ti74139"/>
+
 </main>
 </body>
 </html>
