@@ -157,6 +157,86 @@ end architecture behavior;
 
 <img src="ti74139.svg" alt="ti74139"/>
 
+<h2>74150</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74150 is
+    port (
+        g_n: in std_logic;
+        e: in std_logic_vector(15 downto 0);
+        sel: in std_logic_vector(3 downto 0);
+        w_n: out std_logic);
+end entity;
+
+architecture behavior of ti74150 is
+signal tmp: std_logic;
+begin
+    process (e)
+    begin
+        case sel is
+            when "0000" =&gt; tmp &lt;= e(0);
+            when "0001" =&gt; tmp &lt;= e(1);
+            when "0010" =&gt; tmp &lt;= e(2);
+            when "0011" =&gt; tmp &lt;= e(3);
+            when "0100" =&gt; tmp &lt;= e(4);
+            when "0101" =&gt; tmp &lt;= e(5);
+            when "0110" =&gt; tmp &lt;= e(6);
+            when "0111" =&gt; tmp &lt;= e(7);
+            when "1000" =&gt; tmp &lt;= e(8);
+            when "1001" =&gt; tmp &lt;= e(9);
+            when "1010" =&gt; tmp &lt;= e(10);
+            when "1011" =&gt; tmp &lt;= e(11);
+            when "1100" =&gt; tmp &lt;= e(12);
+            when "1101" =&gt; tmp &lt;= e(13);
+            when "1110" =&gt; tmp &lt;= e(14);
+            when "1111" =&gt; tmp &lt;= e(15);
+        end case;
+    end process;
+
+    w_n &lt;= g_n or not tmp;
+end architecture;
+</code>
+
+<img src="ti74150.svg" alt="ti74150"/>
+
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74151 is
+    port (g_n: in std_logic;
+        e: in std_logic_vector(7 downto 0);
+        sel: in std_logic_vector(2 downto 0);
+        w_n, y: out std_logic);
+end entity;
+
+architecture behavior of ti74151 is
+signal tmp, tmp2: std_logic;
+begin
+    process (e)
+    begin
+        case sel is
+            when "000" =&gt; tmp &lt;= e(0);
+            when "001" =&gt; tmp &lt;= e(1);
+            when "010" =&gt; tmp &lt;= e(2);
+            when "011" =&gt; tmp &lt;= e(3);
+            when "100" =&gt; tmp &lt;= e(4);
+            when "101" =&gt; tmp &lt;= e(5);
+            when "110" =&gt; tmp &lt;= e(6);
+            when "111" =&gt; tmp &lt;= e(7);
+        end case;
+    end process;
+
+    tmp2 &lt;= g_n or not tmp;
+    w_n &lt;= tmp2;
+    y &lt;= not tmp2;
+end architecture;
+</code>
+
+<img src="ti74151.svg" alt="ti74151"/>
+
 </main>
 </body>
 </html>
