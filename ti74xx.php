@@ -244,19 +244,15 @@ end entity;
 architecture behavior of ti74151 is
 signal tmp, tmp2: std_logic;
 begin
-    process (e)
-    begin
-        case sel is
-            when "000" =&gt; tmp &lt;= e(0);
-            when "001" =&gt; tmp &lt;= e(1);
-            when "010" =&gt; tmp &lt;= e(2);
-            when "011" =&gt; tmp &lt;= e(3);
-            when "100" =&gt; tmp &lt;= e(4);
-            when "101" =&gt; tmp &lt;= e(5);
-            when "110" =&gt; tmp &lt;= e(6);
-            when "111" =&gt; tmp &lt;= e(7);
-        end case;
-    end process;
+    with sel select
+        tmp &lt;= e(0) when "000",
+               e(1) when "001",
+               e(2) when "010",
+               e(3) when "011",
+               e(4) when "100",
+               e(5) when "101",
+               e(6) when "110",
+               e(7) when "111";
 
     tmp2 &lt;= g_n or not tmp;
     w_n &lt;= tmp2;
@@ -305,6 +301,59 @@ begin
 end architecture;
 </code>
 <img src="ti74153.svg" alt="ti74153" width="400px"/>
+
+<h2>74174</h2>
+<p>hex D flip-flop, common asynchronous clear</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74174 is
+    port (clk, rst_n: in std_logic;
+        d: in std_logic_vector(5 downto 0);
+        q: out std_logic_vector(5 downto 0));
+end entity;
+
+architecture behavior of ti74174 is
+begin
+    process (clk) is
+    begin
+        if rst_n='0' then
+            q &lt;= (others =&gt; '0');
+        elsif rising_edge(clk) then
+            q &lt;= d;
+        end if;
+    end process;
+end architecture;
+</code>
+<img src="ti74174.svg" alt="ti74174" width="300px"/>
+
+<h2>74273</h2>
+<p>8-bit register, asynchronous clear</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74273 is
+    port (
+        clk, rst_n: in std_logic;
+        d: in std_logic_vector(7 downto 0);
+        q: out std_logic_vector(7 downto 0));
+end entity;
+
+architecture behavior of ti74273 is
+begin
+    process (clk,rst_n,d)
+    begin
+        if rst_n='0' then
+            q &lt;= (others =&gt; '0');
+        elsif rising_edge(clk) then
+            q &lt;= d;
+        end if;
+    end process;
+end architecture;
+</code>
+<img src="ti74273.svg" alt="ti74273" width="300px"/>
 
 <h2>744040</h2>
 <p>12-stage binary ripple counter</p>
