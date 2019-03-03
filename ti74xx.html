@@ -101,6 +101,23 @@ begin
 end architecture;
 </code>
 <img src="ti7483.svg" alt="ti7483"/>
+
+<h2>74133</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74133 is
+    port (a: in std_logic_vector(12 downto 0); y: out std_logic);
+end entity;
+
+architecture behavior of ti74133 is
+begin
+    y &lt;= not (a(0) and a(1) and a(2) and a(3) and a(4) and a(5) and a(6) and a(7) and
+            a(8) and a(9) and a(10) and a(11) and a(12));
+end architecture;
+</code>
+<img src="ti74133.svg" alt="ti74133"/>
 </main>
 </body>
 </html>
