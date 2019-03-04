@@ -78,7 +78,7 @@ begin
 end architecture;
 </code>
 
-<img src="ti7402.svg" alt="ti7402" width="300px"/>
+<img src="ti7402.svg" alt="ti7402" width="200px"/>
 
 <h2>7432</h2>
 <p>quad 2-input OR gate</p>
@@ -99,7 +99,7 @@ begin
 end architecture;
 </code>
 
-<img src="ti7432.svg" alt="ti7432" width="300px"/>
+<img src="ti7432.svg" alt="ti7432" width="200px"/>
 
 <h2>7483</h2>
 <p>4-bit binary full adder</p>
@@ -143,6 +143,38 @@ begin
 end architecture;
 </code>
 <img src="ti74133.svg" alt="ti74133"/>
+
+<h2>74138</h2>
+<p>3-line to 8-line decoder/demultiplexer, inverting outputs</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74138 is
+    port (en1, en2a_n, en2b_n: in std_logic;
+        sel: in std_logic_vector(2 downto 0);
+        y: out std_logic_vector(7 downto 0));
+end entity;
+
+architecture behavior of ti74138 is
+signal en: std_logic;
+signal demux: std_logic_vector(7 downto 0);
+begin
+    en &lt;= en1 and (not en2a_n) and (not en2b_n);
+    y &lt;= demux when en='1' else "11111111";
+
+    with sel select
+        demux &lt;= "11111110" when "000",
+                 "11111101" when "001",
+                 "11111011" when "010",
+                 "11110111" when "011",
+                 "11101111" when "100",
+                 "11011111" when "101",
+                 "10111111" when "110",
+                 "01111111" when "111";
+end architecture;
+</code>
+<img src="ti74138.svg" alt="ti74138"/>
 
 <h2>74139</h2>
 <p>dual 2 to 4-line decoder/demultiplexer, inverting outputs</p>
@@ -204,27 +236,23 @@ end entity;
 architecture behavior of ti74150 is
 signal tmp: std_logic;
 begin
-    process (e)
-    begin
-        case sel is
-            when "0000" =&gt; tmp &lt;= e(0);
-            when "0001" =&gt; tmp &lt;= e(1);
-            when "0010" =&gt; tmp &lt;= e(2);
-            when "0011" =&gt; tmp &lt;= e(3);
-            when "0100" =&gt; tmp &lt;= e(4);
-            when "0101" =&gt; tmp &lt;= e(5);
-            when "0110" =&gt; tmp &lt;= e(6);
-            when "0111" =&gt; tmp &lt;= e(7);
-            when "1000" =&gt; tmp &lt;= e(8);
-            when "1001" =&gt; tmp &lt;= e(9);
-            when "1010" =&gt; tmp &lt;= e(10);
-            when "1011" =&gt; tmp &lt;= e(11);
-            when "1100" =&gt; tmp &lt;= e(12);
-            when "1101" =&gt; tmp &lt;= e(13);
-            when "1110" =&gt; tmp &lt;= e(14);
-            when "1111" =&gt; tmp &lt;= e(15);
-        end case;
-    end process;
+    with sel select
+        tmp &lt;= e(0) when "0000",
+               e(1) when "0001",
+               e(2) when "0010",
+               e(3) when "0011",
+               e(4) when "0100",
+               e(5) when "0101",
+               e(6) when "0110",
+               e(7) when "0111",
+               e(8) when "1000",
+               e(9) when "1001",
+               e(10) when "1010",
+               e(11) when "1011",
+               e(12) when "1100",
+               e(13) when "1101",
+               e(14) when "1110",
+               e(15) when "1111";
 
     w_n &lt;= g_n or not tmp;
 end architecture;
