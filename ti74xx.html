@@ -363,6 +363,44 @@ end architecture;
 </code>
 <img src="ti74174.svg" alt="ti74174" width="300px"/>
 
+<h2>74240</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74240 is
+    port (ena_n, enb_n: in std_logic;
+        a, b: in std_logic_vector(3 downto 0);
+        qa, qb: out std_logic_vector(3 downto 0));
+end entity;
+
+architecture behavior of ti74240 is
+begin
+    qa &lt;= not a when ena_n='0' else (others =&gt; '0');
+    qb &lt;= not b when enb_n='0' else (others =&gt; '0');
+end architecture;
+</code>
+<img src="ti74240.svg" alt="ti74240" width="300px"/>
+
+<h2>74244</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74244 is
+    port (ena_n, enb_n: in std_logic;
+        a, b: in std_logic_vector(3 downto 0);
+        qa, qb: out std_logic_vector(3 downto 0));
+end entity;
+
+architecture behavior of ti74244 is
+begin
+    qa &lt;= a when ena_n='0' else (others =&gt; '0');
+    qb &lt;= b when enb_n='0' else (others =&gt; '0');
+end architecture;
+</code>
+<img src="ti74244.svg" alt="ti74244" width="300px"/>
+
 <h2>74273</h2>
 <p>8-bit register, asynchronous clear</p>
 <code>
