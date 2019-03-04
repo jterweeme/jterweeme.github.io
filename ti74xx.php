@@ -35,8 +35,10 @@ $mm = new MainMenu();
 echo $mm;
 ?>
 <main style="width: 900px;">
+<a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti74138">74138</a>,
+<a href="#ti74150">74150</a>
 <h1>TI 74xx series</h1>
-<h2>7400</h2>
+<h2 id="ti7400">7400</h2>
 <p>quad 2-input NAND gate</p>
 <code>
 library ieee;
@@ -55,7 +57,7 @@ begin
 end architecture;
 </code>
 
-<h2>7402</h2>
+<h2 id="ti7402">7402</h2>
 <p>quad 2-input NOR gate</p>
 <code>
 library ieee;
@@ -76,7 +78,7 @@ end architecture;
 
 <img src="ti7402.svg" alt="ti7402" width="200px"/>
 
-<h2>7432</h2>
+<h2 id="ti7432">7432</h2>
 <p>quad 2-input OR gate</p>
 <code>
 library ieee;
@@ -140,7 +142,7 @@ end architecture;
 </code>
 <img src="ti74133.svg" alt="ti74133"/>
 
-<h2>74138</h2>
+<h2 id="ti74138">74138</h2>
 <p>3-line to 8-line decoder/demultiplexer, inverting outputs</p>
 <code>
 library ieee;
@@ -215,7 +217,7 @@ end architecture behavior;
 
 <img src="ti74139.svg" alt="ti74139"/>
 
-<h2>74150</h2>
+<h2 id="ti74150">74150</h2>
 <p>16-line to 1-line data selector/multiplexer</p>
 <code>
 library ieee;
