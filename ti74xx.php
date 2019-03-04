@@ -56,6 +56,7 @@ begin
     y4 &lt;= not (a4 and b4);
 end architecture;
 </code>
+<img src="ti7400.svg" alt="ti700" width="200px"/>
 
 <h2 id="ti7402">7402</h2>
 <p>quad 2-input NOR gate</p>
