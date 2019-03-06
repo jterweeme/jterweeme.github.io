@@ -56,7 +56,7 @@ begin
     y4 &lt;= not (a4 and b4);
 end architecture;
 </code>
-<img src="ti7400.svg" alt="ti700" width="200px"/>
+<img src="ti74xx/ti7400.svg" alt="ti700" width="200px"/>
 
 <h2 id="ti7402">7402</h2>
 <p>quad 2-input NOR gate</p>
@@ -77,7 +77,7 @@ begin
 end architecture;
 </code>
 
-<img src="ti7402.svg" alt="ti7402" width="200px"/>
+<img src="ti74xx/ti7402.svg" alt="ti7402" width="200px"/>
 
 <h2 id="ti7432">7432</h2>
 <p>quad 2-input OR gate</p>
@@ -245,7 +245,7 @@ begin
 end architecture behavior;
 </code>
 
-<img src="ti74139.svg" alt="ti74139"/>
+<img src="ti74xx/ti74139.svg" alt="ti74139" width="400px"/>
 
 <h2 id="ti74150">74150</h2>
 <p>16-line to 1-line data selector/multiplexer</p>
