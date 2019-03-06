@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 
-<?php
-echo file_get_contents("achtung.html");
-?>
-
 <html>
 <head>
 <title>Project Euler</title>
-<link rel="stylesheet" type="text/css" href="common.css"/>
+<link rel="stylesheet" type="text/css" href="../common.css"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <style>
 code, kbd, samp {
@@ -49,7 +45,7 @@ function mycopy2(x) {
 </head>
 <body>
 <?php
-require_once("mainmenu.php");
+require_once("../mainmenu.php");
 $mm = new MainMenu();
 echo $mm;
 echo file_get_contents("euler.xml");

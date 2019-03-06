@@ -36,7 +36,7 @@ echo $mm;
 ?>
 <main style="width: 900px;">
 <a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti74138">74138</a>,
-<a href="#ti74150">74150</a>
+<a href="#ti74150">74150</a>, <a href="#ti74273">74273</a>, <a href="#ti744040">744040</a>
 <h1>TI 74xx series</h1>
 <h2 id="ti7400">7400</h2>
 <p>quad 2-input NAND gate</p>
@@ -99,6 +99,35 @@ end architecture;
 </code>
 
 <img src="ti7432.svg" alt="ti7432" width="200px"/>
+
+<h2>7448</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti7448 is
+    port(
+        dec: in std_logic_vector(3 downto 0);
+        q: out std_logic_vector(6 downto 0));
+end entity ti7448;
+
+architecture behavior of ti7448 is
+begin
+    with dec select
+        q &lt;= "0111111" when "0000",
+             "0000110" when "0001",
+             "1011011" when "0010",
+             "1001111" when "0011",
+             "1100110" when "0100",
+             "1101101" when "0101",
+             "1111100" when "0110",
+             "0000111" when "0111",
+             "1111111" when "1000",
+             "1100111" when "1001",
+             "0000000" when others;
+end architecture behavior;
+</code>
+<img src="ti7448.svg" alt="ti7448" width="300px"/>
 
 <h2>7483</h2>
 <p>4-bit binary full adder</p>
@@ -333,6 +362,44 @@ end architecture;
 </code>
 <img src="ti74153.svg" alt="ti74153" width="400px"/>
 
+<h2>74157</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74157 is
+    port (sel, g_n: in std_logic;
+        c0, c1, c2, c3: in std_logic_vector(1 downto 0);
+        y0, y1, y2, y3: out std_logic);
+end entity;
+
+architecture behavior of ti74157 is
+signal mux0, mux1, mux2, mux3: std_logic;
+begin
+    y0 &lt;= not g_n and mux0;
+    y1 &lt;= not g_n and mux1;
+    y2 &lt;= not g_n and mux2;
+    y3 &lt;= not g_n and mux3;
+
+    process (sel, c0, c1)
+    begin
+        case sel is
+            when '0' =&gt;
+                mux0 &lt;= c0(0);
+                mux1 &lt;= c1(0);
+                mux2 &lt;= c2(0);
+                mux3 &lt;= c3(0);
+            when '1' =&gt;
+                mux0 &lt;= c0(1);
+                mux1 &lt;= c1(1);
+                mux2 &lt;= c2(1);
+                mux3 &lt;= c3(1);
+        end case;
+    end process;
+end architecture;
+</code>
+<img src="ti74157.svg" alt="ti74157" width="400px"/>
+
 <h2>74174</h2>
 <p>hex D flip-flop, common asynchronous clear</p>
 <code>
@@ -397,7 +464,7 @@ end architecture;
 </code>
 <img src="ti74244.svg" alt="ti74244" width="300px"/>
 
-<h2>74273</h2>
+<h2 id="ti74273">74273</h2>
 <p>8-bit register, asynchronous clear</p>
 <code>
 library ieee;
@@ -424,7 +491,7 @@ end architecture;
 </code>
 <img src="ti74273.svg" alt="ti74273" width="300px"/>
 
-<h2>744040</h2>
+<h2 id="ti744040">744040</h2>
 <p>12-stage binary ripple counter</p>
 <code>
 library ieee;
