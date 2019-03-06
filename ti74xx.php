@@ -35,8 +35,13 @@ $mm = new MainMenu();
 echo $mm;
 ?>
 <main style="width: 900px;">
-<a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti74138">74138</a>,
-<a href="#ti74150">74150</a>, <a href="#ti74273">74273</a>, <a href="#ti744040">744040</a>
+<a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti7432">7432</a>,
+<a href="#ti7448">7448</a>, <a href="#ti7483">7483</a>, <a href="#ti74133">74133</a>,
+<a href="#ti74138">74138</a>, <a href="#ti74139">74139</a>,
+<a href="#ti74150">74150</a>, <a href="#ti74151">74151</a>, <a href="#ti74153">74153</a>,
+<a href="#ti74157">74157</a>, <a href="#ti74174">74174</a>, <a href="#ti74181">74181</a>,
+<a href="#ti74240">74240</a>, <a href="#ti72244">74244</a>,
+<a href="#ti74273">74273</a>, <a href="#ti744040">744040</a>
 <h1>TI 74xx series</h1>
 <h2 id="ti7400">7400</h2>
 <p>quad 2-input NAND gate</p>
@@ -98,9 +103,10 @@ begin
 end architecture;
 </code>
 
-<img src="ti7432.svg" alt="ti7432" width="200px"/>
+<img src="ti74xx/ti7432.svg" alt="ti7432" width="200px"/>
 
-<h2>7448</h2>
+<h2 id="ti7448">7448</h2>
+<p>BCD to 7-segment decoder/driver</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -127,9 +133,9 @@ begin
              "0000000" when others;
 end architecture behavior;
 </code>
-<img src="ti7448.svg" alt="ti7448" width="300px"/>
+<img src="ti74xx/ti7448.svg" alt="ti7448" width="300px"/>
 
-<h2>7483</h2>
+<h2 id="ti7483">7483</h2>
 <p>4-bit binary full adder</p>
 <code>
 library ieee;
@@ -152,9 +158,9 @@ begin
     c4 &lt;= tmp(5);
 end architecture;
 </code>
-<img src="ti7483.svg" alt="ti7483" width="300px"/>
+<img src="ti74xx/ti7483.svg" alt="ti7483" width="300px"/>
 
-<h2>74133</h2>
+<h2 id="ti74133">74133</h2>
 <p>single 13-input NAND gate</p>
 <code>
 library ieee;
@@ -170,7 +176,7 @@ begin
             a(8) and a(9) and a(10) and a(11) and a(12));
 end architecture;
 </code>
-<img src="ti74133.svg" alt="ti74133"/>
+<img src="ti74xx/ti74133.svg" alt="ti74133"/>
 
 <h2 id="ti74138">74138</h2>
 <p>3-line to 8-line decoder/demultiplexer, inverting outputs</p>
@@ -202,9 +208,9 @@ begin
                  "01111111" when "111";
 end architecture;
 </code>
-<img src="ti74138.svg" alt="ti74138"/>
+<img src="ti74xx/ti74138.svg" alt="ti74138"/>
 
-<h2>74139</h2>
+<h2 id="ti74139">74139</h2>
 <p>dual 2 to 4-line decoder/demultiplexer, inverting outputs</p>
 <code>
 library ieee;
@@ -286,9 +292,9 @@ begin
 end architecture;
 </code>
 
-<img src="ti74150.svg" alt="ti74150" width="400px"/>
+<img src="ti74xx/ti74150.svg" alt="ti74150" width="400px"/>
 
-<h2>74151</h2>
+<h2 id="ti74151">74151</h2>
 <p>8-line to 1-line data selector/multiplexer</p>
 <code>
 library ieee;
@@ -320,9 +326,9 @@ begin
 end architecture;
 </code>
 
-<img src="ti74151.svg" alt="ti74151" width="400px"/>
+<img src="ti74xx/ti74151.svg" alt="ti74151" width="400px"/>
 
-<h2>74153</h2>
+<h2 id="ti74153">74153</h2>
 <p>dual 4-line to 1-line data selector/multiplexer, non-inverting outputs</p>
 <code>
 library ieee;
@@ -360,9 +366,10 @@ begin
     end process;
 end architecture;
 </code>
-<img src="ti74153.svg" alt="ti74153" width="400px"/>
+<img src="ti74xx/ti74153.svg" alt="ti74153" width="400px"/>
 
-<h2>74157</h2>
+<h2 id="ti74157">74157</h2>
+<p>quad 2-line to 1-line data selector/multiplexer, non-inverting outputs</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -398,9 +405,9 @@ begin
     end process;
 end architecture;
 </code>
-<img src="ti74157.svg" alt="ti74157" width="400px"/>
+<img src="ti74xx/ti74157.svg" alt="ti74157" width="400px"/>
 
-<h2>74174</h2>
+<h2 id="ti74174">74174</h2>
 <p>hex D flip-flop, common asynchronous clear</p>
 <code>
 library ieee;
@@ -424,9 +431,13 @@ begin
     end process;
 end architecture;
 </code>
-<img src="ti74174.svg" alt="ti74174" width="300px"/>
+<img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
-<h2>74240</h2>
+<h2 id="ti74181">74181</h2>
+
+
+<h2 id="ti74240">74240</h2>
+<p>octal buffer, inverting outputs</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -443,9 +454,10 @@ begin
     qb &lt;= not b when enb_n='0' else (others =&gt; '0');
 end architecture;
 </code>
-<img src="ti74240.svg" alt="ti74240" width="300px"/>
+<img src="ti74xx/ti74240.svg" alt="ti74240" width="300px"/>
 
-<h2>74244</h2>
+<h2 id="ti74244">74244</h2>
+<p>octal buffer, non-inverting outputs</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -462,7 +474,7 @@ begin
     qb &lt;= b when enb_n='0' else (others =&gt; '0');
 end architecture;
 </code>
-<img src="ti74244.svg" alt="ti74244" width="300px"/>
+<img src="ti74xx/ti74244.svg" alt="ti74244" width="300px"/>
 
 <h2 id="ti74273">74273</h2>
 <p>8-bit register, asynchronous clear</p>
@@ -489,7 +501,7 @@ begin
     end process;
 end architecture;
 </code>
-<img src="ti74273.svg" alt="ti74273" width="300px"/>
+<img src="ti74xx/ti74273.svg" alt="ti74273" width="300px"/>
 
 <h2 id="ti744040">744040</h2>
 <p>12-stage binary ripple counter</p>
@@ -516,7 +528,7 @@ begin
 end architecture;
 </code>
 
-<img src="ti744040.svg" alt="ti744040" width="400px"/>
+<img src="ti74xx/ti744040.svg" alt="ti744040" width="400px"/>
 
 </main>
 </body>
