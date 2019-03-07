@@ -438,7 +438,52 @@ end architecture;
 <img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
 <h2 id="ti74181">74181</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
 
+entity ti74181 is
+    port(
+        sel, a, b: in std_logic_vector(3 downto 0);
+        m, c0: in std_logic;
+        f: out std_logic_vector(3 downto 0);
+        c4, g, p, eq: out std_logic);
+end entity ti74181;
+
+architecture behavior of ti74181 is
+signal t0, t1, t2, t3, t4, t5, t6, t7: std_logic;
+signal tmp_g, tmp_f3, tmp_f2, tmp_f1, tmp_f0, tmp2, tmp3, tmp4, tmp5: std_logic;
+signal tmp6, tmp7: std_logic;
+begin
+    t0 &lt;= not (a(0) or (b(0) and sel(0)) or (sel(1) and not b(0)));
+    t2 &lt;= not (a(1) or (b(1) and sel(0)) or (sel(1) and not b(1)));
+    t4 &lt;= not (a(2) or (b(2) and sel(0)) or (sel(1) and not b(2)));
+    t6 &lt;= not (a(3) or (b(3) and sel(0)) or (sel(1) and not b(3)));
+    t1 &lt;= not ((not b(0) and sel(2) and a(0)) or (a(0) and b(0) and sel(3)));
+    t3 &lt;= not ((not b(1) and sel(2) and a(1)) or (a(1) and b(1) and sel(3)));
+    t5 &lt;= not ((not b(2) and sel(2) and a(2)) or (a(2) and b(2) and sel(3)));
+    t7 &lt;= not ((not b(3) and sel(2) and a(3)) or (a(3) and b(3) and sel(3)));
+    tmp2 &lt;= t7 and t5 and t3 and t0;
+    tmp_g &lt;= t6 or (t7 and t4) or (t7 and t5 and t2) or tmp2;
+    g &lt;= not tmp_g;
+    c4 &lt;= (c0 and t1 and t3 and t5 and t7) or tmp_g;
+    p &lt;= not (t1 and t3 and t5 and t7);
+    tmp3 &lt;= m and c0 and t1 and t3 and t5;
+    tmp4 &lt;= (m and t4) or (m and t2 and t5) or (m and t0 and t3 and t5) or tmp3;
+    tmp_f3 &lt;= not tmp4 xor (not t6 and t7);
+    tmp5 &lt;= m and c0 and t1 and t3 and t5;
+    tmp6 &lt;= (m and t0 and t3 and t5) or (m and t2 and t5) or (m and t4) or tmp5;
+    tmp_f2 &lt;= not tmp6 xor (not t4 and t5);
+    tmp7 &lt;= (m and t0) or (m and c0);
+    tmp_f1 &lt;= not tmp7 xor (not t2 and t4);
+    tmp_f0 &lt;= not (c0 and m) xor (not t0 and t1);
+    eq &lt;= tmp_f3 and tmp_f2 and tmp_f1 and tmp_f0;
+    f(3) &lt;= tmp_f3;
+    f(2) &lt;= tmp_f2;
+    f(1) &lt;= tmp_f1;
+    f(0) &lt;= tmp_f0;
+end architecture behavior;
+</code>
 
 <h2 id="ti74240">74240</h2>
 <p>octal buffer, inverting outputs</p>
