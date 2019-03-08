@@ -548,6 +548,30 @@ end architecture;
 </code>
 <img src="ti74xx/ti74273.svg" alt="ti74273" width="300px"/>
 
+<h2 id="ti74377">74377</h2>
+<p>8-bit register, clock enable</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74377 is
+    port(en_n, clk: in std_logic;
+        d: in std_logic_vector(7 downto 0);
+        q: out std_logic_vector(7 downto 0));
+end entity ti74377;
+
+architecture behavior of ti74377 is
+begin
+    process (clk)
+    begin
+        if rising_edge(clk) and en_n='0' then
+            q &lt;= d;
+        end if;
+    end process;
+end architecture behavior;
+</code>
+<img src="ti74xx/ti74377.svg" alt="ti74377" width="300px"/>
+
 <h2 id="ti744040">744040</h2>
 <p>12-stage binary ripple counter</p>
 <code>
