@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>Spectrum FPGA</title>
+<title>TI 74xx series</title>
 <link rel="stylesheet" type="text/css" href="common.css"/>
 <style>
 code, kbd, samp {
@@ -39,31 +39,33 @@ code em {
 <a href="fotopuzzel/index.html">Puzzle</a>
 <a href="worst.html">WWW1</a>
 </nav><main style="width: 900px;">
-<a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti7432">7432</a>,
+<a href="#ti7400">7400</a>, <a href="#ti7402">7402</a>, <a href="#ti7404">7404</a>,
+<a href="#ti7408">7408</a>, <a href="#ti7432">7432</a>,
 <a href="#ti7448">7448</a>, <a href="#ti7483">7483</a>, <a href="#ti74133">74133</a>,
 <a href="#ti74138">74138</a>, <a href="#ti74139">74139</a>,
 <a href="#ti74150">74150</a>, <a href="#ti74151">74151</a>, <a href="#ti74153">74153</a>,
-<a href="#ti74157">74157</a>, <a href="#ti74174">74174</a>, <a href="#ti74181">74181</a>,
+<a href="#ti74157">74157</a>, <a href="#ti74161">74161</a>,
+<a href="#ti74174">74174</a>, <a href="#ti74181">74181</a>,
 <a href="#ti74240">74240</a>, <a href="#ti72244">74244</a>,
-<a href="#ti74273">74273</a>, <a href="#ti744040">744040</a>
+<a href="#ti74273">74273</a>, <a href="#ti74377">74377</a>, <a href="#ti744040">744040</a>
 <h1>TI 74xx series</h1>
 <h2 id="ti7400">7400</h2>
 <p>quad 2-input NAND gate</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity x7400 is
-    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
-end entity;
+<b>entity</b> x7400 <b>is</b>
+    <b>port</b> (a1, b1, a2, b2, a3, b3, a4, b4: <b>in</b> std_logic; y1, y2, y3, y4: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of x7400 is
-begin
-    y1 &lt;= not (a1 and b1);
-    y2 &lt;= not (a2 and b2);
-    y3 &lt;= not (a3 and b3);
-    y4 &lt;= not (a4 and b4);
-end architecture;
+<b>architecture</b> behavior <b>of</b> x7400 <b>is</b>
+<b>begin</b>
+    y1 &lt;= <b>not</b> (a1 <b>and</b> b1);
+    y2 &lt;= <b>not</b> (a2 <b>and</b> b2);
+    y3 &lt;= <b>not</b> (a3 <b>and</b> b3);
+    y4 &lt;= <b>not</b> (a4 <b>and</b> b4);
+<b>end architecture</b>;
 </code>
 <img src="ti74xx/ti7400.svg" alt="ti700" width="200px"/>
 
@@ -87,6 +89,40 @@ end architecture;
 </code>
 
 <img src="ti74xx/ti7402.svg" alt="ti7402" width="200px"/>
+
+<h2 id="ti7404">7404</h2>
+<p>hex inverter gate</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti7404 is
+    port (a: in std_logic_vector(5 downto 0);
+          q: out std_logic_vector(5 downto 0));
+end entity;
+
+architecture behavior of ti7404 is
+begin
+    q &lt;= not a;
+end architecture;
+</code>
+<img src="ti74xx/ti7404.svg" alt="ti7404" width="200px"/>
+
+<h2 id="ti7408">7408</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti7408 is
+    port (a, b: in std_logic_vector(3 downto 0);
+        q: out std_logic_vector(3 downto 0));
+end entity;
+
+architecture behavior of ti7408 is
+begin
+    q &lt;= a and b;
+end architecture;
+</code>
 
 <h2 id="ti7432">7432</h2>
 <p>quad 2-input OR gate</p>
@@ -411,6 +447,44 @@ end architecture;
 </code>
 <img src="ti74xx/ti74157.svg" alt="ti74157" width="400px"/>
 
+<h2 id="ti74161">74161</h2>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ti74161 is
+    port (
+        clk, rst_n, load_n, enp, ent: in std_logic;
+        a: in std_logic_vector(3 downto 0);
+        q: out std_logic_vector(3 downto 0);
+        c4: out std_logic
+    );
+end entity;
+
+architecture behavior of ti74161 is
+signal cnt: unsigned(3 downto 0);
+begin
+    c4 &lt;= '1' when cnt="1111" and ent='1' else '0';
+    q &lt;= std_logic_vector(cnt);
+
+    process (clk, rst_n) begin
+        if rst_n='0' then
+            cnt &lt;= (others =&gt; '0');
+        elsif rising_edge(clk) then
+            if load_n='1' then
+                if ent='1' and enp='1' then
+                    cnt &lt;= cnt + 1;
+                end if;
+            else
+                cnt &lt;= unsigned(a);
+            end if;
+        end if;
+    end process;
+end architecture behavior;
+</code>
+<img src="ti74xx/ti74161.svg" alt="ti74161" width="800px"/>
+
 <h2 id="ti74174">74174</h2>
 <p>hex D flip-flop, common asynchronous clear</p>
 <code>
@@ -438,6 +512,7 @@ end architecture;
 <img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
 <h2 id="ti74181">74181</h2>
+<p>4-bit arithmetic logic unit and function generator</p>
 <code>
 library ieee;
 use ieee.std_logic_1164.all;
@@ -575,6 +650,57 @@ begin
 end architecture behavior;
 </code>
 <img src="ti74xx/ti74377.svg" alt="ti74377" width="300px"/>
+
+<h2 id="ti74557">74557</h2>
+<p>8-bit by 8-bit multiplier</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ti74557 is
+    port (a, b: in std_logic_vector(7 downto 0);
+        q: out std_logic_vector(15 downto 0));
+end entity;
+
+architecture behavior of ti74557 is
+signal ua, ub: unsigned(7 downto 0);
+signal uq: unsigned(15 downto 0);
+begin
+    ua &lt;= unsigned(a);
+    ub &lt;= unsigned(b);
+    uq &lt;= ua * ub;
+    q &lt;= std_logic_vector(uq);
+end architecture;
+</code>
+<img src="ti74xx/ti74557.svg" alt="ti74557" width="300px"/>
+
+<h2 id="ti74595">74595</h2>
+<p>8-bit shift registers, output latches, parallel outputs</p>
+<code>
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity ti74595 is
+    port(rck, srck, g_n, srclr_n, ser: in std_logic;
+        q: out std_logic_vector(7 downto 0));
+end entity;
+
+architecture behavior of ti74595 is
+signal xq: std_logic_vector(7 downto 0);
+begin
+    q &lt;= xq;
+    process (srck)
+    begin
+        if srclr_n='0' then
+            xq &lt;= (others =&gt; '0');
+        elsif rising_edge(srck) then
+            xq(7 downto 1) &lt;= xq(6 downto 0);
+            xq(0) &lt;= ser;
+        end if;
+    end process;
+end architecture;
+</code>
 
 <h2 id="ti744040">744040</h2>
 <p>12-stage binary ripple counter</p>
