@@ -68,20 +68,20 @@ echo $mm;
 <h2 id="ti7402">7402</h2>
 <p>quad 2-input NOR gate</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti7402 is
-    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
-end entity;
+<b>entity</b> ti7402 <b>is</b>
+    <b>port</b> (a1, b1, a2, b2, a3, b3, a4, b4: <b>in</b> std_logic; y1, y2, y3, y4: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of ti7402 is
-begin
-    y1 &lt;= not (a1 or b1);
-    y2 &lt;= not (a2 or b2);
-    y3 &lt;= not (a3 or b3);
-    y4 &lt;= not (a4 or b4);
-end architecture;
+<b>architecture</b> behavior <b>of</b> ti7402 <b>is</b>
+<b>begin</b>
+    y1 &lt;= <b>not</b> (a1 <b>or</b> b1);
+    y2 &lt;= <b>not</b> (a2 <b>or</b> b2);
+    y3 &lt;= <b>not</b> (a3 <b>or</b> b3);
+    y4 &lt;= <b>not</b> (a4 <b>or</b> b4);
+<b>end architecture</b>;
 </code>
 
 <img src="ti74xx/ti7402.svg" alt="ti7402" width="200px"/>
@@ -265,25 +265,18 @@ begin
     y0 &lt;= "1111" when en0_n='1' else tmp0;
     y1 &lt;= "1111" when en1_n='1' else tmp1;
 
-    process (sel0)
-    begin
-        case sel0 is
-        when "00" =&gt; tmp0 &lt;= "1110";
-        when "01" =&gt; tmp0 &lt;= "1101";
-        when "10" =&gt; tmp0 &lt;= "1011";
-        when "11" =&gt; tmp0 &lt;= "0111";
-        end case;
-    end process;
+    with sel0 select
+        tmp0 &lt;= "1110" when "00",
+                "1101" when "01",
+                "1011" when "10",
+                "0111" when "11";
 
-    process (sel1)
-    begin
-        case sel1 is
-        when "00" =&gt; tmp1 &lt;= "1110";
-        when "01" =&gt; tmp1 &lt;= "1101";
-        when "10" =&gt; tmp1 &lt;= "1011";
-        when "11" =&gt; tmp1 &lt;= "0111";
-        end case;
-    end process;
+    with sel1 select
+        tmp1 &lt;= "1110" when "00",
+                "1101" when "01",
+                "1011" when "10",
+                "0111" when "11";
+
 end architecture behavior;
 </code>
 
