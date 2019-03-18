@@ -21,6 +21,12 @@ samp {
     color: gray;
 }
 
+code {
+    display: block;
+    background-color: #eee;
+    margin-bottom: 10px;
+}
+
 code em {
     font-style: normal;
     color: red;
@@ -46,7 +52,7 @@ code em {
 <a href="#ti74150">74150</a>, <a href="#ti74151">74151</a>, <a href="#ti74153">74153</a>,
 <a href="#ti74157">74157</a>, <a href="#ti74161">74161</a>,
 <a href="#ti74174">74174</a>, <a href="#ti74181">74181</a>,
-<a href="#ti74240">74240</a>, <a href="#ti72244">74244</a>,
+<a href="#ti74240">74240</a>, <a href="#ti74244">74244</a>,
 <a href="#ti74273">74273</a>, <a href="#ti74377">74377</a>, <a href="#ti744040">744040</a>
 <h1>TI 74xx series</h1>
 <h2 id="ti7400">7400</h2>
@@ -67,6 +73,19 @@ code em {
     y4 &lt;= <b>not</b> (a4 <b>and</b> b4);
 <b>end architecture</b>;
 </code>
+<code>
+<b>module</b> ti7400(a1, b1, a2, b2, a3, b3, a4, b4, y1, y2, y3, y4);
+
+<b>input</b> a1, b1, a2, b2, a3, b3, a4, b4;
+<b>output</b> y1, y2, y3, y4;
+
+<b>assign</b> y1 = !(a1 &amp;&amp; b1);
+<b>assign</b> y2 = !(a2 &amp;&amp; b2);
+<b>assign</b> y3 = !(a3 &amp;&amp; b3);
+<b>assign</b> y4 = !(a4 &amp;&amp; b4);  
+
+<b>endmodule</b>
+</code>
 <img src="ti74xx/ti7400.svg" alt="ti700" width="200px"/>
 
 <h2 id="ti7402">7402</h2>
@@ -86,6 +105,19 @@ code em {
     y3 &lt;= <b>not</b> (a3 <b>or</b> b3);
     y4 &lt;= <b>not</b> (a4 <b>or</b> b4);
 <b>end architecture</b>;
+</code>
+<code>
+<b>module</b> ti7402(a1, b1, a2, b2, a3, b3, a4, b4, y1, y2, y3, y4);
+
+<b>input</b> a1, b1, a2, b2, a3, b3, a4, b4;
+<b>output</b> y1, y2, y3, y4;
+
+<b>assign</b> y1 = !(a1 || b1);
+<b>assign</b> y2 = !(a2 || b2);
+<b>assign</b> y3 = !(a3 || b3);
+<b>assign</b> y4 = !(a4 || b4);  
+
+<b>endmodule</b>
 </code>
 
 <img src="ti74xx/ti7402.svg" alt="ti7402" width="200px"/>
@@ -501,6 +533,17 @@ begin
         end if;
     end process;
 end architecture;
+</code>
+<code>
+module test9(input clk, input rst_n, input [5:0] d, output reg [5:0] q);
+
+always @(posedge clk, negedge rst_n)
+    if (!rst_n)
+        q &lt;= 0;
+    else
+        q &lt;= d;
+
+endmodule
 </code>
 <img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
