@@ -31,6 +31,11 @@ code em {
     font-style: normal;
     color: red;
 }
+
+svg {
+    display: block;
+    border: 1px dotted red;
+}
 </style>
 </head>
 <body>
@@ -61,32 +66,62 @@ code em {
 <b>library</b> ieee;
 <b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-<b>entity</b> x7400 <b>is</b>
-    <b>port</b> (a1, b1, a2, b2, a3, b3, a4, b4: <b>in</b> std_logic; y1, y2, y3, y4: <b>out</b> std_logic);
+<b>entity</b> ti7400 <b>is</b>
+    <b>port</b> (a, b: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(3 <b>downto</b> 0));
 <b>end entity</b>;
 
-<b>architecture</b> behavior <b>of</b> x7400 <b>is</b>
+<b>architecture</b> behavior <b>of</b> testvhd <b>is</b>
 <b>begin</b>
-    y1 &lt;= <b>not</b> (a1 <b>and</b> b1);
-    y2 &lt;= <b>not</b> (a2 <b>and</b> b2);
-    y3 &lt;= <b>not</b> (a3 <b>and</b> b3);
-    y4 &lt;= <b>not</b> (a4 <b>and</b> b4);
+    q &lt;= <b>not</b> (a <b>and</b> b);
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti7400(a1, b1, a2, b2, a3, b3, a4, b4, y1, y2, y3, y4);
-
-<b>input</b> a1, b1, a2, b2, a3, b3, a4, b4;
-<b>output</b> y1, y2, y3, y4;
-
-<b>assign</b> y1 = !(a1 &amp;&amp; b1);
-<b>assign</b> y2 = !(a2 &amp;&amp; b2);
-<b>assign</b> y3 = !(a3 &amp;&amp; b3);
-<b>assign</b> y4 = !(a4 &amp;&amp; b4);  
-
+<b>module</b> ti7400(<b>input</b> [3:0] a, b, <b>output</b> [3:0] q);
+<b>assign</b> q[0] = !(a[0] &amp; b[0]);
+<b>assign</b> q[1] = !(a[1] &amp; b[1]);
+<b>assign</b> q[2] = !(a[2] &amp; b[2]);
+<b>assign</b> q[3] = !(a[3] &amp; b[3]);
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti7400.svg" alt="ti700" width="200px"/>
+<svg width="400" height="400" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+    <filter id="f1" x="0" y="0" width="200%" height="200%">
+        <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20" />
+        <feBlend in="SourceGraphic" in2="offOut" mode="normal" />
+    </filter>
+    <path id="p2" d="M0,0 H40 L45,5 L40,10 H0Z"/>
+    <path id="p3" d="M0,0 H50 C62.5,0 75,12.5 75,25 C75,37.5 62.5,50 50,50H0Z"/>
+    <g id="g1">
+        <use x="0" y="5" xlink:href="#p2" fill="none"/>
+        <use x="0" y="35" xlink:href="#p2" fill="none"/>
+        <line x1="45" y1="10" x2="95" y2="10"/>
+        <line x1="45" y1="40" x2="95" y2="40"/>
+        <use x="95" y="0" xlink:href="#p3" fill="none"/>
+        <line x1="170" y1="25" x2="220" y2="25"/>
+        <circle cx="225" cy="25" r="5" fill="none"/>
+        <use x="230" y="20" xlink:href="#p2" fill="none"/>
+    </g>
+</defs>
+<g stroke="black">
+<text x="5" y="25">a[0]</text>
+<text x="5" y="55">b[0]</text>
+<use x="45" y="10" xlink:href="#g1"/>
+<text x="325" y="40">q[0]</text>
+<text x="5" y="115">a[1]</text>
+<text x="5" y="145">b[1]</text>
+<use x="45" y="100" xlink:href="#g1"/>
+<text x="325" y="130">q[1]</text>
+<text x="5" y="205">a[2]</text>
+<text x="5" y="235">b[2]</text>
+<use x="45" y="190" xlink:href="#g1"/>
+<text x="325" y="220">q[2]</text>
+<text x="5" y="295">a[3]</text>
+<text x="5" y="325">b[3]</text>
+<use x="45" y="280" xlink:href="#g1"/>
+<text x="325" y="310">q[3]</text>
+</g>
+</svg>
 
 <h2 id="ti7402">7402</h2>
 <p>quad 2-input NOR gate</p>
@@ -125,54 +160,103 @@ code em {
 <h2 id="ti7404">7404</h2>
 <p>hex inverter gate</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti7404 is
-    port (a: in std_logic_vector(5 downto 0);
-          q: out std_logic_vector(5 downto 0));
-end entity;
+<b>entity</b> ti7404 <b>is</b>
+    <b>port</b> (a: <b>in</b> std_logic_vector(5 <b>downto</b> 0);
+          q: <b>out</b> std_logic_vector(5 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti7404 is
-begin
-    q &lt;= not a;
-end architecture;
+<b>architecture</b> behavior <b>of</b> ti7404 <b>is</b>
+<b>begin</b>
+    q &lt;= <b>not</b> a;
+<b>end architecture</b>;
+</code>
+<code>
+<b>module</b> ti7404(<b>input</b> [5:0] a, <b>output</b> [5:0] q);
+<b>assign</b> q = ~a;
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti7404.svg" alt="ti7404" width="200px"/>
 
 <h2 id="ti7408">7408</h2>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti7408 is
-    port (a, b: in std_logic_vector(3 downto 0);
-        q: out std_logic_vector(3 downto 0));
-end entity;
+<b>entity</b> ti7408 <b>is</b>
+    <b>port</b> (a, b: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(3 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti7408 is
-begin
-    q &lt;= a and b;
-end architecture;
+<b>architecture</b> behavior <b>of</b> ti7408 <b>is</b>
+<b>begin</b>
+    q &lt;= a <b>and</b> b;
+<b>end architecture;</b>
 </code>
+<code>
+<b>module</b> ti7408(<b>input</b> [3:0] a, b, <b>output</b> [3:0] q);
+<b>assign</b> q = a &amp; b;
+<b>endmodule</b>
+</code>
+<svg width="400" height="400" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+    <g id="g2">
+        <use x="0" y="5" xlink:href="#p2" fill="none"/>
+        <use x="0" y="35" xlink:href="#p2" fill="none"/>
+        <line x1="45" y1="10" x2="95" y2="10"/>
+        <line x1="45" y1="40" x2="95" y2="40"/>
+        <use x="95" y="0" xlink:href="#p3" fill="none"/>
+        <line x1="170" y1="25" x2="230" y2="25"/>
+        <use x="230" y="20" xlink:href="#p2" fill="none"/>
+    </g>
+</defs>
+<g stroke="black">
+<text x="5" y="25">a[0]</text>
+<text x="5" y="55">b[0]</text>
+<use x="45" y="10" xlink:href="#g2"/>
+<text x="325" y="40">q[0]</text>
+<text x="5" y="115">a[1]</text>
+<text x="5" y="145">b[1]</text>
+<use x="45" y="100" xlink:href="#g2"/>
+<text x="325" y="130">q[1]</text>
+<text x="5" y="205">a[2]</text>
+<text x="5" y="235">b[2]</text>
+<use x="45" y="190" xlink:href="#g2"/>
+<text x="325" y="220">q[2]</text>
+<text x="5" y="295">a[3]</text>
+<text x="5" y="325">b[3]</text>
+<use x="45" y="280" xlink:href="#g2"/>
+<text x="325" y="310">q[3]</text>
+</g>
+</svg>
 
 <h2 id="ti7432">7432</h2>
 <p>quad 2-input OR gate</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti7432 is
-    port (a1, b1, a2, b2, a3, b3, a4, b4: in std_logic; y1, y2, y3, y4: out std_logic);
-end entity;
+<b>entity</b> ti7432 <b>is</b>
+    <b>port</b> (a1, b1, a2, b2, a3, b3, a4, b4: <b>in</b> std_logic; y1, y2, y3, y4: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of ti7432 is
-begin
-    y1 &lt;= a1 or b1;
-    y2 &lt;= a2 or b2;
-    y3 &lt;= a3 or b3;
-    y4 &lt;= a4 or b4;
-end architecture;
+<b>architecture</b> behavior <b>of</b> ti7432 <b>is</b>
+<b>begin</b>
+    y1 &lt;= a1 <b>or</b> b1;
+    y2 &lt;= a2 <b>or</b> b2;
+    y3 &lt;= a3 <b>or</b> b3;
+    y4 &lt;= a4 <b>or</b> b4;
+<b>end architecture</b>;
+</code>
+<code>
+<b>module</b> ti7432(<b>input</b> a1, a2, a3, a4, b1, b2, b3, b4, <b>output</b> q1, q2, q3, q4);
+<b>assign</b> q1 = a1 &amp;&amp; b1;
+<b>assign</b> q2 = a2 &amp;&amp; b2;
+<b>assign</b> q3 = a3 &amp;&amp; b3;
+<b>assign</b> q4 = a4 &amp;&amp; b4;
+<b>endmodule</b>
 </code>
 
 <img src="ti74xx/ti7432.svg" alt="ti7432" width="200px"/>
@@ -180,55 +264,55 @@ end architecture;
 <h2 id="ti7448">7448</h2>
 <p>BCD to 7-segment decoder/driver</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti7448 is
-    port(
-        dec: in std_logic_vector(3 downto 0);
-        q: out std_logic_vector(6 downto 0));
-end entity ti7448;
+<b>entity</b> ti7448 <b>is</b>
+    <b>port</b>(
+        dec: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(6 <b>downto</b> 0));
+<b>end entity</b> ti7448;
 
-architecture behavior of ti7448 is
-begin
-    with dec select
-        q &lt;= "0111111" when "0000",
-             "0000110" when "0001",
-             "1011011" when "0010",
-             "1001111" when "0011",
-             "1100110" when "0100",
-             "1101101" when "0101",
-             "1111100" when "0110",
-             "0000111" when "0111",
-             "1111111" when "1000",
-             "1100111" when "1001",
-             "0000000" when others;
-end architecture behavior;
+<b>architecture</b> behavior <b>of</b> ti7448 <b>is</b>
+<b>begin</b>
+    <b>with</b> dec <b>select</b>
+        q &lt;= "0111111" <b>when</b> "0000",
+             "0000110" <b>when</b> "0001",
+             "1011011" <b>when</b> "0010",
+             "1001111" <b>when</b> "0011",
+             "1100110" <b>when</b> "0100",
+             "1101101" <b>when</b> "0101",
+             "1111100" <b>when</b> "0110",
+             "0000111" <b>when</b> "0111",
+             "1111111" <b>when</b> "1000",
+             "1100111" <b>when</b> "1001",
+             "0000000" <b>when</b> others;
+<b>end architecture</b> behavior;
 </code>
 <img src="ti74xx/ti7448.svg" alt="ti7448" width="300px"/>
 
 <h2 id="ti7483">7483</h2>
 <p>4-bit binary full adder</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
+<b>use</b> ieee.numeric_std.<b>all</b>;
 
-entity ti7483 is
-    port(
-        c0: in std_logic;
-        c4: out std_logic;
-        a, b: in unsigned(3 downto 0);
-        s: out unsigned(3 downto 0));
-end entity;
+<b>entity</b> ti7483 <b>is</b>
+    <b>port</b>(
+        c0: <b>in</b> std_logic;
+        c4: <b>out</b> std_logic;
+        a, b: <b>in</b> unsigned(3 <b>downto</b> 0);
+        s: <b>out</b> unsigned(3 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti7483 is
-signal tmp: unsigned(5 downto 0);
-begin
+<b>architecture</b> behavior <b>of</b> ti7483 <b>is</b>
+<b>signal</b> tmp: unsigned(5 <b>downto</b> 0);
+<b>begin</b>
     tmp &lt;= ('0' &amp; a &amp; '1') + ('0' &amp; b &amp; c0);
-    s &lt;= tmp(4 downto 1);
+    s &lt;= tmp(4 <b>downto</b> 1);
     c4 &lt;= tmp(5);
-end architecture;
+<b>end architecture</b>;
 </code>
 <img src="ti74xx/ti7483.svg" alt="ti7483" width="300px"/>
 
@@ -321,40 +405,40 @@ end architecture behavior;
 <h2 id="ti74150">74150</h2>
 <p>16-line to 1-line data selector/multiplexer</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74150 is
-    port (
-        g_n: in std_logic;
-        e: in std_logic_vector(15 downto 0);
-        sel: in std_logic_vector(3 downto 0);
-        w_n: out std_logic);
-end entity;
+<b>entity</b> ti74150 <b>is</b>
+    <b>port</b> (
+        g_n: <b>in</b> std_logic;
+        e: <b>in</b> std_logic_vector(15 <b>downto</b> 0);
+        sel: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        w_n: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of ti74150 is
-signal tmp: std_logic;
-begin
-    with sel select
-        tmp &lt;= e(0) when "0000",
-               e(1) when "0001",
-               e(2) when "0010",
-               e(3) when "0011",
-               e(4) when "0100",
-               e(5) when "0101",
-               e(6) when "0110",
-               e(7) when "0111",
-               e(8) when "1000",
-               e(9) when "1001",
-               e(10) when "1010",
-               e(11) when "1011",
-               e(12) when "1100",
-               e(13) when "1101",
-               e(14) when "1110",
-               e(15) when "1111";
+<b>architecture</b> behavior <b>of</b> ti74150 <b>is</b>
+<b>signal</b> tmp: std_logic;
+<b>begin</b>
+    <b>with</b> sel <b>select</b>
+        tmp &lt;= e(0) <b>when</b> "0000",
+               e(1) <b>when</b> "0001",
+               e(2) <b>when</b> "0010",
+               e(3) <b>when</b> "0011",
+               e(4) <b>when</b> "0100",
+               e(5) <b>when</b> "0101",
+               e(6) <b>when</b> "0110",
+               e(7) <b>when</b> "0111",
+               e(8) <b>when</b> "1000",
+               e(9) <b>when</b> "1001",
+               e(10) <b>when</b> "1010",
+               e(11) <b>when</b> "1011",
+               e(12) <b>when</b> "1100",
+               e(13) <b>when</b> "1101",
+               e(14) <b>when</b> "1110",
+               e(15) <b>when</b> "1111";
 
-    w_n &lt;= g_n or not tmp;
-end architecture;
+    w_n &lt;= g_n <b>or not</b> tmp;
+<b>end architecture</b>;
 </code>
 
 <img src="ti74xx/ti74150.svg" alt="ti74150" width="400px"/>
@@ -535,15 +619,15 @@ begin
 end architecture;
 </code>
 <code>
-module test9(input clk, input rst_n, input [5:0] d, output reg [5:0] q);
+<b>module</b> ti74174(<b>input</b> clk, <b>input</b> rst_n, <b>input</b> [5:0] d, <b>output reg</b> [5:0] q);
 
-always @(posedge clk, negedge rst_n)
-    if (!rst_n)
+<b>always</b> @(<b>posedge</b> clk, <b>negedge</b> rst_n)
+    <b>if</b> (!rst_n)
         q &lt;= 0;
-    else
+    <b>else</b>
         q &lt;= d;
 
-endmodule
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
@@ -661,6 +745,16 @@ begin
     end process;
 end architecture;
 </code>
+<code>
+module ti74273(input clk, input rst_n, input [7:0] d, output reg [7:0] q);
+
+always @(posedge clk, negedge rst_n)
+    if (!rst_n)
+        q &lt;= 0;
+    else
+        q &lt;= d;
+endmodule
+</code>
 <img src="ti74xx/ti74273.svg" alt="ti74273" width="300px"/>
 
 <h2 id="ti74377">74377</h2>
@@ -684,6 +778,14 @@ begin
         end if;
     end process;
 end architecture behavior;
+</code>
+<code>
+<b>module</b> ti74377(<b>input</b> clk, <b>input</b> en_n, <b>input</b> [7:0] d, <b>output reg</b> [7:0] q);
+
+<b>always</b> @(<b>posedge</b> clk)
+    <b>if</b> (!en_n)
+        q &lt;= d;
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74377.svg" alt="ti74377" width="300px"/>
 
