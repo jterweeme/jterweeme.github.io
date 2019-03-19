@@ -82,41 +82,38 @@ echo $mm;
 </code>
 <svg width="400" height="400" xmlns:xlink="http://www.w3.org/1999/xlink">
 <defs>
-    <filter id="f1" x="0" y="0" width="200%" height="200%">
-        <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20" />
-        <feBlend in="SourceGraphic" in2="offOut" mode="normal" />
-    </filter>
     <path id="p2" d="M0,0 H40 L45,5 L40,10 H0Z"/>
     <path id="p3" d="M0,0 H50 C62.5,0 75,12.5 75,25 C75,37.5 62.5,50 50,50H0Z"/>
-    <g id="g1">
-        <use x="0" y="5" xlink:href="#p2" fill="none"/>
-        <use x="0" y="35" xlink:href="#p2" fill="none"/>
+    <g id="g1" fill="none">
+        <use x="0" y="5" xlink:href="#p2"/>
+        <use x="0" y="35" xlink:href="#p2"/>
         <line x1="45" y1="10" x2="95" y2="10"/>
         <line x1="45" y1="40" x2="95" y2="40"/>
-        <use x="95" y="0" xlink:href="#p3" fill="none"/>
+        <use x="95" y="0" xlink:href="#p3"/>
+    </g>
+    <g id="g2" stroke="black">
+        <use x="0" y="0" xlink:href="#g1"/>
         <line x1="170" y1="25" x2="220" y2="25"/>
         <circle cx="225" cy="25" r="5" fill="none"/>
         <use x="230" y="20" xlink:href="#p2" fill="none"/>
     </g>
 </defs>
-<g stroke="black">
 <text x="5" y="25">a[0]</text>
 <text x="5" y="55">b[0]</text>
-<use x="45" y="10" xlink:href="#g1"/>
+<use x="45" y="10" xlink:href="#g2"/>
 <text x="325" y="40">q[0]</text>
 <text x="5" y="115">a[1]</text>
 <text x="5" y="145">b[1]</text>
-<use x="45" y="100" xlink:href="#g1"/>
+<use x="45" y="100" xlink:href="#g2"/>
 <text x="325" y="130">q[1]</text>
 <text x="5" y="205">a[2]</text>
 <text x="5" y="235">b[2]</text>
-<use x="45" y="190" xlink:href="#g1"/>
+<use x="45" y="190" xlink:href="#g2"/>
 <text x="325" y="220">q[2]</text>
 <text x="5" y="295">a[3]</text>
 <text x="5" y="325">b[3]</text>
-<use x="45" y="280" xlink:href="#g1"/>
+<use x="45" y="280" xlink:href="#g2"/>
 <text x="325" y="310">q[3]</text>
-</g>
 </svg>
 
 <h2 id="ti7402">7402</h2>
@@ -126,15 +123,13 @@ echo $mm;
 <b>use</b> ieee.std_logic_1164.<b>all</b>;
 
 <b>entity</b> ti7402 <b>is</b>
-    <b>port</b> (a1, b1, a2, b2, a3, b3, a4, b4: <b>in</b> std_logic; y1, y2, y3, y4: <b>out</b> std_logic);
+    <b>port</b> (a, b: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(3 <b>downto</b> 0));
 <b>end entity</b>;
 
 <b>architecture</b> behavior <b>of</b> ti7402 <b>is</b>
 <b>begin</b>
-    y1 &lt;= <b>not</b> (a1 <b>or</b> b1);
-    y2 &lt;= <b>not</b> (a2 <b>or</b> b2);
-    y3 &lt;= <b>not</b> (a3 <b>or</b> b3);
-    y4 &lt;= <b>not</b> (a4 <b>or</b> b4);
+    q &lt;= <b>not</b> (a or b);
 <b>end architecture</b>;
 </code>
 <code>
@@ -150,8 +145,37 @@ echo $mm;
 
 <b>endmodule</b>
 </code>
-
-<img src="ti74xx/ti7402.svg" alt="ti7402" width="200px"/>
+<svg width="400" height="400" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+    <path id="p5" d="M0,0 C0,0 50,0 50,25 C50,25 50,50 0,50 C0,50 10,50 10,25 C10,25 10,15 0,0"/>
+    <g id="g4" fill="none" stroke="black">
+        <use x="0" y="5" xlink:href="#p2"/>
+        <use x="0" y="35" xlink:href="#p2"/>
+        <line x1="45" y1="10" x2="105" y2="10"/>
+        <line x1="45" y1="40" x2="105" y2="40"/>
+        <use x="100" y="0" xlink:href="#p5"/>
+        <circle cx="155" cy="25" r="5"/>
+        <line x1="160" y1="25" x2="210" y2="25"/>
+        <use x="210" y="20" xlink:href="#p2"/>
+    </g>
+</defs>
+<text x="5" y="20">a[0]</text>
+<text x="5" y="50">b[0]</text>
+<use x="45" y="5" xlink:href="#g4"/>
+<text x="310" y="35">q[0]</text>
+<text x="5" y="105">a[1]</text>
+<text x="5" y="135">b[1]</text>
+<use x="45" y="90" xlink:href="#g4"/>
+<text x="310" y="120">q[1]</text>
+<text x="5" y="190">a[2]</text>
+<text x="5" y="220">b[2]</text>
+<use x="45" y="175" xlink:href="#g4"/>
+<text x="310" y="205">q[2]</text>
+<text x="5" y="275">a[3]</text>
+<text x="5" y="305">b[3]</text>
+<use x="45" y="260" xlink:href="#g4"/>
+<text x="310" y="290">q[3]</text>
+</svg>
 
 <h2 id="ti7404">7404</h2>
 <p>hex inverter gate</p>
@@ -198,34 +222,28 @@ echo $mm;
 </code>
 <svg width="400" height="400" xmlns:xlink="http://www.w3.org/1999/xlink">
 <defs>
-    <g id="g2">
-        <use x="0" y="5" xlink:href="#p2" fill="none"/>
-        <use x="0" y="35" xlink:href="#p2" fill="none"/>
-        <line x1="45" y1="10" x2="95" y2="10"/>
-        <line x1="45" y1="40" x2="95" y2="40"/>
-        <use x="95" y="0" xlink:href="#p3" fill="none"/>
+    <g id="g3" stroke="black">
+        <use x="0" y="0" xlink:href="#g1" fill="none"/>
         <line x1="170" y1="25" x2="230" y2="25"/>
         <use x="230" y="20" xlink:href="#p2" fill="none"/>
     </g>
 </defs>
-<g stroke="black">
 <text x="5" y="25">a[0]</text>
 <text x="5" y="55">b[0]</text>
-<use x="45" y="10" xlink:href="#g2"/>
+<use x="45" y="10" xlink:href="#g3"/>
 <text x="325" y="40">q[0]</text>
 <text x="5" y="115">a[1]</text>
 <text x="5" y="145">b[1]</text>
-<use x="45" y="100" xlink:href="#g2"/>
+<use x="45" y="100" xlink:href="#g3"/>
 <text x="325" y="130">q[1]</text>
 <text x="5" y="205">a[2]</text>
 <text x="5" y="235">b[2]</text>
-<use x="45" y="190" xlink:href="#g2"/>
+<use x="45" y="190" xlink:href="#g3"/>
 <text x="325" y="220">q[2]</text>
 <text x="5" y="295">a[3]</text>
 <text x="5" y="325">b[3]</text>
-<use x="45" y="280" xlink:href="#g2"/>
+<use x="45" y="280" xlink:href="#g3"/>
 <text x="325" y="310">q[3]</text>
-</g>
 </svg>
 
 <h2 id="ti7432">7432</h2>
