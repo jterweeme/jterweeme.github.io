@@ -56,7 +56,7 @@ svg path, svg g {
     font-size: 8px;
 }
 
-#gmux text {
+#gmux text, #dflop text {
     stroke: none;
     fill: black;
     font-size: 8px;
@@ -767,6 +767,20 @@ end architecture;
 
 <b>endmodule</b>
 </code>
+<svg width="400" height="400">
+<defs>
+<g id="dflop">
+<rect x="0" y="0" width="50" height="70"/>
+<text x="2" y="20">D</text>
+<text x="38" y="20">Q</text>
+<path d="M0,20 L10,30 L0,40"/>
+<text x="2" y="50">EN</text>
+</g>
+</defs>
+<g class="klas1">
+<use x="100" y="10" href="#dflop"/>
+</g>
+</svg>
 <img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
 <h2 id="ti74181">74181</h2>
@@ -884,48 +898,66 @@ begin
 end architecture;
 </code>
 <code>
-module ti74273(input clk, input rst_n, input [7:0] d, output reg [7:0] q);
+<b>module</b> ti74273(<b>input</b> clk, rst_n, <b>input</b> [7:0] d, <b>output reg</b> [7:0] q);
 
-always @(posedge clk, negedge rst_n)
-    if (!rst_n)
+<b>always</b> @(<b>posedge</b> clk, <b>negedge</b> rst_n)
+    <b>if</b> (!rst_n)
         q &lt;= 0;
-    else
+    <b>else</b>
         q &lt;= d;
-endmodule
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74273.svg" alt="ti74273" width="300px"/>
 
 <h2 id="ti74377">74377</h2>
 <p>8-bit register, clock enable</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74377 is
-    port(en_n, clk: in std_logic;
-        d: in std_logic_vector(7 downto 0);
-        q: out std_logic_vector(7 downto 0));
-end entity ti74377;
+<b>entity</b> ti74377 <b>is</b>
+    <b>port</b>(en_n, clk: <b>in</b> std_logic;
+        d: <b>in</b> std_logic_vector(7 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(7 <b>downto</b> 0));
+<b>end entity</b> ti74377;
 
-architecture behavior of ti74377 is
-begin
-    process (clk)
-    begin
-        if rising_edge(clk) and en_n='0' then
+<b>architecture</b> behavior <b>of</b> ti74377 <b>is</b>
+<b>begin</b>
+    <b>process</b> (clk)
+    <b>begin</b>
+        <b>if</b> rising_edge(clk) <b>and</b> en_n='0' <b>then</b>
             q &lt;= d;
-        end if;
-    end process;
-end architecture behavior;
+        <b>end if</b>;
+    <b>end process</b>;
+<b>end architecture</b> behavior;
 </code>
 <code>
-<b>module</b> ti74377(<b>input</b> clk, <b>input</b> en_n, <b>input</b> [7:0] d, <b>output reg</b> [7:0] q);
+<b>module</b> ti74377(<b>input</b> clk, en_n,
+    <b>input</b> [7:0] d, <b>output reg</b> [7:0] q);
 
 <b>always</b> @(<b>posedge</b> clk)
     <b>if</b> (!en_n)
         q &lt;= d;
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74377.svg" alt="ti74377" width="300px"/>
+<svg width="400" height="100">
+<g class="klas1">
+<text x="5" y="28">d[7..0]</text>
+<use x="45" y="20" href="#pin"/>
+<line x1="90" y1="25" x2="150" y2="25"/>
+<text x="15" y="43">clk</text>
+<use x="45" y="35" href="#pin"/>
+<line x1="90" y1="40" x2="150" y2="40"/>
+<text x="5" y="58">en_n</text>
+<use x="45" y="50" href="#pin"/>
+<line x1="90" y1="55" x2="140" y2="55"/>
+<circle cx="145" cy="55" r="5"/>
+<use x="150" y="10" href="#dflop"/>
+<line x1="200" y1="25" x2="250" y2="25"/>
+<use x="250" y="20" href="#pin"/>
+<text x="300" y="28">q[7..0]</text>
+</g>
+</svg>
 
 <h2 id="ti74557">74557</h2>
 <p>8-bit by 8-bit multiplier</p>
