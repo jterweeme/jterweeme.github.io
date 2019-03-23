@@ -33,7 +33,7 @@ code em {
     color: red;
 }
 
-svg {
+svg, img {
     display: block;
     /*border: 1px dotted red;*/
 }
@@ -532,6 +532,35 @@ echo $mm;
                  "01111111" <b>when</b> "111";
 <b>end architecture</b>;
 </code>
+<code>
+<b>module</b> ti74138(<b>input</b> en1, en2a_n, en2b_n, <b>input</b> [2:0] sel, <b>output</b> [7:0] y);
+<b>reg</b> [7:0] demux;
+<b>assign</b> en = en1 &amp; !en2a_n &amp; !en2b_n;
+<b>assign</b> y = en ? demux : 8'b11111111;
+
+<b>always</b> @(sel)
+<b>begin</b>
+    <b>case</b> (sel)
+    3'b000:
+        demux = 8'b11111110;
+    3'b001:
+        demux = 8'b11111101;
+    3'b010:
+        demux = 8'b11111011;
+    3'b011:
+        demux = 8'b11110111;
+    3'b100:
+        demux = 8'b11101111;
+    3'b101:
+        demux = 8'b11011111;
+    3'b110:
+        demux = 8'b10111111;
+    3'b111:
+        demux = 8'b01111111;
+    <b>endcase</b>
+<b>end</b>
+<b>endmodule</b>
+</code>
 <img src="ti74xx/ti74138.svg" alt="ti74138"/>
 
 <h2 id="ti74139">74139</h2>
@@ -618,35 +647,41 @@ echo $mm;
 <h2 id="ti74151">74151</h2>
 <p>8-line to 1-line data selector/multiplexer</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74151 is
-    port (g_n: in std_logic;
-        e: in std_logic_vector(7 downto 0);
-        sel: in std_logic_vector(2 downto 0);
-        w_n, y: out std_logic);
-end entity;
+<b>entity</b> ti74151 <b>is</b>
+    <b>port</b> (g_n: <b>in</b> std_logic;
+        e: <b>in</b> std_logic_vector(7 <b>downto</b> 0);
+        sel: <b>in</b> std_logic_vector(2 <b>downto</b> 0);
+        w_n, y: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of ti74151 is
-signal tmp, tmp2: std_logic;
-begin
-    with sel select
-        tmp &lt;= e(0) when "000",
-               e(1) when "001",
-               e(2) when "010",
-               e(3) when "011",
-               e(4) when "100",
-               e(5) when "101",
-               e(6) when "110",
-               e(7) when "111";
+<b>architecture</b> behavior <b>of</b> ti74151 <b>is</b>
+<b>signal</b> tmp, tmp2: std_logic;
+<b>begin</b>
+    <b>with</b> sel <b>select</b>
+        tmp &lt;= e(0) <b>when</b> "000",
+               e(1) <b>when</b> "001",
+               e(2) <b>when</b> "010",
+               e(3) <b>when</b> "011",
+               e(4) <b>when</b> "100",
+               e(5) <b>when</b> "101",
+               e(6) <b>when</b> "110",
+               e(7) <b>when</b> "111";
 
-    tmp2 &lt;= g_n or not tmp;
+    tmp2 &lt;= g_n <b>or not</b> tmp;
     w_n &lt;= tmp2;
-    y &lt;= not tmp2;
-end architecture;
+    y &lt;= <b>not</b> tmp2;
+<b>end architecture</b>;
 </code>
-
+<code>
+<b>module</b> ti74141(<b>input</b> g_n, <b>input</b> [7:0] e, <b>input</b> [2:0] sel, <b>output</b> w_n, y);
+<b>assign</b> tmp = g_n | ~e[sel];
+<b>assign</b> w_n = tmp;
+<b>assign</b> y = ~tmp;
+<b>endmodule</b>
+</code>
 <img src="ti74xx/ti74151.svg" alt="ti74151" width="400px"/>
 
 <h2 id="ti74153">74153</h2>
@@ -801,7 +836,7 @@ end architecture;
 
 <b>endmodule</b>
 </code>
-<svg width="400" height="400">
+<svg width="400" height="200">
 <defs>
 <g id="dflop">
 <rect x="0" y="0" width="50" height="70"/>
@@ -809,13 +844,27 @@ end architecture;
 <text x="38" y="20">Q</text>
 <path d="M0,20 L10,30 L0,40"/>
 <text x="2" y="50">EN</text>
+<text x="17" y="65">RST</text>
 </g>
 </defs>
 <g class="klas1">
-<use x="100" y="10" href="#dflop"/>
+<text x="5" y="28">d[5..0]</text>
+<use x="45" y="20" href="#pin"/>
+<line x1="90" y1="25" x2="150" y2="25"/>
+<text x="15" y="43">clk</text>
+<use x="45" y="35" href="#pin"/>
+<line x1="90" y1="40" x2="150" y2="40"/>
+<text x="5" y="108">rst_n</text>
+<use x="45" y="100" href="#pin"/>
+<line x1="90" y1="105" x2="175" y2="105"/>
+<line x1="175" y1="90" x2="175" y2="105"/>
+<circle cx="175" cy="85" r="5"/>
+<use x="150" y="10" href="#dflop"/>
+<line x1="200" y1="25" x2="250" y2="25"/>
+<use x="250" y="20" href="#pin"/>
+<text x="300" y="28">q[5..0]</text>
 </g>
 </svg>
-<img src="ti74xx/ti74174.svg" alt="ti74174" width="300px"/>
 
 <h2 id="ti74181">74181</h2>
 <p>4-bit arithmetic logic unit and function generator</p>
@@ -953,7 +1002,25 @@ end architecture behavior;
         q &lt;= d;
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74273.svg" alt="ti74273" width="300px"/>
+<svg width="400" height="150">
+<g class="klas1">
+<text x="5" y="28">d[7..0]</text>
+<use x="45" y="20" href="#pin"/>
+<line x1="90" y1="25" x2="150" y2="25"/>
+<text x="15" y="43">clk</text>
+<use x="45" y="35" href="#pin"/>
+<line x1="90" y1="40" x2="150" y2="40"/>
+<text x="5" y="108">rst_n</text>
+<use x="45" y="100" href="#pin"/>
+<line x1="90" y1="105" x2="175" y2="105"/>
+<line x1="175" y1="90" x2="175" y2="105"/>
+<circle cx="175" cy="85" r="5"/>
+<use x="150" y="10" href="#dflop"/>
+<line x1="200" y1="25" x2="250" y2="25"/>
+<use x="250" y="20" href="#pin"/>
+<text x="300" y="28">q[7..0]</text>
+</g>
+</svg>
 
 <h2 id="ti74377">74377</h2>
 <p>8-bit register, clock enable</p>
@@ -1085,7 +1152,15 @@ begin
     end process;
 end architecture;
 </code>
-
+<code>
+<b>module</b> ti744040(<b>input</b> clk_n, rst, <b>output reg</b> [11:0] q);
+<b>always</b> @(<b>negedge</b> clk_n, <b>posedge</b> rst)
+    <b>if</b> (rst)
+        q = 0;
+    <b>else</b>
+        q = q + 1;
+<b>endmodule</b>
+</code>
 <img src="ti74xx/ti744040.svg" alt="ti744040" width="400px"/>
 
 </main>
