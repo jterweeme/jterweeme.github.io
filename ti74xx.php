@@ -51,13 +51,14 @@ svg path, svg g {
 .klas1 {
     stroke: black;
     fill: none;
+    font-size: 8px;
 }
 
 .klas1 text {
     font-size: 8px;
 }
 
-#gmux text, #dflop text {
+#gmux text, #dflop text, #g12 text, #g13 text {
     stroke: none;
     fill: black;
     font-size: 8px;
@@ -351,7 +352,7 @@ echo $mm;
              "0000111" <b>when</b> "0111",
              "1111111" <b>when</b> "1000",
              "1100111" <b>when</b> "1001",
-             "0000000" <b>when</b> others;
+             "0000000" <b>when others</b>;
 <b>end architecture</b> behavior;
 </code>
 <code>
@@ -371,7 +372,7 @@ echo $mm;
 </code>
 <svg width="400" height="500">
 <defs>
-    <path id="mux" d="M0,0 L60,20 L60,40 L0,60Z"/>
+    <path id="mux" d="M0,0 L60,20 V40 L0,60Z"/>
     <g id="gmux">
         <use x="0" y="0" href="#mux"/>
         <text x="2" y="23">SEL[3..0]</text>
@@ -469,15 +470,42 @@ echo $mm;
 <b>assign</b> {c4, s, bogus} = {1'b0, a, 1'b1} + {1'b0, b, c0};
 <b>endmodule</b>
 </code>
-<svg width="400" height="200">
+<svg width="400" height="170">
 <defs>
 <g id="adder">
 <circle cx="40" cy="40" r="40"/>
+<line x1="40" y1="20" x2="40" y2="60"/>
+<line x1="20" y1="40" x2="60" y2="40"/>
 </g>
 </defs>
-<use x="0" y="0" href="#adder"/>
+<g class="klas1">
+<text x="85" y="15">1'h0</text>
+<text x="5" y="30">a[3..0]</text>
+<use x="35" y="23" href="#pin"/>
+<text x="85" y="45">1'h1</text>
+<line y1="15" y2="15" x1="110" x2="130"/>
+<line y1="28" y2="28" x1="80" x2="130"/>
+<line x1="130" x2="130" y1="15" y2="45"/>
+<text x="5" y="100">b[3..0]</text>
+<use x="35" y="93" href="#pin"/>
+<line x1="80" y1="98" x2="130" y2="98"/>
+<text x="5" y="120">c0</text>
+<use x="35" y="113" href="#pin"/>
+<line x1="110" y1="45" x2="155" y2="45"/>
+<line x1="130" y1="85" x2="130" y2="118"/>
+<line x1="80" y1="118" x2="130" y2="118"/>
+<text x="85" y="85">1'h0</text>
+<line x1="110" y1="85" x2="155" y2="85"/>
+<use x="150" y="25" href="#adder"/>
+<line x1="230" y1="65" x2="300" y2="65"/>
+<line x1="265" y1="65" x2="265" y2="85"/>
+<line x1="265" y1="85" x2="300" y2="85"/>
+<use x="300" y="60" href="#pin"/>
+<text x="350" y="67">c4</text>
+<use x="300" y="80" href="#pin"/>
+<text x="350" y="87">s[3..0]</text>
+</g>
 </svg>
-<img src="ti74xx/ti7483.svg" alt="ti7483" width="300px"/>
 
 <h2 id="ti74133">74133</h2>
 <p>single 13-input NAND gate</p>
@@ -500,7 +528,55 @@ echo $mm;
 <b>assign</b> q = ~(a[0] &amp; a[1] &amp; a[2] &amp; a[3] &amp; a[4] &amp; a[5] &amp; a[6] &amp; a[7] &amp; a[8] &amp; a[9] &amp; a[10] &amp; a[11] &amp; a[12]);
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74133.svg" alt="ti74133"/>
+<svg width="400" height="300">
+<g class="klas1">
+<text x="5" y="18">a[12]</text>
+<use x="50" y="10" href="#pin"/>
+<line y1="15" y2="15" x1="95" x2="140"/>
+<text x="5" y="38">a[11]</text>
+<use x="50" y="30" href="#pin"/>
+<line y1="35" y2="35" x1="95" x2="140"/>
+<text x="5" y="58">a[10]</text>
+<use x="50" y="50" href="#pin"/>
+<line y1="55" y2="55" x1="95" x2="140"/>
+<text x="5" y="78">a[9]</text>
+<use x="50" y="70" href="#pin"/>
+<line y1="75" y2="75" x1="95" x2="140"/>
+<text x="5" y="98">a[8]</text>
+<use x="50" y="90" href="#pin"/>
+<line y1="95" y2="95" x1="95" x2="140"/>
+<text x="5" y="118">a[7]</text>
+<use x="50" y="110" href="#pin"/>
+<line y1="115" y2="115" x1="95" x2="140"/>
+<text x="5" y="138">a[6]</text>
+<use x="50" y="130" href="#pin"/>
+<line y1="135" y2="135" x1="95" x2="140"/>
+<text x="5" y="158">a[5]</text>
+<use x="50" y="150" href="#pin"/>
+<line y1="155" y2="155" x1="95" x2="140"/>
+<text x="5" y="178">a[4]</text>
+<use x="50" y="170" href="#pin"/>
+<line y1="175" y2="175" x1="95" x2="140"/>
+<text x="5" y="198">a[3]</text>
+<use x="50" y="190" href="#pin"/>
+<line y1="195" y2="195" x1="95" x2="140"/>
+<text x="5" y="218">a[2]</text>
+<use x="50" y="210" href="#pin"/>
+<line y1="215" y2="215" x1="95" x2="140"/>
+<text x="5" y="238">a[1]</text>
+<use x="50" y="230" href="#pin"/>
+<line y1="235" y2="235" x1="95" x2="140"/>
+<text x="5" y="258">a[0]</text>
+<use x="50" y="250" href="#pin"/>
+<line y1="255" y2="255" x1="95" x2="140"/>
+<line x1="140" x2="140" y1="15" y2="255"/>
+<path d="M140,120 H155 C155,120 185,120 185,135 C185,135 185,150 155,150 H140"/>
+<circle cx="190" cy="135" r="5"/>
+<line y1="135" y2="135" x1="195" x2="250"/>
+<use x="250" y="130" href="#pin"/>
+<text x="300" y="138">q</text>
+</g>
+</svg>
 
 <h2 id="ti74138">74138</h2>
 <p>3-line to 8-line decoder/demultiplexer, inverting outputs</p>
@@ -533,7 +609,8 @@ echo $mm;
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74138(<b>input</b> en1, en2a_n, en2b_n, <b>input</b> [2:0] sel, <b>output</b> [7:0] y);
+<b>module</b> ti74138(<b>input</b> en1, en2a_n, en2b_n,
+    <b>input</b> [2:0] sel, <b>output</b> [7:0] y);
 <b>reg</b> [7:0] demux;
 <b>assign</b> en = en1 &amp; !en2a_n &amp; !en2b_n;
 <b>assign</b> y = en ? demux : 8'b11111111;
@@ -541,27 +618,57 @@ echo $mm;
 <b>always</b> @(sel)
 <b>begin</b>
     <b>case</b> (sel)
-    3'b000:
-        demux = 8'b11111110;
-    3'b001:
-        demux = 8'b11111101;
-    3'b010:
-        demux = 8'b11111011;
-    3'b011:
-        demux = 8'b11110111;
-    3'b100:
-        demux = 8'b11101111;
-    3'b101:
-        demux = 8'b11011111;
-    3'b110:
-        demux = 8'b10111111;
-    3'b111:
-        demux = 8'b01111111;
+    3'b000: demux = 8'b11111110;
+    3'b001: demux = 8'b11111101;
+    3'b010: demux = 8'b11111011;
+    3'b011: demux = 8'b11110111;
+    3'b100: demux = 8'b11101111;
+    3'b101: demux = 8'b11011111;
+    3'b110: demux = 8'b10111111;
+    3'b111: demux = 8'b01111111;
     <b>endcase</b>
 <b>end</b>
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74138.svg" alt="ti74138"/>
+<svg width="500" height="200">
+<defs>
+<g id="g12">
+<text x="5" y="15">en2b_n</text>
+<text x="5" y="30">en1</text>
+<text x="5" y="45">en2a_n</text>
+<use x="40" y="8" href="#pin"/>
+<use x="40" y="23" href="#pin"/>
+<use x="40" y="38" href="#pin"/>
+<line x1="85" y1="13" y2="13" x2="125"/>
+<circle cx="130" cy="13" r="5"/>
+<line x1="85" y1="28" y2="28" x2="135"/>
+<line x1="85" y1="43" y2="43" x2="125"/>
+<circle cx="130" cy="43" r="5"/>
+<path d="M135,13 H150 C150,13 170,13 170,28 C170,28 170,43 150,43 H135Z"/>
+</g>
+<path id="dec" d="M0,20 L60,0 V60 L0,40Z"/>
+<g id="g13">
+<text x="5" y="50">sel[2..0]</text>
+<use x="40" y="42" href="#pin"/>
+<line x1="85" y1="47" y2="47" x2="120"/>
+<use x="120" y="17" href="#dec"/>
+<line x1="180" y1="47" y2="47" x2="250"/>
+<circle cx="255" cy="47" r="5"/>
+<text x="220" y="30">0xff</text>
+<line x1="240" y1="27" y2="27" x2="260"/>
+<use x="260" y="7" href="#mux"/>
+<line x1="320" y1="37" y2="37" x2="360"/>
+<use x="360" y="32" href="#pin"/>
+<text x="407" y="40">y[7..0]</text>
+</g>
+</defs>
+<g class="klas1">
+<use x="0" y="0" href="#g12"/>
+<use x="0" y="100" href="#g13"/>
+<line x1="170" y1="28" y2="28" x2="290"/>
+<line x1="290" x2="290" y1="28" y2="117"/>
+</g>
+</svg>
 
 <h2 id="ti74139">74139</h2>
 <p>dual 2 to 4-line decoder/demultiplexer, inverting outputs</p>
@@ -596,7 +703,34 @@ echo $mm;
 
 <b>end architecture</b> behavior;
 </code>
+<code>
+<b>module</b> ti74139(<b>input</b> en0_n, en1_n,
+    <b>input</b> [1:0] sel0, sel1, <b>output</b> [3:0] y0, y1);
+<b>reg</b> [3:0] demux0, demux1;
+<b>assign</b> y0 = en0_n ? 8'b1111 : demux0;
+<b>assign</b> y1 = en1_n ? 8'b1111 : demux1;
 
+<b>always</b> @(sel0)
+<b>begin</b>
+    <b>case</b> (sel0)
+    3'b00: demux0 = 8'b1110;
+    3'b01: demux0 = 8'b1101;
+    3'b10: demux0 = 8'b1011;
+    3'b11: demux0 = 8'b0111;
+    <b>endcase</b>
+<b>end</b>
+
+<b>always</b> @(sel1)
+<b>begin</b>
+    <b>case</b> (sel1)
+    3'b00: demux1 = 8'b1110;
+    3'b01: demux1 = 8'b1101;
+    3'b10: demux1 = 8'b1011;
+    3'b11: demux1 = 8'b0111;
+    <b>endcase</b>
+<b>end</b>
+<b>endmodule</b>
+</code>
 <img src="ti74xx/ti74139.svg" alt="ti74139" width="400px"/>
 
 <h2 id="ti74150">74150</h2>
@@ -638,7 +772,8 @@ echo $mm;
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74150(<b>input</b> g_n, <b>input</b> [15:0] e, <b>input</b> [3:0] sel, <b>output</b> w_n);
+<b>module</b> ti74150(<b>input</b> g_n, <b>input</b> [15:0] e,
+    <b>input</b> [3:0] sel, <b>output</b> w_n);
 <b>assign</b> w_n = g_n | ~e[sel];
 <b>endmodule</b>
 </code>
@@ -676,7 +811,10 @@ echo $mm;
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74141(<b>input</b> g_n, <b>input</b> [7:0] e, <b>input</b> [2:0] sel, <b>output</b> w_n, y);
+<b>module</b> ti74151(<b>input</b> g_n,
+    <b>input</b> [7:0] e,
+    <b>input</b> [2:0] sel,
+    <b>output</b> w_n, y);
 <b>assign</b> tmp = g_n | ~e[sel];
 <b>assign</b> w_n = tmp;
 <b>assign</b> y = ~tmp;
@@ -687,146 +825,187 @@ echo $mm;
 <h2 id="ti74153">74153</h2>
 <p>dual 4-line to 1-line data selector/multiplexer, non-inverting outputs</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74153 is
-    port (sel: in std_logic_vector(1 downto 0);
-        g0_n, g1_n: in std_logic;
-        c0, c1: in std_logic_vector(3 downto 0);
-        y0, y1: out std_logic);
-end entity;
+<b>entity</b> ti74153 <b>is</b>
+    <b>port</b> (sel: <b>in</b> std_logic_vector(1 <b>downto</b> 0);
+        g0_n, g1_n: <b>in</b> std_logic;
+        c0, c1: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        y0, y1: <b>out</b> std_logic);
+<b>end entity</b>;
 
-architecture behavior of ti74153 is
-signal mux0_out, mux1_out: std_logic;
-begin
-    y0 &lt;= not g0_n and mux0_out;
-    y1 &lt;= not g1_n and mux1_out;
+<b>architecture</b> behavior <b>of</b> ti74153 <b>is</b>
+<b>signal</b> mux0_out, mux1_out: std_logic;
+<b>begin</b>
+    y0 &lt;= <b>not</b> g0_n <b>and</b> mux0_out;
+    y1 &lt;= <b>not</b> g1_n <b>and</b> mux1_out;
 
-    process (sel, c0, c1)
-    begin
-        case sel is
-            when "00" =&gt;
+    <b>process</b> (sel, c0, c1)
+    <b>begin</b>
+        <b>case</b> sel <b>is</b>
+            <b>when</b> "00" =&gt;
                 mux0_out &lt;= c0(0);
                 mux1_out &lt;= c1(0);
-            when "01" =&gt;
+            <b>when</b> "01" =&gt;
                 mux0_out &lt;= c0(1);
                 mux1_out &lt;= c1(1);
-            when "10" =&gt;
+            <b>when</b> "10" =&gt;
                 mux0_out &lt;= c0(2);
                 mux1_out &lt;= c1(2);
-            when "11" =&gt;
+            <b>when</b> "11" =&gt;
                 mux0_out &lt;= c0(3);
                 mux1_out &lt;= c1(3);
-        end case;
-    end process;
-end architecture;
+        <b>end case</b>;
+    <b>end process</b>;
+<b>end architecture</b>;
+</code>
+<code>
+<b>module</b> ti74153(<b>input</b> g0_n, g1_n,
+    <b>input</b> [1:0] sel,
+    <b>input</b> [3:0] c0, c1,
+    <b>output</b> y0, y1);
+<b>reg</b> mux0, mux1;
+<b>assign</b> y0 = ~g0_n &amp; mux0;
+<b>assign</b> y1 = ~g1_n &amp; mux1;
+
+<b>always</b> @(sel, c0, c1)
+<b>begin</b>
+    <b>case</b> (sel)
+    3'b00:
+    <b>begin</b>
+        mux0 = c0[0];
+        mux1 = c1[0];
+    <b>end</b>
+    3'b01:
+    <b>begin</b>
+        mux0 = c0[1];
+        mux1 = c1[1];
+    <b>end</b>
+    3'b10:
+    <b>begin</b>
+        mux0 = c0[2];
+        mux1 = c1[2];
+    <b>end</b>
+    3'b11:
+    <b>begin</b>
+        mux0 = c0[3];
+        mux1 = c1[3];
+    <b>end</b>
+    <b>endcase</b>
+<b>end</b>
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74153.svg" alt="ti74153" width="400px"/>
 
 <h2 id="ti74157">74157</h2>
 <p>quad 2-line to 1-line data selector/multiplexer, non-inverting outputs</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74157 is
-    port (sel, g_n: in std_logic;
-        c0, c1, c2, c3: in std_logic_vector(1 downto 0);
-        y0, y1, y2, y3: out std_logic);
-end entity;
+<b>entity</b> ti74157 <b>is</b>
+    <b>port</b> (sel, g_n: <b>in</b> std_logic;
+        a, b: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(3 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti74157 is
-signal mux0, mux1, mux2, mux3: std_logic;
-begin
-    y0 &lt;= not g_n and mux0;
-    y1 &lt;= not g_n and mux1;
-    y2 &lt;= not g_n and mux2;
-    y3 &lt;= not g_n and mux3;
-
-    process (sel, c0, c1)
-    begin
-        case sel is
-            when '0' =&gt;
-                mux0 &lt;= c0(0);
-                mux1 &lt;= c1(0);
-                mux2 &lt;= c2(0);
-                mux3 &lt;= c3(0);
-            when '1' =&gt;
-                mux0 &lt;= c0(1);
-                mux1 &lt;= c1(1);
-                mux2 &lt;= c2(1);
-                mux3 &lt;= c3(1);
-        end case;
-    end process;
-end architecture;
+<b>architecture</b> behavior <b>of</b> ti74157 <b>is</b>
+<b>signal</b> mux: std_logic_vector(3 <b>downto</b> 0);
+<b>begin</b>
+    mux &lt;= a <b>when</b> sel='0' <b>else</b> b;
+    q &lt;= mux <b>when</b> g_n='0' <b>else</b> (<b>others</b> =&gt; '0');
+<b>end architecture</b>;
+</code>
+<code>
+<b>module</b> ti74157(<b>input</b> sel, g_n, <b>input</b> [3:0] a, b, <b>output</b> [3:0] q);
+<b>assign</b> q = g_n ? 4'b0000 : (sel ? b : a);
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74157.svg" alt="ti74157" width="400px"/>
 
 <h2 id="ti74161">74161</h2>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
+<b>use</b> ieee.numeric_std.<b>all</b>;
 
-entity ti74161 is
-    port (
-        clk, rst_n, load_n, enp, ent: in std_logic;
-        a: in std_logic_vector(3 downto 0);
-        q: out std_logic_vector(3 downto 0);
-        c4: out std_logic
+<b>entity</b> ti74161 <b>is</b>
+    <b>port</b> (
+        clk, rst_n, load_n, enp, ent: <b>in</b> std_logic;
+        a: <b>in</b> std_logic_vector(3 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(3 <b>downto</b> 0);
+        c4: <b>out</b> std_logic
     );
-end entity;
+<b>end entity</b>;
 
-architecture behavior of ti74161 is
-signal cnt: unsigned(3 downto 0);
-begin
-    c4 &lt;= '1' when cnt="1111" and ent='1' else '0';
+<b>architecture</b> behavior <b>of</b> ti74161 <b>is</b>
+<b>signal</b> cnt: unsigned(3 <b>downto</b> 0);
+<b>begin</b>
+    c4 &lt;= '1' <b>when</b> cnt="1111" <b>and</b> ent='1' <b>else</b> '0';
     q &lt;= std_logic_vector(cnt);
 
-    process (clk, rst_n) begin
-        if rst_n='0' then
-            cnt &lt;= (others =&gt; '0');
-        elsif rising_edge(clk) then
-            if load_n='1' then
-                if ent='1' and enp='1' then
+    <b>process</b> (clk, rst_n) <b>begin</b>
+        <b>if</b> rst_n='0' <b>then</b>
+            cnt &lt;= (<b>others</b> =&gt; '0');
+        <b>elsif</b> rising_edge(clk) <b>then</b>
+            <b>if</b> load_n='1' <b>then</b>
+                <b>if</b> ent='1' <b>and</b> enp='1' <b>then</b>
                     cnt &lt;= cnt + 1;
-                end if;
-            else
+                <b>end if</b>;
+            <b>else</b>
                 cnt &lt;= unsigned(a);
-            end if;
-        end if;
-    end process;
-end architecture behavior;
+            <b>end if</b>;
+        <b>end if</b>;
+    <b>end process</b>;
+<b>end architecture</b> behavior;
+</code>
+<code>
+<b>module</b> ti74161(<b>input</b> clk, rst_n, load_n, enp, ent,
+    <b>input</b> [3:0] a, <b>output reg</b> [3:0] q, <b>output</b> c4);
+<b>assign</b> c4 = (q==4'b1111 &amp;&amp; ent) ? 1 : 0;
+<b>always</b> @(<b>posedge</b> clk, <b>negedge</b> rst_n)
+    <b>if</b> (!rst_n)
+        q = 0;
+    <b>else</b>
+        <b>if</b> (load_n)
+        <b>begin</b>
+            <b>if</b> (ent &amp;&amp; enp)
+                q = q + 4'b1;
+        <b>end</b>
+        <b>else</b>
+            q = a;
+<b>endmodule</b>
 </code>
 <img src="ti74xx/ti74161.svg" alt="ti74161" width="800px"/>
 
 <h2 id="ti74174">74174</h2>
 <p>hex D flip-flop, common asynchronous clear</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
 
-entity ti74174 is
-    port (clk, rst_n: in std_logic;
-        d: in std_logic_vector(5 downto 0);
-        q: out std_logic_vector(5 downto 0));
-end entity;
+<b>entity</b> ti74174 <b>is</b>
+    <b>port</b> (clk, rst_n: <b>in</b> std_logic;
+        d: <b>in</b> std_logic_vector(5 <b>downto</b> 0);
+        q: <b>out</b> std_logic_vector(5 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti74174 is
-begin
-    process (clk) is
-    begin
-        if rst_n='0' then
-            q &lt;= (others =&gt; '0');
-        elsif rising_edge(clk) then
+<b>architecture</b> behavior <b>of</b> ti74174 <b>is</b>
+<b>begin</b>
+    <b>process</b> (clk) <b>is</b>
+    <b>begin</b>
+        <b>if</b> rst_n='0' <b>then</b>
+            q &lt;= (<b>others</b> =&gt; '0');
+        <b>elsif</b> rising_edge(clk) <b>then</b>
             q &lt;= d;
-        end if;
-    end process;
-end architecture;
+        <b>end if</b>;
+    <b>end process</b>;
+<b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74174(<b>input</b> clk, <b>input</b> rst_n, <b>input</b> [5:0] d, <b>output reg</b> [5:0] q);
+<b>module</b> ti74174(<b>input</b> clk, <b>input</b> rst_n,
+    <b>input</b> [5:0] d, <b>output reg</b> [5:0] q);
 
 <b>always</b> @(<b>posedge</b> clk, <b>negedge</b> rst_n)
     <b>if</b> (!rst_n)
@@ -929,14 +1108,15 @@ end architecture behavior;
 
 <b>architecture</b> behavior <b>of</b> ti74240 <b>is</b>
 <b>begin</b>
-    qa &lt;= <b>not</b> a <b>when</b> ena_n='0' <b>else</b> (<b>others</b> =&gt; '0');
-    qb &lt;= <b>not</b> b <b>when</b> enb_n='0' <b>else</b> (<b>others</b> =&gt; '0');
+    qa &lt;= <b>not</b> a <b>when</b> ena_n='0' <b>else</b> (<b>others</b> =&gt; 'Z');
+    qb &lt;= <b>not</b> b <b>when</b> enb_n='0' <b>else</b> (<b>others</b> =&gt; 'Z');
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74240(<b>input</b> ena_n, enb_n, <b>input</b> [3:0] a, b, <b>output</b> [3:0] qa, qb);
-<b>assign</b> qa = ena_n ? 0 : ~a;
-<b>assign</b> qb = enb_n ? 0 : ~b;
+<b>module</b> ti74240(<b>input</b> ena_n, enb_n,
+    <b>input</b> [3:0] a, b, <b>output</b> [3:0] qa, qb);
+<b>assign</b> qa = ena_n ? 1'bz : ~a;
+<b>assign</b> qb = enb_n ? 1'bz : ~b;
 <b>endmodule</b>
 </code>
 <img src="ti74xx/ti74240.svg" alt="ti74240" width="300px"/>
@@ -955,14 +1135,15 @@ end architecture behavior;
 
 <b>architecture</b> behavior of ti74244 is
 <b>begin</b>
-    qa &lt;= a <b>when</b> ena_n='0' <b>else</b> (<b>others</b> =&gt; '0');
-    qb &lt;= b <b>when</b> enb_n='0' <b>else</b> (<b>others</b> =&gt; '0');
+    qa &lt;= a <b>when</b> ena_n='0' <b>else</b> (<b>others</b> =&gt; 'Z');
+    qb &lt;= b <b>when</b> enb_n='0' <b>else</b> (<b>others</b> =&gt; 'Z');
 <b>end architecture</b>;
 </code>
 <code>
-<b>module</b> ti74244(<b>input</b> ena_n, enb_n, <b>input</b> [3:0] a, b, <b>output</b> [3:0] qa, qb);
-<b>assign</b> qa = ena_n ? 0 : a;
-<b>assign</b> qb = enb_n ? 0 : b;
+<b>module</b> ti74244(<b>input</b> ena_n, enb_n,
+    <b>input</b> [3:0] a, b, <b>output</b> [3:0] qa, qb);
+<b>assign</b> qa = ena_n ? 1'bz : a;
+<b>assign</b> qb = enb_n ? 1'bz : b;
 <b>endmodule</b>
 </code>
 <img src="ti74xx/ti74244.svg" alt="ti74244" width="300px"/>
@@ -1085,8 +1266,8 @@ end architecture behavior;
 <b>end entity</b>;
 
 <b>architecture</b> behavior of ti74557 is
-<b>signal</b> ua, ub: unsigned(7 downto 0);
-<b>signal</b> uq: unsigned(15 downto 0);
+<b>signal</b> ua, ub: unsigned(7 <b>downto</b> 0);
+<b>signal</b> uq: unsigned(15 <b>downto</b> 0);
 <b>begin</b>
     ua &lt;= unsigned(a);
     ub &lt;= unsigned(b);
@@ -1131,26 +1312,26 @@ end architecture;
 <h2 id="ti744040">744040</h2>
 <p>12-stage binary ripple counter</p>
 <code>
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+<b>library</b> ieee;
+<b>use</b> ieee.std_logic_1164.<b>all</b>;
+<b>use</b> ieee.numeric_std.<b>all</b>;
 
-entity ti744040 is
-    port (clk, clr: in std_logic; q: out unsigned(11 downto 0));
-end entity;
+<b>entity</b> ti744040 <b>is</b>
+    <b>port</b> (clk, clr: <b>in</b> std_logic; q: <b>out</b> unsigned(11 <b>downto</b> 0));
+<b>end entity</b>;
 
-architecture behavior of ti744040 is
-signal tmp: unsigned(11 downto 0);
-begin
+<b>architecture</b> behavior <b>of</b> ti744040 <b>is</b>
+<b>signal</b> tmp: unsigned(11 <b>downto</b> 0);
+<b>begin</b>
     q &lt;= tmp;
-    process (clk, clr) begin
-        if clr='1' then
-            tmp &lt;= (others =&gt; '0');
-        elsif falling_edge(clk) then
+    <b>process</b> (clk, clr) <b>begin</b>
+        <b>if</b> clr='1' <b>then</b>
+            tmp &lt;= (<b>others</b> =&gt; '0');
+        <b>elsif</b> falling_edge(clk) <b>then</b>
             tmp &lt;= tmp + 1;
-        end if;
-    end process;
-end architecture;
+        <b>end if</b>;
+    <b>end process</b>;
+<b>end architecture</b>;
 </code>
 <code>
 <b>module</b> ti744040(<b>input</b> clk_n, rst, <b>output reg</b> [11:0] q);
