@@ -17,7 +17,7 @@ echo $mm;
 <main>
 <h1>Welcome</h1>
 <ul>
-<li><a href="ti74xx.html">TI 74xx series</a></li>
+<li><a href="ti74xx/index.html">TI 74xx series</a></li>
 <li><a href="ringtone.html">Ringtoon speler</a></li>
 <li><a href="spelcomputer.pdf">Spelcomputer op breadboard</a></li>
 <li><a href="euler/index.html">Project Euler</a></li>
