@@ -1123,7 +1123,32 @@ end architecture behavior;
 <b>assign</b> qb = enb_n ? 1'bz : ~b;
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74240.svg" alt="ti74240" width="300px"/>
+<svg width="400" height="200">
+<defs>
+<g id="g20">
+<use x="0" y="0" href="#pin"/>
+<line x1="45" y1="5" y2="5" x2="115"/>
+<line x1="115" x2="115" y1="5" y2="27"/>
+<circle cx="115" cy="32" r="5"/>
+<use x="0" y="40" href="#pin"/>
+<line x1="45" y1="45" y2="45" x2="90"/>
+<circle cx="95" cy="45" r="5"/>
+<path d="M100,30 L130,45 L100,60Z"/>
+<line x1="130" y1="45" y2="45" x2="180"/>
+<use x="180" y="40" href="#pin"/>
+</g>
+</defs>
+<g class="klas1">
+<text x="5" y="8">ena_n</text>
+<text x="5" y="48">a[3..0]</text>
+<use x="40" y="0" href="#g20"/>
+<text x="270" y="48">qa[3..0]</text>
+<text x="5" y="88">enb_n</text>
+<text x="5" y="128">b[3..0]</text>
+<use x="40" y="80" href="#g20"/>
+<text x="270" y="128">qb[3..0]</text>
+</g>
+</svg>
 
 <h2 id="ti74244">74244</h2>
 <p>octal buffer, non-inverting outputs</p>
@@ -1150,7 +1175,31 @@ end architecture behavior;
 <b>assign</b> qb = enb_n ? 1'bz : b;
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74244.svg" alt="ti74244" width="300px"/>
+<svg width="400" height="200">
+<defs>
+<g id="g21">
+<use x="0" y="0" href="#pin"/>
+<line x1="45" y1="5" y2="5" x2="115"/>
+<line x1="115" x2="115" y1="5" y2="27"/>
+<circle cx="115" cy="32" r="5"/>
+<use x="0" y="40" href="#pin"/>
+<line x1="45" y1="45" y2="45" x2="100"/>
+<path d="M100,30 L130,45 L100,60Z"/>
+<line x1="130" y1="45" y2="45" x2="180"/>
+<use x="180" y="40" href="#pin"/>
+</g>
+</defs>
+<g class="klas1">
+<text x="5" y="8">ena_n</text>
+<text x="5" y="48">a[3..0]</text>
+<use x="40" y="0" href="#g21"/>
+<text x="270" y="48">qa[3..0]</text>
+<text x="5" y="88">enb_n</text>
+<text x="5" y="128">b[3..0]</text>
+<use x="40" y="80" href="#g21"/>
+<text x="270" y="128">qb[3..0]</text>
+</g>
+</svg>
 
 <h2 id="ti74273">74273</h2>
 <p>8-bit register, asynchronous clear</p>
