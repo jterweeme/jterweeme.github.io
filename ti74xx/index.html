@@ -1361,6 +1361,39 @@ end architecture behavior;
 <b>assign</b> q = a * b;
 <b>endmodule</b>
 </code>
+<svg width="400" height="200">
+<defs>
+<g id="mul">
+<circle cx="40" cy="40" r="40"/>
+<line x1="25" y1="25" x2="55" y2="55"/>
+<line x1="55" y1="25" x2="25" y2="55"/>
+</g>
+</defs>
+<g class="klas1">
+<text x="5" y="30">a[3..0]</text>
+<use x="35" y="23" href="#pin"/>
+<line y1="15" y2="15" x1="110" x2="130"/>
+<line y1="28" y2="28" x1="80" x2="130"/>
+<line x1="130" x2="130" y1="15" y2="45"/>
+<text x="5" y="100">b[3..0]</text>
+<use x="35" y="93" href="#pin"/>
+<line x1="80" y1="98" x2="130" y2="98"/>
+<text x="5" y="120">c0</text>
+<use x="35" y="113" href="#pin"/>
+<line x1="110" y1="45" x2="155" y2="45"/>
+<line x1="130" y1="85" x2="130" y2="118"/>
+<line x1="80" y1="118" x2="130" y2="118"/>
+<line x1="110" y1="85" x2="155" y2="85"/>
+<use x="150" y="25" href="#mul"/>
+<line x1="230" y1="65" x2="300" y2="65"/>
+<line x1="265" y1="65" x2="265" y2="85"/>
+<line x1="265" y1="85" x2="300" y2="85"/>
+<use x="300" y="60" href="#pin"/>
+<text x="350" y="67">c4</text>
+<use x="300" y="80" href="#pin"/>
+<text x="350" y="87">s[3..0]</text>
+</g>
+</svg>
 <img src="ti74557.svg" alt="ti74557" width="300px"/>
 
 <h2 id="ti74595">74595</h2>
