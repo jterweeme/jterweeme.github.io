@@ -58,7 +58,7 @@ svg path, svg g {
     font-size: 8px;
 }
 
-#gmux text, #dflop text, #g12 text, #g13 text {
+#gmux text, #dflop text, #g12 text, #g13 text, #g14 text {
     stroke: none;
     fill: black;
     font-size: 8px;
@@ -731,7 +731,35 @@ echo $mm;
 <b>end</b>
 <b>endmodule</b>
 </code>
-<img src="ti74xx/ti74139.svg" alt="ti74139" width="400px"/>
+<svg width="500" height="240">
+<defs>
+<g id="g14">
+<use x="0" y="0" href="#pin"/>
+<line x1="45" y1="5" y2="5" x2="295"/>
+<line x1="295" x2="295" y1="5" y2="39"/>
+<use x="0" y="42" href="#pin"/>
+<line x1="45" y1="47" y2="47" x2="120"/>
+<use x="120" y="17" href="#dec"/>
+<line x1="180" y1="47" y2="47" x2="250"/>
+<circle cx="255" cy="47" r="5"/>
+<text x="220" y="70">0xf</text>
+<line x1="240" y1="67" y2="67" x2="260"/>
+<use x="260" y="27" href="#mux"/>
+<line x1="320" y1="57" y2="57" x2="360"/>
+<use x="360" y="52" href="#pin"/>
+</g>
+</defs>
+<g class="klas1">
+<text x="5" y="17">en0_n</text>
+<text x="5" y="60">sel0[1..0]</text>
+<use x="50" y="10" href="#g14"/>
+<text x="460" y="70">y0[3..0]</text>
+<text x="5" y="137">en1_n</text>
+<text x="5" y="180">sel1[1..0]</text>
+<use x="50" y="130" href="#g14"/>
+<text x="460" y="190">y1[3..0]</text>
+</g>
+</svg>
 
 <h2 id="ti74150">74150</h2>
 <p>16-line to 1-line data selector/multiplexer</p>
