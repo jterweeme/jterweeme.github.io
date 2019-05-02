@@ -523,13 +523,16 @@ svg path, svg g {
 
 <b>architecture</b> behavior <b>of</b> ti74133 <b>is</b>
 <b>begin</b>
-    y &lt;= <b>not</b> (a(0) <b>and</b> a(1) <b>and</b> a(2) <b>and</b> a(3) <b>and</b> a(4) <b>and</b> a(5) <b>and</b> a(6) <b>and</b> a(7) <b>and</b>
+    y &lt;= <b>not</b> (a(0) <b>and</b> a(1) <b>and</b> a(2) <b>and</b> a(3) <b>and</b>
+            a(4) <b>and</b> a(5) <b>and</b> a(6) <b>and</b> a(7) <b>and</b>
             a(8) <b>and</b> a(9) <b>and</b> a(10) <b>and</b> a(11) <b>and</b> a(12));
 <b>end architecture</b>;
 </code>
 <code>
 <b>module</b> ti74133(<b>input</b> [12:0] a, <b>output</b> q);
-<b>assign</b> q = ~(a[0] &amp; a[1] &amp; a[2] &amp; a[3] &amp; a[4] &amp; a[5] &amp; a[6] &amp; a[7] &amp; a[8] &amp; a[9] &amp; a[10] &amp; a[11] &amp; a[12]);
+<b>assign</b> q = ~(a[0] &amp; a[1] &amp; a[2] &amp; a[3] &amp;
+    a[4] &amp; a[5] &amp; a[6] &amp; a[7] &amp; a[8] &amp;
+    a[9] &amp; a[10] &amp; a[11] &amp; a[12]);
 <b>endmodule</b>
 </code>
 <svg width="400" height="300">
@@ -1040,11 +1043,7 @@ svg path, svg g {
     <b>input</b> [5:0] d, <b>output reg</b> [5:0] q);
 
 <b>always</b> @(<b>posedge</b> clk, <b>negedge</b> rst_n)
-    <b>if</b> (!rst_n)
-        q &lt;= 0;
-    <b>else</b>
-        q &lt;= d;
-
+    q = !rst_n ? 0 : d;
 <b>endmodule</b>
 </code>
 <svg width="400" height="200">
