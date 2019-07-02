@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8"/>
 <title>Fotopuzzel</title>
 <link rel="stylesheet" type="text/css" href="../common.css"/>
 <link rel="stylesheet" type="text/css" href="index.css"/>

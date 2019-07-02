@@ -31,6 +31,7 @@ REDIPS.drag=(function()
         //normalize,
         has_childs,obj_margin=null,window_width=0,window_height=0,
         scroll_width=null,scroll_height=null;
+
     var edge=
     {
         page:
@@ -46,10 +47,12 @@ REDIPS.drag=(function()
             x:0,y:0
         }
     };
+
     var scroll_object,bgstyle_old,
         scrollable_container=[],tables=[],sort_idx,
         moved,cloned,cloned_id=[],currentCell=[],
         div_drag=null,div_box=null;
+
     var pointer=
     {
         x:0,y:0
@@ -84,13 +87,16 @@ REDIPS.drag=(function()
     animation_step=2,animation_shift=false,shift_after=true,
     an_counter=0,clone_shiftKey=false,clone_shiftKey_row=false,
     row_empty_color='White';
-    init=function(dc)
+
+    init = function(dc)
     {
-        var self=this,
-        i,imgs,redips_clone;
+        var self = this, i, imgs, redips_clone;
+
         if(dc===undefined)
             dc='drag';
-        div_drag=document.getElementById(dc);
+
+        div_drag = document.getElementById(dc);
+
         if(!document.getElementById('redips_clone'))
         {
             redips_clone=document.createElement('div');
@@ -111,7 +117,7 @@ REDIPS.drag=(function()
         REDIPS.event.add(window,'scroll',calculate_cells);
     };
 
-    init_tables=function()
+    init_tables = function()
     {
         var i,j,k,element,level,group_idx,
         tables_nodeList,nested_tables,td,rowspan;
@@ -129,76 +135,82 @@ REDIPS.drag=(function()
             while(element&&element!==div_drag);
 
             tables[j]=tables_nodeList[i];
-            if(!tables[j].redips)
-                tables[j].redips={};
+
+            if (!tables[j].redips)
+                tables[j].redips= {};
 
             tables[j].redips.container=div_drag;
             tables[j].redips.nestedLevel=level;
             tables[j].redips.idx=j;
             td=tables[j].getElementsByTagName('td');
-        for(k=0,rowspan=false;k<td.length;k++)
-        {
-            if(td[k].rowSpan>1)
+            for(k=0,rowspan=false;k<td.length;k++)
             {
-                rowspan=true;
-                break;
+                if(td[k].rowSpan>1)
+                {
+                    rowspan=true;
+                    break;
+                }
+            }
+            tables[j].redips.rowspan=rowspan;
+            j++;
+        }
+
+        for(i=0,group_idx=sort_idx=1;i<tables.length;i++)
+        {
+            if(tables[i].redips.nestedLevel===0)
+            {
+                tables[i].redips.nestedGroup=group_idx;
+                tables[i].redips.sort=sort_idx*100;
+                nested_tables=tables[i].getElementsByTagName('table');
+
+                for(j = 0; j < nested_tables.length; j++)
+                {
+                    if(nested_tables[j].className.indexOf('nolayout')>-1)
+                        continue;
+
+                    nested_tables[j].redips.nestedGroup=group_idx;
+
+                    nested_tables[j].redips.sort =
+                        sort_idx * 100 + nested_tables[j].redips.nestedLevel;
+                }
+                group_idx++;
+                sort_idx++;
             }
         }
-        tables[j].redips.rowspan=rowspan;
-        j++;
-    }
-    for(i=0,group_idx=sort_idx=1;i<tables.length;i++)
+    };
+
+    var getEmpty=function()
     {
-        if(tables[i].redips.nestedLevel===0)
-        {
-            tables[i].redips.nestedGroup=group_idx;
-            tables[i].redips.sort=sort_idx*100;
-            nested_tables=tables[i].getElementsByTagName('table');
-            for(j=0;j<nested_tables.length;j++)
-            {
-                if(nested_tables[j].className.indexOf('nolayout')>-1)
-                    continue;
-
-                nested_tables[j].redips.nestedGroup=group_idx;
-                nested_tables[j].redips.sort=sort_idx*100+nested_tables[j].redips.nestedLevel;
-            }
-            group_idx++;sort_idx++;
-        }
-    }
-};
-
-var getEmpty=function()
-{
-    var vakje;
-    vakje = document.getElementById("0");
-    if (vakje.innerHTML == "")
-        return 0;
-    vakje = document.getElementById("1");
-    if (vakje.innerHTML == "")
-        return 1;
-    vakje = document.getElementById("2");
-    if (vakje.innerHTML == "")
-        return 2;
-    vakje = document.getElementById("3");
-    if (vakje.innerHTML == "")
-        return 3;
-    vakje = document.getElementById("4");
-    if (vakje.innerHTML == "")
-        return 4;
-    vakje = document.getElementById("5");
-    if (vakje.innerHTML == "")
-        return 5;
-    vakje = document.getElementById("6");
-    if (vakje.innerHTML == "")
-        return 6;
-    vakje = document.getElementById("7");
-    if (vakje.innerHTML == "")
-        return 7;
-    vakje = document.getElementById("8");
-    if (vakje.innerHTML == "")
-        return 8;
+        var vakje;
+        vakje = document.getElementById("0");
+        if (vakje.innerHTML == "")
+            return 0;
+        vakje = document.getElementById("1");
+        if (vakje.innerHTML == "")
+            return 1;
+        vakje = document.getElementById("2");
+        if (vakje.innerHTML == "")
+            return 2;
+        vakje = document.getElementById("3");
+        if (vakje.innerHTML == "")
+            return 3;
+        vakje = document.getElementById("4");
+        if (vakje.innerHTML == "")
+            return 4;
+        vakje = document.getElementById("5");
+        if (vakje.innerHTML == "")
+            return 5;
+        vakje = document.getElementById("6");
+        if (vakje.innerHTML == "")
+            return 6;
+        vakje = document.getElementById("7");
+        if (vakje.innerHTML == "")
+            return 7;
+        vakje = document.getElementById("8");
+        if (vakje.innerHTML == "")
+            return 8;
   
-}
+    }
 
 var isLocked=function(evt)
 {
@@ -222,11 +234,12 @@ handler_onmousedown=function(e)
     if (isLocked(evt))
         return;
   
-
-    if(this.redips.animated===true)
+    if (this.redips.animated === true)
         return true;
+
     evt.cancelBubble=true;
-    if(evt.stopPropagation)
+
+    if (evt.stopPropagation)
         evt.stopPropagation();
 
     shift_key=evt.shiftKey;
@@ -236,10 +249,10 @@ handler_onmousedown=function(e)
     else
         mouseButton=evt.button;
 
-    if(elementControl(evt)||(!evt.touches&&mouseButton!==1))
+    if (elementControl(evt) || (!evt.touches&&mouseButton !== 1))
         return true;
 
-    if(window.getSelection)
+    if (window.getSelection)
     {
         window.getSelection().removeAllRanges();
     }
@@ -300,12 +313,12 @@ handler_onmousedown=function(e)
     REDIPS.drag.current_cell=current_cell=source_cell;
     REDIPS.drag.previous_cell=previous_cell=source_cell;
 
-    if(mode==='cell')
+    if (mode==='cell')
         REDIPS.drag.myhandler_clicked(current_cell);
     else
         REDIPS.drag.myhandler_row_clicked(current_cell);
 
-    if(table===null||row===null||cell===null)
+    if (table===null||row===null||cell===null)
     {
         set_trc();
         table_source=table_old=table;
@@ -326,8 +339,10 @@ handler_onmousedown=function(e)
         bgstyle_old=getTdStyle(table,row,cell);
     
     position=get_style(tables[table_source],'position');
+
     if(position!=='fixed')
         position=get_style(tables[table_source].parentNode,'position');
+
     offset=box_offset(obj,position);
     obj_margin=[Y-offset[0],offset[1]-X,offset[2]-Y,X-offset[3]];
 
@@ -342,7 +357,7 @@ handler_onmousedown=function(e)
             return false;
         }
     };
-return false;
+    return false;
 };
 
 handler_ondblclick=function(e)
@@ -358,84 +373,15 @@ table_top = function(obj)
     for(i=0;i<tables.length;i++)
         if(tables[i].redips.nestedGroup===group)
             tables[i].redips.sort=sort_idx*100+tables[i].redips.nestedLevel;
-tables.sort(function(a,b)
-{
-    return b.redips.sort-a.redips.sort;
-});
+
+    tables.sort(function(a,b)
+    {
+        return b.redips.sort-a.redips.sort;
+    });
     sort_idx++;
 };
 
-row_clone=function(el)
-{
-    var table_mini,offset,row_obj,last_idx,empty_row=true,cr,div,i,j;
-    if(el.nodeName==='DIV')
-    {
-        div=el;
-        el=find_parent('TR',el);
-        if(el.redips===undefined)
-        {
-            el.redips={};
-        }
-        el.redips.div=div;
-        return el;
-    }
-    else
-    {
-        row_obj=el;
-        
-        if(row_obj.redips===undefined)
-            row_obj.redips={};
-            
-        el=find_parent('TABLE',el);
-        if(clone_class&&cloned)
-        {
-            div=row_obj.redips.div;
-            div.className=normalize(div.className.replace('clone',''));
-        }
-        table_mini=el.cloneNode(true);
-
-        if(clone_class&&cloned)
-            div.className=div.className+' clone';
-    
-        last_idx=table_mini.rows.length-1;
-for(i=last_idx;i>=0;i--)
-{
-    if(i!==row_obj.rowIndex)
-    {
-        if(empty_row===true)
-        {
-            cr=table_mini.rows[i];
-            for(j=0;j<cr.cells.length;j++)
-            {
-                if(cr.cells[j].className.indexOf('rowhandler')>-1)
-                {
-                    empty_row=false;
-                    break;
-                }
-            }
-}
-table_mini.deleteRow(i);
-}
-}
-if(!cloned)
-{
-    row_obj.redips.empty_row=empty_row;
-}
-table_mini.redips={};
-table_mini.redips.container=el.redips.container;
-table_mini.redips.source_row=row_obj;
-form_elements(row_obj,table_mini.rows[0]);
-copy_properties(row_obj,table_mini.rows[0]);
-document.getElementById('redips_clone').appendChild(table_mini);
-offset=box_offset(row_obj,'fixed');
-table_mini.style.position='fixed';
-table_mini.style.top=offset[0]+"px";
-table_mini.style.left=offset[3]+"px";
-table_mini.style.width=(offset[1]-offset[3])+"px";
-return table_mini;
-}
-};
-row_drop=function(r_table,r_row,table_mini)
+row_drop = function(r_table,r_row,table_mini)
 {
     var tbl=tables[r_table],ts=tbl.rows[0].parentNode;
     var animated=false,tr,rp,src,rowIndex,delete_srow,drop;
@@ -451,73 +397,76 @@ row_drop=function(r_table,r_row,table_mini)
             src.deleteRow(rowIndex);
         }
     };
-    if(table_mini===undefined)
-    {
-        table_mini=obj;
-    }
-    else
-    {
-        animated=true;
-    }
-src=table_mini.redips.source_row;rowIndex=src.rowIndex;
-tr=table_mini.getElementsByTagName('tr')[0];
-table_mini.parentNode.removeChild(table_mini);
-drop=REDIPS.drag.myhandler_row_dropped_before(rowIndex);
 
-if(drop!==false)
-{
-    if(!animated&&target_cell.className.indexOf(REDIPS.drag.trash_cname)>-1)
+    if (table_mini === undefined)
+        table_mini = obj;
+    else
+        animated =true;
+    
+    src = table_mini.redips.source_row;
+    rowIndex = src.rowIndex;
+    tr = table_mini.getElementsByTagName('tr')[0];
+    table_mini.parentNode.removeChild(table_mini);
+    drop = REDIPS.drag.myhandler_row_dropped_before(rowIndex);
+
+    if (drop !== false)
     {
-        if(cloned)
+        if (!animated && target_cell.className.indexOf(REDIPS.drag.trash_cname) >- 1)
         {
-            REDIPS.drag.myhandler_row_deleted();
-        }
-        else
-        {
-            if(REDIPS.drag.trash_ask_row)
+            if(cloned)
             {
-                if(confirm('Are you sure you want to delete row?'))
+                REDIPS.drag.myhandler_row_deleted();
+            }
+            else
+            {
+                if(REDIPS.drag.trash_ask_row)
+                {
+                    if (confirm('Are you sure you want to delete row?'))
+                    {
+                        delete_srow();
+                        REDIPS.drag.myhandler_row_deleted();
+                    }
+                    else
+                    {
+                        delete obj_old.redips.empty_row;
+                        REDIPS.drag.myhandler_row_undeleted();
+                    }
+                }
+                else
                 {
                     delete_srow();
                     REDIPS.drag.myhandler_row_deleted();
                 }
-                else
-                {
-                    delete obj_old.redips.empty_row;
-                    REDIPS.drag.myhandler_row_undeleted();
-                }
-            }
-            else
-            {
-                delete_srow();
-                REDIPS.drag.myhandler_row_deleted();
-            }
-        }
-    }
-    else
-    {
-        if(animated||!cloned)
-        {
-            delete_srow();
-        }
-        if(r_row<tbl.rows.length)
-        {
-            ts.insertBefore(tr,tbl.rows[r_row]);
-            rp=tbl.rows[r_row+1].redips;
-            if(rp&&rp.empty_row)
-            {
-                ts.deleteRow(r_row+1);
             }
         }
         else
         {
-            ts.appendChild(tr);
+            if(animated||!cloned)
+                delete_srow();
+
+            if (r_row < tbl.rows.length)
+            {
+                ts.insertBefore(tr,tbl.rows[r_row]);
+                rp = tbl.rows[r_row+1].redips;
+
+                if (rp && rp.empty_row)
+                    ts.deleteRow(r_row+1);
+            }
+            else
+            {
+                ts.appendChild(tr);
+            }
+            delete tr.redips.empty_row;
+
+            if(!animated)
+                REDIPS.drag.myhandler_row_dropped(target_cell);
         }
-delete tr.redips.empty_row;
-if(!animated){REDIPS.drag.myhandler_row_dropped(target_cell);}}
-if(tr.getElementsByTagName('table').length>0){init_tables();}}
-else{}};form_elements=function(str,ctr)
-{
+
+        if(tr.getElementsByTagName('table').length>0)
+            init_tables();
+    }
+        else{}};form_elements=function(str,ctr)
+        {
     var i,j,k,type,src=[],cld=[];
     src[0]=str.getElementsByTagName('input');
     src[1]=str.getElementsByTagName('textarea');
@@ -544,45 +493,48 @@ else{}};form_elements=function(str,ctr)
                     cld[i][j].selectedIndex=src[i][j].selectedIndex;
                     break;
                 case'select-multiple':
-                    for(k=0;k<src[i][j].options.length;k++)
+                    for(k=0; k < src[i][j].options.length; k++)
                     {
-                        cld[i][j].options[k].selected=src[i][j].options[k].selected;
+                        cld[i][j].options[k].selected = src[i][j].options[k].selected;
                     }
                     break;
             }
         }
     }
 };
+
 handler_onmouseup=function(e)
 {
-var evt=e||window.event,target_table,r_table;
-var r_row,mt_tr,X,Y,i,target_elements,target_elements_length;
-X=evt.clientX;Y=evt.clientY;edge.flag.x=edge.flag.y=0;
-if(obj.releaseCapture){obj.releaseCapture();
-}
-REDIPS.event.remove(document,'mousemove',handler_onmousemove);
-REDIPS.event.remove(document,'touchmove',handler_onmousemove);
-REDIPS.event.remove(document,'mouseup',handler_onmouseup);
-REDIPS.event.remove(document,'touchend',handler_onmouseup);
-div_drag.onselectstart=null;
-obj.style.left=0;obj.style.top=0;
-obj.style.zIndex=-1;obj.style.position='static';
-scroll_width=document.documentElement.scrollWidth;
-scroll_height=document.documentElement.scrollHeight;
-edge.flag.x=edge.flag.y=0;
+    var evt = e || window.event, target_table, r_table;
+    var r_row,mt_tr,X,Y,i,target_elements,target_elements_length;
+    X = evt.clientX;Y=evt.clientY;edge.flag.x=edge.flag.y=0;
 
-if(cloned&&mode==='cell'&&(table===null||row===null||cell===null))
-{
-    obj.parentNode.removeChild(obj);
-    cloned_id[obj_old.id]-=1;
-    REDIPS.drag.myhandler_notcloned();
-}
-else if(table===null||row===null||cell===null)
-{
-    REDIPS.drag.myhandler_notmoved();
-}
-else
-{
+    if(obj.releaseCapture)
+        obj.releaseCapture();
+    
+    REDIPS.event.remove(document,'mousemove',handler_onmousemove);
+    REDIPS.event.remove(document,'touchmove',handler_onmousemove);
+    REDIPS.event.remove(document,'mouseup',handler_onmouseup);
+    REDIPS.event.remove(document,'touchend',handler_onmouseup);
+    div_drag.onselectstart=null;
+    obj.style.left=0;obj.style.top=0;
+    obj.style.zIndex=-1;obj.style.position='static';
+    scroll_width=document.documentElement.scrollWidth;
+    scroll_height=document.documentElement.scrollHeight;
+    edge.flag.x=edge.flag.y=0;
+
+    if(cloned&&mode==='cell'&&(table===null||row===null||cell===null))
+    {
+        obj.parentNode.removeChild(obj);
+        cloned_id[obj_old.id]-=1;
+        REDIPS.drag.myhandler_notcloned();
+    }
+    else if(table===null||row===null||cell===null)
+    {
+        REDIPS.drag.myhandler_notmoved();
+    }
+    else
+    {
     if(table<tables.length)
     {
         target_table=tables[table];
@@ -593,7 +545,7 @@ else
     else if(table_old===null||row_old===null||cell_old===null)
     {
         target_table=tables[table_source];
-REDIPS.drag.target_cell=target_cell=target_table.rows[row_source].cells[cell_source];
+        REDIPS.drag.target_cell = target_cell = target_table.rows[row_source].cells[cell_source];
 setTdStyle(table_source,row_source,cell_source,bgstyle_old);r_table=table_source;
 r_row=row_source;}
 else{target_table=tables[table_old];
@@ -654,7 +606,8 @@ else if (cloned && REDIPS.drag.delete_cloned===true &&
 else if(REDIPS.drag.drop_option==='switch'){obj.parentNode.removeChild(obj);
 target_elements=target_cell.getElementsByTagName('div');
 target_elements_length=target_elements.length;
-for(i=0;i<target_elements_length;i++)
+
+for (i = 0; i < target_elements_length; i++)
 {
     if(target_elements[0]!==undefined)
     {
@@ -662,8 +615,9 @@ for(i=0;i<target_elements_length;i++)
         source_cell.appendChild(target_elements[0]);
     }
 }
+
 element_drop();
-if(target_elements_length)
+if (target_elements_length)
 {
     REDIPS.drag.myhandler_switched();
 }
@@ -738,6 +692,7 @@ handler_onmousemove=function(e)
     }
     deltaX=Math.abs(threshold.x-X);
     deltaY=Math.abs(threshold.y-Y);
+
     if(!moved)
     {
         if(mode==='cell'&&(clone_class||(REDIPS.drag.clone_shiftKey===true&&shift_key)))
@@ -748,49 +703,48 @@ handler_onmousemove=function(e)
             REDIPS.drag.myhandler_cloned();
             set_position();
         }
-else
-{
-    if(mode==='row')
-    {
-        if(clone_class||(REDIPS.drag.clone_shiftKey_row===true&&shift_key))
-        {
-            cloned=true;
-        }
-        REDIPS.drag.obj_old=obj_old=obj;
-        REDIPS.drag.obj=obj=row_clone(obj);
-        obj.style.zIndex=999;
-    }
-    if(obj.setCapture)
-        obj.setCapture();
-
-    obj.style.position='fixed';
-    calculate_cells();
-    set_trc();
-    if(mode==='row')
-    {
-        if(cloned)
-        {
-            REDIPS.drag.myhandler_row_cloned();
-        }
         else
         {
-            REDIPS.drag.myhandler_row_moved();
+            if(mode==='row')
+            {
+                if(clone_class || (REDIPS.drag.clone_shiftKey_row === true && shift_key))
+                    cloned=true;
+                
+                REDIPS.drag.obj_old=obj_old=obj;
+                REDIPS.drag.obj=obj=row_clone(obj);
+                obj.style.zIndex=999;
+            }
+
+            if(obj.setCapture)
+                obj.setCapture();
+
+            obj.style.position='fixed';
+            calculate_cells();
+            set_trc();
+
+            if (mode==='row')
+            {
+            if (cloned)
+                REDIPS.drag.myhandler_row_cloned();
+            else
+                REDIPS.drag.myhandler_row_moved();
+            }
+            set_position();
+        }
+        if(X>window_width-obj_margin[1])
+        {
+        obj.style.left = (window_width-(obj_margin[1]+obj_margin[3]))+'px';
+        }
+
+        if(Y>window_height-obj_margin[2])
+        {
+        obj.style.top=(window_height-(obj_margin[0]+obj_margin[2]))+'px';
         }
     }
-    set_position();
-}
-if(X>window_width-obj_margin[1])
-{
-    obj.style.left=(window_width-(obj_margin[1]+obj_margin[3]))+'px';
-}
-if(Y>window_height-obj_margin[2])
-{
-    obj.style.top=(window_height-(obj_margin[0]+obj_margin[2]))+'px';
-}
-}
-moved=true;
-if(mode==='cell'&&(deltaX>threshold.value||deltaY>threshold.value)&&!threshold.flag)
-{
+    moved=true;
+
+    if (mode === 'cell'&&(deltaX>threshold.value||deltaY>threshold.value)&&!threshold.flag)
+    {
     threshold.flag=true;set_position();REDIPS.drag.myhandler_moved();
 }
 
@@ -897,7 +851,10 @@ if(table<tables.length&&(table!==table_old||row!==row_old||cell!==cell_old))
     if(table_old!==null&&row_old!==null&&cell_old!==null)
     {
         setTdStyle(table_old,row_old,cell_old,bgstyle_old);
-        REDIPS.drag.previous_cell=previous_cell=tables[table_old].rows[row_old].cells[cell_old];
+
+        REDIPS.drag.previous_cell = previous_cell =
+            tables[table_old].rows[row_old].cells[cell_old];
+
         REDIPS.drag.current_cell=current_cell=tables[table].rows[row].cells[cell];
         if(REDIPS.drag.drop_option==='switching'&&mode==='cell')
         {
@@ -1109,7 +1066,9 @@ if(table<tables.length&&table!==null&&row!==null&&cell!==null)
     table_old=table;
     row_old=row;cell_old=cell;}};setTdStyle=function(ti,ri,ci,t)
 {
-var tr,i,s;if(mode==='cell'&&threshold.flag)
+var tr,i,s;
+
+if (mode==='cell'&&threshold.flag)
 {
     s=tables[ti].rows[ri].cells[ci].style;
     s.backgroundColor=(t===undefined)?REDIPS.drag.hover.color_td:t.color[0].toString();
@@ -1121,18 +1080,18 @@ var tr,i,s;if(mode==='cell'&&threshold.flag)
         }
         else
         {
-            s.borderTopWidth=t.top[0][0];
-            s.borderTopStyle=t.top[0][1];
-            s.borderTopColor=t.top[0][2];
-            s.borderRightWidth=t.right[0][0];
-            s.borderRightStyle=t.right[0][1];
-            s.borderRightColor=t.right[0][2];
-            s.borderBottomWidth=t.bottom[0][0];
-            s.borderBottomStyle=t.bottom[0][1];
-            s.borderBottomColor=t.bottom[0][2];
-            s.borderLeftWidth=t.left[0][0];
-            s.borderLeftStyle=t.left[0][1];
-            s.borderLeftColor=t.left[0][2];
+            s.borderTopWidth = t.top[0][0];
+            s.borderTopStyle = t.top[0][1];
+            s.borderTopColor = t.top[0][2];
+            s.borderRightWidth = t.right[0][0];
+            s.borderRightStyle = t.right[0][1];
+            s.borderRightColor = t.right[0][2];
+            s.borderBottomWidth = t.bottom[0][0];
+            s.borderBottomStyle = t.bottom[0][1];
+            s.borderBottomColor = t.bottom[0][2];
+            s.borderLeftWidth = t.left[0][0];
+            s.borderLeftStyle = t.left[0][1];
+            s.borderLeftColor = t.left[0][2];
         }
     }
 }
@@ -1338,32 +1297,8 @@ else{REDIPS.event.add(scroll_object,'scroll',calculate_cells);
 edge.flag.y=0;currentCell=[0,0,0,0];
 }
 };
-clone_div=function(div,drag)
-{
-    var div_cloned=div.cloneNode(true),offset,offset_dragged;
-    if(drag===true)
-    {
-        document.getElementById('redips_clone').appendChild(div_cloned);
-        div_cloned.style.zIndex=999;
-        div_cloned.style.position='fixed';
-        offset=box_offset(div);
-        offset_dragged=box_offset(div_cloned);
-        div_cloned.style.top=(offset[0]-offset_dragged[0])+'px';
-        div_cloned.style.left=(offset[3]-offset_dragged[3])+'px';
-    }
 
-    if(div_cloned.setCapture)
-    {
-        div_cloned.setCapture();
-    }
-    div_cloned.className=div_cloned.className.replace('clone','');
-    if(cloned_id[div.id]===undefined)
-    {
-        cloned_id[div.id]=0;
-    }
-div_cloned.id=div.id+'c'+cloned_id[div.id];
-cloned_id[div.id]+=1;copy_properties(div,div_cloned);
-return(div_cloned);};copy_properties=function(src,cln)
+copy_properties = function(src,cln)
 {
     var copy=[],childs;
     copy[0]=function(e1,e2)
@@ -1807,60 +1742,54 @@ get_table_index=function(idx)
 
 has_childs=function(el)
 {
-var i;
-for(i=0;i<el.childNodes.length;i++)
-{
-    if(el.childNodes[i].nodeType===1)
+    var i;
+    for(i = 0; i < el.childNodes.length; i++)
     {
-        return true;
+        if (el.childNodes[i].nodeType === 1)
+            return true;
     }
-}
-return false;};row_opacity=function(el,opacity,color)
+    return false;
+};
+
+row_opacity = function(el,opacity,color)
 {
-    var td,i,j;
-    if(typeof(el)==='string')
+    var td, i, j;
+    if (typeof(el)==='string')
     {
-        el=document.getElementById(el);el=find_parent('TABLE',el);
+        el = document.getElementById(el);
+        el = find_parent('TABLE',el);
     }
-if(el.nodeName==='TR')
-{
-    td=el.getElementsByTagName('td');
-    for(i=0;i<td.length;i++)
+
+    if(el.nodeName==='TR')
     {
-        td[i].style.backgroundColor=color?color:'';
-        if(opacity==='empty')
+        td=el.getElementsByTagName('td');
+        for(i=0;i<td.length;i++)
         {
-            td[i].innerHTML='';
-        }
-        else
-        {
-            for(j=0;j<td[i].childNodes.length;j++)
+            td[i].style.backgroundColor=color?color:'';
+            if(opacity==='empty')
             {
-                if(td[i].childNodes[j].nodeType===1)
+                td[i].innerHTML='';
+            }
+            else
+            {
+                for(j=0;j<td[i].childNodes.length;j++)
                 {
-                    td[i].childNodes[j].style.opacity=opacity/100;
-                    td[i].childNodes[j].style.filter='alpha(opacity='+opacity+')';
+                    if(td[i].childNodes[j].nodeType===1)
+                    {
+                        td[i].childNodes[j].style.opacity = opacity/100;
+                        td[i].childNodes[j].style.filter = 'alpha(opacity='+opacity+')';
+                    }
                 }
             }
         }
     }
-}
-else
-{
-    el.style.opacity=opacity/100;
-    el.style.filter='alpha(opacity='+opacity+')';
-}
-};row_empty=function(tbl_id,row_idx,color)
-{
-var tbl=document.getElementById(tbl_id),row=tbl.rows[row_idx];
-if(color===undefined)
-    color=REDIPS.drag.row_empty_color;
-
-if(row.redips===undefined)
-    row.redips={};
-
-row.redips.empty_row=true;row_opacity(row,'empty',color);
+    else
+    {
+        el.style.opacity=opacity/100;
+        el.style.filter='alpha(opacity='+opacity+')';
+    }
 };
+
 return{
     obj:obj,
     obj_old:obj_old,
@@ -1910,7 +1839,10 @@ return{
     myhandler_row_cloned:function(){},
     myhandler_row_notcloned:function(){},
     myhandler_row_deleted:function(){},
-    myhandler_row_undeleted:function(){}};}());
+    myhandler_row_undeleted:function(){}
+};
+}());
+
 if(!REDIPS.event)
 {
     REDIPS.event=(function()
@@ -1925,24 +1857,27 @@ if(!REDIPS.event)
             else
                 obj['on'+eventName]=handler;
         };
-remove=function(obj,eventName,handler)
-{
-    if(obj.removeEventListener)
-    {
-        obj.removeEventListener(eventName,handler,false);
-    }
-    else if(obj.detachEvent)
-    {
-        obj.detachEvent('on'+eventName,handler);
-    }
-    else
-    {
-        obj['on'+eventName]=null;
-    }
-};
+
+        remove=function(obj,eventName,handler)
+        {
+            if(obj.removeEventListener)
+            {
+            obj.removeEventListener(eventName,handler,false);
+            }
+            else if(obj.detachEvent)
+            {
+            obj.detachEvent('on'+eventName,handler);
+            }
+            else
+            {
+            obj['on'+eventName]=null;
+            }
+        };
         return {
             add:add,
             remove:remove
         };
     }());
 }
+
+
