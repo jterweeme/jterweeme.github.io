@@ -220,7 +220,7 @@ Antwoord: 23,514,624,000
 */
 
 func problem8() string {
-    var series1 string = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
+    const series1 string = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
 
     var cur, best uint64 = 0, 0
     for _, chr := range series1 {
@@ -427,25 +427,62 @@ Work out the first ten digits of the sum of the following one-hundred 50-digit n
 Antwoord: 5,537,376,230
 */
 
+func isdigit(c uint8) bool {
+    return c >= '0' && c <= '9'
+}
+
 func problem13() string {
     b, err := ioutil.ReadFile("euler13.txt")
+
     if err != nil {
-        fmt.Printf("onzin")
+        return "0"
     }
-    //var numbers2 [5000]uint8
-    //var uint16
-/*
-    for i := 50; i > 0; i-- {
-        for j := 0; j < 100; j++ {
-            sum += b[j * 50
+
+    // stop de nummers uit file in array
+    var numbers2 [5000]uint64
+    var n uint64 = 0
+    for _, el := range b {
+        if isdigit(el) {
+            numbers2[n] = uint64(el) - uint64('0')
+            n++
         }
     }
-*/
+
+    // bereken totalSum
+    var totalSum [100]uint64
+    var sum, end uint64 = 0, 0
+
+    for i := 50; i > 0; i-- {
+        for j := 0; j < 100; j++ {
+            sum += numbers2[j * 50 + (i - 1)]
+        }
+        totalSum[end] = sum % 10
+        sum /= 10
+        end++
+    }
+    for sum > 0 {
+        totalSum[end] = sum % 10
+        end++
+        sum /= 10
+    }
+
+    // haal het antwoord uit totalSum
+    end--
+    var ret uint64 = 0
+    var factor uint64 = 1000000000
+    for i:= 0; i < 10; i++ {
+        ret += totalSum[end] * factor
+        end--
+        factor /= 10
+    }
+
+    return fmt.Sprintf("%d", ret)
+/*
     if b[0] == '3' {
         return "0"
     }
     return "0"
-    //return "onzin"
+*/
 }
 
 
@@ -511,17 +548,144 @@ func problem15() string {
     return fmt.Sprintf("%d", paths)
 }
 
+/*
+#16 Power digit sum
+
+2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+
+What is the sum of the digits of the number 2^1000?
+
+Antwoord: 1,366
+*/
+
 func problem16() string {
     return "0"
 }
+
+/*
+#17 Number letter counts
+
+If the numbers 1 to 5 are written out in words: one, two, three, four,
+five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+
+If all the numbers from 1 to 1000 (one thousand) inclusive
+were written out in words, how many letters would be used?
+
+NOTE: Do not count spaces or hyphens. For example, 342 (three hundred and
+forty-two) contains 23 letters and 115 (one hundred and fifteen) contains
+20 letters. The use of "and" when writing out numbers is in compliance
+with British usage.
+
+Antwoord: 21,124
+*/
 
 func problem17() string {
     return "0"
 }
 
-func problem18() string {
-    return "0"
+/*
+#18: Maximum path sum I
+
+By starting at the top of the triangle below and moving to adjacent
+numbers on the row below, the maximum total from top to bottom is 23.
+
+3
+7 4
+2 4 6
+8 5 9 3
+
+That is, 3 + 7 + 4 + 9 = 23.
+
+Find the maximum total from top to bottom of the triangle below:
+
+75
+95 64
+17 47 82
+18 35 87 10
+20 04 82 47 65
+19 01 23 75 03 34
+88 02 77 73 07 63 67
+99 65 04 28 06 16 70 92
+41 41 26 56 83 40 80 70 33
+41 48 72 33 47 32 37 16 94 29
+53 71 44 65 25 43 91 52 97 51 14
+70 11 33 28 77 73 17 78 39 68 17 57
+91 71 52 38 17 14 91 43 58 50 27 29 48
+63 66 04 68 89 53 67 30 73 16 69 87 40 31
+04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
+
+NOTE: As there are only 16384 routes, it is possible to solve this
+problem by trying every route. However, Problem 67, is the same
+challenge with a triangle containing one-hundred rows; it cannot be
+solved by brute force, and requires a clever method! ;o)
+
+Antwoord: 1,074
+*/
+
+func myPow64(base uint64, e uint64) uint64 {
+    if e == 0 { return 1 }
+    var ret uint64 = base
+    e--
+    for e > 0 {
+        ret *= base
+        e--
+    }
+    return ret
 }
+
+func problem18() string {
+    t18 := [][]uint64 {
+        {75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {95,64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {17,47,82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {18,35,87,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {20, 4,82,47,65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {19, 1,23,75, 3,34, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {88, 2,77,73, 7,63,67, 0, 0, 0, 0, 0, 0, 0, 0},
+        {99,65, 4,28, 6,16,70,92, 0, 0, 0, 0, 0, 0, 0},
+        {41,41,26,56,83,40,80,70,33, 0, 0, 0, 0, 0, 0},
+        {41,48,72,33,47,32,37,16,94,29, 0, 0, 0, 0, 0},
+        {53,71,44,65,25,43,91,52,97,51,14, 0, 0, 0, 0},
+        {70,11,33,28,77,73,17,78,39,68,17,57, 0, 0, 0},
+        {91,71,52,38,17,14,91,43,58,50,27,29,48, 0, 0},
+        {63,66, 4,68,89,53,67,30,73,16,69,87,40,31, 0},
+        { 4,62,98,27,23, 9,70,98,73,93,38,53,60, 4,23}}
+
+    var possibilities uint64 = myPow64(2, 14)
+    var best uint64 = 0
+
+    for i := uint64(0); i <= possibilities; i++ {
+        var index, sum uint64 = 0, t18[0][0]
+        for j := uint64(0); j < 14; j++ {
+            index = index + (i >> j & 1)
+            var value uint64 = t18[j + 1][index]
+            sum += value
+        }
+        if sum > best { best = sum }
+    }
+    return fmt.Sprintf("%d", best)
+}
+
+/*
+#19 Counting Sundays
+
+You are given the following information, but you may prefer to do some research for yourself.
+
+    * 1 Jan 1900 was a Monday.
+    * Thirty days has September,
+      April, June and November.
+      All the rest have thirty-one,
+      Saving February alone,
+      Which has twenty-eight, rain or shine.
+      And on leap years, twenty-nine.
+    * A leap year occurs on any year evenly divisible by 4, but not on a
+      century unless it is divisible by 400.
+
+How many Sundays fell on the first of the month during
+the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+Antwoord: 171
+*/
 
 func problem19() string {
     return "0"
@@ -543,7 +707,34 @@ func problem23() string {
     return "0"
 }
 
+/*
+#24: Lexicographic permutations
+
+A permutation is an ordered arrangement of objects. For example, 3124 is
+one possible permutation of the digits 1, 2, 3 and 4. If all of the
+permutations are listed numerically or alphabetically, we call it
+lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
+
+012   021   102   120   201   210
+
+What is the millionth lexicographic permutation
+of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
+
+Antwoord: 2,783,915,460
+*/
+
 func problem24() string {
+/*
+    a := []uint8 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+    var r uint8 = 0
+    var perm uint32 = 999999
+    for j := uint8(0); j < 10; j++ {
+        var i uint8 = perm / fac32(9 - j)
+        perm = perm % fac32(9 - j)
+        ret[r] = a[i] + '0'
+        r++
+    }
+*/
     return "0"
 }
 
@@ -686,91 +877,108 @@ func problem28() string {
     return fmt.Sprintf("%d", xsum)
 }
 
+var answers2 = [...]string{"233168", "4613732", "6857",
+    "906609", "232792560", "25164150", "104743", "23514624000",
+    "31875000", "142913828922", "70600674", "76576500",
+    "5537376230", "837799", "137846528820",
+    "1366", "21124", "1074", "171", "648", "31626", "871198282",
+    "4179871", "2783915460", "4782", "983", "-59231",
+    "669171001", "9183", "443839", "73682", "45228", "100",
+    "40730", "55", "872187", "748317",
+    "932718654", "840", "210", "7652413", "162",
+    "16695334890", "5482660", "1533776805", "5777",
+    "134043", "9110846700", "296962999629", "997651",
+    "121313", "142857", "4075", "376", "249", "972", "153", "26241",
+    "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
+    "6531031914842725", "510510", "8319823", "428570",
+    "303963552391", "7295372", "402", "161667",
+    "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
+    "101524", "2772", "1818", "1097343", "7587457", "743", "1217", "14234", "8581146",
+    "1258", "518408346", "14316", "24702", "8739992577", "18769", "709", "756872327473",
+    "37076114526", "228"}
+
 func run2(p uint32) string {
+    var ret string = "0"
     switch p {
     case 1:
-        return problem1()
+        ret = problem1()
     case 2:
-        return problem2()
+        ret = problem2()
     case 3:
-        return problem3()
+        ret = problem3()
     case 4:
-        return problem4()
+        ret = problem4()
     case 5:
-        return problem5()
+        ret = problem5()
     case 6:
-        return problem6()
+        ret = problem6()
     case 7:
-        return problem7()
+        ret = problem7()
     case 8:
-        return problem8()
+        ret = problem8()
     case 9:
-        return problem9()
+        ret = problem9()
     case 10:
-        return problem10()
+        ret = problem10()
     case 11:
-        return problem11()
+        ret = problem11()
     case 12:
-        return problem12()
+        ret = problem12()
     case 13:
-        return problem13()
+        ret = problem13()
     case 14:
-        return problem14()
+        ret = problem14()
     case 15:
-        return problem15()
+        ret = problem15()
     case 16:
-        return problem16()
+        ret = problem16()
     case 17:
-        return problem17()
+        ret = problem17()
     case 18:
-        return problem18()
+        ret = problem18()
     case 19:
-        return problem19()
+        ret = problem19()
     case 20:
-        return problem20()
+        ret = problem20()
     case 21:
-        return problem21()
+        ret = problem21()
     case 22:
-        return problem22()
+        ret = problem22()
     case 23:
-        return problem23()
+        ret = problem23()
     case 24:
-        return problem24()
+        ret = problem24()
     case 25:
-        return problem25()
+        ret = problem25()
     case 26:
-        return problem26()
+        ret = problem26()
     case 27:
-        return problem27()
+        ret = problem27()
     case 28:
-        return problem28()
+        ret = problem28()
     }
-    return "onzin"
+    return ret
 }
 
+func worker(prob_n chan uint32, done chan bool) {
+    for i := range prob_n {
+        start := time.Now()
+        var ret string = run2(i)
+        elapsed := time.Since(start)
+        var status string = "OK"
+        if strings.Compare(answers2[i - 1], ret) != 0 {
+            status = "Error"
+        }
+        fmt.Printf("#%d: %s %s %s\n", i, ret, elapsed, status)
+    }
+    done <- true
+}
+
+const nWorkers = 4
+
 func main() {
-    answers2 := [...]string{"233168", "4613732", "6857",
-        "906609", "232792560", "25164150", "104743", "23514624000",
-        "31875000", "142913828922", "70600674", "76576500",
-        "5537376230", "837799", "137846528820",
-        "1366", "21124", "1074", "171", "648", "31626", "871198282",
-        "4179871", "2783915460", "4782", "983", "-59231",
-        "669171001", "9183", "443839", "73682", "45228", "100",
-        "40730", "55", "872187", "748317",
-        "932718654", "840", "210", "7652413", "162",
-        "16695334890", "5482660", "1533776805", "5777",
-        "134043", "9110846700", "296962999629", "997651",
-        "121313", "142857", "4075", "376", "249", "972", "153", "26241",
-        "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
-        "6531031914842725", "510510", "8319823", "428570",
-        "303963552391", "7295372", "402", "161667",
-        "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
-        "101524", "2772", "1818", "1097343", "7587457", "743", "1217", "14234", "8581146",
-        "1258", "518408346", "14316", "24702", "8739992577", "18769", "709", "756872327473",
-        "37076114526", "228"}
-
     start := time.Now()
-
+/*
     for i := uint32(1); i <= 28; i++ {
         var ret string = run2(i)
         var status string = "OK"
@@ -778,6 +986,25 @@ func main() {
             status = "Error"
         }
         fmt.Printf("#%d: %s %s\n", i, ret, status)
+    }
+*/
+    var prob_n = make(chan uint32, 10)
+    var done = make(chan bool, 10)
+
+    for i := 0; i < nWorkers; i++ {
+        go worker(prob_n, done)
+    }
+
+    for i := 1; i <= 28; i++ {
+        prob_n <- uint32(i)
+    }
+    close(prob_n)
+    var tmp int
+    for range done {
+        tmp++
+        if tmp == nWorkers {
+            break
+        }
     }
 
     elapsed := time.Since(start)

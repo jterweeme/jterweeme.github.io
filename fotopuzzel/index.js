@@ -61,22 +61,22 @@ REDIPS.drag=(function()
     var init, init_tables, enable_drag, enable_table,
         img_onmousemove,
         handler_onmousedown,
-        handler_ondblclick,table_top,handler_onmouseup,
+        handler_ondblclick, table_top, handler_onmouseup,
         handler_onmousemove,
-        element_drop,element_deleted,cell_changed,
-        handler_onresize,set_trc,
-        set_position,setTdStyle,getTdStyle,
-        box_offset,calculate_cells,
-        getScrollPosition,autoscrollX,autoscrollY,
-        clone_div,copy_properties,
-        clone_limit,elementControl,get_style,
-        find_parent,find_cell,save_content,
-        relocate,empty_cell,shift_cells,
-        move_object,delete_object,
-        animation,get_table_index,get_position,
-        row_opacity,row_empty,row_clone,row_drop,form_elements,
-        has_childs,obj_margin=null,window_width=0,window_height=0,
-        scroll_width=null,scroll_height=null;
+        element_drop, element_deleted, cell_changed,
+        handler_onresize, set_trc,
+        set_position, setTdStyle,getTdStyle,
+        box_offset, calculate_cells,
+        getScrollPosition, autoscrollX,autoscrollY,
+        clone_div, copy_properties,
+        clone_limit, elementControl,get_style,
+        find_parent, find_cell,save_content,
+        relocate, empty_cell,shift_cells,
+        move_object, delete_object,
+        animation, get_table_index,get_position,
+        row_opacity, row_empty,row_clone,row_drop,form_elements,
+        has_childs, obj_margin = null,window_width=0,window_height=0,
+        scroll_width = null, scroll_height = null;
 
     var edge=
     {
@@ -170,12 +170,12 @@ REDIPS.drag=(function()
             tables_nodeList,nested_tables,td,rowspan;
             tables_nodeList = div_drag.getElementsByTagName('table');
 
-        for(i = 0, j = 0; i < tables_nodeList.length; i++)
+        for (i = 0, j = 0; i < tables_nodeList.length; i++)
         {
-            element=tables_nodeList[i].parentNode;level=0;
+            element = tables_nodeList[i].parentNode;level=0;
             do
             {
-                if(element.nodeName==='TD')
+                if (element.nodeName === 'TD')
                     level++;
         
                 element=element.parentNode;
@@ -478,7 +478,7 @@ REDIPS.drag=(function()
         }
     };
 
-    form_elements=function(str,ctr)
+    form_elements = function(str,ctr)
     {
         var i, j, k, type, src=[], cld=[];
         src[0]=str.getElementsByTagName('input');
@@ -696,8 +696,8 @@ element_drop=function()
 
 handler_onmousemove=function(e)
 {
-    var evt=e||window.event,bound=REDIPS.drag.bound;
-    var sca,X,Y,deltaX,deltaY,i,scrollPosition;
+    var evt = e || window.event, bound = REDIPS.drag.bound;
+    var sca, X, Y, deltaX, deltaY, i, scrollPosition;
 
     if (evt.touches)
     {
@@ -709,6 +709,7 @@ handler_onmousemove=function(e)
         X = pointer.x=evt.clientX;
         Y = pointer.y=evt.clientY;
     }
+
     deltaX=Math.abs(threshold.x-X);
     deltaY=Math.abs(threshold.y-Y);
 
@@ -798,7 +799,7 @@ handler_onmousemove=function(e)
         edge.page.x *= X < window_width / 2 ? -1 : 1;
 
         if (!((edge.page.x < 0 && scrollPosition <= 0) ||
-            (edge.page.x > 0 && scrollPosition>=(scroll_width-window_width))))
+            (edge.page.x > 0 && scrollPosition >= (scroll_width-window_width))))
         {
             if(edge.flag.x++===0)
             {
@@ -814,121 +815,131 @@ handler_onmousemove=function(e)
 
     edge.page.y=bound-(window_height/2>Y?Y-obj_margin[0]:window_height-Y-obj_margin[2]);
 
-if(edge.page.y>0)
-{
-    if(edge.page.y>bound)
-        edge.page.y=bound;
-
-    scrollPosition=getScrollPosition()[1];
-    edge.page.y*=Y<window_height/2?-1:1;
-    if(!((edge.page.y<0&&scrollPosition<=0)||(edge.page.y>0&&scrollPosition>=(scroll_height-window_height))))
+    if (edge.page.y > 0)
     {
-        if(edge.flag.y++===0)
+        if(edge.page.y>bound)
+            edge.page.y=bound;
+    
+        scrollPosition=getScrollPosition()[1];
+        edge.page.y*=Y<window_height/2?-1:1;
+    
+        if (!((edge.page.y < 0 && scrollPosition <= 0) || (edge.page.y > 0 &&
+            scrollPosition>=(scroll_height-window_height))))
         {
-            REDIPS.event.remove(window,'scroll',calculate_cells);
-            autoscrollY(window);
-        }
-    }
-}
-else
-{
-    edge.page.y = 0;
-}
-
-for (i = 0; i < scrollable_container.length; i++)
-{
-    sca = scrollable_container[i];
-
-    if (sca.autoscroll && X < sca.offset[1]&&X>sca.offset[3]&&Y<sca.offset[2]&&Y>sca.offset[0])
-    {
-        edge.div.x = bound-(sca.midstX>X ?
-            X-obj_margin[3]-sca.offset[3] : sca.offset[1]-X-obj_margin[1]);
-
-        if(edge.div.x>0)
-        {
-            if(edge.div.x>bound)
-                edge.div.x=bound;
-
-            edge.div.x*=X<sca.midstX?-1:1;
-
-            if(edge.flag.x++===0)
-            {
-                REDIPS.event.remove(sca.div,'scroll',calculate_cells);
-                autoscrollX(sca.div);
-            }
-        }
-        else
-        {
-            edge.div.x=0;
-        }
-
-        edge.div.y = bound-(sca.midstY>Y ?
-            Y-obj_margin[0]-sca.offset[0]:sca.offset[2]-Y-obj_margin[2]);
-
-        if (edge.div.y > 0)
-        {
-            if (edge.div.y>bound)
-            {
-                edge.div.y=bound;
-            }
-
-            edge.div.y*=Y<sca.midstY?-1:1;
-
             if(edge.flag.y++===0)
             {
-                REDIPS.event.remove(sca.div,'scroll',calculate_cells);
-                autoscrollY(sca.div);
+                REDIPS.event.remove(window,'scroll',calculate_cells);
+                autoscrollY(window);
             }
         }
-        else
-        {
-            edge.div.y=0;
-        }
-        break;
     }
     else
     {
-        edge.div.x=edge.div.y=0;
+        edge.page.y = 0;
     }
-}
-evt.cancelBubble=true;
-if(evt.stopPropagation)
-{
-    evt.stopPropagation();
-}
-};
-cell_changed=function()
-{
-if(table<tables.length&&(table!==table_old||row!==row_old||cell!==cell_old))
-{
-    if(table_old!==null&&row_old!==null&&cell_old!==null)
+
+    for (i = 0; i < scrollable_container.length; i++)
     {
-        setTdStyle(table_old,row_old,cell_old,bgstyle_old);
-
-        REDIPS.drag.previous_cell = previous_cell =
-            tables[table_old].rows[row_old].cells[cell_old];
-
-        REDIPS.drag.current_cell=current_cell=tables[table].rows[row].cells[cell];
-        if(REDIPS.drag.drop_option==='switching'&&mode==='cell')
+        sca = scrollable_container[i];
+    
+        if (sca.autoscroll && X < sca.offset[1] && X > sca.offset[3] &&
+            Y < sca.offset[2] && Y > sca.offset[0])
         {
-            relocate(current_cell,previous_cell);
-            calculate_cells();
-            set_trc();
+            edge.div.x = bound-(sca.midstX>X ?
+                X-obj_margin[3]-sca.offset[3] : sca.offset[1]-X-obj_margin[1]);
+    
+            if(edge.div.x>0)
+            {
+                if(edge.div.x>bound)
+                    edge.div.x=bound;
+    
+                edge.div.x*=X<sca.midstX?-1:1;
+    
+                if(edge.flag.x++===0)
+                {
+                    REDIPS.event.remove(sca.div,'scroll',calculate_cells);
+                    autoscrollX(sca.div);
+                }
+            }
+            else
+            {
+                edge.div.x=0;
+            }
+    
+            edge.div.y = bound-(sca.midstY>Y ?
+                Y - obj_margin[0] - sca.offset[0] : sca.offset[2] - Y - obj_margin[2]);
+    
+            if (edge.div.y > 0)
+            {
+                if (edge.div.y>bound)
+                {
+                    edge.div.y=bound;
+                }
+    
+                edge.div.y*=Y<sca.midstY?-1:1;
+    
+                if(edge.flag.y++===0)
+                {
+                    REDIPS.event.remove(sca.div,'scroll',calculate_cells);
+                    autoscrollY(sca.div);
+                }
+            }
+            else
+            {
+                edge.div.y=0;
+            }
+            break;
         }
-    if(mode==='cell')
-        REDIPS.drag.myhandler_changed(current_cell);
-    else if(mode==='row'&&(table!==table_old||row!==row_old))
-        REDIPS.drag.myhandler_row_changed(current_cell);
-}
-set_position();}};
-handler_onresize=function()
+        else
+        {
+            edge.div.x=edge.div.y=0;
+        }
+    }
+    evt.cancelBubble=true;
+
+    if (evt.stopPropagation)
+        evt.stopPropagation();
+};
+
+cell_changed = function()
 {
-    if (typeof(window.innerWidth)==='number')
+    if (table<tables.length&&(table!==table_old||row!==row_old||cell!==cell_old))
+    {
+        if (table_old !== null && row_old !== null && cell_old!==null)
+        {
+            setTdStyle(table_old,row_old,cell_old,bgstyle_old);
+    
+            REDIPS.drag.previous_cell = previous_cell =
+                tables[table_old].rows[row_old].cells[cell_old];
+    
+            REDIPS.drag.current_cell=current_cell=tables[table].rows[row].cells[cell];
+    
+            if(REDIPS.drag.drop_option==='switching'&&mode==='cell')
+            {
+                relocate(current_cell,previous_cell);
+                calculate_cells();
+                set_trc();
+            }
+    
+            if (mode === 'cell')
+                REDIPS.drag.myhandler_changed(current_cell);
+    
+            else if (mode === 'row' && (table !== table_old || row !== row_old))
+                REDIPS.drag.myhandler_row_changed(current_cell);
+        }
+        set_position();
+    }
+};
+
+handler_onresize = function()
+{
+    if (typeof(window.innerWidth) === 'number')
     {
         window_width=window.innerWidth;
         window_height=window.innerHeight;
     }
-    else if (document.documentElement&&(document.documentElement.clientWidth||document.documentElement.clientHeight))
+    else if (document.documentElement &&
+        (document.documentElement.clientWidth || document.documentElement.clientHeight))
     {
         window_width=document.documentElement.clientWidth;
         window_height=document.documentElement.clientHeight;
