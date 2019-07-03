@@ -1,6 +1,9 @@
 package main
 
 import "fmt"
+import "io/ioutil"
+import "strings"
+import "time"
 
 /*
 #1 If we list all the natural numbers below 10 that are multiples of 3 or 5,
@@ -52,29 +55,29 @@ What is the largest prime factor of the number 600,851,475,143?
 Antwoord: 6,857
 */
 
-func primeHelper(n int64) int64 {
-    var presets = [4]int64{3000,300,100,8}
+func primeHelper(n uint64) uint64 {
+    var presets = [4]uint64{3000,300,100,8}
     for i := 0; i < 4; i++ {
         if n > presets[i] * presets[i] { return n / presets[i] }
     }
     return 0
 }
 
-func isprime(n int64) bool {
+func isprime(n uint64) bool {
     if n == 0 || n == 1 { return false }
     var limit = primeHelper(n)
-    for i := int64(2); i < limit; i++ {
+    for i := uint64(2); i < limit; i++ {
         if n % i == 0 { return false }
     }
     return true
 }
 
 func problem3() string {
-    var n int64 = 600851475143
-    var best int64 = 0
+    var n uint64 = 600851475143
+    var best uint64 = 0
     for n > 1 {
-        var factor int64 = 0
-        for i := int64(2); i < 999999; i++ {
+        var factor uint64 = 0
+        for i := uint64(2); i < 999999; i++ {
             if isprime(i) == false { continue }
             if n % i == 0 {
                 factor = i
@@ -136,7 +139,7 @@ func isdivisible(n int, lower int, max int) bool {
 }
 
 func problem5() string {
-    var start = 2560
+    var start = 2520
     var number = start
     for isdivisible(number, 11, 20) == false { number += start }
     return fmt.Sprintf("%d", number)
@@ -216,6 +219,22 @@ have the greatest product. What is the value of this product?
 Antwoord: 23,514,624,000
 */
 
+func problem8() string {
+    var series1 string = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450"
+
+    var cur, best uint64 = 0, 0
+    for _, chr := range series1 {
+        cur = (cur % uint64(1000000000000)) * 10 + uint64(chr - '0')
+        var peel, product uint64 = cur, 1
+        for peel > 0 {
+            product *= peel % 10
+            peel = peel / 10
+        }
+        if product > best { best = product }
+    }
+    return fmt.Sprintf("%d", best)
+}
+
 /*  
 #9 Special Pythagorean triplet
 
@@ -267,15 +286,73 @@ func problem10() string {
             }
         }
     }
-    sum := 0
-    for i := 0; i < 2000000; i++ {
+    var sum uint64 = 0
+    for i := uint64(0); i < 2000000; i++ {
         if v[i] == true { sum += i }
     }
     return fmt.Sprintf("%d", sum)
 }
 
+/*
+#11 Largest product in a grid
+
+In the 20x20 grid below, four numbers along
+a diagonal line have been marked in red.
+
+The product of these numbers is 26 x 63 x 78 x 14 = 1,788,696.
+
+What is the greatest product of four adjacent numbers in the same
+direction (up, down, left, right, or diagonally) in the 20x20 grid?
+
+Antwoord: 70,600,674
+*/
+
 func problem11() string {
-    return "onzin"
+    t11 := [][]uint32{
+        { 8, 2,22,97,38,15, 0,40, 0,75, 4, 5, 7,78,52,12,50,77,91, 8},
+        {49,49,99,40,17,81,18,57,60,87,17,40,98,43,69,48, 4,56,62, 0},
+        {81,49,31,73,55,79,14,29,93,71,40,67,53,88,30, 3,49,13,36,65},
+        {52,70,95,23, 4,60,11,42,69,24,68,56, 1,32,56,71,37, 2,36,91},
+        {22,31,16,71,51,67,63,89,41,92,36,54,22,40,40,28,66,33,13,80},
+        {24,47,32,60,99, 3,45, 2,44,75,33,53,78,36,84,20,35,17,12,50},
+        {32,98,81,28,64,23,67,10,26,38,40,67,59,54,70,66,18,38,64,70},
+        {67,26,20,68, 2,62,12,20,95,63,94,39,63, 8,40,91,66,49,94,21},
+        {24,55,58, 5,66,73,99,26,97,17,78,78,96,83,14,88,34,89,63,72},
+        {21,36,23, 9,75, 0,76,44,20,45,35,14, 0,61,33,97,34,31,33,95},
+        {78,17,53,28,22,75,31,67,15,94, 3,80, 4,62,16,14, 9,53,56,92},
+        {16,39, 5,42,96,35,31,47,55,58,88,24, 0,17,54,24,36,29,85,57},
+        {86,56, 0,48,35,71,89, 7, 5,44,44,37,44,60,21,58,51,54,17,58},
+        {19,80,81,68, 5,94,47,69,28,73,92,13,86,52,17,77, 4,89,55,40},
+        { 4,52, 8,83,97,35,99,16, 7,97,57,32,16,26,26,79,33,27,98,66},
+        {88,36,68,87,57,62,20,72, 3,46,33,67,46,55,12,32,63,93,53,69},
+        { 4,42,16,73,38,25,39,11,24,94,72,18, 8,46,29,32,40,62,76,36},
+        {20,69,36,41,72,30,23,88,34,62,99,69,82,67,59,85,74, 4,36,16},
+        {20,73,35,29,78,31,90, 1,74,31,49,71,48,86,81,16,23,57, 5,54},
+        { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}}
+
+    var best uint32 = 0
+    for i := 0; i < 20; i++ {
+        for j := 0; j < 16; j++ {
+            var prod uint32 = t11[i][j] * t11[i][j + 1] * t11[i][j+2] * t11[i][j+3]
+            if prod > best { best = prod }
+            prod = t11[j][i] * t11[j+1][i] * t11[j+2][i] * t11[j+3][i]
+            if prod > best { best = prod }
+        }
+    }
+    for i := 0; i < 16; i++ {
+        for j := 0; j < 16; j++ {
+            var prod uint32 = t11[i][j] * t11[i+1][j+1] * t11[i+2][j+2] * t11[i+3][j+3]
+            if prod > best { best = prod }
+        }
+    }
+    for i := 3; i < 20; i++ {
+        for j := 0; j < 16; j++ {
+            var prod uint32 = t11[i][j] * t11[i-1][j+1] * t11[i-2][j+2] * t11[i-3][j+3]
+            if prod > best { best = prod }
+        }
+    }
+
+    return fmt.Sprintf("%d", best)
 }
 
 /*
@@ -351,7 +428,24 @@ Antwoord: 5,537,376,230
 */
 
 func problem13() string {
-    return "onzin"
+    b, err := ioutil.ReadFile("euler13.txt")
+    if err != nil {
+        fmt.Printf("onzin")
+    }
+    //var numbers2 [5000]uint8
+    //var uint16
+/*
+    for i := 50; i > 0; i-- {
+        for j := 0; j < 100; j++ {
+            sum += b[j * 50
+        }
+    }
+*/
+    if b[0] == '3' {
+        return "0"
+    }
+    return "0"
+    //return "onzin"
 }
 
 
@@ -378,8 +472,8 @@ NOTE: Once the chain starts the terms are allowed to go above one million.
 Antwoord: 837,799
 */
 
-func collatz(n int) int {
-    var count = 1
+func collatz(n uint32) uint32 {
+    var count uint32 = 1
     for n > 1 {
         if n % 2 == 0 {
             n = n >> 1
@@ -390,9 +484,9 @@ func collatz(n int) int {
 }
 
 func problem14() string {
-    var lower, upper, best_start, best_length = 1, 1000000, 0, 0
+    var lower, upper, best_start, best_length uint32 = 1, 1000000, 0, 0
     for i := lower; i < upper; i++ {
-        var length = collatz(i)
+        var length uint32 = collatz(i)
         if length > best_length { best_start, best_length = i, length }
     }
     return fmt.Sprintf("%d", best_start)
@@ -410,15 +504,51 @@ Antwoord: 137,846,528,820
 */
 
 func problem15() string {
-    var size, paths = 20, 1
-    for i := 0; i < size; i++ {
+    var size, paths, i uint64 = 20, 1, 0
+    for i = 0; i < size; i++ {
         paths = (paths * (2 * size - i)) / (i + 1)
     }
     return fmt.Sprintf("%d", paths)
 }
 
 func problem16() string {
-    return "onzin"
+    return "0"
+}
+
+func problem17() string {
+    return "0"
+}
+
+func problem18() string {
+    return "0"
+}
+
+func problem19() string {
+    return "0"
+}
+
+func problem20() string {
+    return "0"
+}
+
+func problem21() string {
+    return "0"
+}
+
+func problem22() string {
+    return "0"
+}
+
+func problem23() string {
+    return "0"
+}
+
+func problem24() string {
+    return "0"
+}
+
+func problem25() string {
+    return "0"
 }
 
 /*
@@ -504,6 +634,26 @@ starting with n = 0.
 Antwoord: -59231
 */
 
+func myAbs32(n int32) int32 {
+    if n < 0 { return n * -1 }
+    return n
+}
+
+func problem27() string {
+    var best_a, best_b, best_n int32 = 0, 0, 0
+    var a, b, n int32
+    for a = -999; a < 1000; a++ {
+        for b = -1000; b <= 1000; b++ {
+            n = 0
+            for isprime(uint64(myAbs32(n * n + a * n + b))) { n++ }
+            if n > best_n {
+                best_a, best_b, best_n = a, b, n
+            }
+        }
+    }
+    return fmt.Sprintf("%d", best_a * best_b)
+}
+
 /*
 #28 Number spiral diagonals
 
@@ -553,7 +703,7 @@ func run2(p uint32) string {
     case 7:
         return problem7()
     case 8:
-        return "onzin"
+        return problem8()
     case 9:
         return problem9()
     case 10:
@@ -571,17 +721,27 @@ func run2(p uint32) string {
     case 16:
         return problem16()
     case 17:
+        return problem17()
     case 18:
+        return problem18()
     case 19:
+        return problem19()
     case 20:
+        return problem20()
     case 21:
+        return problem21()
     case 22:
+        return problem22()
     case 23:
+        return problem23()
     case 24:
+        return problem24()
     case 25:
-        return "onzin"
+        return problem25()
     case 26:
         return problem26()
+    case 27:
+        return problem27()
     case 28:
         return problem28()
     }
@@ -589,9 +749,39 @@ func run2(p uint32) string {
 }
 
 func main() {
+    answers2 := [...]string{"233168", "4613732", "6857",
+        "906609", "232792560", "25164150", "104743", "23514624000",
+        "31875000", "142913828922", "70600674", "76576500",
+        "5537376230", "837799", "137846528820",
+        "1366", "21124", "1074", "171", "648", "31626", "871198282",
+        "4179871", "2783915460", "4782", "983", "-59231",
+        "669171001", "9183", "443839", "73682", "45228", "100",
+        "40730", "55", "872187", "748317",
+        "932718654", "840", "210", "7652413", "162",
+        "16695334890", "5482660", "1533776805", "5777",
+        "134043", "9110846700", "296962999629", "997651",
+        "121313", "142857", "4075", "376", "249", "972", "153", "26241",
+        "107359", "26033", "28684", "127035954683", "49", "1322", "272", "661", "7273",
+        "6531031914842725", "510510", "8319823", "428570",
+        "303963552391", "7295372", "402", "161667",
+        "190569291", "71", "55374", "73162890", "40886", "427337", "260324", "425185",
+        "101524", "2772", "1818", "1097343", "7587457", "743", "1217", "14234", "8581146",
+        "1258", "518408346", "14316", "24702", "8739992577", "18769", "709", "756872327473",
+        "37076114526", "228"}
+
+    start := time.Now()
+
     for i := uint32(1); i <= 28; i++ {
-        fmt.Printf("Oplossing %d: %s\n", i, run2(i))
+        var ret string = run2(i)
+        var status string = "OK"
+        if strings.Compare(answers2[i - 1], ret) != 0 {
+            status = "Error"
+        }
+        fmt.Printf("#%d: %s %s\n", i, ret, status)
     }
+
+    elapsed := time.Since(start)
+    fmt.Printf("Total: %s\n", elapsed)
 }
 
 

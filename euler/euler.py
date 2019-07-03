@@ -4029,7 +4029,7 @@ this reason, 220 and 284 are called an amicable pair.
 Perhaps less well known are longer chains. For example,
 starting with 12496, we form a chain of five numbers:
 
-12496 → 14288 → 15472 → 14536 → 14264 (→ 12496 → ...)
+12496 -> 14288 -> 15472 -> 14536 -> 14264 (-> 12496 -> ...)
 
 Since this chain returns to its starting
 point, it is called an amicable chain.
@@ -4523,9 +4523,10 @@ def runjob(n):
     ts = time.time()
     ret = runn2(n)
     #assert ret == answers[n - 1]
+    status = "OK"
     if ret != answers[n - 1]:
-        print("error")
-    print("#{}: {} {}s".format(n, ret, math.floor(time.time() - ts)))
+        status = "Error"
+    print("#{}: {} {}s {}".format(n, ret, math.floor(time.time() - ts), status))
 
 def runm(l = list(range(1, 102 + 1))):
     ts = time.time()
