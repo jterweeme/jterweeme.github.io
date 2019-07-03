@@ -77,7 +77,7 @@ func problem3() string {
     var best uint64 = 0
     for n > 1 {
         var factor uint64 = 0
-        for i := uint64(2); i < 999999; i++ {
+        for i := uint64(2); i < 999999; i++ {    // semi oneindige loop
             if isprime(i) == false { continue }
             if n % i == 0 {
                 factor = i
@@ -477,12 +477,6 @@ func problem13() string {
     }
 
     return fmt.Sprintf("%d", ret)
-/*
-    if b[0] == '3' {
-        return "0"
-    }
-    return "0"
-*/
 }
 
 
@@ -540,6 +534,10 @@ How many such routes are there through a 20x20 grid?
 Antwoord: 137,846,528,820
 */
 
+/*
+opgelost met dynamic programming
+*/
+
 func problem15() string {
     var size, paths, i uint64 = 20, 1, 0
     for i = 0; i < size; i++ {
@@ -558,8 +556,28 @@ What is the sum of the digits of the number 2^1000?
 Antwoord: 1,366
 */
 
+/*
+simpele implementatie van grote nummers in de largeNum
+array. Deze array in een loop 1000 keer verdubbelen.
+Dan de nummers in de array optellen
+*/
+
 func problem16() string {
-    return "0"
+    var largeNum [400]uint8
+    largeNum[0] = 2
+    var carry, sum uint64 = 0, 0
+    for e := 1; e < 1000; e++ {
+        for i := 0; i < 400; i++ {
+            largeNum[i] *= 2
+            largeNum[i] += uint8(carry)
+            carry = uint64(largeNum[i]) / 10
+            largeNum[i] = largeNum[i] % 10
+        }
+    }
+    for i := 0; i < 400; i++ {
+        sum += uint64(largeNum[i])
+    }
+    return fmt.Sprintf("%d", sum)
 }
 
 /*
@@ -580,7 +598,34 @@ Antwoord: 21,124
 */
 
 func problem17() string {
-    return "0"
+    arr17 := []string{"one", "two", "three", "four", "five", "six", "seven",
+        "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
+        "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+        "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"}
+    var xsum int = 0
+    for i := 0; i < 19; i++ {
+        xsum += len(arr17[i])
+    }
+    for i := 19; i < 27; i++ {
+        xsum += len(arr17[i])
+        for j := 0; j < 9; j++ {
+            xsum += len(arr17[i]) + len(arr17[j])
+        }
+    }
+    for i := 0; i < 9; i++ {
+        xsum += len(arr17[i]) + len("hundred")
+        for j := 0; j < 19; j++ {
+            xsum += len(arr17[i]) + len("hundred") + len("and") + len(arr17[j])
+        }
+        for j := 19; j < 27; j++ {
+            xsum += len(arr17[i]) + len("hundred") + len("and") + len(arr17[j])
+            for k := 0; k < 9; k++ {
+                xsum += len(arr17[i]) + len("hundredand") + len(arr17[j]) + len(arr17[k])
+            }
+        }
+    }
+    xsum += len("onethousand")
+    return fmt.Sprintf("%d", xsum)
 }
 
 /*
