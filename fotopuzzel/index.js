@@ -1,7 +1,4 @@
-var body;
-var tbody;
-var imgs;
-var tds;
+var body, tbody, imgs, tds;
 
 function clearBgColor()
 {
@@ -10,7 +7,6 @@ function clearBgColor()
             tbody.rows[row].cells[col].bgColor = "";
 }
 
-/*
 function getEmpty()
 {
     for (var row = 0; row <= 2; row++)
@@ -18,7 +14,6 @@ function getEmpty()
             if (tbody.rows[row].cells[col].childElementCount == 0)
                 return [row, col];
 }
-*/
 
 function getEmpty2()
 {
@@ -43,25 +38,27 @@ function drag(ev)
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
+function stop(ev)
+{
+    clearBgColor();
+}
+
 function drop(ev)
 {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     ev.target.appendChild(document.getElementById(data));
-    clearBgColor();
     lock();
 }
 
 function lock()
 {
-    var empty = getEmpty2();
+    var empty2 = getEmpty2();
 
     for (var i = 0; i < 8; i++)
-    {
         imgs[i].draggable = false;
-    }
 
-    switch (empty)
+    switch (empty2)
     {
     case 0:
         tds[1].children[0].draggable = true;
@@ -120,6 +117,7 @@ function init()
     for (var i = 0; i < 8; i++)
     {
         imgs[i].addEventListener("dragstart", drag, false);
+        imgs[i].addEventListener("dragend", stop, false);
     }
     
     for (var i = 0; i < 9; i++)
