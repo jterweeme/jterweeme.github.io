@@ -1,31 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>Fotopuzzel</title>
 <link rel="stylesheet" type="text/css" href="../common.css"/>
 <link rel="stylesheet" type="text/css" href="index.css"/>
 <script>
-function allowDrop(ev) {
+
+var body;
+var tbody;
+var imgs;
+var tds;
+
+function clearBgColor()
+{
+    for (var row = 0; row <= 2; row++)
+        for (var col = 0; col <= 2; col++)
+            tbody.rows[row].cells[col].bgColor = "";
+}
+
+/*
+function getEmpty()
+{
+    for (var row = 0; row <= 2; row++)
+        for (var col = 0; col <= 2; col++)
+            if (tbody.rows[row].cells[col].childElementCount == 0)
+                return [row, col];
+}
+*/
+
+function getEmpty2()
+{
+    for (var i = 0; i < 9; i++)
+        if (tds[i].childElementCount == 0)
+            return i;
+}
+
+function allowDrop(ev)
+{
+    clearBgColor();
+    ev.currentTarget.bgColor = "red";
+
+    if (ev.currentTarget.childElementCount > 0)
+        return;
+
     ev.preventDefault();
 }
 
-function drag(ev) {
+function drag(ev)
+{
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function drop(ev) {
+function drop(ev)
+{
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     ev.target.appendChild(document.getElementById(data));
+    clearBgColor();
+    lock();
+}
+
+function lock()
+{
+    var empty = getEmpty2();
+
+    for (var i = 0; i < 8; i++)
+    {
+        imgs[i].draggable = false;
+    }
+
+    switch (empty)
+    {
+    case 0:
+        tds[1].children[0].draggable = true;
+        tds[3].children[0].draggable = true;
+        break;
+    case 1:
+        tds[0].children[0].draggable = true;
+        tds[2].children[0].draggable = true;
+        tds[4].children[0].draggable = true;
+        break;
+    case 2:
+        tds[1].children[0].draggable = true;
+        tds[5].children[0].draggable = true;
+        break;
+    case 3:
+        tds[0].children[0].draggable = true;
+        tds[4].children[0].draggable = true;
+        tds[6].children[0].draggable = true;
+        break;
+    case 4:
+        tds[1].children[0].draggable = true;
+        tds[3].children[0].draggable = true;
+        tds[5].children[0].draggable = true;
+        tds[7].children[0].draggable = true;
+        break;
+    case 5:
+        tds[2].children[0].draggable = true;
+        tds[4].children[0].draggable = true;
+        tds[8].children[0].draggable = true;
+        break;
+    case 6:
+        tds[3].children[0].draggable = true;
+        tds[7].children[0].draggable = true;
+        break;
+    case 7:
+        tds[4].children[0].draggable = true;
+        tds[6].children[0].draggable = true;
+        tds[8].children[0].draggable = true;
+        break;
+    case 8:
+        tds[5].children[0].draggable = true;
+        tds[7].children[0].draggable = true;
+        break;
+    }
+
 }
 
 function init()
 {
     body = document.getElementsByTagName('body')[0];
-    tbody = body.children[1].children[0];
-    //tbody.children[0].children[0].ondrop=drop(event);
-    //tbody.children[0].children[0].ondragover="allowDrop(event)";
+    tbody = document.getElementById("puzzle");
+    imgs = tbody.getElementsByTagName("img");
+    tds = tbody.getElementsByTagName("td");
+    lock();
+
+    for (var i = 0; i < 8; i++)
+    {
+        imgs[i].addEventListener("dragstart", drag, false);
+    }
     
+    for (var i = 0; i < 9; i++)
+    {
+        tds[i].addEventListener("drop", drop, false);
+        tds[i].addEventListener("dragover", allowDrop, false);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", init, false);
@@ -42,39 +151,35 @@ document.addEventListener("DOMContentLoaded", init, false);
 <a href="../worst.html">WWW1</a>
 </nav>
 <table>
+<tbody id="puzzle">
 <tr>
-    <td id="0" ondrop="drop(event)" ondragover="allowDrop(event)">
-    <!-- <td id="0"> -->
-        <img id="afb1" src="win_2_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="1" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb2" src="win_1_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="2" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb3" src="win_0_2.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
+    <td><img id="afb1" src="win_2_0.jpg" alt="tux"/></td>
+    <td><img id="afb2" src="win_1_0.jpg" alt="tux"/></td>
+    <td><img id="afb3" src="win_0_2.jpg" alt="tux"/></td>
 </tr>
 <tr>
-    <td id="3" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb4" src="win_0_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="4" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb5" src="win_0_0.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="5" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb6" src="win_1_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
+    <td><img id="afb4" src="win_0_1.jpg" alt="tux"/></td>
+    <td><img id="afb5" src="win_0_0.jpg" alt="tux"/></td>
+    <td><img id="afb6" src="win_1_1.jpg" alt="tux"/></td>
 </tr>
 <tr>
-    <td id="6" ondrop="drop(event)" ondragover="allowDrop(event)" >
-        <img id="afb7" src="win_2_2.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="7" ondrop="drop(event)" ondragover="allowDrop(event)">
-        <img id="afb8" src="win_2_1.jpg" alt="tux" draggable="true" ondragstart="drag(event)"/>
-    </td>
-    <td id="8" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+    <td><img id="afb7" src="win_2_2.jpg" alt="tux"/></td>
+    <td><img id="afb8" src="win_2_1.jpg" alt="tux"/></td>
+    <td></td>
 </tr>
+</tbody>
 </table>
+
+<pre style="color: white;">
+[Oplossing 1]
+8 7 4 1 2 5 8 7 4 1 2 3 6 5 8 9 6 3
+2 5 6
+
+[Oplossing 2]
+6 5 8 7 4 5 6 9 8 7 4 1 2 5 8 7 4 1
+2 5 6
+</pre>
+
 </body>
 </html>
 

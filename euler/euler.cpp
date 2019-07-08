@@ -7666,10 +7666,13 @@ static void runjob2(uint32_t n)
     time_t begin = time(0);
     string answer = run2(n);
 
+    // status (ERROR of OK) moet in dezelfde regel als resultaat nog
     if (answer.compare(answers2[n - 1]) != 0)
         cout << "ERROR: ";
 
     time_t end = time(0);
+
+    // race conditie hier!
     cout << "#" << (uint16_t)n << ": " << answer << " " << end - begin << "s\r\n";
 }
 

@@ -1074,7 +1074,8 @@ of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 Antwoord: 2,783,915,460
 """
 
-def problem24(pool = [0,1,2,3,4,5,6,7,8,9], perm = 1000000 - 1):
+def problem24(perm = 1000000 - 1):
+    pool = [0,1,2,3,4,5,6,7,8,9]
     lst = list()
     while len(pool) > 0:
         i, perm = divmod(perm, factorial(len(pool) - 1))
@@ -4534,7 +4535,9 @@ def runm(l = list(range(1, 102 + 1))):
         executor.map(runjob, l)
     print("Total: {}s".format(math.floor(time.time() - ts)))
 
-def runs(l = range(1, 102 + 1)):
+def runs(l = None):
+    if l == None:
+        l = range(1, 102 + 1)
     ts = time.time()
     for job in l:
         runjob(job)
